@@ -15,14 +15,12 @@
  */
 package com.vonage.client.application;
 
-import com.vonage.client.application.capabilities.Capability;
-import com.vonage.client.application.capabilities.Messages;
-import com.vonage.client.application.capabilities.Rtc;
-import com.vonage.client.application.capabilities.Voice;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
+import com.vonage.client.application.capabilities.*;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.util.UUID;
 
 public class ApplicationTest {
@@ -51,11 +49,29 @@ public class ApplicationTest {
     }
 
     @Test
-    public void testAddCapability() {
-        String json = "{\"capabilities\":{\"voice\":{}}}";
-        Application application = Application.builder().addCapability(Voice.builder().build()).build();
+    public void testAddSingleCapability() {
+        String json = "{\"capabilities\":{\"verify\":{}}}";
+        Application application = Application.builder().addCapability(Verify.builder().build()).build();
 
         assertEquals(json, application.toJson());
+    }
+
+    @Test
+    public void testAddAllCapabilities() {
+        Application application = Application.builder()
+                .addCapability(Messages.builder().build())
+                .addCapability(Verify.builder().build())
+                .addCapability(Voice.builder().build())
+                .addCapability(Rtc.builder().build())
+                .addCapability(Vbc.builder().build())
+                .build();
+
+        assertEquals(
+                "{\"capabilities\":{\"voice\":{},\"messages\":{},\"rtc\":{},\"vbc\":{},\"verify\":{}}}",
+                application.toJson()
+        );
+
+        testJsonableBaseObject(application);
     }
 
     @Test
@@ -76,17 +92,7 @@ public class ApplicationTest {
                 .build();
 
         assertEquals(expectedJson, application.toJson());
-    }
-
-    @Test
-    public void testAddMultipleCapabilitiesOfDifferentType() {
-        String json = "{\"capabilities\":{\"voice\":{},\"rtc\":{}}}";
-        Application application = Application.builder()
-                .addCapability(Voice.builder().build())
-                .addCapability(Rtc.builder().build())
-                .build();
-
-        assertEquals(json, application.toJson());
+        testJsonableBaseObject(application);
     }
 
     @Test
@@ -99,6 +105,7 @@ public class ApplicationTest {
                 .build();
 
         assertEquals(json, application.toJson());
+        testJsonableBaseObject(application);
     }
 
     @Test
@@ -112,6 +119,7 @@ public class ApplicationTest {
                 .build();
 
         assertEquals(json, application.toJson());
+        testJsonableBaseObject(application);
     }
 
     @Test
@@ -124,6 +132,7 @@ public class ApplicationTest {
                 .build();
 
         assertEquals(json, application.toJson());
+        testJsonableBaseObject(application);
     }
 
     @Test
@@ -138,6 +147,21 @@ public class ApplicationTest {
                 .build();
 
         assertEquals(json, application.toJson());
+        testJsonableBaseObject(application);
+    }
+
+    @Test
+    public void testAddVerifyCapabilityWithStatusWebhooks() {
+        String json = "{\"capabilities\":{\"verify\":{\"webhooks\":{\"status_url\":{\"address\":\"https://example.org/status_cb\",\"http_method\":\"GET\"}}}}}";
+        Application application = Application.builder()
+                .addCapability(Verify.builder()
+                        .addWebhook(Webhook.Type.STATUS, new Webhook("https://example.org/status_cb", HttpMethod.GET))
+                        .build()
+                )
+                .build();
+
+        assertEquals(json, application.toJson());
+        testJsonableBaseObject(application);
     }
 
     @Test
@@ -151,6 +175,7 @@ public class ApplicationTest {
                 .build();
 
         assertEquals(json, application.toJson());
+        testJsonableBaseObject(application);
     }
 
     @Test
@@ -180,6 +205,7 @@ public class ApplicationTest {
         assertNotNull(request.getId());
         assertNotNull(request.getPrivacy());
         assertNull(request.getPrivacy().getImproveAi());
+        testJsonableBaseObject(request);
     }
 
     @Test

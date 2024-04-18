@@ -18,7 +18,6 @@ package com.vonage.client.application.capabilities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
@@ -28,15 +27,15 @@ import java.util.Map;
 /**
  * Represents a capability of a Vonage Application
  */
+@JsonInclude(JsonInclude.Include.NON_ABSENT)
 public abstract class Capability extends JsonableBaseObject {
     protected Map<Webhook.Type, Webhook> webhooks;
 
     protected Capability() {
     }
 
-    @Override
-    protected ObjectMapper createJsonObjectMapper() {
-        return super.createJsonObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
+    protected Capability(Builder<?, ?> builder) {
+        webhooks = builder.webhooks;
     }
 
     /**
@@ -57,20 +56,46 @@ public abstract class Capability extends JsonableBaseObject {
         return webhooks;
     }
 
+    /**
+     * Represents the API this capability relates to.
+     */
     public enum Type {
+
+        /**
+         * Voice API
+         */
         VOICE,
+
+        /**
+         * RTC
+         */
         RTC,
+
+        /**
+         * Messages API
+         */
         MESSAGES,
-        VBC
+
+        /**
+         * VBC
+         */
+        VBC,
+
+        /**
+         * Verify API
+         *
+         * @since 8.6.0
+         */
+        VERIFY
     }
 
     @SuppressWarnings("unchecked")
-    static abstract class Builder<C extends Capability, B extends Builder<C, B>> {
+    protected static abstract class Builder<C extends Capability, B extends Builder<C, B>> {
         Map<Webhook.Type, Webhook> webhooks;
 
         /**
          * Add a webhook for the Vonage API to use. Each Capability can only have a single webhook of each type.
-         * See <a href="https://developer.nexmo.com/concepts/guides/webhooks"> the webhooks guide</a> for details.
+         * See <a href="https://developer.vonage.com/concepts/guides/webhooks"> the webhooks guide</a> for details.
          *
          * @param type    The {@link Webhook.Type} of webhook to add.
          * @param webhook The webhook containing the URL and {@link HttpMethod}.

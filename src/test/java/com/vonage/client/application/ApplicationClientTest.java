@@ -17,6 +17,7 @@ package com.vonage.client.application;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.application.capabilities.*;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
@@ -80,7 +81,16 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
             "        }\n" +
             "      }\n" +
             "    },\n" +
-            "    \"vbc\": {}\n" +
+            "    \"vbc\": {},\n" +
+            "    \"verify\": {\n" +
+            "       \"version\": \"v2\",\n" +
+            "       \"webhooks\": {\n" +
+            "          \"status_url\": {\n" +
+            "             \"address\": \"https://example.com/webhooks/status\",\n" +
+            "             \"http_method\": \"POST\"\n" +
+            "          }\n" +
+            "       }\n" +
+            "    }\n" +
             "  },\n" +
             "  \"keys\": {\n" +
             "    \"public_key\": \"-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCA\\nKOxjsU4pf/sMFi9N0jqcSLcjxu33G\\nd/vynKnlw9SENi+UZR44GdjGdmfm1\\ntL1eA7IBh2HNnkYXnAwYzKJoa4eO3\\n0kYWekeIZawIwe/g9faFgkev+1xsO\\nOUNhPx2LhuLmgwWSRS4L5W851Xe3f\\nUQIDAQAB\\n-----END PUBLIC KEY-----\\n\",\n" +
@@ -96,6 +106,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
     }
 
     static void assertEqualsSampleApplication(Application response) {
+        testJsonableBaseObject(response);
         assertEquals("78d335fa-323d-0114-9c3d-d6f0d48968cf", response.getId());
         assertEquals("My Application", response.getName());
 
@@ -130,6 +141,11 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
         Vbc vbc = capabilities.getVbc();
         assertEquals(Capability.Type.VBC, vbc.getType());
         assertNull(vbc.getWebhooks());
+
+        Verify verify = capabilities.getVerify();
+        assertEquals(Capability.Type.VERIFY, verify.getType());
+        assertEquals("https://example.com/webhooks/status", verify.getWebhooks().get(Webhook.Type.STATUS).getAddress());
+        assertEquals(HttpMethod.POST, verify.getWebhooks().get(Webhook.Type.STATUS).getMethod());
 
         Application.Privacy privacy = response.getPrivacy();
         assertNotNull(privacy);

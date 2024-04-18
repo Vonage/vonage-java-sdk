@@ -19,13 +19,13 @@ package com.vonage.client.application.capabilities;
 /**
  * VBC capability configuration settings.
  */
-public class Vbc extends Capability {
+public final class Vbc extends Capability {
 
     private Vbc() {
     }
 
     private Vbc(Builder builder) {
-
+        super(builder);
     }
 
     @Override

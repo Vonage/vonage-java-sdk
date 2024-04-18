@@ -20,13 +20,13 @@ import com.vonage.client.common.Webhook;
 /**
  * Rtc capability configuration settings.
  */
-public class Rtc extends Capability {
+public final class Rtc extends Capability {
 
     private Rtc() {
     }
 
     private Rtc(Builder builder) {
-        webhooks = builder.webhooks;
+        super(builder);
     }
 
     @Override
