@@ -201,9 +201,13 @@ public class Application extends JsonableBaseObject {
         public Builder removeCapability(Capability.Type type) {
             if (capabilities != null) {
                 capabilities.setCapability(type, null);
-                boolean noCapabilities =  capabilities.voice == null &&
-                        capabilities.rtc == null && capabilities.messages == null && capabilities.vbc == null;
-                if (noCapabilities) {
+                if (
+                    capabilities.voice == null &&
+                    capabilities.rtc == null &&
+                    capabilities.messages == null &&
+                    capabilities.vbc == null &&
+                    capabilities.verify == null
+                ) {
                     capabilities = null;
                 }
             }
