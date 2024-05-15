@@ -43,7 +43,7 @@ There are a few small changes to be aware of when migrating to Vonage from OpenT
 Many of these are straightforward and your IDE will help you with auto-completion, but for clarity, consider the following:
 
 - `projectId` is now `applicationId` where applicable.
-- Stronger typing used where applicable (e.g. `UUID` and `URI` instead of `String`)
+- Stronger typing used where applicable (e.g. `UUID` and `URI` instead of `String`).
 - `playDTMF` renamed to `sendDtmf` for all applicable DTMF endpoints.
 - `OpenTok#disableForceMute(String)` replaced by `VideoClient#muteSession(String, boolean, String...)`. You need to set the `active` boolean parameter to `false` to achieve the same effect.
 - The `MuteAllProperties` class and parameter in `OpenTok` has been replaced by using the `excludedStreamIds` directly in the method parameter of `VideoClient#muteSession(String, boolean, Collection<String>)` (or `VideoClient#muteSession(String, boolean, String...) for convenience`). These methods replace `OpenTok#forceMuteAll(String, MuteAllProperties)`.
