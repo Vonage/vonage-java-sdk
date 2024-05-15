@@ -19,14 +19,17 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MmsVcardRequestTest {
+	String from = "447900000001", to = "317900000002",
+			url = "https://foo.tld/path/to/resource.vcf", caption = "!Alt text";
 
 	@Test
 	public void testSerializeValid() {
-		String from = "447900000001", to = "317900000002",
-				url = "https://foo.tld/path/to/resource.vcf", caption = "!Alt text";
+		int ttl = 1200;
 
-		MmsVcardRequest mms = MmsVcardRequest.builder().url(url).from(from).to(to).caption(caption).build();
+		MmsVcardRequest mms = MmsVcardRequest.builder()
+				.ttl(ttl).url(url).from(from).to(to).caption(caption).build();
 		String json = mms.toJson();
+		assertTrue(json.contains("\"ttl\":"+ttl));
 		assertTrue(json.contains("\"from\":\""+from+"\""));
 		assertTrue(json.contains("\"to\":\""+to+"\""));
 		assertTrue(json.contains("\"message_type\":\"vcard\""));
@@ -51,15 +54,25 @@ public class MmsVcardRequestTest {
 	@Test
 	public void testConstructNoUrl() {
 		assertThrows(NullPointerException.class, () ->
-				MmsVcardRequest.builder().caption("Cap").from("447900000001").to("317900000002").build()
+				MmsVcardRequest.builder().caption(caption).from(from).to(to).build()
 		);
 	}
 
 	@Test
 	public void testConstructInvalidExtension() {
 		assertThrows(IllegalArgumentException.class, () -> MmsVcardRequest.builder()
-				.to("317900000002").from("447900000001")
-				.url("http://foo.tld/path/to/file.csv").build()
+				.to(to).from(from).url("http://foo.tld/path/to/file.csv").build()
 		);
+	}
+
+	@Test
+	public void testTtlBounds() {
+		final int min = 300, max = 259200;
+		var request = MmsVcardRequest.builder().url(url).to(to).from(from);
+
+		assertEquals(min, request.ttl(min).build().getTtl());
+		assertEquals(max, request.ttl(max).build().getTtl());
+		assertThrows(IllegalArgumentException.class, () -> request.ttl(min-1).build());
+		assertThrows(IllegalArgumentException.class, () -> request.ttl(max+1).build());
 	}
 }
