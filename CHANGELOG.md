@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.7.0] - 2024-05-??
+- Added missing supported languages to `TextToSpeechLanguage` enum
+
 # [8.6.0] - 2024-04-18
 - Added Experience Composer to Video API
 - Fixed regression in `createSession` Video endpoint

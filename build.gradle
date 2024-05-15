@@ -5,6 +5,7 @@ plugins {
     id 'maven-publish'
     id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id "com.github.ben-manes.versions" version '0.51.0'
 }
 
 group = "com.vonage"
@@ -18,11 +19,11 @@ repositories {
 }
 
 dependencies {
-    def jacksonVersion = '2.17.0'
+    def jacksonVersion = '2.17.1'
     def httpclientVersion = '4.5.14'
-    def junitVersion = '5.10.2'
+    def junitVersion = '5.11.0-M1'
 
-    implementation "commons-codec:commons-codec:1.16.1"
+    implementation 'commons-codec:commons-codec:1.17.0'
     implementation 'org.apache.commons:commons-lang3:3.14.0'
     implementation "org.apache.httpcomponents:httpclient:$httpclientVersion"
     implementation "org.apache.httpcomponents:httpmime:$httpclientVersion"
@@ -32,7 +33,7 @@ dependencies {
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
-    testImplementation "org.mockito:mockito-core:5.11.0"
+    testImplementation "org.mockito:mockito-core:5.12.0"
     testImplementation "jakarta.servlet:jakarta.servlet-api:4.0.4"
 }
 
