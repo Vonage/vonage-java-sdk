@@ -23,9 +23,7 @@ public final class MmsImageRequest extends MmsRequest {
 
 	MmsImageRequest(Builder builder) {
 		super(builder, MessageType.IMAGE);
-		payload = new MessagePayload(builder.url, builder.caption);
 		payload.validateUrlExtension("jpg", "jpeg", "png", "gif");
-		payload.validateCaptionLength(2000);
 	}
 
 	@JsonProperty("image")

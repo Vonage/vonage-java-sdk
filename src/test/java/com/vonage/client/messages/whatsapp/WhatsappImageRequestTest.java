@@ -30,6 +30,7 @@ public class WhatsappImageRequestTest {
 		assertTrue(json.contains("\"image\":{\"url\":\""+url+"\",\"caption\":\""+caption+"\"}"));
 		assertTrue(json.contains("\"message_type\":\"image\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
+		assertFalse(json.contains("\"context\""));
 	}
 
 	@Test

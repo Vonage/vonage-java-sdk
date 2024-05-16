@@ -23,7 +23,6 @@ public final class MmsVcardRequest extends MmsRequest {
 
 	MmsVcardRequest(Builder builder) {
 		super(builder, MessageType.VCARD);
-		payload = new MessagePayload(builder.url, builder.caption);
 		payload.validateUrlExtension("vcf");
 	}
 

@@ -77,9 +77,7 @@ public class MmsAudioRequestTest {
 		}
 
 		StringBuilder sb = new StringBuilder(2001);
-		for (int i = 0; i < 1999; i++) {
-			sb.append('*');
-		}
+        sb.append("*".repeat(1999));
 		assertEquals(1999, sb.length());
 
 		assertEquals(sb.toString(), builder.caption(sb.toString()).build().getAudio().getCaption());

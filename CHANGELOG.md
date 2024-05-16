@@ -4,8 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.7.0] - 2024-05-??
+# [8.7.0] - 2024-05-16
 - Added missing supported languages to `TextToSpeechLanguage` enum
+- Added `ttl` field to outbound MMS messages
+- Added message reply context to Whatsapp outbound requests
+- Added network code to `InboundMessage`
 
 # [8.6.0] - 2024-04-18
 - Added Experience Composer to Video API
