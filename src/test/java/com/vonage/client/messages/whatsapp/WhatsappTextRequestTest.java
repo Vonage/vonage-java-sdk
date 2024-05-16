@@ -15,19 +15,23 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
+import java.util.UUID;
 
 public class WhatsappTextRequestTest {
+	String from = "447900000001", to = "317900000002", txt = "Hello, World!";
 
 	@Test
 	public void testSerializeValid() {
-		String from = "447900000001", to = "317900000002", txt = "Hello, World!";
-		String json = WhatsappTextRequest.builder().from(from).to(to).text(txt).build().toJson();
+		String messageUuid = UUID.randomUUID().toString();
+		String json = WhatsappTextRequest.builder().from(from).to(to).text(txt)
+				.contextMessageId(messageUuid).build().toJson();
+
 		assertTrue(json.contains("\"text\":\""+txt+"\""));
 		assertTrue(json.contains("\"from\":\""+from+"\""));
 		assertTrue(json.contains("\"to\":\""+to+"\""));
+		assertTrue(json.contains("\"context\":{\"message_uuid\":\""+messageUuid+"\"}"));
 		assertTrue(json.contains("\"message_type\":\"text\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 	}
@@ -35,44 +39,39 @@ public class WhatsappTextRequestTest {
 	@Test
 	public void testConstructEmptySender() {
 		assertThrows(IllegalArgumentException.class, () -> WhatsappTextRequest.builder()
-				.from("").to("317900000002").text("Hello, World!").build()
+				.from("").to(to).text(txt).build()
 		);
 	}
 
 	@Test
 	public void testConstructNoSender() {
 		assertThrows(NullPointerException.class, () -> WhatsappTextRequest.builder()
-				.to("317900000002").text("Hello, World!").build()
+				.to(to).text(txt).build()
 		);
 	}
 
 	@Test
 	public void testConstructNullText() {
 		assertThrows(NullPointerException.class, () -> WhatsappTextRequest.builder()
-				.from("447900000001").to("317900000002").build()
+				.from(from).to(to).build()
 		);
 	}
 
 	@Test
 	public void testConstructEmptyText() {
 		assertThrows(IllegalArgumentException.class, () -> WhatsappTextRequest.builder()
-				.from("447900000001").to("317900000002").text("").build()
+				.from(from).to(to).text("").build()
 		);
 	}
 
 	@Test
 	public void testConstructLongText() {
 		StringBuilder text = new StringBuilder(1002);
-		for (int i = 0; i < 4095; i++) {
-			text.append('*');
-		}
+        text.append("*".repeat(4095));
 		assertEquals(4095, text.length());
 
 		WhatsappTextRequest msg = WhatsappTextRequest.builder()
-				.text(text.toString())
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+				.text(text.toString()).from(from).to(to).build();
 
 		assertEquals(text.toString(), msg.getText());
 		text.append("xy");

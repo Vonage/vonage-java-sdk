@@ -15,15 +15,19 @@
  */
 package com.vonage.client.messages.whatsapp;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.common.E164;
 import com.vonage.client.messages.Channel;
 import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.MessageType;
-import com.vonage.client.common.E164;
+import java.util.UUID;
 
 public abstract class WhatsappRequest extends MessageRequest {
+	final Context context;
 
 	protected WhatsappRequest(Builder<?, ?> builder, MessageType messageType) {
 		super(builder, Channel.WHATSAPP, messageType);
+        context = builder.messageUuid != null ? new Context(builder.messageUuid) : null;
 	}
 
 	@Override
@@ -32,6 +36,29 @@ public abstract class WhatsappRequest extends MessageRequest {
 		this.to = new E164(to).toString();
 	}
 
+	@JsonProperty("context")
+	public Context getContext() {
+		return context;
+	}
+
+	@SuppressWarnings("unchecked")
 	protected abstract static class Builder<M extends WhatsappRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
+		UUID messageUuid;
+
+		/**
+		 * An optional context used for quoting/replying to a specific message in a conversation. When used,
+		 * the WhatsApp UI will display the new message along with a contextual bubble that displays the
+		 * quoted/replied to message's content.<br>
+		 * This field is the UUID of the message being replied to or quoted.
+		 *
+		 * @param messageUuid The context's message UUID as a string.
+		 *
+		 * @return This builder.
+		 * @since 8.7.0
+		 */
+		public B contextMessageId(String messageUuid) {
+			this.messageUuid = UUID.fromString(messageUuid);
+			return (B) this;
+		}
 	}
 }

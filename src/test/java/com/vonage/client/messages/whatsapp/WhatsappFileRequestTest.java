@@ -17,19 +17,23 @@ package com.vonage.client.messages.whatsapp;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.UUID;
 
 public class WhatsappFileRequestTest {
+	String from = "447900000001", to = "317900000002";
 
 	@Test
 	public void testSerializeValid() {
+		String messageUuid = UUID.randomUUID().toString();
 		String url = "file:///path/to/attachment.zip", caption = "Srs bzns", name = "Stuff";
 		String json = WhatsappFileRequest.builder()
-				.from("317900000002").to("447900000001")
-				.url(url).caption(caption).name(name)
-				.build().toJson();
+				.from(from).to(to).url(url).contextMessageId(messageUuid)
+				.caption(caption).name(name).build().toJson();
+
 		assertTrue(json.contains(
-				"\"file\":{\"url\":\""+url+ "\",\"caption\":\""+caption+"\",\"name\":\""+name+"\"}"
+				"\"file\":{\"url\":\""+url+"\",\"caption\":\"" + caption + "\",\"name\":\""+name+"\"}"
 		));
+		assertTrue(json.contains("\"context\":{\"message_uuid\":\""+messageUuid+"\"}"));
 		assertTrue(json.contains("\"message_type\":\"file\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 	}
@@ -37,8 +41,7 @@ public class WhatsappFileRequestTest {
 	@Test
 	public void testSerializeNoCaptionOrName() {
 		String url = "file:///path/to/spec.pdf";
-		WhatsappFileRequest req = WhatsappFileRequest.builder()
-				.url(url).from("447900000002").to("447900000001").build();
+		WhatsappFileRequest req = WhatsappFileRequest.builder().url(url).from(from).to(to).build();
 		assertNull(req.getFile().getName());
 		String json = req.toJson();
 		assertTrue(json.contains("\"file\":{\"url\":\""+url+"\"}"));
@@ -49,7 +52,7 @@ public class WhatsappFileRequestTest {
 	@Test
 	public void testConstructNoUrl() {
 		assertThrows(NullPointerException.class, () -> WhatsappFileRequest.builder()
-				.caption("Description").from("447900000001").to("317900000002").build()
+				.caption("Description").from(from).to(to).build()
 		);
 	}
 }

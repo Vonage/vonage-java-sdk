@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 # [8.7.0] - 2024-05-??
 - Added missing supported languages to `TextToSpeechLanguage` enum
 - Added `ttl` field to outbound MMS messages
-- 
+- Added message reply context to Whatsapp outbound requests
 
 # [8.6.0] - 2024-04-18
 - Added Experience Composer to Video API

@@ -32,6 +32,10 @@ public final class Context extends JsonableBaseObject {
 
 	Context() {}
 
+	Context(UUID messageUuid) {
+		this.messageUuid = messageUuid;
+	}
+
 	/**
 	 * The phone number of the original sender of the message being quoted.
 	 *
