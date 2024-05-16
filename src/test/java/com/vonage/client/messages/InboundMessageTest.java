@@ -358,4 +358,15 @@ public class InboundMessageTest {
 		assertEquals(sourceType, referral.getSourceType());
 		assertEquals(URI.create(sourceUrl), referral.getSourceUrl());
 	}
+
+	@Test
+	public void testOriginOnly() {
+		String networkCode = "12534", json = "{\n" +
+				"  \"origin\": {\n" +
+				"    \"network_code\": \""+networkCode+"\"\n" +
+				"   }\n" +
+				"}";
+		var im = InboundMessage.fromJson(json);
+		assertEquals(networkCode, im.getNetworkCode());
+	}
 }

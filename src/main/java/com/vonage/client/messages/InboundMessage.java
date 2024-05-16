@@ -38,6 +38,7 @@ public class InboundMessage extends JsonableBaseObject {
 
 	protected static class UrlWrapper extends JsonableBaseObject {
 		@JsonProperty("url") protected URI url;
+		@JsonProperty("name") protected String name;
 	}
 
 	protected static class UrlWrapperWithCaption extends UrlWrapper {
@@ -46,6 +47,10 @@ public class InboundMessage extends JsonableBaseObject {
 
 	protected static class Whatsapp extends JsonableBaseObject {
 		@JsonProperty("referral") protected Referral referral;
+	}
+
+	protected static class Origin extends JsonableBaseObject {
+		@JsonProperty("network_code") protected String networkCode;
 	}
 
 	protected InboundMessage() {}
@@ -79,6 +84,7 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonProperty("order") protected Order whatsappOrder;
 	@JsonProperty("usage") protected MessageStatus.Usage usage;
 	@JsonProperty("sms") protected SmsInboundMetadata smsMetadata;
+	@JsonProperty("origin") protected Origin origin;
 
 	/**
 	 * This is a catch-all method which encapsulates all fields in the response JSON
@@ -328,6 +334,19 @@ public class InboundMessage extends JsonableBaseObject {
 	 */
 	public SmsInboundMetadata getSmsMetadata() {
 		return smsMetadata;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#SMS} or {@linkplain Channel#MMS},
+	 * return the network code from which the message originated (if available).
+	 *
+	 * @return The origin network code if applicable, or {@code null} if unknown.
+	 *
+	 * @since 8.7.0
+	 */
+	@JsonIgnore
+	public String getNetworkCode() {
+		return origin != null ? origin.networkCode : null;
 	}
 
 	/**
