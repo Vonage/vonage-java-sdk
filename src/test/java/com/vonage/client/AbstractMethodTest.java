@@ -149,8 +149,7 @@ public class AbstractMethodTest {
     @Test
     public void testGetAuthMethod() {
         ConcreteMethod method = new ConcreteMethod(mockWrapper);
-
-        AuthMethod auth = method.getAuthMethod(method.getAcceptableAuthMethods());
+        AuthMethod auth = method.getAuthMethod();
         assertEquals(auth, mockAuthMethod);
     }
 
@@ -257,11 +256,6 @@ public class AbstractMethodTest {
             @Override
             protected AuthMethod getAuthMethod() throws VonageUnexpectedException {
                 return mockAuthMethod;
-            }
-
-            @Override
-            protected AuthMethod getAuthMethod(Class<?>[] acceptableAuthMethods) throws VonageClientException {
-                return getAuthMethod();
             }
 
             @Override

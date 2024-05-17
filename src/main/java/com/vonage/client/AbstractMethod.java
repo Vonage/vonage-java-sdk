@@ -112,7 +112,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
      * @throws VonageClientException If no appropriate {@link AuthMethod} is available
      */
     protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
-        return getAuthMethod(getAcceptableAuthMethods()).apply(request);
+        return getAuthMethod().apply(request);
     }
 
     /**
@@ -126,7 +126,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
      * @throws VonageClientException If no AuthMethod is available from the provided array of acceptableAuthMethods.
      */
     @SuppressWarnings("unchecked")
-    protected AuthMethod getAuthMethod(Class<?>[] acceptableAuthMethods) throws VonageClientException {
+    private AuthMethod getAuthMethod(Class<?>[] acceptableAuthMethods) throws VonageClientException {
         if (acceptable == null) {
             acceptable = Arrays.stream(acceptableAuthMethods)
                     .filter(AuthMethod.class::isAssignableFrom)
@@ -138,7 +138,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
     }
 
     /**
-     * Call {@linkplain #getAuthMethod(Class[])} with {@linkplain #getAcceptableAuthMethods()}.
+     * Gets the highest priority available authentication method according to {@link AuthMethod#getSortKey()}.
      *
      * @return An AuthMethod created from the accepted auth methods.
      * @throws VonageUnexpectedException If no AuthMethod is available.

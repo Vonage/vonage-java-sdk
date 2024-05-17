@@ -41,9 +41,7 @@ public class SmsClient {
                 super(DynamicEndpoint.<Message, SmsSubmissionResponse> builder(SmsSubmissionResponse.class)
                         .wrapper(wrapper).requestMethod(HttpMethod.POST)
                         .authMethod(SignatureAuthMethod.class, TokenAuthMethod.class)
-                        .contentTypeHeader("application/x-www-form-urlencoded")
-                        .acceptHeader("application/json")
-                        .pathGetter((de, req) ->
+                        .urlFormEncodedContentType(true).pathGetter((de, req) ->
                                 de.getHttpWrapper().getHttpConfig().getRestBaseUri() + "/sms/json"
                         )
                 );

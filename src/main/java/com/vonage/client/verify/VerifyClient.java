@@ -49,7 +49,7 @@ public class VerifyClient {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .wrapper(wrapper).requestMethod(HttpMethod.POST)
                         .authMethod(TokenAuthMethod.class)
-                        .contentTypeHeader(formEncoded ? "application/x-www-form-urlencoded" : null)
+                        .urlFormEncodedContentType(formEncoded)
                         .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig()
                                 .getApiBaseUri() + "/verify" + path + "/json"
                         )

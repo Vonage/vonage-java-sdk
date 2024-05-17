@@ -133,6 +133,10 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			return this;
 		}
 
+		public Builder<T, R> urlFormEncodedContentType(boolean formEncoded) {
+			return contentTypeHeader(formEncoded ? "application/x-www-form-urlencoded" : null);
+		}
+
 		public Builder<T, R> contentTypeHeader(String contentType) {
 			this.contentType = contentType;
 			return this;
@@ -180,7 +184,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			return request;
 		}
 		else if (applyBasicAuth) {
-			return getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request);
+			return getAuthMethod().applyAsBasicAuth(request);
 		}
 		else {
 			return super.applyAuth(request);
@@ -192,13 +196,18 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	}
 
 	private String getRequestHeader(T requestBody) {
-		if (contentType != null)
+		if (contentType != null) {
 			return contentType;
-		else if (requestBody instanceof Jsonable)
+		}
+		else if (requestBody instanceof Jsonable) {
 			return "application/json";
-		else if (requestBody instanceof BinaryRequest)
+		}
+		else if (requestBody instanceof BinaryRequest) {
 			return ((BinaryRequest) requestBody).getContentType();
-		else return null;
+		}
+		else {
+			return null;
+		}
 	}
 
 	@Override

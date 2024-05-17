@@ -49,6 +49,7 @@ public class AccountClient {
      */
     @SuppressWarnings("unchecked")
     public AccountClient(HttpWrapper wrapper) {
+        super();
         apiKeyGetter = () -> wrapper.getAuthCollection().getAuth(TokenAuthMethod.class).getApiKey();
 
         class Endpoint<T, R> extends DynamicEndpoint<T, R> {
@@ -67,11 +68,10 @@ public class AccountClient {
                         .wrapper(wrapper).requestMethod(method).applyAsBasicAuth(signatureAuth)
                         .authMethod(TokenAuthMethod.class, signatureAuth ? SignatureAuthMethod.class : null)
                         .responseExceptionType(AccountResponseException.class)
-                        .contentTypeHeader(formEncoded ? "application/x-www-form-urlencoded" : null)
-                        .pathGetter((de, req) -> {
-                            HttpConfig config = de.getHttpWrapper().getHttpConfig();
-                            String base = signatureAuth ? config.getApiBaseUri() : config.getRestBaseUri();
-                            return base + "/account" + pathGetter.apply(req);
+                        .urlFormEncodedContentType(formEncoded).pathGetter((de, req) -> {
+                                HttpConfig config = de.getHttpWrapper().getHttpConfig();
+                                String base = signatureAuth ? config.getApiBaseUri() : config.getRestBaseUri();
+                                return base + "/account" + pathGetter.apply(req);
                         })
                 );
             }

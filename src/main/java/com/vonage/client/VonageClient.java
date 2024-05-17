@@ -224,8 +224,7 @@ public class VonageClient {
      * @throws VonageUnacceptableAuthException if no {@link JWTAuthMethod} is available
      */
     public String generateJwt() throws VonageUnacceptableAuthException {
-        JWTAuthMethod authMethod = httpWrapper.getAuthCollection().getAuth(JWTAuthMethod.class);
-        return authMethod.generateToken();
+        return httpWrapper.getAuthCollection().getAuth(JWTAuthMethod.class).generateToken();
     }
 
     /**
