@@ -20,7 +20,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import java.util.List;
 
-public class SignatureAuthMethod implements AuthMethod {
+public class SignatureAuthMethod extends AbstractAuthMethod {
     private static final int SORT_KEY = 20;
 
     private final String apiKey, apiSecret;
@@ -41,6 +41,10 @@ public class SignatureAuthMethod implements AuthMethod {
     }
 
     @Override
+    public int getSortKey() {
+        return SORT_KEY;
+    }
+
     public RequestBuilder apply(RequestBuilder request) {
         request.addParameter("api_key", apiKey);
         List<NameValuePair> params = request.getParameters();
@@ -48,10 +52,5 @@ public class SignatureAuthMethod implements AuthMethod {
         int last = params.size() - 1;
         request.addParameters(params.get(last), params.get(last - 1));
         return request;
-    }
-
-    @Override
-    public int getSortKey() {
-        return SORT_KEY;
     }
 }

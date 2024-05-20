@@ -13,27 +13,21 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.camara.auth;
+package com.vonage.client.auth.camara;
 
 import com.vonage.client.QueryParamsRequest;
-import com.vonage.client.common.E164;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
-public final class BackendAuthRequest implements QueryParamsRequest {
+final class TokenRequest implements QueryParamsRequest {
     private final Map<String, String> params = new LinkedHashMap<>(4);
 
-    /**
-     * Creates the parameters for a Back-End Authorization OIDC request.
-     *
-     * @param msisdn The MSISDN of the user you want to authenticate.
-     * @param scope The scope of the request as an enum.
-     */
-    public BackendAuthRequest(String msisdn, FraudPreventionDetectionScope scope) {
-        params.put("login_hint", "tel:+" + new E164(msisdn));
-        params.put("scope", "openid dpv:FraudPreventionAndDetection#" +
-                Objects.requireNonNull(scope, "Scope is required.")
+    TokenRequest(UUID authReqId) {
+        params.put("grant_type", "urn:openid:params:grant-type:ciba");
+        params.put("auth_req_id", "arid/" +
+                Objects.requireNonNull(authReqId, "Auth request ID is required.")
         );
     }
 

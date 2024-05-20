@@ -15,24 +15,15 @@
  */
 package com.vonage.client.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.vonage.client.VonageUnexpectedException;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
-import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * This AuthMethod uses API key and secret either as URL parameters, or as
  * {@code Basic} in the header.
  */
-public class TokenAuthMethod implements AuthMethod {
+public class TokenAuthMethod extends BasicAuthMethod implements QueryParamsAuthMethod {
     private static final int SORT_KEY = 30;
 
     private final String apiKey, apiSecret;
@@ -47,29 +38,16 @@ public class TokenAuthMethod implements AuthMethod {
     }
 
     @Override
-    public RequestBuilder apply(RequestBuilder request) {
-        return request.addParameter("api_key", apiKey).addParameter("api_secret", apiSecret);
+    public Map<String, String> asQueryParams() {
+        Map<String, String> params = new LinkedHashMap<>(4);
+        params.put("api_key", apiKey);
+        params.put("api_secret", apiSecret);
+        return params;
     }
 
     @Override
-    public RequestBuilder applyAsBasicAuth(RequestBuilder request) {
-        String headerValue = Base64.encodeBase64String((apiKey + ":" + apiSecret).getBytes());
-        Header authHeader = new BasicHeader("Authorization", "Basic " + headerValue);
-        return request.addHeader(authHeader);
-    }
-
-    @Override
-    public RequestBuilder applyAsJsonProperties(RequestBuilder request) {
-        HttpEntity entity = request.getEntity();
-        try {
-            ObjectNode json = (ObjectNode) new ObjectMapper().readTree(EntityUtils.toString(entity));
-            json.put("api_key", apiKey);
-            json.put("api_secret", apiSecret);
-
-            return request.setEntity(new StringEntity(json.toString(), ContentType.APPLICATION_JSON));
-        } catch (IOException e) {
-            throw new VonageUnexpectedException("Failed to attach api key and secret to json.", e);
-        }
+    protected String getBasicToken() {
+        return Base64.encodeBase64String((apiKey + ":" + apiSecret).getBytes());
     }
 
     @Override

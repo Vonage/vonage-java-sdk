@@ -29,22 +29,23 @@ import java.nio.charset.StandardCharsets;
  * Internal class that holds available authentication methods and a shared HttpClient.
  */
 public class HttpWrapper {
-    private static final String CLIENT_NAME = "vonage-java-sdk";
-    private static final String CLIENT_VERSION = "8.7.0";
-    private static final String JAVA_VERSION = System.getProperty("java.version");
-    private static final String USER_AGENT = String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION);
+    private static final String
+            CLIENT_NAME = "vonage-java-sdk",
+            CLIENT_VERSION = "8.7.0",
+            JAVA_VERSION = System.getProperty("java.version"),
+            USER_AGENT = String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION);
 
     private AuthCollection authCollection;
     private HttpClient httpClient;
     private HttpConfig httpConfig;
 
-    public HttpWrapper(AuthCollection authCollection) {
-        this(HttpConfig.builder().build(), authCollection);
-    }
-
     public HttpWrapper(HttpConfig httpConfig, AuthCollection authCollection) {
         this.authCollection = authCollection;
         this.httpConfig = httpConfig;
+    }
+
+    public HttpWrapper(AuthCollection authCollection) {
+        this(HttpConfig.builder().build(), authCollection);
     }
 
     public HttpWrapper(AuthMethod... authMethods) {
@@ -52,8 +53,7 @@ public class HttpWrapper {
     }
 
     public HttpWrapper(HttpConfig httpConfig, AuthMethod... authMethods) {
-        this(new AuthCollection(authMethods));
-        this.httpConfig = httpConfig;
+        this(httpConfig, new AuthCollection(authMethods));
     }
 
     public HttpClient getHttpClient() {

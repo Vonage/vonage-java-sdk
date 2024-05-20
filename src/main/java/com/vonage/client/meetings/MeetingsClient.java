@@ -58,6 +58,7 @@ public class MeetingsClient {
 	 * @param wrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
 	public MeetingsClient(HttpWrapper wrapper) {
+		super();
 		httpClient = wrapper.getHttpClient();
 
 		@SuppressWarnings("unchecked")

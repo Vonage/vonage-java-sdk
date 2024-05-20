@@ -15,12 +15,29 @@
  */
 package com.vonage.client.auth;
 
-public interface AuthMethod extends Comparable<AuthMethod> {
+import java.util.Objects;
+
+/**
+ * Base class for auth methods.
+ *
+ * @since 8.8.0
+ */
+public abstract class AbstractAuthMethod implements AuthMethod {
 
     @Override
-    default int compareTo(AuthMethod other) {
-        return Integer.compare(this.getSortKey(), other.getSortKey());
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof AuthMethod)) {
+            return false;
+        }
+        return ((AuthMethod) obj).getSortKey() == this.getSortKey() &&
+                obj.getClass().equals(this.getClass());
     }
 
-    int getSortKey();
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSortKey(), getClass());
+    }
 }

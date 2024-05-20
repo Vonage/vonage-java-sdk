@@ -16,12 +16,11 @@
 package com.vonage.client.auth;
 
 import com.vonage.jwt.Jwt;
-import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class JWTAuthMethod implements AuthMethod {
+public class JWTAuthMethod extends BearerAuthMethod {
     private static final int SORT_KEY = 10;
 
     private final Jwt jwt;
@@ -56,8 +55,8 @@ public class JWTAuthMethod implements AuthMethod {
     }
 
     @Override
-    public RequestBuilder apply(RequestBuilder request) {
-        return request.setHeader("Authorization", "Bearer " + generateToken());
+    protected String getBearerToken() {
+        return generateToken();
     }
 
     @Override

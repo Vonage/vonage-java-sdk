@@ -15,10 +15,7 @@
  */
 package com.vonage.client;
 
-import com.vonage.client.auth.AuthMethod;
-import com.vonage.client.auth.JWTAuthMethod;
-import com.vonage.client.auth.SignatureAuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.*;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -112,7 +109,18 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
      * @throws VonageClientException If no appropriate {@link AuthMethod} is available
      */
     protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
-        return getAuthMethod().apply(request);
+        AuthMethod am = getAuthMethod();
+        if (am instanceof SignatureAuthMethod) {
+            // TODO sort out this complete mess of an AuthMethod
+            return ((SignatureAuthMethod) am).apply(request);
+        }
+        else if (am instanceof HeaderAuthMethod) {
+            return request.setHeader("Authorization", ((HeaderAuthMethod) am).getHeaderValue());
+        }
+        else if (am instanceof QueryParamsAuthMethod) {
+            ((QueryParamsAuthMethod) am).asQueryParams().forEach(request::addParameter);
+        }
+        return request;
     }
 
     /**

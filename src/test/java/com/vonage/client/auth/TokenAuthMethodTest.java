@@ -18,20 +18,35 @@ package com.vonage.client.auth;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.Base64;
 
 public class TokenAuthMethodTest {
+
     @Test
-    public void testAddingApiKeyAndSecretToJson() throws Exception {
-        AuthMethod auth = new TokenAuthMethod("apikey", "secret");
-        String before = "{\"name\":\"app name\",\"type\":\"voice\",\"answer_url\":\"https://example.com/answer\",\"event_url\":\"https://example.com/event\"}";
-        RequestBuilder requestBuilder = RequestBuilder.get().setEntity(new StringEntity(before, ContentType.APPLICATION_JSON));
+    public void testApplyApiKeyAndSecret() {
+        String key = "e4e5b6c3", secret = "0123456789abcdef";
+        var auth = new TokenAuthMethod(key, secret);
+        String payload = "{\"name\":\"app name\"}";
+        RequestBuilder requestBuilder = RequestBuilder.get().setEntity(
+                new StringEntity(payload, ContentType.APPLICATION_JSON)
+        );
 
-        RequestBuilder requestBuilderWithAuthentication = auth.applyAsJsonProperties(requestBuilder);
+        var header = auth.getHeaderValue();
+        var prefix = "Basic ";
+        assertTrue(header.startsWith(prefix));
+        var encoded = header.substring(prefix.length());
+        var decoded = new String(Base64.getDecoder().decode(encoded));
+        String[] split = decoded.split(":");
+        assertEquals(2, split.length);
+        assertEquals(key, split[0]);
+        assertEquals(secret, split[1]);
 
-        String after = "{\"name\":\"app name\",\"type\":\"voice\",\"answer_url\":\"https://example.com/answer\",\"event_url\":\"https://example.com/event\",\"api_key\":\"apikey\",\"api_secret\":\"secret\"}";
-        assertEquals(after, EntityUtils.toString(requestBuilderWithAuthentication.getEntity()));
+        var params = auth.asQueryParams();
+        assertNotNull(params);
+        assertEquals(2, params.size());
+        assertEquals(key, params.get("api_key"));
+        assertEquals(secret, params.get("api_secret"));
     }
 }

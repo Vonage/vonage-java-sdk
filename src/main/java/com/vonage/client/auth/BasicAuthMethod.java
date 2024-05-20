@@ -13,14 +13,18 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.camara.auth;
+package com.vonage.client.auth;
 
-public enum FraudPreventionDetectionScope {
-    CHECK_SIM_SWAP,
-    RETRIEVE_SIM_SWAP_DATE;
+/**
+ * Base class for auth methods which use the {@code Authorization: Basic } header.
+ *
+ * @since 8.8.0
+ */
+public abstract class BasicAuthMethod extends HeaderAuthMethod {
 
-    @Override
-    public String toString() {
-        return name().toLowerCase().replace('_', '-');
+    protected abstract String getBasicToken();
+
+    public final String getHeaderValue() {
+        return "Basic " + getBasicToken();
     }
 }

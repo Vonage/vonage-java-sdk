@@ -41,7 +41,6 @@ import java.util.function.Consumer;
  */
 @SuppressWarnings("unchecked")
 public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
-	protected boolean applyBasicAuth;
 	protected Collection<Class<? extends AuthMethod>> authMethods;
 	protected String contentType, accept;
 	protected HttpMethod requestMethod;
@@ -52,7 +51,6 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	protected DynamicEndpoint(Builder<T, R> builder) {
 		super(builder.wrapper);
-		applyBasicAuth = builder.applyBasicAuth;
 		authMethods = builder.authMethods;
 		requestMethod = builder.requestMethod;
 		pathGetter = builder.pathGetter;
@@ -90,7 +88,6 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		private final Class<R> responseType;
 		private Collection<Class<? extends AuthMethod>> authMethods;
 		private HttpWrapper wrapper;
-		private boolean applyBasicAuth = false;
 		private String contentType, accept;
 		private HttpMethod requestMethod;
 		private BiFunction<DynamicEndpoint<T, R>, ? super T, String> pathGetter;
@@ -147,15 +144,6 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			return this;
 		}
 
-		public Builder<T, R> applyAsBasicAuth() {
-			return applyAsBasicAuth(true);
-		}
-
-		public Builder<T, R> applyAsBasicAuth(boolean applyBasicAuth) {
-			this.applyBasicAuth = applyBasicAuth;
-			return this;
-		}
-
 		public DynamicEndpoint<T, R> build() {
 			return new DynamicEndpoint<>(this);
 		}
@@ -176,19 +164,6 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	protected final Class<?>[] getAcceptableAuthMethods() {
 		Class<?>[] emptyArray = new Class<?>[0];
 		return authMethods != null ? authMethods.toArray(emptyArray) : emptyArray;
-	}
-
-	@Override
-	protected final RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
-		if (authMethods == null || authMethods.isEmpty()) {
-			return request;
-		}
-		else if (applyBasicAuth) {
-			return getAuthMethod().applyAsBasicAuth(request);
-		}
-		else {
-			return super.applyAuth(request);
-		}
 	}
 
 	private boolean isJsonableArrayResponse() {

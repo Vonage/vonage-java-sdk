@@ -37,7 +37,7 @@ public class NumbersClient {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .responseExceptionType(NumbersResponseException.class)
                         .wrapper(wrapper).requestMethod(method)
-                        .authMethod(TokenAuthMethod.class).applyAsBasicAuth()
+                        .authMethod(TokenAuthMethod.class)
                         .urlFormEncodedContentType(method == HttpMethod.POST)
                         .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig().getRestBaseUri()+ "/" + path)
                 );

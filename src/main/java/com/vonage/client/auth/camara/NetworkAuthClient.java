@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.camara.auth;
+package com.vonage.client.auth.camara;
 
 import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.HttpWrapper;

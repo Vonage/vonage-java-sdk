@@ -43,10 +43,13 @@ public class AuthCollection {
 
     /**
      * Add a new {@link AuthMethod} to the set managed by this AuthCollection.
+     * If an auth method of this type already exists, this method will replace it with
+     * the new provided value.
      *
      * @param auth AuthMethod method to be added to this collection.
      */
     public void add(AuthMethod auth) {
+        authList.remove(auth);
         authList.add(auth);
     }
 

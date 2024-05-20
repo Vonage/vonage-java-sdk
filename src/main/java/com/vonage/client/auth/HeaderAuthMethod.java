@@ -15,12 +15,13 @@
  */
 package com.vonage.client.auth;
 
-public interface AuthMethod extends Comparable<AuthMethod> {
+/**
+ * Base class for auth methods which use the {@code Authorization: } header.
+ *
+ * @since 8.8.0
+ */
+public abstract class HeaderAuthMethod extends AbstractAuthMethod {
 
-    @Override
-    default int compareTo(AuthMethod other) {
-        return Integer.compare(this.getSortKey(), other.getSortKey());
-    }
+    public abstract String getHeaderValue();
 
-    int getSortKey();
 }

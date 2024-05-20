@@ -15,12 +15,6 @@
  */
 package com.vonage.client.auth;
 
-public interface AuthMethod extends Comparable<AuthMethod> {
+public class NetworkAuthClientTest {
 
-    @Override
-    default int compareTo(AuthMethod other) {
-        return Integer.compare(this.getSortKey(), other.getSortKey());
-    }
-
-    int getSortKey();
 }

@@ -13,14 +13,14 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.auth;
+package com.vonage.client.auth.camara;
 
-public interface AuthMethod extends Comparable<AuthMethod> {
+public enum FraudPreventionDetectionScope {
+    CHECK_SIM_SWAP,
+    RETRIEVE_SIM_SWAP_DATE;
 
     @Override
-    default int compareTo(AuthMethod other) {
-        return Integer.compare(this.getSortKey(), other.getSortKey());
+    public String toString() {
+        return name().toLowerCase().replace('_', '-');
     }
-
-    int getSortKey();
 }

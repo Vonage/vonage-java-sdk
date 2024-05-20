@@ -65,7 +65,7 @@ public class AccountClient {
                      boolean signatureAuth, boolean formEncoded, R... type
             ) {
                 super(DynamicEndpoint.<T, R> builder(type)
-                        .wrapper(wrapper).requestMethod(method).applyAsBasicAuth(signatureAuth)
+                        .wrapper(wrapper).requestMethod(method)
                         .authMethod(TokenAuthMethod.class, signatureAuth ? SignatureAuthMethod.class : null)
                         .responseExceptionType(AccountResponseException.class)
                         .urlFormEncodedContentType(formEncoded).pathGetter((de, req) -> {

@@ -103,8 +103,6 @@ public class AbstractMethodTest {
         mockAuthMethods = mock(AuthCollection.class);
         mockAuthMethod = mock(AuthMethod.class);
         mockHttpClient = mock(HttpClient.class);
-        when(mockAuthMethod.apply(any(RequestBuilder.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0, RequestBuilder.class));
         when(mockAuthMethods.getAcceptableAuthMethod(any())).thenReturn(mockAuthMethod);
         when(mockWrapper.getHttpClient()).thenReturn(mockHttpClient);
         when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(basicResponse);
@@ -121,7 +119,6 @@ public class AbstractMethodTest {
                 .setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
 
         when(method.makeRequest(any(String.class))).thenReturn(builder);
-        when(mockAuthMethod.apply(any(RequestBuilder.class))).thenReturn(builder);
         return method;
     }
 
@@ -156,10 +153,8 @@ public class AbstractMethodTest {
     @Test
     public void testApplyAuth() {
         ConcreteMethod method = new ConcreteMethod(mockWrapper);
-
         RequestBuilder request = RequestBuilder.get("url");
-        method.applyAuth(request);
-        verify(mockAuthMethod).apply(request);
+        assertEquals(request, method.applyAuth(request));
     }
 
     @Test
@@ -263,9 +258,7 @@ public class AbstractMethodTest {
                 return builder.setEntity(new StringEntity(request));
             }
         }
-        LocalMethod method = new LocalMethod();
-        when(mockAuthMethod.apply(any(RequestBuilder.class))).thenReturn(builder);
-        return method;
+        return new LocalMethod();
     }
 
     @Test

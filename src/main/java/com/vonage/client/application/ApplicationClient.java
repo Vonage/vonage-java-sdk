@@ -41,7 +41,7 @@ public class ApplicationClient {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .responseExceptionType(ApplicationResponseException.class)
                         .wrapper(wrapper).requestMethod(method)
-                        .authMethod(TokenAuthMethod.class).applyAsBasicAuth()
+                        .authMethod(TokenAuthMethod.class)
                         .pathGetter((de, req) -> {
                             String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v2");
                             String path = base + "/applications";

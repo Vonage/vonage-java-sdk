@@ -13,14 +13,13 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.auth;
 
-public interface AuthMethod extends Comparable<AuthMethod> {
-
-    @Override
-    default int compareTo(AuthMethod other) {
-        return Integer.compare(this.getSortKey(), other.getSortKey());
-    }
-
-    int getSortKey();
-}
+/**
+ * This package contains classes to support usage of the
+ * <a href=https://developer.vonage.com/en/api/camara/auth>Vonage Network Auth API</a>. Please refer to
+ * <a href=https://developer.vonage.com/en/getting-started-network/authentication>the developer documentation</a>
+ * for an overview of the concepts.
+ *
+ * @since 8.8.0
+ */
+package com.vonage.client.auth.camara;

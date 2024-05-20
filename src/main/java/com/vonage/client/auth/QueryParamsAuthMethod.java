@@ -13,26 +13,16 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.camara.auth;
+package com.vonage.client.auth;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
 
-final class TokenRequest implements QueryParamsRequest {
-    private final Map<String, String> params = new LinkedHashMap<>(4);
+/**
+ * Base class for auth methods that are appended to the request's query parameters.
+ *
+ * @since 8.8.0
+ */
+public interface QueryParamsAuthMethod extends AuthMethod {
 
-    TokenRequest(UUID authReqId) {
-        params.put("grant_type", "urn:openid:params:grant-type:ciba");
-        params.put("auth_req_id", "arid/" +
-                Objects.requireNonNull(authReqId, "Auth request ID is required.")
-        );
-    }
-
-    @Override
-    public Map<String, String> makeParams() {
-        return params;
-    }
+    Map<String, String> asQueryParams();
 }

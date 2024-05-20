@@ -22,21 +22,11 @@ import com.vonage.client.voice.CallEvent;
 import com.vonage.client.voice.CallStatus;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PublicKey;
@@ -44,25 +34,9 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.List;
 import java.util.UUID;
 
-public class VonageClientTest {
+public class VonageClientTest extends ClientTest<VonageClient> {
     private static final UUID APPLICATION_ID = UUID.randomUUID();
     private final TestUtils testUtils = new TestUtils();
-
-    private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
-        HttpClient result = mock(HttpClient.class);
-
-        HttpResponse response = mock(HttpResponse.class);
-        StatusLine sl = mock(StatusLine.class);
-        HttpEntity entity = mock(HttpEntity.class);
-
-        when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
-        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
-        when(sl.getStatusCode()).thenReturn(statusCode);
-        when(response.getStatusLine()).thenReturn(sl);
-        when(response.getEntity()).thenReturn(entity);
-
-        return result;
-    }
 
     @Test
     public void testConstructVonageClient() throws Exception {
@@ -161,13 +135,7 @@ public class VonageClientTest {
     public void testApiKeyWithSecret() throws VonageUnacceptableAuthException {
         VonageClient vonageClient = VonageClient.builder().apiKey("api-key").apiSecret("api-secret").build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
-
-        RequestBuilder requestBuilder = RequestBuilder.get();
-        authCollection.getAuth(TokenAuthMethod.class).apply(requestBuilder);
-
-        List<NameValuePair> parameters = requestBuilder.getParameters();
-        assertContainsParam(parameters, "api_key", "api-key");
-        assertContainsParam(parameters, "api_secret", "api-secret");
+        assertTrue(authCollection.hasAuthMethod(TokenAuthMethod.class));
     }
 
     @Test
@@ -254,13 +222,9 @@ public class VonageClientTest {
                 .applicationId(APPLICATION_ID)
                 .privateKeyContents(keyBytes)
                 .build();
+
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
-
-        RequestBuilder requestBuilder = RequestBuilder.get();
-        authCollection.getAuth(JWTAuthMethod.class).apply(requestBuilder);
-
-        assertEquals(1, requestBuilder.getHeaders("Authorization").length);
-        assertEquals("Bearer ", requestBuilder.getFirstHeader("Authorization").getValue().substring(0, 7));
+        assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));
     }
 
     @Test
@@ -270,12 +234,7 @@ public class VonageClientTest {
 
         VonageClient vonageClient = VonageClient.builder().applicationId(APPLICATION_ID).privateKeyContents(key).build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
-
-        RequestBuilder requestBuilder = RequestBuilder.get();
-        authCollection.getAuth(JWTAuthMethod.class).apply(requestBuilder);
-
-        assertEquals(1, requestBuilder.getHeaders("Authorization").length);
-        assertEquals("Bearer ", requestBuilder.getFirstHeader("Authorization").getValue().substring(0, 7));
+        assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));
     }
 
     @Test
@@ -285,12 +244,7 @@ public class VonageClientTest {
                 .privateKeyPath(Paths.get(getClass().getResource("test/keys/application_key").toURI()))
                 .build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
-
-        RequestBuilder requestBuilder = RequestBuilder.get();
-        authCollection.getAuth(JWTAuthMethod.class).apply(requestBuilder);
-
-        assertEquals(1, requestBuilder.getHeaders("Authorization").length);
-        assertEquals("Bearer ", requestBuilder.getFirstHeader("Authorization").getValue().substring(0, 7));
+        assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));
     }
 
     @Test
@@ -300,12 +254,7 @@ public class VonageClientTest {
                 .privateKeyPath(Paths.get(getClass().getResource("test/keys/application_key").toURI()).toString())
                 .build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
-
-        RequestBuilder requestBuilder = RequestBuilder.get();
-        authCollection.getAuth(JWTAuthMethod.class).apply(requestBuilder);
-
-        assertEquals(1, requestBuilder.getHeaders("Authorization").length);
-        assertEquals("Bearer ", requestBuilder.getFirstHeader("Authorization").getValue().substring(0, 7));
+        assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));
     }
 
     @Test
