@@ -19,7 +19,7 @@ import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageClient;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 
 /**
@@ -39,7 +39,7 @@ public class NumberInsight2Client {
 		final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
 			Endpoint(R... type) {
 				super(DynamicEndpoint.<T, R> builder(type)
-					.authMethod(TokenAuthMethod.class)
+					.authMethod(ApiKeyHeaderAuthMethod.class)
 					.responseExceptionType(NumberInsight2ResponseException.class)
 					.requestMethod(HttpMethod.POST).wrapper(wrapper).pathGetter((de, req) ->
 						de.getHttpWrapper().getHttpConfig().getApiBaseUri() + "/v2/ni"

@@ -21,7 +21,7 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.messages.messenger.*;
 import com.vonage.client.messages.mms.MmsAudioRequest;
@@ -182,7 +182,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 
 			@Override
 			protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-				return Arrays.asList(JWTAuthMethod.class, TokenAuthMethod.class);
+				return Arrays.asList(JWTAuthMethod.class, ApiKeyHeaderAuthMethod.class);
 			}
 
 			@Override

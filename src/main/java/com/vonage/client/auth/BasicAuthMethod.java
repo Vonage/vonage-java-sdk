@@ -24,6 +24,7 @@ public abstract class BasicAuthMethod extends HeaderAuthMethod {
 
     protected abstract String getBasicToken();
 
+    @Override
     public final String getHeaderValue() {
         return "Basic " + getBasicToken();
     }

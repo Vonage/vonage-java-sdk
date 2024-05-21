@@ -22,12 +22,12 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Base64;
 
-public class TokenAuthMethodTest {
+public class ApiKeySecretAuthMethodTest {
 
     @Test
     public void testApplyApiKeyAndSecret() {
         String key = "e4e5b6c3", secret = "0123456789abcdef";
-        var auth = new TokenAuthMethod(key, secret);
+        var auth = new ApiKeyHeaderAuthMethod(key, secret);
         String payload = "{\"name\":\"app name\"}";
         RequestBuilder requestBuilder = RequestBuilder.get().setEntity(
                 new StringEntity(payload, ContentType.APPLICATION_JSON)
@@ -43,10 +43,14 @@ public class TokenAuthMethodTest {
         assertEquals(key, split[0]);
         assertEquals(secret, split[1]);
 
-        var params = auth.asQueryParams();
+        var params = auth.asQueryParams().getQueryParams();
         assertNotNull(params);
         assertEquals(2, params.size());
         assertEquals(key, params.get("api_key"));
         assertEquals(secret, params.get("api_secret"));
+
+        var qpAuth = new ApiKeyQueryParamsAuthMethod(key, secret);
+        assertEquals(qpAuth, auth.asQueryParams());
+        assertEquals(auth, qpAuth.asBasicHeader());
     }
 }

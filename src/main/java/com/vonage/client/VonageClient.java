@@ -412,66 +412,18 @@ public class VonageClient {
          *                                      generating an {@link JWTAuthMethod} with the provided credentials.
          */
         public VonageClient build() {
-            authCollection = generateAuthCollection(applicationId,
-                    apiKey,
-                    apiSecret,
-                    signatureSecret,
-                    privateKeyContents,
-                    hashType);
+            try {
+                authCollection = new AuthCollection(
+                        applicationId, privateKeyContents,
+                        apiKey, apiSecret,
+                        hashType, signatureSecret
+                );
+            }
+            catch (IllegalStateException ex) {
+                throw new VonageClientCreationException("Failed to generate authentication methods.", ex);
+            }
           
             return new VonageClient(this);
-        }
-
-        private AuthCollection generateAuthCollection(String applicationId,
-                                                      String key,
-                                                      String secret,
-                                                      String signature,
-                                                      byte[] privateKeyContents,
-                                                      HashUtil.HashType hashType) {
-            AuthCollection authMethods = new AuthCollection();
-
-            try {
-                validateAuthParameters(applicationId, key, secret, signature, privateKeyContents);
-            } catch (IllegalStateException e) {
-                throw new VonageClientCreationException("Failed to generate authentication methods.", e);
-            }
-
-            if (key != null && secret != null) {
-                authMethods.add(new TokenAuthMethod(key, secret));
-            }
-
-            if (key != null && signature != null) {
-                authMethods.add(new SignatureAuthMethod(key, signature, hashType));
-            }
-
-            if (applicationId != null && privateKeyContents != null) {
-                authMethods.add(new JWTAuthMethod(applicationId, privateKeyContents));
-            }
-
-            return authMethods;
-        }
-
-        private void validateAuthParameters(String applicationId, String key, String secret, String signature, byte[] privateKeyContents) {
-            if (key != null && secret == null && signature == null) {
-                throw new IllegalStateException(
-                        "You must provide an API secret or signature secret in addition to your API key.");
-            }
-
-            if (secret != null && key == null) {
-                throw new IllegalStateException("You must provide an API key in addition to your API secret.");
-            }
-
-            if (signature != null && key == null) {
-                throw new IllegalStateException("You must provide an API key in addition to your signature secret.");
-            }
-
-            if (applicationId == null && privateKeyContents != null) {
-                throw new IllegalStateException("You must provide an application ID in addition to your private key.");
-            }
-
-            if (applicationId != null && privateKeyContents == null) {
-                throw new IllegalStateException("You must provide a private key in addition to your application id.");
-            }
         }
     }
 }

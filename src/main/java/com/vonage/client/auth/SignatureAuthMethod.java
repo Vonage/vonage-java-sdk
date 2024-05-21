@@ -20,7 +20,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import java.util.List;
 
-public class SignatureAuthMethod extends AbstractAuthMethod {
+public class SignatureAuthMethod extends AuthMethod {
     private static final int SORT_KEY = 20;
 
     private final String apiKey, apiSecret;

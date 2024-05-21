@@ -18,7 +18,7 @@ package com.vonage.client.subaccounts;
 import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.HttpWrapper;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +44,7 @@ public class SubaccountsClient {
 			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
 				super(DynamicEndpoint.<T, R> builder(type)
 						.responseExceptionType(SubaccountsResponseException.class)
-						.wrapper(wrapper).requestMethod(method).authMethod(TokenAuthMethod.class)
+						.wrapper(wrapper).requestMethod(method).authMethod(ApiKeyHeaderAuthMethod.class)
 						.pathGetter((de, req) -> {
 								if (req instanceof CreateSubaccountRequest) {
 									CreateSubaccountRequest csr = (CreateSubaccountRequest) req;

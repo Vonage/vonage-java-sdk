@@ -16,7 +16,7 @@
 package com.vonage.client.numbers;
 
 import com.vonage.client.*;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 
 /**
@@ -37,7 +37,7 @@ public class NumbersClient {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .responseExceptionType(NumbersResponseException.class)
                         .wrapper(wrapper).requestMethod(method)
-                        .authMethod(TokenAuthMethod.class)
+                        .authMethod(ApiKeyHeaderAuthMethod.class)
                         .urlFormEncodedContentType(method == HttpMethod.POST)
                         .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig().getRestBaseUri()+ "/" + path)
                 );

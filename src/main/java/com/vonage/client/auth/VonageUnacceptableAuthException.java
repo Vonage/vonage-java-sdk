@@ -24,7 +24,7 @@ public class VonageUnacceptableAuthException extends VonageAuthException {
     private final Iterable<Class<? extends AuthMethod>> acceptableAuthClasses;
 
     static {
-        AUTH_DESCRIPTION_MAP.put(TokenAuthMethod.class, "API Key and Secret");
+        AUTH_DESCRIPTION_MAP.put(ApiKeyHeaderAuthMethod.class, "API Key and Secret");
         AUTH_DESCRIPTION_MAP.put(SignatureAuthMethod.class, "API Key and Signature Secret");
         AUTH_DESCRIPTION_MAP.put(JWTAuthMethod.class, "Application ID and Private Key");
     }

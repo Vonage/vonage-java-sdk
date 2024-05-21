@@ -118,7 +118,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
             return request.setHeader("Authorization", ((HeaderAuthMethod) am).getHeaderValue());
         }
         else if (am instanceof QueryParamsAuthMethod) {
-            ((QueryParamsAuthMethod) am).asQueryParams().forEach(request::addParameter);
+            ((QueryParamsAuthMethod) am).getQueryParams().forEach(request::addParameter);
         }
         return request;
     }
@@ -167,8 +167,8 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
         if (am instanceof JWTAuthMethod) {
             return ((JWTAuthMethod) am).getApplicationId();
         }
-        if (am instanceof TokenAuthMethod) {
-            return ((TokenAuthMethod) am).getApiKey();
+        if (am instanceof ApiKeyHeaderAuthMethod) {
+            return ((ApiKeyHeaderAuthMethod) am).getApiKey();
         }
         if (am instanceof SignatureAuthMethod) {
             return ((SignatureAuthMethod) am).getApiKey();

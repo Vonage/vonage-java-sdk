@@ -16,15 +16,15 @@
 package com.vonage.client.sms;
 
 import com.vonage.client.*;
+import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.SignatureAuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.sms.messages.BinaryMessage;
 import com.vonage.client.sms.messages.Message;
 import com.vonage.client.sms.messages.TextMessage;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,7 +34,6 @@ import java.util.Map;
 public class SmsClientTest extends ClientTest<SmsClient> {
 
     public SmsClientTest() {
-        wrapper = new HttpWrapper(new TokenAuthMethod("not-an-api-key", "secret"));
         client = new SmsClient(wrapper);
     }
 
@@ -96,7 +95,7 @@ public class SmsClientTest extends ClientTest<SmsClient> {
 
             @Override
             protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-                return Arrays.asList(SignatureAuthMethod.class, TokenAuthMethod.class);
+                return Arrays.asList(SignatureAuthMethod.class, ApiKeyQueryParamsAuthMethod.class);
             }
 
             @Override

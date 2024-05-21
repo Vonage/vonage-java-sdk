@@ -23,7 +23,7 @@ abstract class VideoEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, R>
 
 	@Override
 	protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-		return Arrays.asList(JWTAuthMethod.class, TokenAuthMethod.class);
+		return Arrays.asList(JWTAuthMethod.class, ApiKeyHeaderAuthMethod.class);
 	}
 
 	@Override

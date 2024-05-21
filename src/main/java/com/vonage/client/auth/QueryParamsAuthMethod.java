@@ -22,7 +22,7 @@ import java.util.Map;
  *
  * @since 8.8.0
  */
-public interface QueryParamsAuthMethod extends AuthMethod {
+public abstract class QueryParamsAuthMethod extends AuthMethod {
 
-    Map<String, String> asQueryParams();
+    public abstract Map<String, String> getQueryParams();
 }

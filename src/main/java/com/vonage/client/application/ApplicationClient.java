@@ -16,7 +16,7 @@
 package com.vonage.client.application;
 
 import com.vonage.client.*;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.List;
 import java.util.Objects;
@@ -41,7 +41,7 @@ public class ApplicationClient {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .responseExceptionType(ApplicationResponseException.class)
                         .wrapper(wrapper).requestMethod(method)
-                        .authMethod(TokenAuthMethod.class)
+                        .authMethod(ApiKeyHeaderAuthMethod.class)
                         .pathGetter((de, req) -> {
                             String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v2");
                             String path = base + "/applications";

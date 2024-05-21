@@ -15,13 +15,15 @@
  */
 package com.vonage.client.redact;
 
-import com.vonage.client.*;
+import com.vonage.client.ClientTest;
+import com.vonage.client.DynamicEndpointTestSpec;
+import com.vonage.client.RestEndpoint;
+import com.vonage.client.VonageBadRequestException;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.AuthMethod;
-import com.vonage.client.auth.SignatureAuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.*;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -107,7 +109,7 @@ public class RedactClientTest extends ClientTest<RedactClient> {
 
             @Override
             protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-                return Arrays.asList(SignatureAuthMethod.class, TokenAuthMethod.class);
+                return Arrays.asList(ApiKeyHeaderAuthMethod.class);
             }
 
             @Override

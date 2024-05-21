@@ -16,8 +16,7 @@
 package com.vonage.client.redact;
 
 import com.vonage.client.*;
-import com.vonage.client.auth.SignatureAuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 
 /**
@@ -34,7 +33,7 @@ public class RedactClient {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .wrapper(wrapper).requestMethod(HttpMethod.POST)
                         .responseExceptionType(VonageBadRequestException.class)
-                        .authMethod(SignatureAuthMethod.class, TokenAuthMethod.class)
+                        .authMethod(ApiKeyHeaderAuthMethod.class)
                         .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig()
                                 .getVersionedApiBaseUri("v1") + "/redact/transaction"
                         )

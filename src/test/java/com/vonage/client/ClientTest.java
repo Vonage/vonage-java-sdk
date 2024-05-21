@@ -15,8 +15,9 @@
  */
 package com.vonage.client;
 
+import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -34,7 +35,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public abstract class ClientTest<T> {
-    protected static final String
+    public static final String
             APPLICATION_ID = UUID.randomUUID().toString(),
             API_KEY = "a1b2c3d4", API_SECRET = "1234567890abcdef",
             TEST_REASON = "Test reason";
@@ -44,7 +45,8 @@ public abstract class ClientTest<T> {
 
     protected ClientTest() {
         wrapper = new HttpWrapper(
-                new TokenAuthMethod(API_KEY, API_SECRET),
+                new ApiKeyHeaderAuthMethod(API_KEY, API_SECRET),
+                new ApiKeyQueryParamsAuthMethod(API_KEY, API_SECRET),
                 new JWTAuthMethod(APPLICATION_ID, new byte[0])
         );
     }

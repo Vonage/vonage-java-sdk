@@ -17,7 +17,7 @@ package com.vonage.client.account;
 
 import com.vonage.client.*;
 import com.vonage.client.auth.SignatureAuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.List;
 import java.util.Objects;
@@ -50,7 +50,7 @@ public class AccountClient {
     @SuppressWarnings("unchecked")
     public AccountClient(HttpWrapper wrapper) {
         super();
-        apiKeyGetter = () -> wrapper.getAuthCollection().getAuth(TokenAuthMethod.class).getApiKey();
+        apiKeyGetter = () -> wrapper.getAuthCollection().getAuth(ApiKeyHeaderAuthMethod.class).getApiKey();
 
         class Endpoint<T, R> extends DynamicEndpoint<T, R> {
             static final String SECRETS_PATH = "s/%s/secrets";
@@ -66,7 +66,7 @@ public class AccountClient {
             ) {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .wrapper(wrapper).requestMethod(method)
-                        .authMethod(TokenAuthMethod.class, signatureAuth ? SignatureAuthMethod.class : null)
+                        .authMethod(ApiKeyHeaderAuthMethod.class, signatureAuth ? SignatureAuthMethod.class : null)
                         .responseExceptionType(AccountResponseException.class)
                         .urlFormEncodedContentType(formEncoded).pathGetter((de, req) -> {
                                 HttpConfig config = de.getHttpWrapper().getHttpConfig();

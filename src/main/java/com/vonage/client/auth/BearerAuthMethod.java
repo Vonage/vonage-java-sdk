@@ -24,6 +24,7 @@ public abstract class BearerAuthMethod extends HeaderAuthMethod {
 
     protected abstract String getBearerToken();
 
+    @Override
     public final String getHeaderValue() {
         return "Bearer " + getBearerToken();
     }

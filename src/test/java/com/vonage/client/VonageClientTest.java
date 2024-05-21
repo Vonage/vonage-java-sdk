@@ -135,7 +135,7 @@ public class VonageClientTest extends ClientTest<VonageClient> {
     public void testApiKeyWithSecret() throws VonageUnacceptableAuthException {
         VonageClient vonageClient = VonageClient.builder().apiKey("api-key").apiSecret("api-secret").build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
-        assertTrue(authCollection.hasAuthMethod(TokenAuthMethod.class));
+        assertTrue(authCollection.hasAuthMethod(ApiKeyHeaderAuthMethod.class));
     }
 
     @Test

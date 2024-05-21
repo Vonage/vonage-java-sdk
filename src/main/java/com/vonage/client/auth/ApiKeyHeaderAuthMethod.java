@@ -16,19 +16,18 @@
 package com.vonage.client.auth;
 
 import org.apache.commons.codec.binary.Base64;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
- * This AuthMethod uses API key and secret either as URL parameters, or as
- * {@code Basic} in the header.
+ * API key and secret in the header.
+ *
+ * @since 8.8.0
  */
-public class TokenAuthMethod extends BasicAuthMethod implements QueryParamsAuthMethod {
-    private static final int SORT_KEY = 30;
+public class ApiKeyHeaderAuthMethod extends BasicAuthMethod {
+    private static final int SORT_KEY = 40;
 
     private final String apiKey, apiSecret;
 
-    public TokenAuthMethod(String apiKey, String apiSecret) {
+    public ApiKeyHeaderAuthMethod(String apiKey, String apiSecret) {
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
     }
@@ -37,12 +36,13 @@ public class TokenAuthMethod extends BasicAuthMethod implements QueryParamsAuthM
         return apiKey;
     }
 
-    @Override
-    public Map<String, String> asQueryParams() {
-        Map<String, String> params = new LinkedHashMap<>(4);
-        params.put("api_key", apiKey);
-        params.put("api_secret", apiSecret);
-        return params;
+    /**
+     * Converts this to a {@linkplain QueryParamsAuthMethod}.
+     *
+     * @return A new {@linkplain ApiKeyQueryParamsAuthMethod} with this object's API key and secret.
+     */
+    public QueryParamsAuthMethod asQueryParams() {
+        return new ApiKeyQueryParamsAuthMethod(apiKey, apiSecret);
     }
 
     @Override
