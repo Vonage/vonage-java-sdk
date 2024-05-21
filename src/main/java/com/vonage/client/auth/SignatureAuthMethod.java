@@ -16,9 +16,7 @@
 package com.vonage.client.auth;
 
 import com.vonage.client.auth.hashutils.HashUtil;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.methods.RequestBuilder;
-import java.util.List;
+import java.util.Map;
 
 public class SignatureAuthMethod extends AuthMethod {
     private static final int SORT_KEY = 20;
@@ -45,12 +43,8 @@ public class SignatureAuthMethod extends AuthMethod {
         return SORT_KEY;
     }
 
-    public RequestBuilder apply(RequestBuilder request) {
-        request.addParameter("api_key", apiKey);
-        List<NameValuePair> params = request.getParameters();
+    public void apply(Map<String, String> params) {
+        params.put("api_key", apiKey);
         RequestSigning.constructSignatureForRequestParameters(params, apiSecret, hashType);
-        int last = params.size() - 1;
-        request.addParameters(params.get(last), params.get(last - 1));
-        return request;
     }
 }

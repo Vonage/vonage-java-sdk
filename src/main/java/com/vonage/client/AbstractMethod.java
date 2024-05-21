@@ -18,6 +18,7 @@ package com.vonage.client;
 import com.vonage.client.auth.*;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -25,7 +26,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -110,9 +113,17 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
      */
     protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
         AuthMethod am = getAuthMethod();
+
         if (am instanceof SignatureAuthMethod) {
-            // TODO sort out this complete mess of an AuthMethod
-            return ((SignatureAuthMethod) am).apply(request);
+            Map<String, String> params = request.getParameters().stream().collect(Collectors.toMap(
+                    NameValuePair::getName,
+                    NameValuePair::getValue,
+                    (v1, v2) -> v1,
+                    TreeMap::new
+            ));
+            ((SignatureAuthMethod) am).apply(params);
+            request.getParameters().clear();
+            params.forEach(request::addParameter);
         }
         else if (am instanceof HeaderAuthMethod) {
             return request.setHeader("Authorization", ((HeaderAuthMethod) am).getHeaderValue());
