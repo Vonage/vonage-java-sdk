@@ -182,7 +182,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	}
 
 	@Override
-	public final RequestBuilder makeRequest(T requestBody) {
+	protected final RequestBuilder makeRequest(T requestBody) {
 		if (requestBody instanceof Jsonable && responseType.isAssignableFrom(requestBody.getClass())) {
 			cachedRequestBody = requestBody;
 		}
@@ -227,7 +227,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	}
 
 	@Override
-	public final R parseResponse(HttpResponse response) throws IOException {
+	protected final R parseResponse(HttpResponse response) throws IOException {
 		int statusCode = response.getStatusLine().getStatusCode();
 		try {
 			if (statusCode >= 200 && statusCode < 300) {

@@ -170,7 +170,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
      *
      * @throws UnsupportedEncodingException if UTF-8 encoding is not supported by the JVM
      */
-    public abstract RequestBuilder makeRequest(RequestT request) throws UnsupportedEncodingException;
+    protected abstract RequestBuilder makeRequest(RequestT request) throws UnsupportedEncodingException;
 
     /**
      * Construct a ResultT representing the contents of the HTTP response returned from the Vonage Voice API.
@@ -181,5 +181,5 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
      *
      * @throws IOException if a problem occurs parsing the response
      */
-    public abstract ResultT parseResponse(HttpResponse response) throws IOException;
+    protected abstract ResultT parseResponse(HttpResponse response) throws IOException;
 }
