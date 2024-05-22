@@ -41,6 +41,7 @@ import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
@@ -52,8 +53,8 @@ public class AbstractMethodTest {
         }
 
         @Override
-        protected Class<?>[] getAcceptableAuthMethods() {
-            return new Class<?>[]{JWTAuthMethod.class};
+        protected Set<Class<? extends AuthMethod>> getAcceptableAuthMethods() {
+            return Set.of(JWTAuthMethod.class);
         }
 
         @Override

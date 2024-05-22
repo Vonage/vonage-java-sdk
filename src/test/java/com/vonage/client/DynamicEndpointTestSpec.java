@@ -222,7 +222,10 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 	}
 
 	protected void assertAcceptableAuthMethods() {
-		assertArrayEquals(expectedAuthMethods().toArray(), endpointAsAbstractMethod().getAcceptableAuthMethods());
+		assertArrayEquals(
+				expectedAuthMethods().toArray(),
+				endpointAsAbstractMethod().getAcceptableAuthMethods().toArray()
+		);
 	}
 
 	protected void assertErrorResponse(int statusCode) {

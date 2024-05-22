@@ -26,10 +26,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
@@ -41,7 +38,7 @@ import java.util.function.Consumer;
  */
 @SuppressWarnings("unchecked")
 public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
-	protected Collection<Class<? extends AuthMethod>> authMethods;
+	protected Set<Class<? extends AuthMethod>> authMethods;
 	protected String contentType, accept;
 	protected HttpMethod requestMethod;
 	protected BiFunction<DynamicEndpoint<T, R>, ? super T, String> pathGetter;
@@ -86,7 +83,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	public static final class Builder<T, R> {
 		private final Class<R> responseType;
-		private Collection<Class<? extends AuthMethod>> authMethods;
+		private Set<Class<? extends AuthMethod>> authMethods;
 		private HttpWrapper wrapper;
 		private String contentType, accept;
 		private HttpMethod requestMethod;
@@ -113,7 +110,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 
 		public Builder<T, R> authMethod(Class<? extends AuthMethod> primary, Class<? extends AuthMethod>... others) {
-			authMethods = new ArrayList<>(2);
+			authMethods = new LinkedHashSet<>(2);
 			authMethods.add(Objects.requireNonNull(primary, "Primary auth method cannot be null"));
 			if (others != null) {
 				for (Class<? extends AuthMethod> amc : others) {
@@ -161,9 +158,8 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	}
 
 	@Override
-	protected final Class<?>[] getAcceptableAuthMethods() {
-		Class<?>[] emptyArray = new Class<?>[0];
-		return authMethods != null ? authMethods.toArray(emptyArray) : emptyArray;
+	protected final Set<Class<? extends AuthMethod>> getAcceptableAuthMethods() {
+		return authMethods;
 	}
 
 	private boolean isJsonableArrayResponse() {

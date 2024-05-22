@@ -15,11 +15,8 @@
  */
 package com.vonage.client.auth;
 
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.util.Base64;
 
 public class ApiKeySecretAuthMethodTest {
@@ -28,10 +25,6 @@ public class ApiKeySecretAuthMethodTest {
     public void testApplyApiKeyAndSecret() {
         String key = "e4e5b6c3", secret = "0123456789abcdef";
         var auth = new ApiKeyHeaderAuthMethod(key, secret);
-        String payload = "{\"name\":\"app name\"}";
-        RequestBuilder requestBuilder = RequestBuilder.get().setEntity(
-                new StringEntity(payload, ContentType.APPLICATION_JSON)
-        );
 
         var header = auth.getHeaderValue();
         var prefix = "Basic ";

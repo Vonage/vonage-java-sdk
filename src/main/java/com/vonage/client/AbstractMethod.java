@@ -25,11 +25,10 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 /**
  * Abstract class to assist in implementing a call against a REST endpoint.
@@ -50,9 +49,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
     }
 
     protected static final BasicResponseHandler basicResponseHandler = new BasicResponseHandler();
-
     protected final HttpWrapper httpWrapper;
-    private Set<Class<? extends AuthMethod>> acceptable;
 
     public AbstractMethod(HttpWrapper httpWrapper) {
         this.httpWrapper = httpWrapper;
@@ -115,15 +112,12 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
         AuthMethod am = getAuthMethod();
 
         if (am instanceof SignatureAuthMethod) {
-            Map<String, String> params = request.getParameters().stream().collect(Collectors.toMap(
-                    NameValuePair::getName,
-                    NameValuePair::getValue,
-                    (v1, v2) -> v1,
-                    TreeMap::new
-            ));
-            ((SignatureAuthMethod) am).apply(params);
-            request.getParameters().clear();
-            params.forEach(request::addParameter);
+            Map<String, String> paramsMap = new TreeMap<>();
+            List<NameValuePair> reqParams = request.getParameters();
+            reqParams.forEach(nvp -> paramsMap.put(nvp.getName(), nvp.getValue()));
+            ((SignatureAuthMethod) am).apply(paramsMap);
+            reqParams.clear();
+            paramsMap.forEach(request::addParameter);
         }
         else if (am instanceof HeaderAuthMethod) {
             return request.setHeader("Authorization", ((HeaderAuthMethod) am).getHeaderValue());
@@ -135,35 +129,13 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
     }
 
     /**
-     * Utility method for obtaining an appropriate {@link AuthMethod} for this call.
-     *
-     * @param acceptableAuthMethods an array of classes, representing authentication methods that are acceptable for
-     *                              this endpoint
-     *
-     * @return An AuthMethod created from one of the provided acceptableAuthMethods.
-     *
-     * @throws VonageClientException If no AuthMethod is available from the provided array of acceptableAuthMethods.
-     */
-    @SuppressWarnings("unchecked")
-    private AuthMethod getAuthMethod(Class<?>[] acceptableAuthMethods) throws VonageClientException {
-        if (acceptable == null) {
-            acceptable = Arrays.stream(acceptableAuthMethods)
-                    .filter(AuthMethod.class::isAssignableFrom)
-                    .map(c -> (Class<? extends AuthMethod>) c)
-                    .collect(Collectors.toSet());
-        }
-
-        return httpWrapper.getAuthCollection().getAcceptableAuthMethod(acceptable);
-    }
-
-    /**
-     * Gets the highest priority available authentication method according to {@link AuthMethod#getSortKey()}.
+     * Gets the highest priority available authentication method according to its sort key.
      *
      * @return An AuthMethod created from the accepted auth methods.
      * @throws VonageUnexpectedException If no AuthMethod is available.
      */
     protected AuthMethod getAuthMethod() throws VonageUnexpectedException {
-        return getAuthMethod(getAcceptableAuthMethods());
+        return httpWrapper.getAuthCollection().getAcceptableAuthMethod(getAcceptableAuthMethods());
     }
 
     /**
@@ -187,7 +159,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
         throw new IllegalStateException(am.getClass().getSimpleName() + " does not have API key.");
     }
 
-    protected abstract Class<?>[] getAcceptableAuthMethods();
+    protected abstract Set<Class<? extends AuthMethod>> getAcceptableAuthMethods();
 
     /**
      * Construct and return a RequestBuilder instance from the provided request.
