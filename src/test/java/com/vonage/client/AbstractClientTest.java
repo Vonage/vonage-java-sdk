@@ -18,6 +18,8 @@ package com.vonage.client;
 import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
+import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.hashutils.HashUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -30,24 +32,19 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public abstract class AbstractClientTest<T> {
-    public static final String
-            APPLICATION_ID = UUID.randomUUID().toString(),
-            API_KEY = "a1b2c3d4", API_SECRET = "1234567890abcdef",
-            TEST_REASON = "Test reason";
-
     protected HttpWrapper wrapper;
     protected T client;
 
     protected AbstractClientTest() {
         wrapper = new HttpWrapper(
-                new ApiKeyHeaderAuthMethod(API_KEY, API_SECRET),
-                new ApiKeyQueryParamsAuthMethod(API_KEY, API_SECRET),
-                new JWTAuthMethod(APPLICATION_ID, new byte[0])
+                new ApiKeyHeaderAuthMethod(TestUtils.API_KEY, TestUtils.API_SECRET),
+                new ApiKeyQueryParamsAuthMethod(TestUtils.API_KEY, TestUtils.API_SECRET),
+                new SignatureAuthMethod(TestUtils.API_KEY, TestUtils.SIGNATURE_SECRET, HashUtil.HashType.HMAC_SHA256),
+                new JWTAuthMethod(TestUtils.APPLICATION_ID, new byte[0])
         );
     }
 
@@ -67,7 +64,7 @@ public abstract class AbstractClientTest<T> {
         InputStream[] contentsEncoded = Arrays.stream(additionalReturns).map(transformation).toArray(InputStream[]::new);
         when(entity.getContent()).thenReturn(transformation.apply(content), contentsEncoded);
         when(sl.getStatusCode()).thenReturn(statusCode);
-        when(sl.getReasonPhrase()).thenReturn(TEST_REASON);
+        when(sl.getReasonPhrase()).thenReturn(TestUtils.TEST_REASON);
         when(response.getStatusLine()).thenReturn(sl);
         when(response.getEntity()).thenReturn(entity);
 
@@ -161,10 +158,10 @@ public abstract class AbstractClientTest<T> {
         catch (Throwable ex) {
             assertEquals(exClass, ex.getClass(), failPrefix + ex.getClass());
             if (expectedResponse.getTitle() == null) {
-                expectedResponse.title = TEST_REASON;
+                expectedResponse.title = TestUtils.TEST_REASON;
             }
             assertEquals(expectedResponse, ex);
-            String actualJson = ((E) ex).toJson().replace("\"title\":\""+ TEST_REASON +"\",", "");
+            String actualJson = ((E) ex).toJson().replace("\"title\":\""+ TestUtils.TEST_REASON +"\",", "");
             assertEquals(expectedJson, actualJson);
         }
         return expectedResponse;

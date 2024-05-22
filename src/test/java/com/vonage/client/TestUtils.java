@@ -34,6 +34,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class TestUtils {
+    public static final String
+            APPLICATION_ID = UUID.randomUUID().toString(),
+            API_KEY = "a1b2c3d4",
+            API_SECRET = "1234567890abcdef",
+            SIGNATURE_SECRET = "kTCRawcijyNTfQ1sNqVrz3ZDyRQRZXoL8IhaYTrMxKg153UcHT",
+            TEST_BASE_URI = "http://localhost:8081",
+            TEST_REASON = "Test reason";
+
+    public static final HttpConfig TEST_HTTP_CONFIG = HttpConfig.builder().baseUri(TEST_BASE_URI).build();
 
     public byte[] loadKey(String path) throws IOException {
         int size = 1024;

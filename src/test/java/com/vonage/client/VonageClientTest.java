@@ -15,8 +15,10 @@
  */
 package com.vonage.client;
 
+import static com.vonage.client.TestUtils.*;
 import com.vonage.client.auth.*;
 import com.vonage.client.auth.hashutils.HashUtil;
+import com.vonage.client.sms.messages.TextMessage;
 import com.vonage.client.voice.Call;
 import com.vonage.client.voice.CallEvent;
 import com.vonage.client.voice.CallStatus;
@@ -30,13 +32,43 @@ import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class VonageClientTest extends AbstractClientTest<VonageClient> {
-    private static final UUID APPLICATION_ID = UUID.randomUUID();
     private final TestUtils testUtils = new TestUtils();
 
     final String key = "api-key", secret = "api-secret";
+
+    @Test
+    public void testSendSignedSms() throws Exception {
+        String from = "Nexmo", to = "447900000001", text = "V for Vonage!",
+                url = "/sms/json", expectedResponseBody = """
+                {
+                   "message-count": "1",
+                   "messages": [
+                      {
+                         "to": "447700900001",
+                         "message-id": "aaaaaaaa-bbbb-cccc-dddd-0123456789ab",
+                         "status": "0",
+                         "remaining-balance": "3.14159265",
+                         "message-price": "0.03330000",
+                         "network": "12345",
+                         "client-ref": "my-personal-reference",
+                         "account-ref": "customer1234"
+                      }
+                   ]
+                }""";
+
+        var client = VonageClient.builder()
+                .apiKey(API_KEY).signatureSecret(SIGNATURE_SECRET)
+                .httpClient(stubHttpClient(200, expectedResponseBody))
+                .build();
+
+        var actualResponse = client.getSmsClient().submitMessage(new TextMessage(from, to, text));
+        assertNotNull(actualResponse);
+        assertEquals(1, actualResponse.getMessageCount());
+        var responseMessage = actualResponse.getMessages().getFirst();
+        assertNotNull(responseMessage);
+    }
 
     @Test
     public void testConstructVonageClient() throws Exception {
@@ -93,7 +125,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
 
         Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(constructedToken).getPayload();
 
-        assertEquals(APPLICATION_ID.toString(), claims.get("application_id"));
+        assertEquals(APPLICATION_ID, claims.get("application_id"));
     }
 
     @Test

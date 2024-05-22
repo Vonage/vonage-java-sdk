@@ -202,7 +202,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 
 			@Override
 			protected String expectedEndpointUri(UpdateSubaccountRequest request) {
-				return "/accounts/"+ API_KEY +"/subaccounts/"+request.subaccountApiKey;
+				return "/accounts/"+ TestUtils.API_KEY +"/subaccounts/"+request.subaccountApiKey;
 			}
 
 			@Override
@@ -251,7 +251,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 
 			@Override
 			protected String expectedEndpointUri(Void request) {
-				return "/accounts/"+ API_KEY +"/subaccounts";
+				return "/accounts/"+ TestUtils.API_KEY +"/subaccounts";
 			}
 
 			@Override
@@ -284,7 +284,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 
 			@Override
 			protected String expectedEndpointUri(String request) {
-				return "/accounts/"+ API_KEY +"/subaccounts/"+request;
+				return "/accounts/"+ TestUtils.API_KEY +"/subaccounts/"+request;
 			}
 
 			@Override
@@ -332,7 +332,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 			protected String expectedEndpointUri(ListTransfersFilter request) {
 				assertNotNull(request.getStartDate());
 				assertNotNull(request.getEndDate());
-				return "/accounts/"+ API_KEY +"/credit-transfers";
+				return "/accounts/"+ TestUtils.API_KEY +"/credit-transfers";
 			}
 
 			@Override
@@ -377,7 +377,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 				assertNotNull(request.getStartDate());
 				assertNull(request.getEndDate());
 				assertNull(request.getSubaccount());
-				return "/accounts/"+ API_KEY +"/balance-transfers";
+				return "/accounts/"+ TestUtils.API_KEY +"/balance-transfers";
 			}
 
 			@Override
@@ -400,7 +400,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 
 		@Override
 		protected String expectedEndpointUri(MoneyTransfer request) {
-			return "/accounts/"+ API_KEY +"/"+name()+"-transfers";
+			return "/accounts/"+ TestUtils.API_KEY +"/"+name()+"-transfers";
 		}
 
 		@Override
@@ -514,7 +514,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 
 			@Override
 			protected String expectedEndpointUri(NumberTransfer request) {
-				return "/accounts/"+ API_KEY +"/transfer-number";
+				return "/accounts/"+ TestUtils.API_KEY +"/transfer-number";
 			}
 
 			@Override
