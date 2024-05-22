@@ -15,7 +15,7 @@
  */
 package com.vonage.client.auth;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.TestUtils;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,8 +28,8 @@ public class AuthCollectionTest {
             TOKEN_AUTH_CLASS_SET = Collections.singleton(ApiKeyHeaderAuthMethod.class);
 
     final byte[] privateKeyContents = new TestUtils().loadKey("test/keys/application_key");
-    final String applicationId = ClientTest.APPLICATION_ID,
-            apiKey = ClientTest.API_KEY, apiSecret = ClientTest.API_SECRET;
+    final String applicationId = AbstractClientTest.APPLICATION_ID,
+            apiKey = AbstractClientTest.API_KEY, apiSecret = AbstractClientTest.API_SECRET;
 
     final JWTAuthMethod jwtAuth = new JWTAuthMethod(applicationId, privateKeyContents);
 

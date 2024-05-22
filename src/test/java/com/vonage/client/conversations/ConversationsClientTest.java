@@ -17,7 +17,7 @@ package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
@@ -38,7 +38,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class ConversationsClientTest extends ClientTest<ConversationsClient> {
+public class ConversationsClientTest extends AbstractClientTest<ConversationsClient> {
 	static final Random RANDOM = new Random();
 	static final boolean IS_SYSTEM = false, EXCLUDE_DELETED_EVENTS = true,
 			AUDIO = true, AUDIO_EARMUFFED = false, AUDIO_MUTED = true, AUDIO_ENABLED = true;

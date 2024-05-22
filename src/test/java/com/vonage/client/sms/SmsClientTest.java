@@ -31,7 +31,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class SmsClientTest extends ClientTest<SmsClient> {
+public class SmsClientTest extends AbstractClientTest<SmsClient> {
 
     public SmsClientTest() {
         client = new SmsClient(wrapper);

@@ -15,7 +15,7 @@
  */
 package com.vonage.client.users;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
 import com.vonage.client.common.HalLinks;
@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class UsersClientTest extends ClientTest<UsersClient> {
+public class UsersClientTest extends AbstractClientTest<UsersClient> {
     static final String SAMPLE_USER_ID = "USR-" + UUID.randomUUID(),
             SAMPLE_USER = "{\n" +
                     "   \"id\": \""+SAMPLE_USER_ID+"\",\n" +

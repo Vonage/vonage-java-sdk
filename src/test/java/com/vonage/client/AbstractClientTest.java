@@ -34,7 +34,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public abstract class ClientTest<T> {
+public abstract class AbstractClientTest<T> {
     public static final String
             APPLICATION_ID = UUID.randomUUID().toString(),
             API_KEY = "a1b2c3d4", API_SECRET = "1234567890abcdef",
@@ -43,7 +43,7 @@ public abstract class ClientTest<T> {
     protected HttpWrapper wrapper;
     protected T client;
 
-    protected ClientTest() {
+    protected AbstractClientTest() {
         wrapper = new HttpWrapper(
                 new ApiKeyHeaderAuthMethod(API_KEY, API_SECRET),
                 new ApiKeyQueryParamsAuthMethod(API_KEY, API_SECRET),

@@ -42,6 +42,10 @@ public class ApiKeyQueryParamsAuthMethod extends QueryParamsAuthMethod {
         return new ApiKeyHeaderAuthMethod(apiKey, apiSecret);
     }
 
+    public String getApiKey() {
+        return apiKey;
+    }
+
     @Override
     public Map<String, String> getQueryParams() {
         Map<String, String> params = new LinkedHashMap<>(4);

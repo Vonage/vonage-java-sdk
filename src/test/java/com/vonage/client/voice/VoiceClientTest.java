@@ -15,7 +15,7 @@
  */
 package com.vonage.client.voice;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
 import com.vonage.client.common.HttpMethod;
@@ -30,7 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class VoiceClientTest extends ClientTest<VoiceClient> {
+public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
     static final UUID SAMPLE_CALL_UUID = UUID.randomUUID();
     static final String SAMPLE_CALL_ID = SAMPLE_CALL_UUID.toString();
 

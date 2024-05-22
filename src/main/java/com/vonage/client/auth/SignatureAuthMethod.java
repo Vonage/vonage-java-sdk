@@ -21,16 +21,16 @@ import java.util.Map;
 public class SignatureAuthMethod extends AuthMethod {
     private static final int SORT_KEY = 20;
 
-    private final String apiKey, apiSecret;
+    private final String apiKey, sigSecret;
     private final HashUtil.HashType hashType;
 
-    public SignatureAuthMethod(String apiKey, String apiSecret) {
-        this(apiKey, apiSecret, HashUtil.HashType.MD5);
+    public SignatureAuthMethod(String apiKey, String sigSecret) {
+        this(apiKey, sigSecret, HashUtil.HashType.MD5);
     }
 
-    public SignatureAuthMethod(String apiKey, String apiSecret, HashUtil.HashType hashType) {
+    public SignatureAuthMethod(String apiKey, String sigSecret, HashUtil.HashType hashType) {
         this.apiKey = apiKey;
-        this.apiSecret = apiSecret;
+        this.sigSecret = sigSecret;
         this.hashType = hashType;
     }
 
@@ -45,6 +45,6 @@ public class SignatureAuthMethod extends AuthMethod {
 
     public void apply(Map<String, String> params) {
         params.put("api_key", apiKey);
-        RequestSigning.constructSignatureForRequestParameters(params, apiSecret, hashType);
+        RequestSigning.constructSignatureForRequestParameters(params, sigSecret, hashType);
     }
 }

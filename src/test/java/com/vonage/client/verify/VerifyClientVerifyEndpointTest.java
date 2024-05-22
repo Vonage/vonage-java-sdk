@@ -15,7 +15,7 @@
  */
 package com.vonage.client.verify;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageApiResponseException;
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,7 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
+public class VerifyClientVerifyEndpointTest extends AbstractClientTest<VerifyClient> {
 
     public VerifyClientVerifyEndpointTest() {
         client = new VerifyClient(wrapper);

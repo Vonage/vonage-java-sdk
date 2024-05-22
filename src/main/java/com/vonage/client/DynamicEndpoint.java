@@ -171,7 +171,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			return contentType;
 		}
 		else if (requestBody instanceof Jsonable) {
-			return "application/json";
+			return ContentType.APPLICATION_JSON.getMimeType();
 		}
 		else if (requestBody instanceof BinaryRequest) {
 			return ((BinaryRequest) requestBody).getContentType();

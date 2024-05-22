@@ -32,7 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class VonageClientTest extends ClientTest<VonageClient> {
+public class VonageClientTest extends AbstractClientTest<VonageClient> {
     private static final UUID APPLICATION_ID = UUID.randomUUID();
     private final TestUtils testUtils = new TestUtils();
 

@@ -15,7 +15,7 @@
  */
 package com.vonage.client.verify2;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.common.HttpMethod;
@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class Verify2ClientTest extends ClientTest<Verify2Client> {
+public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 	static final UUID REQUEST_ID = UUID.randomUUID();
 	static final String CODE = "1234";
 	static final String VERIFICATION_RESPONSE = "{\"request_id\": \""+REQUEST_ID+"\"}";

@@ -15,7 +15,7 @@
  */
 package com.vonage.client.application;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.application.capabilities.*;
@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class ApplicationClientTest extends ClientTest<ApplicationClient> {
+public class ApplicationClientTest extends AbstractClientTest<ApplicationClient> {
     static final UUID SAMPLE_APPLICATION_ID = UUID.randomUUID();
 
     static final String SAMPLE_APPLICATION = "{\n" +

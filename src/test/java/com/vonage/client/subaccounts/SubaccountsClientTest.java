@@ -15,7 +15,7 @@
  */
 package com.vonage.client.subaccounts;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
 import com.vonage.client.common.HttpMethod;
@@ -27,7 +27,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
+public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient> {
 	static final String FROM_API_KEY = "cde3214b", TO_API_KEY = "12c4d5e6", SUB_API_KEY = "def123ab",
 		ACCOUNT_RESPONSE_JSON = "{\n" +
 				"   \"secret\": \"Password123\",\n" +

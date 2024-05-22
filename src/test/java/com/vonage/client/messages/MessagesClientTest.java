@@ -15,7 +15,7 @@
  */
 package com.vonage.client.messages;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageApiResponseException;
@@ -40,7 +40,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
 
-public class MessagesClientTest extends ClientTest<MessagesClient> {
+public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 
 	private static final String
 			TEXT = "Nexmo Verification code: 12345. Valid for 10 minutes.",

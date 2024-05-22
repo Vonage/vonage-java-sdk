@@ -16,7 +16,7 @@
 package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
@@ -39,7 +39,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class MeetingsClientTest extends ClientTest<MeetingsClient> {
+public class MeetingsClientTest extends AbstractClientTest<MeetingsClient> {
 
 	static final UUID
 			RANDOM_ID = UUID.randomUUID(),

@@ -15,7 +15,7 @@
  */
 package com.vonage.client.redact;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageBadRequestException;
@@ -27,7 +27,7 @@ import org.junit.jupiter.api.*;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class RedactClientTest extends ClientTest<RedactClient> {
+public class RedactClientTest extends AbstractClientTest<RedactClient> {
 
     public RedactClientTest() {
         client = new RedactClient(wrapper);

@@ -120,7 +120,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
             paramsMap.forEach(request::addParameter);
         }
         else if (am instanceof HeaderAuthMethod) {
-            return request.setHeader("Authorization", ((HeaderAuthMethod) am).getHeaderValue());
+            request.setHeader("Authorization", ((HeaderAuthMethod) am).getHeaderValue());
         }
         else if (am instanceof QueryParamsAuthMethod) {
             ((QueryParamsAuthMethod) am).getQueryParams().forEach(request::addParameter);
@@ -152,6 +152,9 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
         }
         if (am instanceof ApiKeyHeaderAuthMethod) {
             return ((ApiKeyHeaderAuthMethod) am).getApiKey();
+        }
+        if (am instanceof ApiKeyQueryParamsAuthMethod) {
+            return ((ApiKeyQueryParamsAuthMethod) am).getApiKey();
         }
         if (am instanceof SignatureAuthMethod) {
             return ((SignatureAuthMethod) am).getApiKey();

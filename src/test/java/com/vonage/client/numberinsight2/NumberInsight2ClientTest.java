@@ -15,7 +15,7 @@
  */
 package com.vonage.client.numberinsight2;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageApiResponseException;
@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
-public class NumberInsight2ClientTest extends ClientTest<NumberInsight2Client> {
+public class NumberInsight2ClientTest extends AbstractClientTest<NumberInsight2Client> {
 	private static final String PHONE_NUMBER = "447009000002";
 
 	public NumberInsight2ClientTest() {

@@ -15,7 +15,7 @@
  */
 package com.vonage.client.conversion;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageApiResponseException;
@@ -33,7 +33,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ConversionClientTest extends ClientTest<ConversionClient> {
+public class ConversionClientTest extends AbstractClientTest<ConversionClient> {
 
     public ConversionClientTest() {
         client = new ConversionClient(wrapper);

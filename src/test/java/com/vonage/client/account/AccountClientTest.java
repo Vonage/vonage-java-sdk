@@ -15,7 +15,7 @@
  */
 package com.vonage.client.account;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.*;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class AccountClientTest extends ClientTest<AccountClient> {
+public class AccountClientTest extends AbstractClientTest<AccountClient> {
     static final String SECRET_ID = UUID.randomUUID().toString();
 
     public AccountClientTest() {

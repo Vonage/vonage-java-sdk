@@ -29,6 +29,7 @@ import java.security.MessageDigest;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -43,10 +44,6 @@ public class RequestSigning {
     public static final String APPLICATION_JSON = "application/json";
 
     private static final Log log = LogFactory.getLog(RequestSigning.class);
-
-    private static String clean(String str) {
-        return str == null ? null : str.replaceAll("[=&]", "_");
-    }
 
     /**
      * Signs a set of request parameters.
@@ -101,6 +98,25 @@ public class RequestSigning {
         constructSignatureForRequestParameters(params, secretKey, Instant.now().getEpochSecond(), hashType);
     }
 
+    private static String clean(String str) {
+        return str == null ? null : str.replaceAll("[=&]", "_");
+    }
+
+    static String generateParamsString(Map<String, String> params) {
+        SortedMap<String, String> sortedParams = params instanceof SortedMap ?
+                (SortedMap<String, String>) params : new TreeMap<>(params);
+
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> param : sortedParams.entrySet()) {
+            String name = param.getKey(), value = param.getValue();
+            if (PARAM_SIGNATURE.equals(name) || value == null || value.trim().isEmpty()) {
+                continue;
+            }
+            sb.append("&").append(clean(name)).append("=").append(clean(value));
+        }
+        return sb.toString();
+    }
+
     /**
      * Signs a set of request parameters.
      * <p>
@@ -120,23 +136,13 @@ public class RequestSigning {
         // First, inject a 'timestamp=' parameter containing the current time in seconds since Jan 1st 1970
         params.put(PARAM_TIMESTAMP, Long.toString(currentTimeSeconds));
 
-        // Now, walk through the sorted list of parameters and construct a string
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> param: params.entrySet()) {
-            String name = param.getKey(), value = param.getValue();
-            if (PARAM_SIGNATURE.equals(name) || value == null || value.trim().isEmpty()) {
-                continue;
-            }
-            sb.append("&").append(clean(name)).append("=").append(clean(value));
-        }
-
-        String str = sb.toString();
-
-        String hashed = "no signature";
+        String hashed, str = generateParamsString(params);
         try {
             hashed = HashUtil.calculate(str, secretKey, "UTF-8", hashType);
-        } catch (Exception e) {
-            log.error("error...", e);
+        }
+        catch (Exception ex) {
+            log.error("error...", ex);
+            hashed = "no signature";
         }
 
         log.debug("SECURITY-KEY-GENERATION -- String [ " + str + " ] Signature [ " + hashed + " ] ");

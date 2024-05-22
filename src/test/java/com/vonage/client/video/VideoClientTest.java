@@ -15,7 +15,7 @@
  */
 package com.vonage.client.video;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.OrderedJsonMap;
 import static com.vonage.client.OrderedJsonMap.entry;
@@ -32,7 +32,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class VideoClientTest extends ClientTest<VideoClient> {
+public class VideoClientTest extends AbstractClientTest<VideoClient> {
 	static final String
 			applicationId = "78d335fa-323d-0114-9c3d-d6f0d48968cf",
 			sessionId = "flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN",
