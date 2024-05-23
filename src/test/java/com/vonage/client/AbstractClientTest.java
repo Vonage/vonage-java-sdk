@@ -71,8 +71,8 @@ public abstract class AbstractClientTest<T> {
         return result;
     }
 
-    protected void stubResponse(int code, String response) throws Exception {
-        wrapper.setHttpClient(stubHttpClient(code, response));
+    protected void stubResponse(int code, String response, String... additionalResponses) throws Exception {
+        wrapper.setHttpClient(stubHttpClient(code, response, additionalResponses));
     }
 
     protected void stubResponse(String response) throws Exception {
@@ -157,7 +157,7 @@ public abstract class AbstractClientTest<T> {
         }
         catch (Throwable ex) {
             assertEquals(exClass, ex.getClass(), failPrefix + ex.getClass());
-            if (expectedResponse.getTitle() == null) {
+            if (expectedResponse.title == null) {
                 expectedResponse.title = TestUtils.TEST_REASON;
             }
             assertEquals(expectedResponse, ex);
