@@ -15,19 +15,15 @@
  */
 package com.vonage.client.sms;
 
-import com.vonage.client.*;
-import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
-import com.vonage.client.auth.AuthMethod;
-import com.vonage.client.auth.SignatureAuthMethod;
-import com.vonage.client.common.HttpMethod;
+import com.vonage.client.AbstractClientTest;
+import com.vonage.client.TestUtils;
+import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.sms.messages.BinaryMessage;
 import com.vonage.client.sms.messages.Message;
 import com.vonage.client.sms.messages.TextMessage;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -63,7 +59,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
                 }"""
         );
 
-        var message = new TextMessage("TestSender", "not-a-number", "Test");
+        var message = new TextMessage("Nexmo", "not-a-number", "Test");
 
         var response = client.submitMessage(message);
         TestUtils.testJsonableBaseObject(response, true);
@@ -81,47 +77,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
 
     @Test
     public void testSendMessageEndpoint() throws Exception {
-        new DynamicEndpointTestSpec<Message, SmsSubmissionResponse>() {
-
-            @Override
-            protected RestEndpoint<Message, SmsSubmissionResponse> endpoint() {
-                return client.sendMessage;
-            }
-
-            @Override
-            protected HttpMethod expectedHttpMethod() {
-                return HttpMethod.POST;
-            }
-
-            @Override
-            protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-                return Arrays.asList(SignatureAuthMethod.class, ApiKeyQueryParamsAuthMethod.class);
-            }
-
-            @Override
-            protected Class<? extends Exception> expectedResponseExceptionType() {
-                return VonageApiResponseException.class;
-            }
-
-            @Override
-            protected String expectedContentTypeHeader(Message request) {
-                return "application/x-www-form-urlencoded";
-            }
-
-            @Override
-            protected String expectedDefaultBaseUri() {
-                return "https://rest.nexmo.com";
-            }
-
-            @Override
-            protected String expectedEndpointUri(Message request) {
-                return "/sms/json";
-            }
-
-            @Override
-            protected Message sampleRequest() {
-                return new TextMessage("TestSender", "447900000001", "Test msg");
-            }
+        new SmsEndpointTestSpec(client) {
 
             @Override
             public void runTests() throws Exception {

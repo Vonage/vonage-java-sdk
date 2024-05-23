@@ -18,7 +18,6 @@ package com.vonage.client;
 import static com.vonage.client.TestUtils.*;
 import com.vonage.client.auth.*;
 import com.vonage.client.auth.hashutils.HashUtil;
-import com.vonage.client.sms.messages.TextMessage;
 import com.vonage.client.voice.Call;
 import com.vonage.client.voice.CallEvent;
 import com.vonage.client.voice.CallStatus;
@@ -30,45 +29,10 @@ import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class VonageClientTest extends AbstractClientTest<VonageClient> {
     private final TestUtils testUtils = new TestUtils();
-
-    final String key = "api-key", secret = "api-secret";
-
-    @Test
-    public void testSendSignedSms() throws Exception {
-        String from = "Nexmo", to = "447900000001", text = "V for Vonage!",
-                url = "/sms/json", expectedResponseBody = """
-                {
-                   "message-count": "1",
-                   "messages": [
-                      {
-                         "to": "447700900001",
-                         "message-id": "aaaaaaaa-bbbb-cccc-dddd-0123456789ab",
-                         "status": "0",
-                         "remaining-balance": "3.14159265",
-                         "message-price": "0.03330000",
-                         "network": "12345",
-                         "client-ref": "my-personal-reference",
-                         "account-ref": "customer1234"
-                      }
-                   ]
-                }""";
-
-        var client = VonageClient.builder()
-                .apiKey(API_KEY).signatureSecret(SIGNATURE_SECRET)
-                .httpClient(stubHttpClient(200, expectedResponseBody))
-                .build();
-
-        var actualResponse = client.getSmsClient().submitMessage(new TextMessage(from, to, text));
-        assertNotNull(actualResponse);
-        assertEquals(1, actualResponse.getMessageCount());
-        var responseMessage = actualResponse.getMessages().getFirst();
-        assertNotNull(responseMessage);
-    }
 
     @Test
     public void testConstructVonageClient() throws Exception {
@@ -131,21 +95,21 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
     @Test
     public void testSoloApiKeyThrowsException() {
         assertThrows(VonageClientCreationException.class, () ->
-                VonageClient.builder().apiKey(key).build()
+                VonageClient.builder().apiKey(API_KEY).build()
         );
     }
 
     @Test
     public void testSoloApiSecret() {
         assertThrows(VonageClientCreationException.class, () ->
-                VonageClient.builder().apiSecret(secret).build()
+                VonageClient.builder().apiSecret(API_SECRET).build()
         );
     }
 
     @Test
     public void testSoloSignatureSecret() {
         assertThrows(VonageClientCreationException.class, () ->
-                VonageClient.builder().signatureSecret(secret).build()
+                VonageClient.builder().signatureSecret(SIGNATURE_SECRET).build()
         );
     }
 
@@ -172,35 +136,21 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
 
     @Test
     public void testApiKeyWithSignatureSecret() throws Exception {
-        var vonageClient = VonageClient.builder()
-                .apiKey(key).signatureSecret(secret).build();
-
-        var authCollection = vonageClient.getHttpWrapper().getAuthCollection();
-
-        Map<String, String> params = new LinkedHashMap<>();
-        authCollection.getAuth(SignatureAuthMethod.class).apply(params);
-
-        // This is messy but trying to generate a signature auth method and then comparing with what's on the request
-        // could have a race condition depending on the returned timestamp.
-
-        // So, we're going to generate the signature after trying to determine what the timestamp is.
-        String timestamp = params.get("timestamp");
-        String sig = HashUtil.calculate("&api_key="+key+"&timestamp=" + timestamp + secret, HashUtil.HashType.MD5);
-        assertEquals(sig, params.get("sig"));
-
         for (var hashType : HashUtil.HashType.values()) {
-            if (hashType == HashUtil.HashType.MD5) continue;
+            var vonageClient = VonageClient.builder()
+                    .apiKey(API_KEY).signatureSecret(SIGNATURE_SECRET).hashType(hashType).build();
 
-            vonageClient = VonageClient.builder()
-                    .apiKey(key).signatureSecret(secret).hashType(hashType).build();
+            var sigAuthMethod = vonageClient.getHttpWrapper().getAuthCollection().getAuth(SignatureAuthMethod.class);
+            var params = sigAuthMethod.getAuthParams(Map.of());
 
-            authCollection = vonageClient.getHttpWrapper().getAuthCollection();
+            // This is messy but trying to generate a signature auth method and then comparing with
+            // what's on the request could have a race condition depending on the returned timestamp.
+            // So, we're going to generate the signature after trying to determine what the timestamp is.
 
-            params = new LinkedHashMap<>();
-            authCollection.getAuth(SignatureAuthMethod.class).apply(params);
+            String timestamp = params.get("timestamp");
+            String input = "&api_key="+API_KEY+"&timestamp=" + timestamp;
+            String sig = HashUtil.calculate(input, SIGNATURE_SECRET, "UTF-8", hashType);
 
-            timestamp = params.get("timestamp");
-            sig = HashUtil.calculate("&api_key="+key+"&timestamp=" + timestamp, secret, "UTF-8", hashType);
             assertEquals(sig, params.get("sig"));
         }
     }

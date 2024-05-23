@@ -34,26 +34,26 @@ import java.util.Objects;
 public class RequestSigningTest {
     final String secret = "abcde";
     final long time = 2100;
-    final LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
-
-    void assertEqualsSignature(HashUtil.HashType hashType, String sig) {
-        RequestSigning.constructSignatureForRequestParameters(params, secret, time, hashType);
-        assertEquals(sig, params.get(PARAM_SIGNATURE));
-    }
+    final Map<String, String> inputParams = new LinkedHashMap<>(4);
 
     @BeforeEach
     public void beforeTest() {
-        params.clear();
-        params.put("a", "alphabet");
-        params.put("b", "bananas");
+        inputParams.clear();
+        inputParams.put("a", "alphabet");
+        inputParams.put("b", "bananas");
+    }
+
+    void assertEqualsSignature(HashUtil.HashType hashType, String sig) {
+        var result = constructSignatureForRequestParameters(inputParams, secret, time, hashType);
+        assertEquals(sig, result.get(PARAM_SIGNATURE));
     }
 
     @Test
     public void testConstructSignatureForRequestParameters() {
         String expected = "7d43241108912b32cc315b48ce681acf";
         assertEqualsSignature(MD5, expected);
-        RequestSigning.constructSignatureForRequestParameters(params, secret, MD5);
-        assertNotEquals(expected, params.get(PARAM_SIGNATURE));
+        constructSignatureForRequestParameters(inputParams, secret, MD5);
+        assertNotEquals(expected, inputParams.get(PARAM_SIGNATURE));
     }
 
     @Test
@@ -79,13 +79,13 @@ public class RequestSigningTest {
     @Test
     public void testConstructSignatureForRequestParametersSkipsSignature() {
         String sig = "7d43241108912b32cc315b48ce681acf";
-        params.put("sig", sig);
+        inputParams.put("sig", sig);
         assertEqualsSignature(MD5, sig);
     }
 
     @Test
     public void testConstructSignatureForRequestParametersSkipsNullValues() {
-        params.put("b", null);
+        inputParams.put("b", null);
         assertEqualsSignature(MD5, "a3368bf718ba104dcb392d8877e8eb2b");
     }
 

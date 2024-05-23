@@ -16,14 +16,12 @@
 package com.vonage.client;
 
 import com.sun.net.httpserver.HttpServer;
-import com.vonage.client.auth.AuthCollection;
-import com.vonage.client.auth.AuthMethod;
-import com.vonage.client.auth.JWTAuthMethod;
+import static com.vonage.client.TestUtils.*;
+import com.vonage.client.auth.*;
+import com.vonage.client.auth.hashutils.HashUtil;
 import io.jsonwebtoken.lang.Assert;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.ProtocolVersion;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
@@ -52,9 +50,15 @@ public class AbstractMethodTest {
             super(httpWrapper);
         }
 
+        RequestBuilder makeRequest() throws UnsupportedEncodingException {
+            return makeRequest("http://example.org/resource")
+                    .addParameter("foo", "bar")
+                    .addParameter("BAZINGA", "Yes");
+        }
+
         @Override
         protected Set<Class<? extends AuthMethod>> getAcceptableAuthMethods() {
-            return Set.of(JWTAuthMethod.class);
+            return Set.of(AuthMethod.class);
         }
 
         @Override
@@ -74,8 +78,8 @@ public class AbstractMethodTest {
         }
 
         @Override
-        public String parseResponse(HttpResponse response) throws IOException{
-            throw new IOException("This is a test io exception from parse");
+        public String parseResponse(HttpResponse response) throws IOException {
+            throw new IOException("This is a test IOException from parseResponse.");
         }
     }
 
@@ -88,20 +92,15 @@ public class AbstractMethodTest {
     private HttpServer httpServer;
     private HttpWrapper mockWrapper;
     private HttpClient mockHttpClient;
-    private AuthCollection mockAuthMethods;
     private AuthMethod mockAuthMethod;
     private final HttpResponse basicResponse = new BasicHttpResponse(
-            new BasicStatusLine(
-                    new ProtocolVersion("1.1", 1, 1),
-                    200,
-                    "OK"
-            )
+            new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
     );
 
     @BeforeEach
     public void setUp() throws Exception {
         mockWrapper = mock(HttpWrapper.class);
-        mockAuthMethods = mock(AuthCollection.class);
+        AuthCollection mockAuthMethods = mock(AuthCollection.class);
         mockAuthMethod = mock(AuthMethod.class);
         mockHttpClient = mock(HttpClient.class);
         when(mockAuthMethods.getAcceptableAuthMethod(any())).thenReturn(mockAuthMethod);
@@ -152,10 +151,55 @@ public class AbstractMethodTest {
     }
 
     @Test
-    public void testApplyAuth() {
-        ConcreteMethod method = new ConcreteMethod(mockWrapper);
-        RequestBuilder request = RequestBuilder.get("url");
+    public void testApplyAuth() throws Exception {
+        var method = new ConcreteMethod(mockWrapper);
+        var request = method.makeRequest();
         assertEquals(request, method.applyAuth(request));
+        assertEquals(2, request.getParameters().size());
+
+        var jwtAuthCollection = new AuthCollection(new JWTAuthMethod(
+                APPLICATION_ID, new TestUtils().loadKey("test/keys/application_key")
+        ));
+        when(mockWrapper.getAuthCollection()).thenReturn(jwtAuthCollection);
+        request = method.makeRequest();
+        assertEquals(request, method.applyAuth(request));
+        assertEquals(2, request.getParameters().size());
+        var expectedHeaderStart = "Bearer eyJ0eXBlIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.";
+        var authHeaderValue = request.getFirstHeader("Authorization").getValue();
+        assertTrue(authHeaderValue.startsWith(expectedHeaderStart));
+
+        var headerApiKeyAuthCollection = new AuthCollection(new ApiKeyHeaderAuthMethod(API_KEY, API_SECRET));
+        when(mockWrapper.getAuthCollection()).thenReturn(headerApiKeyAuthCollection);
+        request = method.makeRequest();
+        assertEquals(request, method.applyAuth(request));
+        assertEquals(2, request.getParameters().size());
+        var expectedHeader = "Basic "+Base64.encodeBase64String((API_KEY+":"+API_SECRET).getBytes());
+        authHeaderValue = request.getFirstHeader("Authorization").getValue();
+        assertEquals(expectedHeader, authHeaderValue);
+
+        var qpApiKeyAuthCollection = new AuthCollection(new ApiKeyQueryParamsAuthMethod(API_KEY, API_SECRET));
+        when(mockWrapper.getAuthCollection()).thenReturn(qpApiKeyAuthCollection);
+        request = method.makeRequest();
+        assertEquals(request, method.applyAuth(request));
+        var paramsMap = AbstractMethod.requestParamsToMap(request);
+        assertEquals(4, paramsMap.size());
+        assertEquals(API_KEY, paramsMap.get("api_key"));
+        assertEquals(API_SECRET, paramsMap.get("api_secret"));
+
+        var sigAuthCollection = new AuthCollection(new SignatureAuthMethod(
+                API_KEY, SIGNATURE_SECRET, HashUtil.HashType.HMAC_SHA256
+        ));
+        when(mockWrapper.getAuthCollection()).thenReturn(sigAuthCollection);
+
+        request = method.makeRequest();
+        assertEquals(request, method.applyAuth(request));
+        paramsMap = AbstractMethod.requestParamsToMap(request);
+        assertEquals(5, paramsMap.size());
+        assertEquals(API_KEY, paramsMap.get("api_key"));
+        assertEquals("Yes", paramsMap.get("BAZINGA"));
+        assertEquals("bar", paramsMap.get("foo"));
+        assertTrue(System.currentTimeMillis() > Long.parseLong(paramsMap.get("timestamp")));
+        assertTrue(paramsMap.get("sig").length() > 16);
     }
 
     @Test

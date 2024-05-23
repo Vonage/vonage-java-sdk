@@ -25,10 +25,9 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * Abstract class to assist in implementing a call against a REST endpoint.
@@ -112,12 +111,8 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
         AuthMethod am = getAuthMethod();
 
         if (am instanceof SignatureAuthMethod) {
-            Map<String, String> paramsMap = new TreeMap<>();
-            List<NameValuePair> reqParams = request.getParameters();
-            reqParams.forEach(nvp -> paramsMap.put(nvp.getName(), nvp.getValue()));
-            ((SignatureAuthMethod) am).apply(paramsMap);
-            reqParams.clear();
-            paramsMap.forEach(request::addParameter);
+            ((SignatureAuthMethod) am).getAuthParams(requestParamsToMap(request))
+                    .forEach(request::addParameter);
         }
         else if (am instanceof HeaderAuthMethod) {
             request.setHeader("Authorization", ((HeaderAuthMethod) am).getHeaderValue());
@@ -126,6 +121,21 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
             ((QueryParamsAuthMethod) am).getQueryParams().forEach(request::addParameter);
         }
         return request;
+    }
+
+    /**
+     * Converts the request's parameters to a Map, for easier querying.
+     *
+     * @param request The request to obtain parameters from.
+     *
+     * @return A new Map representation of the request's query parameters.
+     *
+     * @since 8.8.0
+     */
+    protected static Map<String, String> requestParamsToMap(RequestBuilder request) {
+        return request.getParameters().stream().collect(Collectors.toMap(
+                NameValuePair::getName, NameValuePair::getValue
+        ));
     }
 
     /**

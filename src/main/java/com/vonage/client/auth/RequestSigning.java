@@ -27,10 +27,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -55,7 +52,7 @@ public class RequestSigning {
      * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
      * @param secretKey the pre-shared secret key held by the client
      *
-     * @deprecated Use {@link #constructSignatureForRequestParameters(Map, String, HashUtil.HashType)}.
+     * @deprecated Use {@link #getSignatureForRequestParameters(Map, String, HashUtil.HashType)}.
      */
     @Deprecated
     public static void constructSignatureForRequestParameters(List<NameValuePair> params, String secretKey) {
@@ -89,13 +86,34 @@ public class RequestSigning {
      * <p>
      * Generates additional parameters to represent the timestamp and generated signature.
      * Uses the supplied pre-shared secret key to generate the signature.
+     * This method modifies the input params.
      *
-     * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
-     * @param secretKey the pre-shared secret key held by the client
-     * @param hashType The type of hash that is to be used in construction
+     * @param params Query parameters for the request that is to be signed.
+     * @param secretKey the pre-shared secret key held by the client.
+     * @param hashType The type of hash that is to be used in construction.
+     *
+     * @deprecated Use {@link #getSignatureForRequestParameters(Map, String, HashUtil.HashType)}.
      */
+    @Deprecated
     public static void constructSignatureForRequestParameters(Map<String, String> params, String secretKey, HashUtil.HashType hashType) {
-        constructSignatureForRequestParameters(params, secretKey, Instant.now().getEpochSecond(), hashType);
+        params.putAll(getSignatureForRequestParameters(params, secretKey, hashType));
+    }
+
+    /**
+     * Signs a set of request parameters.
+     * <p>
+     * Generates additional parameters to represent the timestamp and generated signature.
+     * Uses the supplied pre-shared secret key to generate the signature.
+     * This method does not modify the input parameters.
+     *
+     * @param params Query parameters for the request that is to be signed.
+     * @param secretKey the pre-shared secret key held by the client.
+     * @param hashType The type of hash that is to be used in construction.
+     *
+     * @return A new Map with the signature query parameters.
+     */
+    public static Map<String, String> getSignatureForRequestParameters(Map<String, String> params, String secretKey, HashUtil.HashType hashType) {
+        return constructSignatureForRequestParameters(params, secretKey, Instant.now().getEpochSecond(), hashType);
     }
 
     private static String clean(String str) {
@@ -123,20 +141,23 @@ public class RequestSigning {
      * Generates additional parameters to represent the timestamp and generated signature.
      * Uses the supplied pre-shared secret key to generate the signature.
      *
-     * @param params Query parameters for the request that is to be signed.
+     * @param inputParams Query parameters for the request that is to be signed.
      * @param secretKey the pre-shared secret key held by the client.
      * @param currentTimeSeconds the current time in seconds since 1970-01-01.
      * @param hashType Hash type to be used to construct request parameters.
      *
      */
-    static void constructSignatureForRequestParameters(Map<String, String> params,
+    static Map<String, String> constructSignatureForRequestParameters(Map<String, String> inputParams,
                                                                  String secretKey,
                                                                  long currentTimeSeconds,
                                                                  HashUtil.HashType hashType) {
-        // First, inject a 'timestamp=' parameter containing the current time in seconds since Jan 1st 1970
-        params.put(PARAM_TIMESTAMP, Long.toString(currentTimeSeconds));
 
-        String hashed, str = generateParamsString(params);
+        // First, inject a 'timestamp=' parameter containing the current time in seconds since Jan 1st 1970
+        String timestampStr = Long.toString(currentTimeSeconds);
+        Map<String, String> tempParams = new TreeMap<>(inputParams);
+        tempParams.put(PARAM_TIMESTAMP, timestampStr);
+
+        String hashed, str = generateParamsString(tempParams);
         try {
             hashed = HashUtil.calculate(str, secretKey, "UTF-8", hashType);
         }
@@ -147,7 +168,10 @@ public class RequestSigning {
 
         log.debug("SECURITY-KEY-GENERATION -- String [ " + str + " ] Signature [ " + hashed + " ] ");
 
-        params.put(PARAM_SIGNATURE, hashed);
+        Map<String, String> outputParams = new LinkedHashMap<>(4);
+        outputParams.put(PARAM_TIMESTAMP, timestampStr);
+        outputParams.put(PARAM_SIGNATURE, hashed);
+        return outputParams;
     }
 
     /**
