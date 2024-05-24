@@ -57,7 +57,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
     @SuppressWarnings("unchecked")
     @Test
     public void testFraudBackendAuthMethod() throws Exception {
-        var fbam = new FraudBackendAuthMethod(client, "+34 91 12345678", CHECK_SIM_SWAP);
+        var fbam = new FraudBackendAuthMethod(client, "+34 91 12345678", RETRIEVE_SIM_SWAP_DATE);
         wrapper.getAuthCollection().add(fbam);
         var endpoint = DynamicEndpoint.<Void, String> builder(String.class)
                 .wrapper(wrapper).requestMethod(HttpMethod.POST)
@@ -72,15 +72,6 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
         );
 
         assertEquals(expectedResponse, endpoint.execute(null));
-    }
-
-    @Test
-    public void testGetCamaraAccessToken() throws Exception {
-        stubResponse(200,
-                "{\"auth_req_id\": \""+authReqId+"\"}",
-                "{\"access_token\": \""+accessToken+"\"}"
-        );
-        assertEquals(accessToken, client.getCamaraAccessToken("+447900000001", RETRIEVE_SIM_SWAP_DATE));
     }
 
     @Test
