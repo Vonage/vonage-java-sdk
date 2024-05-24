@@ -16,7 +16,7 @@
 package com.vonage.client.verify;
 
 import com.vonage.client.*;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.Locale;
 
@@ -48,8 +48,8 @@ public class VerifyClient {
             Endpoint(String path, boolean formEncoded, R... type) {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .wrapper(wrapper).requestMethod(HttpMethod.POST)
-                        .authMethod(TokenAuthMethod.class)
-                        .contentTypeHeader(formEncoded ? "application/x-www-form-urlencoded" : null)
+                        .authMethod(ApiKeyQueryParamsAuthMethod.class)
+                        .urlFormEncodedContentType(formEncoded)
                         .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig()
                                 .getApiBaseUri() + "/verify" + path + "/json"
                         )

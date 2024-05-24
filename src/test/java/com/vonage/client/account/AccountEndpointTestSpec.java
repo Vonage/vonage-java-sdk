@@ -17,7 +17,7 @@ package com.vonage.client.account;
 
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.auth.AuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +27,7 @@ abstract class AccountEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, 
 	@Override
 	protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
 		Collection<Class<? extends AuthMethod>> authMethods = new ArrayList<>(2);
-		authMethods.add(TokenAuthMethod.class);
+		authMethods.add(ApiKeyHeaderAuthMethod.class);
 		return authMethods;
 	}
 

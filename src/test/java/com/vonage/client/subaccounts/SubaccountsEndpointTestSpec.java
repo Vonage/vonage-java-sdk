@@ -18,7 +18,7 @@ package com.vonage.client.subaccounts;
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.auth.AuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -26,7 +26,7 @@ abstract class SubaccountsEndpointTestSpec<T, R> extends DynamicEndpointTestSpec
 
 	@Override
 	protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-		return Collections.singleton(TokenAuthMethod.class);
+		return Collections.singleton(ApiKeyHeaderAuthMethod.class);
 	}
 
 	@Override

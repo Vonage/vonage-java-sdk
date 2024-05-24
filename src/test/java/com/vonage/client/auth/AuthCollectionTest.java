@@ -16,30 +16,36 @@
 package com.vonage.client.auth;
 
 import com.vonage.client.TestUtils;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.Collections;
 import java.util.Set;
 
 public class AuthCollectionTest {
-    private final TestUtils testUtils = new TestUtils();
     private static final Set<Class<? extends AuthMethod>>
             JWT_AUTH_CLASS_SET = Collections.singleton(JWTAuthMethod.class),
-            TOKEN_AUTH_CLASS_SET = Collections.singleton(TokenAuthMethod.class);
+            TOKEN_AUTH_CLASS_SET = Collections.singleton(ApiKeyHeaderAuthMethod.class);
+
+    final byte[] privateKeyContents = new TestUtils().loadKey("test/keys/application_key");
+    final String applicationId = TestUtils.APPLICATION_ID,
+            apiKey = TestUtils.API_KEY, apiSecret = TestUtils.API_SECRET;
+
+    final JWTAuthMethod jwtAuth = new JWTAuthMethod(applicationId, privateKeyContents);
+
+    public AuthCollectionTest() throws Exception {
+    }
+
 
     @Test
     public void testGetAcceptableAuthMethod() throws Exception {
-        JWTAuthMethod jAuth = new JWTAuthMethod("application_id", testUtils.loadKey("test/keys/application_key"));
         AuthCollection auths = new AuthCollection();
-        auths.add(jAuth);
-        assertEquals(jAuth, auths.getAcceptableAuthMethod(JWT_AUTH_CLASS_SET));
+        auths.add(jwtAuth);
+        assertEquals(jwtAuth, auths.getAcceptableAuthMethod(JWT_AUTH_CLASS_SET));
     }
 
     @Test
     public void testMultipleAuthMethods() throws Exception {
-        JWTAuthMethod jwtAuth = new JWTAuthMethod("application_id", testUtils.loadKey("test/keys/application_key"));
-        TokenAuthMethod tokenAuth = new TokenAuthMethod("api_key", "api_secret");
+        ApiKeyHeaderAuthMethod tokenAuth = new ApiKeyHeaderAuthMethod("api_key", "api_secret");
         AuthCollection auths = new AuthCollection(jwtAuth, tokenAuth);
         assertEquals(jwtAuth, auths.getAcceptableAuthMethod(JWT_AUTH_CLASS_SET));
         assertEquals(tokenAuth, auths.getAcceptableAuthMethod(TOKEN_AUTH_CLASS_SET));
@@ -59,19 +65,18 @@ public class AuthCollectionTest {
 
     @Test
     public void testAuthMethodPrecedence() throws Exception {
-        JWTAuthMethod jAuth = new JWTAuthMethod("application_id", testUtils.loadKey("test/keys/application_key"));
-        TokenAuthMethod tAuth = new TokenAuthMethod("key", "secret");
+        ApiKeyHeaderAuthMethod tAuth = new ApiKeyHeaderAuthMethod(apiKey, apiSecret);
         AuthCollection auths = new AuthCollection();
         auths.add(tAuth);
-        auths.add(jAuth);
-        assertEquals(jAuth, auths.getAcceptableAuthMethod(JWT_AUTH_CLASS_SET));
+        auths.add(jwtAuth);
+        assertEquals(jwtAuth, auths.getAcceptableAuthMethod(JWT_AUTH_CLASS_SET));
         assertEquals(tAuth, auths.getAcceptableAuthMethod(TOKEN_AUTH_CLASS_SET));
-        assertEquals(jAuth, auths.getAcceptableAuthMethod(Collections.singleton(AuthMethod.class)));
+        assertEquals(jwtAuth, auths.getAcceptableAuthMethod(Collections.singleton(AuthMethod.class)));
     }
 
     @Test
     public void testIncompatibleAuths() throws Exception {
-        TokenAuthMethod tAuth = new TokenAuthMethod("key", "secret");
+        ApiKeyHeaderAuthMethod tAuth = new ApiKeyHeaderAuthMethod(apiKey, apiSecret);
         AuthCollection auths = new AuthCollection();
         auths.add(tAuth);
 
@@ -81,5 +86,44 @@ public class AuthCollectionTest {
         } catch (VonageUnacceptableAuthException ex) {
             assertEquals("No acceptable authentication type could be found. Acceptable types are: Application ID and Private Key. Supplied types were: API Key and Secret", ex.getMessage());
         }
+    }
+
+    @Test
+    public void testLongConstructorJwtAndApiSecret() throws Exception {
+        var ac = new AuthCollection(applicationId, privateKeyContents, apiKey, apiSecret, null, null);
+
+        assertTrue(ac.hasAuthMethod(JWTAuthMethod.class));
+        assertTrue(ac.hasAuthMethod(ApiKeyQueryParamsAuthMethod.class));
+        assertTrue(ac.hasAuthMethod(ApiKeyHeaderAuthMethod.class));
+        assertFalse(ac.hasAuthMethod(SignatureAuthMethod.class));
+
+        var apiKeyClasses = Set.of(ApiKeyQueryParamsAuthMethod.class, ApiKeyHeaderAuthMethod.class);
+        assertNotNull(ac.getAcceptableAuthMethod(JWT_AUTH_CLASS_SET));
+        assertEquals(ApiKeyQueryParamsAuthMethod.class, ac.getAcceptableAuthMethod(apiKeyClasses).getClass());
+        assertThrows(VonageUnacceptableAuthException.class, () ->
+                ac.getAcceptableAuthMethod(Set.of(SignatureAuthMethod.class))
+        );
+
+        assertEquals(JWTAuthMethod.class, ac.getAuth(JWTAuthMethod.class).getClass());
+        assertEquals(JWTAuthMethod.class, ac.getAuth(HeaderAuthMethod.class).getClass());
+        assertEquals(ApiKeyQueryParamsAuthMethod.class, ac.getAuth(QueryParamsAuthMethod.class).getClass());
+        assertEquals(ApiKeyHeaderAuthMethod.class, ac.getAuth(BasicAuthMethod.class).getClass());
+    }
+
+    @Test
+    public void testAddReplacesExistingAuthMethod() throws Exception {
+        class CustomJwt extends JWTAuthMethod {
+            public CustomJwt() {
+                super(applicationId, privateKeyContents);
+            }
+        }
+
+        var ac = new AuthCollection(jwtAuth);
+        assertEquals(jwtAuth, ac.getAuth(AuthMethod.class));
+        var custom = new CustomJwt();
+        ac.add(custom);
+        var retrieved = ac.getAuth(AuthMethod.class);
+        assertEquals(custom, retrieved);
+        assertEquals(CustomJwt.class, retrieved.getClass());
     }
 }

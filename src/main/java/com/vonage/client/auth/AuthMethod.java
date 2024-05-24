@@ -15,42 +15,36 @@
  */
 package com.vonage.client.auth;
 
-import org.apache.http.client.methods.RequestBuilder;
+import java.util.Objects;
 
-public interface AuthMethod extends Comparable<AuthMethod> {
+/**
+ * Base class for auth methods.
+ *
+ * @since 8.8.0 is an abstract class rather than interface.
+ */
+public abstract class AuthMethod implements Comparable<AuthMethod> {
 
     @Override
-    default int compareTo(AuthMethod other) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof AuthMethod)) {
+            return false;
+        }
+        return ((AuthMethod) obj).getSortKey() == this.getSortKey() &&
+                obj.getClass().equals(this.getClass());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSortKey(), getClass());
+    }
+
+    @Override
+    public final int compareTo(AuthMethod other) {
         return Integer.compare(this.getSortKey(), other.getSortKey());
     }
 
-    /**
-     * Apply the authentication to the header as basic authentication.
-     *
-     * @param requestBuilder The request being built
-     *
-     * @return RequestBuilder for more building of the request.
-     */
-    default RequestBuilder applyAsBasicAuth(RequestBuilder requestBuilder) {
-        throw new UnsupportedOperationException(
-                "applyAsBasicAuth not implemented for " + getClass().getCanonicalName()
-        );
-    }
-
-    /**
-     * Apply the authentication by adding it to the entity payload.
-     *
-     * @param requestBuilder The request being built
-     *
-     * @return RequestBuilder for more building of the request.
-     */
-    default RequestBuilder applyAsJsonProperties(RequestBuilder requestBuilder) {
-        throw new UnsupportedOperationException(
-                "applyAsJsonProperties not implemented for " + getClass().getCanonicalName()
-        );
-    }
-
-    RequestBuilder apply(RequestBuilder request);
-
-    int getSortKey();
+    protected abstract int getSortKey();
 }

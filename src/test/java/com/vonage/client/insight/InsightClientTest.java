@@ -15,7 +15,7 @@
  */
 package com.vonage.client.insight;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class InsightClientTest extends ClientTest<InsightClient> {
+public class InsightClientTest extends AbstractClientTest<InsightClient> {
 
     private static final String BASIC_RESPOSE_JSON =
             "{\n" + "  \"status\": 0,\n" + "  \"status_message\": \"Success\",\n"

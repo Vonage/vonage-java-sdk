@@ -15,10 +15,7 @@
  */
 package com.vonage.client;
 
-import com.vonage.client.auth.AuthMethod;
-import com.vonage.client.auth.JWTAuthMethod;
-import com.vonage.client.auth.SignatureAuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.*;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -27,7 +24,7 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.util.AbstractMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,9 +47,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
     }
 
     protected static final BasicResponseHandler basicResponseHandler = new BasicResponseHandler();
-
     protected final HttpWrapper httpWrapper;
-    private Set<Class<? extends AuthMethod>> acceptable;
 
     public AbstractMethod(HttpWrapper httpWrapper) {
         this.httpWrapper = httpWrapper;
@@ -112,39 +107,31 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
      * @throws VonageClientException If no appropriate {@link AuthMethod} is available
      */
     protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
-        return getAuthMethod(getAcceptableAuthMethods()).apply(request);
-    }
-
-    /**
-     * Utility method for obtaining an appropriate {@link AuthMethod} for this call.
-     *
-     * @param acceptableAuthMethods an array of classes, representing authentication methods that are acceptable for
-     *                              this endpoint
-     *
-     * @return An AuthMethod created from one of the provided acceptableAuthMethods.
-     *
-     * @throws VonageClientException If no AuthMethod is available from the provided array of acceptableAuthMethods.
-     */
-    @SuppressWarnings("unchecked")
-    protected AuthMethod getAuthMethod(Class<?>[] acceptableAuthMethods) throws VonageClientException {
-        if (acceptable == null) {
-            acceptable = Arrays.stream(acceptableAuthMethods)
-                    .filter(AuthMethod.class::isAssignableFrom)
-                    .map(c -> (Class<? extends AuthMethod>) c)
-                    .collect(Collectors.toSet());
+        AuthMethod am = getAuthMethod();
+        if (am instanceof HeaderAuthMethod) {
+            request.setHeader("Authorization", ((HeaderAuthMethod) am).getHeaderValue());
         }
+        else if (am instanceof QueryParamsAuthMethod) {
+            RequestQueryParams qp = am instanceof ApiKeyQueryParamsAuthMethod ? null : normalRequestParams(request);
+            ((QueryParamsAuthMethod) am).getAuthParams(qp).forEach(request::addParameter);
+        }
+        return request;
+    }
 
-        return httpWrapper.getAuthCollection().getAcceptableAuthMethod(acceptable);
+    static RequestQueryParams normalRequestParams(RequestBuilder request) {
+        return request.getParameters().stream()
+                .map(nvp -> new AbstractMap.SimpleEntry<>(nvp.getName(), nvp.getValue()))
+                .collect(Collectors.toCollection(RequestQueryParams::new));
     }
 
     /**
-     * Call {@linkplain #getAuthMethod(Class[])} with {@linkplain #getAcceptableAuthMethods()}.
+     * Gets the highest priority available authentication method according to its sort key.
      *
      * @return An AuthMethod created from the accepted auth methods.
      * @throws VonageUnexpectedException If no AuthMethod is available.
      */
     protected AuthMethod getAuthMethod() throws VonageUnexpectedException {
-        return getAuthMethod(getAcceptableAuthMethods());
+        return httpWrapper.getAuthCollection().getAcceptableAuthMethod(getAcceptableAuthMethods());
     }
 
     /**
@@ -159,8 +146,11 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
         if (am instanceof JWTAuthMethod) {
             return ((JWTAuthMethod) am).getApplicationId();
         }
-        if (am instanceof TokenAuthMethod) {
-            return ((TokenAuthMethod) am).getApiKey();
+        if (am instanceof ApiKeyHeaderAuthMethod) {
+            return ((ApiKeyHeaderAuthMethod) am).getApiKey();
+        }
+        if (am instanceof ApiKeyQueryParamsAuthMethod) {
+            return ((ApiKeyQueryParamsAuthMethod) am).getApiKey();
         }
         if (am instanceof SignatureAuthMethod) {
             return ((SignatureAuthMethod) am).getApiKey();
@@ -168,7 +158,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
         throw new IllegalStateException(am.getClass().getSimpleName() + " does not have API key.");
     }
 
-    protected abstract Class<?>[] getAcceptableAuthMethods();
+    protected abstract Set<Class<? extends AuthMethod>> getAcceptableAuthMethods();
 
     /**
      * Construct and return a RequestBuilder instance from the provided request.
@@ -179,7 +169,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
      *
      * @throws UnsupportedEncodingException if UTF-8 encoding is not supported by the JVM
      */
-    public abstract RequestBuilder makeRequest(RequestT request) throws UnsupportedEncodingException;
+    protected abstract RequestBuilder makeRequest(RequestT request) throws UnsupportedEncodingException;
 
     /**
      * Construct a ResultT representing the contents of the HTTP response returned from the Vonage Voice API.
@@ -190,5 +180,5 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
      *
      * @throws IOException if a problem occurs parsing the response
      */
-    public abstract ResultT parseResponse(HttpResponse response) throws IOException;
+    protected abstract ResultT parseResponse(HttpResponse response) throws IOException;
 }

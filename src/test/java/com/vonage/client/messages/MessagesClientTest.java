@@ -15,13 +15,13 @@
  */
 package com.vonage.client.messages;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.messages.messenger.*;
 import com.vonage.client.messages.mms.MmsAudioRequest;
@@ -40,7 +40,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
 
-public class MessagesClientTest extends ClientTest<MessagesClient> {
+public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 
 	private static final String
 			TEXT = "Nexmo Verification code: 12345. Valid for 10 minutes.",
@@ -182,7 +182,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 
 			@Override
 			protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-				return Arrays.asList(JWTAuthMethod.class, TokenAuthMethod.class);
+				return Arrays.asList(JWTAuthMethod.class, ApiKeyHeaderAuthMethod.class);
 			}
 
 			@Override

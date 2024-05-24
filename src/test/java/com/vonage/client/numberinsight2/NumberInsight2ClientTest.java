@@ -15,12 +15,12 @@
  */
 package com.vonage.client.numberinsight2;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.auth.AuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
-public class NumberInsight2ClientTest extends ClientTest<NumberInsight2Client> {
+public class NumberInsight2ClientTest extends AbstractClientTest<NumberInsight2Client> {
 	private static final String PHONE_NUMBER = "447009000002";
 
 	public NumberInsight2ClientTest() {
@@ -79,7 +79,7 @@ public class NumberInsight2ClientTest extends ClientTest<NumberInsight2Client> {
 
 			@Override
 			protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-				return Arrays.asList(TokenAuthMethod.class);
+				return Arrays.asList(ApiKeyHeaderAuthMethod.class);
 			}
 
 			@Override

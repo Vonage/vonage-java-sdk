@@ -15,13 +15,17 @@
  */
 package com.vonage.client.conversion;
 
-import com.vonage.client.*;
+import com.vonage.client.AbstractClientTest;
+import com.vonage.client.DynamicEndpointTestSpec;
+import com.vonage.client.RestEndpoint;
+import com.vonage.client.VonageApiResponseException;
+import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.SignatureAuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -29,7 +33,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ConversionClientTest extends ClientTest<ConversionClient> {
+public class ConversionClientTest extends AbstractClientTest<ConversionClient> {
 
     public ConversionClientTest() {
         client = new ConversionClient(wrapper);
@@ -71,7 +75,7 @@ public class ConversionClientTest extends ClientTest<ConversionClient> {
 
             @Override
             protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-                return Arrays.asList(SignatureAuthMethod.class, TokenAuthMethod.class);
+                return Arrays.asList(SignatureAuthMethod.class, ApiKeyQueryParamsAuthMethod.class);
             }
 
             @Override

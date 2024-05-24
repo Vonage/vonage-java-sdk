@@ -26,10 +26,10 @@ public class VonageUnacceptableAuthExceptionTest {
     @Test
     public void testAllAuthMethodHaveAppropriateDescriptions() throws IOException {
         VonageUnacceptableAuthException exception = new VonageUnacceptableAuthException(
-                Arrays.asList(new TokenAuthMethod(null, null),
+                Arrays.asList(new ApiKeyHeaderAuthMethod(null, null),
                         new SignatureAuthMethod(null, null),
                         new JWTAuthMethod("application_id", new TestUtils().loadKey("test/keys/application_key"))),
-                Arrays.asList(TokenAuthMethod.class, SignatureAuthMethod.class, JWTAuthMethod.class)
+                Arrays.asList(ApiKeyHeaderAuthMethod.class, SignatureAuthMethod.class, JWTAuthMethod.class)
         );
 
         assertEquals("No acceptable authentication type could be found. Acceptable types are: API Key and Secret, API Key and Signature Secret, Application ID and Private Key. Supplied types were: API Key and Secret, API Key and Signature Secret, Application ID and Private Key", exception.getMessage());

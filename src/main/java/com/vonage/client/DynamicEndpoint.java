@@ -26,10 +26,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
@@ -41,8 +38,7 @@ import java.util.function.Consumer;
  */
 @SuppressWarnings("unchecked")
 public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
-	protected boolean applyBasicAuth;
-	protected Collection<Class<? extends AuthMethod>> authMethods;
+	protected Set<Class<? extends AuthMethod>> authMethods;
 	protected String contentType, accept;
 	protected HttpMethod requestMethod;
 	protected BiFunction<DynamicEndpoint<T, R>, ? super T, String> pathGetter;
@@ -52,7 +48,6 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	protected DynamicEndpoint(Builder<T, R> builder) {
 		super(builder.wrapper);
-		applyBasicAuth = builder.applyBasicAuth;
 		authMethods = builder.authMethods;
 		requestMethod = builder.requestMethod;
 		pathGetter = builder.pathGetter;
@@ -88,9 +83,8 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	public static final class Builder<T, R> {
 		private final Class<R> responseType;
-		private Collection<Class<? extends AuthMethod>> authMethods;
+		private Set<Class<? extends AuthMethod>> authMethods;
 		private HttpWrapper wrapper;
-		private boolean applyBasicAuth = false;
 		private String contentType, accept;
 		private HttpMethod requestMethod;
 		private BiFunction<DynamicEndpoint<T, R>, ? super T, String> pathGetter;
@@ -116,7 +110,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 
 		public Builder<T, R> authMethod(Class<? extends AuthMethod> primary, Class<? extends AuthMethod>... others) {
-			authMethods = new ArrayList<>(2);
+			authMethods = new LinkedHashSet<>(2);
 			authMethods.add(Objects.requireNonNull(primary, "Primary auth method cannot be null"));
 			if (others != null) {
 				for (Class<? extends AuthMethod> amc : others) {
@@ -133,6 +127,10 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			return this;
 		}
 
+		public Builder<T, R> urlFormEncodedContentType(boolean formEncoded) {
+			return contentTypeHeader(formEncoded ? "application/x-www-form-urlencoded" : null);
+		}
+
 		public Builder<T, R> contentTypeHeader(String contentType) {
 			this.contentType = contentType;
 			return this;
@@ -140,15 +138,6 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 		public Builder<T, R> acceptHeader(String accept) {
 			this.accept = accept;
-			return this;
-		}
-
-		public Builder<T, R> applyAsBasicAuth() {
-			return applyAsBasicAuth(true);
-		}
-
-		public Builder<T, R> applyAsBasicAuth(boolean applyBasicAuth) {
-			this.applyBasicAuth = applyBasicAuth;
 			return this;
 		}
 
@@ -169,22 +158,8 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	}
 
 	@Override
-	protected final Class<?>[] getAcceptableAuthMethods() {
-		Class<?>[] emptyArray = new Class<?>[0];
-		return authMethods != null ? authMethods.toArray(emptyArray) : emptyArray;
-	}
-
-	@Override
-	protected final RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
-		if (authMethods == null || authMethods.isEmpty()) {
-			return request;
-		}
-		else if (applyBasicAuth) {
-			return getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request);
-		}
-		else {
-			return super.applyAuth(request);
-		}
+	protected final Set<Class<? extends AuthMethod>> getAcceptableAuthMethods() {
+		return authMethods;
 	}
 
 	private boolean isJsonableArrayResponse() {
@@ -192,17 +167,22 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	}
 
 	private String getRequestHeader(T requestBody) {
-		if (contentType != null)
+		if (contentType != null) {
 			return contentType;
-		else if (requestBody instanceof Jsonable)
-			return "application/json";
-		else if (requestBody instanceof BinaryRequest)
+		}
+		else if (requestBody instanceof Jsonable) {
+			return ContentType.APPLICATION_JSON.getMimeType();
+		}
+		else if (requestBody instanceof BinaryRequest) {
 			return ((BinaryRequest) requestBody).getContentType();
-		else return null;
+		}
+		else {
+			return null;
+		}
 	}
 
 	@Override
-	public final RequestBuilder makeRequest(T requestBody) {
+	protected final RequestBuilder makeRequest(T requestBody) {
 		if (requestBody instanceof Jsonable && responseType.isAssignableFrom(requestBody.getClass())) {
 			cachedRequestBody = requestBody;
 		}
@@ -247,7 +227,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	}
 
 	@Override
-	public final R parseResponse(HttpResponse response) throws IOException {
+	protected final R parseResponse(HttpResponse response) throws IOException {
 		int statusCode = response.getStatusLine().getStatusCode();
 		try {
 			if (statusCode >= 200 && statusCode < 300) {

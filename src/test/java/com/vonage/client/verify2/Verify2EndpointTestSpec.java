@@ -19,7 +19,7 @@ import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -27,7 +27,7 @@ abstract class Verify2EndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, 
 
 	@Override
 	protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-		return Arrays.asList(JWTAuthMethod.class, TokenAuthMethod.class);
+		return Arrays.asList(JWTAuthMethod.class, ApiKeyHeaderAuthMethod.class);
 	}
 
 	@Override

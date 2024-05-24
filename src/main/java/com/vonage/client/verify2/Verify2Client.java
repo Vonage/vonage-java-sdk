@@ -19,7 +19,7 @@ import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.auth.JWTAuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.Objects;
 import java.util.UUID;
@@ -46,7 +46,7 @@ public class Verify2Client {
 				super(DynamicEndpoint.<T, R> builder(type)
 						.responseExceptionType(VerifyResponseException.class)
 						.wrapper(wrapper).requestMethod(method)
-						.authMethod(JWTAuthMethod.class, TokenAuthMethod.class)
+						.authMethod(JWTAuthMethod.class, ApiKeyHeaderAuthMethod.class)
 						.pathGetter((de, req) -> {
 							String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v2") + "/verify";
 							return pathGetter != null ? base + "/" + pathGetter.apply(req) : base;

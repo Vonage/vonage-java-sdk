@@ -17,7 +17,7 @@ package com.vonage.client.messages;
 
 import com.vonage.client.*;
 import com.vonage.client.auth.JWTAuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.jwt.Jwt;
 import java.util.function.Function;
@@ -38,7 +38,7 @@ public class MessagesClient {
 				super(DynamicEndpoint.<T, R> builder(type)
 						.responseExceptionType(MessageResponseException.class)
 						.wrapper(wrapper).requestMethod(HttpMethod.POST)
-						.authMethod(JWTAuthMethod.class, TokenAuthMethod.class)
+						.authMethod(JWTAuthMethod.class, ApiKeyHeaderAuthMethod.class)
 						.pathGetter((de, req) -> basePathGetter.apply(de.getHttpWrapper()) + "/v1/messages")
 				);
 			}

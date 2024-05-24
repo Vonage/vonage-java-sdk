@@ -16,8 +16,8 @@
 package com.vonage.client.auth;
 
 import com.vonage.client.TestUtils;
-import org.apache.http.client.methods.RequestBuilder;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.*;
 import java.nio.file.Paths;
 
@@ -37,10 +37,8 @@ public class JWTAuthMethodTest {
 
     @Test
     public void testApply() throws Exception {
-        RequestBuilder req = RequestBuilder.get();
-        auth.apply(req);
-
-        assertEquals(1, req.getHeaders("Authorization").length);
-        assertEquals("Bearer ", req.getFirstHeader("Authorization").getValue().substring(0, 7));
+        String header = auth.getHeaderValue();
+        assertNotNull(header);
+        assertEquals("Bearer ", header.substring(0, 7));
     }
 }

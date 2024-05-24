@@ -31,7 +31,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClient> {
+public class ProactiveConnectClientTest extends AbstractClientTest<ProactiveConnectClient> {
 
 	static Path SAMPLE_CSV_PATH;
 	static final Instant

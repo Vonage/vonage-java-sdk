@@ -15,7 +15,7 @@
  */
 package com.vonage.client.numbers;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
 import com.vonage.client.common.HttpMethod;
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.function.Executable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class NumbersClientTest extends ClientTest<NumbersClient> {
+public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
     public NumbersClientTest() {
         client = new NumbersClient(wrapper);

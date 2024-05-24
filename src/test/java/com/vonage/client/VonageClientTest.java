@@ -15,6 +15,7 @@
  */
 package com.vonage.client;
 
+import static com.vonage.client.TestUtils.*;
 import com.vonage.client.auth.*;
 import com.vonage.client.auth.hashutils.HashUtil;
 import com.vonage.client.voice.Call;
@@ -22,47 +23,15 @@ import com.vonage.client.voice.CallEvent;
 import com.vonage.client.voice.CallStatus;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.message.BasicNameValuePair;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.List;
-import java.util.UUID;
 
-public class VonageClientTest {
-    private static final UUID APPLICATION_ID = UUID.randomUUID();
+public class VonageClientTest extends AbstractClientTest<VonageClient> {
     private final TestUtils testUtils = new TestUtils();
-
-    private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
-        HttpClient result = mock(HttpClient.class);
-
-        HttpResponse response = mock(HttpResponse.class);
-        StatusLine sl = mock(StatusLine.class);
-        HttpEntity entity = mock(HttpEntity.class);
-
-        when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
-        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
-        when(sl.getStatusCode()).thenReturn(statusCode);
-        when(response.getStatusLine()).thenReturn(sl);
-        when(response.getEntity()).thenReturn(entity);
-
-        return result;
-    }
 
     @Test
     public void testConstructVonageClient() throws Exception {
@@ -119,27 +88,27 @@ public class VonageClientTest {
 
         Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(constructedToken).getPayload();
 
-        assertEquals(APPLICATION_ID.toString(), claims.get("application_id"));
+        assertEquals(APPLICATION_ID, claims.get("application_id"));
     }
 
     @Test
     public void testSoloApiKeyThrowsException() {
         assertThrows(VonageClientCreationException.class, () ->
-                VonageClient.builder().apiKey("api-key").build()
+                VonageClient.builder().apiKey(API_KEY).build()
         );
     }
 
     @Test
     public void testSoloApiSecret() {
         assertThrows(VonageClientCreationException.class, () ->
-                VonageClient.builder().apiSecret("api-secret").build()
+                VonageClient.builder().apiSecret(API_SECRET).build()
         );
     }
 
     @Test
     public void testSoloSignatureSecret() {
         assertThrows(VonageClientCreationException.class, () ->
-                VonageClient.builder().signatureSecret("api-secret").build()
+                VonageClient.builder().signatureSecret(SIGNATURE_SECRET).build()
         );
     }
 
@@ -161,88 +130,28 @@ public class VonageClientTest {
     public void testApiKeyWithSecret() throws VonageUnacceptableAuthException {
         VonageClient vonageClient = VonageClient.builder().apiKey("api-key").apiSecret("api-secret").build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
-
-        RequestBuilder requestBuilder = RequestBuilder.get();
-        authCollection.getAuth(TokenAuthMethod.class).apply(requestBuilder);
-
-        List<NameValuePair> parameters = requestBuilder.getParameters();
-        assertContainsParam(parameters, "api_key", "api-key");
-        assertContainsParam(parameters, "api_secret", "api-secret");
+        assertTrue(authCollection.hasAuthMethod(ApiKeyHeaderAuthMethod.class));
     }
 
     @Test
     public void testApiKeyWithSignatureSecret() throws Exception {
-        VonageClient vonageClient = VonageClient.builder().apiKey("api-key").signatureSecret("api-secret").build();
-        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
+        for (var hashType : HashUtil.HashType.values()) {
+            var vonageClient = VonageClient.builder()
+                    .apiKey(API_KEY).signatureSecret(SIGNATURE_SECRET).hashType(hashType).build();
 
-        RequestBuilder requestBuilder = RequestBuilder.get();
-        authCollection.getAuth(SignatureAuthMethod.class).apply(requestBuilder);
+            var sigAuthMethod = vonageClient.getHttpWrapper().getAuthCollection().getAuth(SignatureAuthMethod.class);
+            var params = sigAuthMethod.getAuthParams(new RequestQueryParams());
 
-        List<NameValuePair> parameters = requestBuilder.getParameters();
+            // This is messy but trying to generate a signature auth method and then comparing with
+            // what's on the request could have a race condition depending on the returned timestamp.
+            // So, we're going to generate the signature after trying to determine what the timestamp is.
 
-        // This is messy but trying to generate a signature auth method and then comparing with what's on the request
-        // could have a race condition depending on the returned timestamp.
+            String timestamp = params.get("timestamp");
+            String input = "&api_key="+API_KEY+"&timestamp=" + timestamp;
+            String sig = HashUtil.calculate(input, SIGNATURE_SECRET, "UTF-8", hashType);
 
-        // So, we're going to generate the signature after trying to determine what the timestamp is.
-        String timestamp = parameters
-                .stream()
-                .filter(pair -> "timestamp".equals(pair.getName()))
-                .findFirst()
-                .orElse(new BasicNameValuePair("", ""))
-                .getValue();
-
-        String sig = HashUtil.calculate("&api_key=api-key&timestamp=" + timestamp + "api-secret", HashUtil.HashType.MD5);
-        assertContainsParam(parameters, "sig", sig);
-    }
-
-    @Test
-    public void testApiKeyWithSignatureSecretAsHMACSHA256() throws Exception {
-        VonageClient vonageClient = VonageClient.builder().hashType(HashUtil.HashType.HMAC_SHA256).apiKey("api-key").signatureSecret("api-secret").build();
-        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
-
-        RequestBuilder requestBuilder = RequestBuilder.get();
-        authCollection.getAuth(SignatureAuthMethod.class).apply(requestBuilder);
-
-        List<NameValuePair> parameters = requestBuilder.getParameters();
-
-        // This is messy but trying to generate a signature auth method and then comparing with what's on the request
-        // could have a race condition depending on the returned timestamp.
-
-        // So, we're going to generate the signature after trying to determine what the timestamp is.
-        String timestamp = parameters
-                .stream()
-                .filter(pair -> "timestamp".equals(pair.getName()))
-                .findFirst()
-                .orElse(new BasicNameValuePair("", ""))
-                .getValue();
-
-        String sig = HashUtil.calculate("&api_key=api-key&timestamp=" + timestamp, "api-secret", "UTF-8", HashUtil.HashType.HMAC_SHA256);
-        assertContainsParam(parameters, "sig", sig);
-    }
-
-    @Test
-    public void testApiKeyWithSignatureSecretAsHmacSHA256() throws Exception {
-        VonageClient vonageClient = VonageClient.builder().hashType(HashUtil.HashType.HMAC_SHA256).apiKey("api-key").signatureSecret("api-secret").build();
-        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
-
-        RequestBuilder requestBuilder = RequestBuilder.get();
-        authCollection.getAuth(SignatureAuthMethod.class).apply(requestBuilder);
-
-        List<NameValuePair> parameters = requestBuilder.getParameters();
-
-        // This is messy but trying to generate a signature auth method and then comparing with what's on the request
-        // could have a race condition depending on the returned timestamp.
-
-        // So, we're going to generate the signature after trying to determine what the timestamp is.
-        String timestamp = parameters
-                .stream()
-                .filter(pair -> "timestamp".equals(pair.getName()))
-                .findFirst()
-                .orElse(new BasicNameValuePair("", ""))
-                .getValue();
-
-        String sig = HashUtil.calculate("&api_key=api-key&timestamp=" + timestamp, "api-secret", "UTF-8", HashUtil.HashType.HMAC_SHA256);
-        assertContainsParam(parameters, "sig", sig);
+            assertEquals(sig, params.get("sig"));
+        }
     }
 
     @Test
@@ -254,13 +163,9 @@ public class VonageClientTest {
                 .applicationId(APPLICATION_ID)
                 .privateKeyContents(keyBytes)
                 .build();
+
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
-
-        RequestBuilder requestBuilder = RequestBuilder.get();
-        authCollection.getAuth(JWTAuthMethod.class).apply(requestBuilder);
-
-        assertEquals(1, requestBuilder.getHeaders("Authorization").length);
-        assertEquals("Bearer ", requestBuilder.getFirstHeader("Authorization").getValue().substring(0, 7));
+        assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));
     }
 
     @Test
@@ -270,12 +175,7 @@ public class VonageClientTest {
 
         VonageClient vonageClient = VonageClient.builder().applicationId(APPLICATION_ID).privateKeyContents(key).build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
-
-        RequestBuilder requestBuilder = RequestBuilder.get();
-        authCollection.getAuth(JWTAuthMethod.class).apply(requestBuilder);
-
-        assertEquals(1, requestBuilder.getHeaders("Authorization").length);
-        assertEquals("Bearer ", requestBuilder.getFirstHeader("Authorization").getValue().substring(0, 7));
+        assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));
     }
 
     @Test
@@ -285,12 +185,7 @@ public class VonageClientTest {
                 .privateKeyPath(Paths.get(getClass().getResource("test/keys/application_key").toURI()))
                 .build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
-
-        RequestBuilder requestBuilder = RequestBuilder.get();
-        authCollection.getAuth(JWTAuthMethod.class).apply(requestBuilder);
-
-        assertEquals(1, requestBuilder.getHeaders("Authorization").length);
-        assertEquals("Bearer ", requestBuilder.getFirstHeader("Authorization").getValue().substring(0, 7));
+        assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));
     }
 
     @Test
@@ -300,12 +195,7 @@ public class VonageClientTest {
                 .privateKeyPath(Paths.get(getClass().getResource("test/keys/application_key").toURI()).toString())
                 .build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
-
-        RequestBuilder requestBuilder = RequestBuilder.get();
-        authCollection.getAuth(JWTAuthMethod.class).apply(requestBuilder);
-
-        assertEquals(1, requestBuilder.getHeaders("Authorization").length);
-        assertEquals("Bearer ", requestBuilder.getFirstHeader("Authorization").getValue().substring(0, 7));
+        assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));
     }
 
     @Test
@@ -353,10 +243,5 @@ public class VonageClientTest {
         assertNotNull(client.getVerifyClient());
         assertNotNull(client.getVerify2Client());
         assertNotNull(client.getVideoClient());
-    }
-
-    private void assertContainsParam(List<NameValuePair> params, String key, String value) {
-        NameValuePair item = new BasicNameValuePair(key, value);
-        assertTrue(params.contains(item), params + " should contain " + item);
     }
 }

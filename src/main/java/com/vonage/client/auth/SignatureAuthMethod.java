@@ -16,23 +16,22 @@
 package com.vonage.client.auth;
 
 import com.vonage.client.auth.hashutils.HashUtil;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.methods.RequestBuilder;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class SignatureAuthMethod implements AuthMethod {
+public class SignatureAuthMethod extends QueryParamsAuthMethod {
     private static final int SORT_KEY = 20;
 
-    private final String apiKey, apiSecret;
+    private final String apiKey, sigSecret;
     private final HashUtil.HashType hashType;
 
-    public SignatureAuthMethod(String apiKey, String apiSecret) {
-        this(apiKey, apiSecret, HashUtil.HashType.MD5);
+    public SignatureAuthMethod(String apiKey, String sigSecret) {
+        this(apiKey, sigSecret, HashUtil.HashType.MD5);
     }
 
-    public SignatureAuthMethod(String apiKey, String apiSecret, HashUtil.HashType hashType) {
+    public SignatureAuthMethod(String apiKey, String sigSecret, HashUtil.HashType hashType) {
         this.apiKey = apiKey;
-        this.apiSecret = apiSecret;
+        this.sigSecret = sigSecret;
         this.hashType = hashType;
     }
 
@@ -41,17 +40,16 @@ public class SignatureAuthMethod implements AuthMethod {
     }
 
     @Override
-    public RequestBuilder apply(RequestBuilder request) {
-        request.addParameter("api_key", apiKey);
-        List<NameValuePair> params = request.getParameters();
-        RequestSigning.constructSignatureForRequestParameters(params, apiSecret, hashType);
-        int last = params.size() - 1;
-        request.addParameters(params.get(last), params.get(last - 1));
-        return request;
+    public int getSortKey() {
+        return SORT_KEY;
     }
 
     @Override
-    public int getSortKey() {
-        return SORT_KEY;
+    public Map<String, String> getAuthParams(RequestQueryParams requestParams) {
+        Map<String, String> inParams = requestParams.toMap(), outParams = new LinkedHashMap<>(4);
+        outParams.put("api_key", apiKey);
+        inParams.putAll(outParams);
+        outParams.putAll(RequestSigning.getSignatureForRequestParameters(inParams, sigSecret, hashType));
+        return outParams;
     }
 }

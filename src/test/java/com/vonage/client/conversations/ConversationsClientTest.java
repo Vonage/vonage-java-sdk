@@ -17,8 +17,9 @@ package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
+import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.common.ChannelType;
@@ -38,7 +39,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class ConversationsClientTest extends ClientTest<ConversationsClient> {
+public class ConversationsClientTest extends AbstractClientTest<ConversationsClient> {
 	static final Random RANDOM = new Random();
 	static final boolean IS_SYSTEM = false, EXCLUDE_DELETED_EVENTS = true,
 			AUDIO = true, AUDIO_EARMUFFED = false, AUDIO_MUTED = true, AUDIO_ENABLED = true;
@@ -194,7 +195,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 						  "id": "\{USER_ID}",
 						  "name": "\{USER_NAME}"
 					   },
-					   "api_key": "\{API_KEY}"
+					   "api_key": "\{TestUtils.API_KEY}"
 					},
 					"properties": {
 					   "ttl": \{USER_SESSION_TTL}
@@ -778,7 +779,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	public void testCreateConversationEndpoint() throws Exception {
 		new ConversationsEndpointTestSpec<Conversation, Conversation>() {
 			final Callback callback = Callback.builder().url("http://example.com/callback")
-					.eventMask("Test value").applicationId(APPLICATION_ID)
+					.eventMask("Test value").applicationId(TestUtils.APPLICATION_ID)
 					.nccoUrl("http://example.com/ncco").method(HttpMethod.POST).build();
 
 			@Override

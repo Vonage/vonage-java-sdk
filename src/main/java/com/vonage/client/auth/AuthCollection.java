@@ -15,6 +15,7 @@
  */
 package com.vonage.client.auth;
 
+import com.vonage.client.auth.hashutils.HashUtil;
 import java.util.*;
 
 /**
@@ -41,12 +42,48 @@ public class AuthCollection {
         authList = authMethods;
     }
 
+    public AuthCollection(String applicationId, byte[] privateKeyContents, String key, String secret, HashUtil.HashType hashType, String signature) {
+
+        this();
+
+        if (key != null && secret == null && signature == null) {
+            throw new IllegalStateException(
+                    "You must provide an API secret or signature secret in addition to your API key.");
+        }
+        if (secret != null && key == null) {
+            throw new IllegalStateException("You must provide an API key in addition to your API secret.");
+        }
+        if (signature != null && key == null) {
+            throw new IllegalStateException("You must provide an API key in addition to your signature secret.");
+        }
+        if (applicationId == null && privateKeyContents != null) {
+            throw new IllegalStateException("You must provide an application ID in addition to your private key.");
+        }
+        if (applicationId != null && privateKeyContents == null) {
+            throw new IllegalStateException("You must provide a private key in addition to your application id.");
+        }
+
+        if (key != null && secret != null) {
+            authList.add(new ApiKeyHeaderAuthMethod(key, secret));
+            authList.add(new ApiKeyQueryParamsAuthMethod(key, secret));
+        }
+        if (key != null && signature != null) {
+            authList.add(new SignatureAuthMethod(key, signature, hashType));
+        }
+        if (applicationId != null) {
+            authList.add(new JWTAuthMethod(applicationId, privateKeyContents));
+        }
+    }
+
     /**
      * Add a new {@link AuthMethod} to the set managed by this AuthCollection.
+     * If an auth method of this type already exists, this method will replace it with
+     * the new provided value.
      *
      * @param auth AuthMethod method to be added to this collection.
      */
     public void add(AuthMethod auth) {
+        authList.remove(auth);
         authList.add(auth);
     }
 

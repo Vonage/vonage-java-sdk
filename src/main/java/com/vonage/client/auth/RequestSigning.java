@@ -22,15 +22,13 @@ import com.vonage.client.auth.hashutils.HashUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A helper class for generating or verifying MD5 signatures when signing REST requests for submission to Vonage.
@@ -54,9 +52,11 @@ public class RequestSigning {
      * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
      * @param secretKey the pre-shared secret key held by the client
      *
+     * @deprecated Use {@link #getSignatureForRequestParameters(Map, String, HashUtil.HashType)}.
      */
+    @Deprecated
     public static void constructSignatureForRequestParameters(List<NameValuePair> params, String secretKey) {
-        constructSignatureForRequestParameters(params, secretKey, Instant.now().getEpochSecond());
+        constructSignatureForRequestParameters(params, secretKey, HashUtil.HashType.HMAC_MD5);
     }
 
     /**
@@ -66,11 +66,19 @@ public class RequestSigning {
      * Uses the supplied pre-shared secret key to generate the signature.
      *
      * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
-     * @param secretKey the pre-shared secret key held by the client
-     * @param hashType The type of hash that is to be used in construction
+     * @param secretKey the pre-shared secret key held by the client.
+     * @param hashType The type of hash that is to be used in construction.
+     * @deprecated Use {@link #constructSignatureForRequestParameters(Map, String, HashUtil.HashType)}.
      */
+    @Deprecated
     public static void constructSignatureForRequestParameters(List<NameValuePair> params, String secretKey, HashUtil.HashType hashType) {
-        constructSignatureForRequestParameters(params, secretKey, Instant.now().getEpochSecond(), hashType);
+        Map<String, String> sortedParams = params.stream().collect(Collectors.toMap(
+                NameValuePair::getName,
+                NameValuePair::getValue,
+                (v1, v2) -> v1,
+                TreeMap::new
+        ));
+        constructSignatureForRequestParameters(sortedParams, secretKey, hashType);
     }
 
     /**
@@ -78,18 +86,53 @@ public class RequestSigning {
      * <p>
      * Generates additional parameters to represent the timestamp and generated signature.
      * Uses the supplied pre-shared secret key to generate the signature.
-     * Hashing strategy is MD5.
+     * This method modifies the input params.
      *
-     * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
-     * @param secretKey the pre-shared secret key held by the client
-     * @param currentTimeSeconds the current time in seconds since 1970-01-01
+     * @param params Query parameters for the request that is to be signed.
+     * @param secretKey the pre-shared secret key held by the client.
+     * @param hashType The type of hash that is to be used in construction.
      *
+     * @deprecated Use {@link #getSignatureForRequestParameters(Map, String, HashUtil.HashType)}.
      */
-     protected static void constructSignatureForRequestParameters(List<NameValuePair> params,
-                                                                  String secretKey,
-                                                                  long currentTimeSeconds) {
-        // First, inject a 'timestamp=' parameter containing the current time in seconds since Jan 1st 1970
-        constructSignatureForRequestParameters(params, secretKey, currentTimeSeconds, HashUtil.HashType.MD5);
+    @Deprecated
+    public static void constructSignatureForRequestParameters(Map<String, String> params, String secretKey, HashUtil.HashType hashType) {
+        params.putAll(getSignatureForRequestParameters(params, secretKey, hashType));
+    }
+
+    /**
+     * Signs a set of request parameters.
+     * <p>
+     * Generates additional parameters to represent the timestamp and generated signature.
+     * Uses the supplied pre-shared secret key to generate the signature.
+     * This method does not modify the input parameters.
+     *
+     * @param params Query parameters for the request that is to be signed.
+     * @param secretKey the pre-shared secret key held by the client.
+     * @param hashType The type of hash that is to be used in construction.
+     *
+     * @return A new Map with the signature query parameters.
+     */
+    public static Map<String, String> getSignatureForRequestParameters(Map<String, String> params, String secretKey, HashUtil.HashType hashType) {
+        return constructSignatureForRequestParameters(params, secretKey, Instant.now().getEpochSecond(), hashType);
+    }
+
+    private static String clean(String str) {
+        return str == null ? null : str.replaceAll("[=&]", "_");
+    }
+
+    static String generateParamsString(Map<String, String> params) {
+        SortedMap<String, String> sortedParams = params instanceof SortedMap ?
+                (SortedMap<String, String>) params : new TreeMap<>(params);
+
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> param : sortedParams.entrySet()) {
+            String name = param.getKey(), value = param.getValue();
+            if (PARAM_SIGNATURE.equals(name) || value == null || value.trim().isEmpty()) {
+                continue;
+            }
+            sb.append("&").append(clean(name)).append("=").append(clean(value));
+        }
+        return sb.toString();
     }
 
     /**
@@ -98,52 +141,37 @@ public class RequestSigning {
      * Generates additional parameters to represent the timestamp and generated signature.
      * Uses the supplied pre-shared secret key to generate the signature.
      *
-     * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed.
+     * @param inputParams Query parameters for the request that is to be signed.
      * @param secretKey the pre-shared secret key held by the client.
      * @param currentTimeSeconds the current time in seconds since 1970-01-01.
      * @param hashType Hash type to be used to construct request parameters.
      *
      */
-    protected static void constructSignatureForRequestParameters(List<NameValuePair> params,
+    static Map<String, String> constructSignatureForRequestParameters(Map<String, String> inputParams,
                                                                  String secretKey,
                                                                  long currentTimeSeconds,
                                                                  HashUtil.HashType hashType) {
+
         // First, inject a 'timestamp=' parameter containing the current time in seconds since Jan 1st 1970
-        params.add(new BasicNameValuePair(PARAM_TIMESTAMP, Long.toString(currentTimeSeconds)));
+        String timestampStr = Long.toString(currentTimeSeconds);
+        Map<String, String> tempParams = new TreeMap<>(inputParams);
+        tempParams.put(PARAM_TIMESTAMP, timestampStr);
 
-        Map<String, String> sortedParams = new TreeMap<>();
-        for (NameValuePair param: params) {
-            String name = param.getName();
-            String value = param.getValue();
-            if (name.equals(PARAM_SIGNATURE)) {
-                continue;
-            }
-            if (value == null) {
-                value = "";
-            }
-            if (!value.trim().isEmpty()) {
-                sortedParams.put(name, value);
-            }
-        }
-
-        // Now, walk through the sorted list of parameters and construct a string
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> param: sortedParams.entrySet()) {
-            sb.append("&").append(clean(param.getKey())).append("=").append(clean(param.getValue()));
-        }
-
-        String str = sb.toString();
-
-        String hashed = "no signature";
+        String hashed, str = generateParamsString(tempParams);
         try {
             hashed = HashUtil.calculate(str, secretKey, "UTF-8", hashType);
-        } catch (Exception e) {
-            log.error("error...", e);
+        }
+        catch (Exception ex) {
+            log.error("error...", ex);
+            hashed = "no signature";
         }
 
         log.debug("SECURITY-KEY-GENERATION -- String [ " + str + " ] Signature [ " + hashed + " ] ");
 
-        params.add(new BasicNameValuePair(PARAM_SIGNATURE, hashed));
+        Map<String, String> outputParams = new LinkedHashMap<>(4);
+        outputParams.put(PARAM_TIMESTAMP, timestampStr);
+        outputParams.put(PARAM_SIGNATURE, hashed);
+        return outputParams;
     }
 
     /**
@@ -198,7 +226,7 @@ public class RequestSigning {
      *
      * @return true if the signature is correct for this request and secret key.
      */
-    protected static boolean verifyRequestSignature(String contentType,
+    static boolean verifyRequestSignature(String contentType,
                                                     InputStream inputStream,
                                                     Map<String, String[]> parameterMap,
                                                     String secretKey,
@@ -258,7 +286,7 @@ public class RequestSigning {
         }
 
 
-        // walk this sorted list of parameters and construct a string
+        // Walk this sorted list of parameters and construct a string
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> param : sortedParams.entrySet()) {
             if (param.getKey().equals(PARAM_SIGNATURE)) continue;
@@ -286,9 +314,4 @@ public class RequestSigning {
                 suppliedSignature.toLowerCase().getBytes(StandardCharsets.UTF_8)
         );
     }
-
-    public static String clean(String str) {
-        return str == null ? null : str.replaceAll("[=&]", "_");
-    }
-
 }

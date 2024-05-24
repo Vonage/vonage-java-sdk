@@ -15,7 +15,7 @@
  */
 package com.vonage.client.subaccounts;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
 import com.vonage.client.common.HttpMethod;
@@ -27,7 +27,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
+public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient> {
 	static final String FROM_API_KEY = "cde3214b", TO_API_KEY = "12c4d5e6", SUB_API_KEY = "def123ab",
 		ACCOUNT_RESPONSE_JSON = "{\n" +
 				"   \"secret\": \"Password123\",\n" +
@@ -202,7 +202,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 			@Override
 			protected String expectedEndpointUri(UpdateSubaccountRequest request) {
-				return "/accounts/"+ API_KEY +"/subaccounts/"+request.subaccountApiKey;
+				return "/accounts/"+ TestUtils.API_KEY +"/subaccounts/"+request.subaccountApiKey;
 			}
 
 			@Override
@@ -251,7 +251,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 			@Override
 			protected String expectedEndpointUri(Void request) {
-				return "/accounts/"+ API_KEY +"/subaccounts";
+				return "/accounts/"+ TestUtils.API_KEY +"/subaccounts";
 			}
 
 			@Override
@@ -284,7 +284,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 			@Override
 			protected String expectedEndpointUri(String request) {
-				return "/accounts/"+ API_KEY +"/subaccounts/"+request;
+				return "/accounts/"+ TestUtils.API_KEY +"/subaccounts/"+request;
 			}
 
 			@Override
@@ -332,7 +332,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			protected String expectedEndpointUri(ListTransfersFilter request) {
 				assertNotNull(request.getStartDate());
 				assertNotNull(request.getEndDate());
-				return "/accounts/"+ API_KEY +"/credit-transfers";
+				return "/accounts/"+ TestUtils.API_KEY +"/credit-transfers";
 			}
 
 			@Override
@@ -377,7 +377,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 				assertNotNull(request.getStartDate());
 				assertNull(request.getEndDate());
 				assertNull(request.getSubaccount());
-				return "/accounts/"+ API_KEY +"/balance-transfers";
+				return "/accounts/"+ TestUtils.API_KEY +"/balance-transfers";
 			}
 
 			@Override
@@ -400,7 +400,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 		@Override
 		protected String expectedEndpointUri(MoneyTransfer request) {
-			return "/accounts/"+ API_KEY +"/"+name()+"-transfers";
+			return "/accounts/"+ TestUtils.API_KEY +"/"+name()+"-transfers";
 		}
 
 		@Override
@@ -514,7 +514,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 			@Override
 			protected String expectedEndpointUri(NumberTransfer request) {
-				return "/accounts/"+ API_KEY +"/transfer-number";
+				return "/accounts/"+ TestUtils.API_KEY +"/transfer-number";
 			}
 
 			@Override
