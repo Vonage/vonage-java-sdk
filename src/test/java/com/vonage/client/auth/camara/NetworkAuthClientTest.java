@@ -16,17 +16,23 @@
 package com.vonage.client.auth.camara;
 
 import com.vonage.client.AbstractClientTest;
+import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.RestEndpoint;
+import static com.vonage.client.TestUtils.TEST_BASE_URI;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
-import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.*;
+import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.CHECK_SIM_SWAP;
+import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.RETRIEVE_SIM_SWAP_DATE;
+import com.vonage.client.common.HttpMethod;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.function.Executable;
 import java.util.Map;
 import java.util.UUID;
 
 public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient> {
     final UUID authReqId = UUID.randomUUID();
+    final String accessToken = "youMayProceed";
 
     public NetworkAuthClientTest() {
         client = new NetworkAuthClient(wrapper);
@@ -47,14 +53,33 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
         assertEquals(code, parsed.getCode());
     }
 
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testFraudBackendAuthMethod() throws Exception {
+        var fbam = new FraudBackendAuthMethod(client, "+34 91 12345678", CHECK_SIM_SWAP);
+        wrapper.getAuthCollection().add(fbam);
+        var endpoint = DynamicEndpoint.<Void, String> builder(String.class)
+                .wrapper(wrapper).requestMethod(HttpMethod.POST)
+                .authMethod(FraudBackendAuthMethod.class)
+                .pathGetter((de, req) -> TEST_BASE_URI).build();
+
+        var expectedResponse = "Hello, GNP!";
+        stubResponse(200,
+                "{\"auth_req_id\": \""+authReqId+"\"}",
+                "{\"access_token\": \""+accessToken+"\"}",
+                expectedResponse
+        );
+
+        assertEquals(expectedResponse, endpoint.execute(null));
+    }
+
     @Test
     public void testGetCamaraAccessToken() throws Exception {
-        var accessToken = "youMayProceed";
         stubResponse(200,
                 "{\"auth_req_id\": \""+authReqId+"\"}",
                 "{\"access_token\": \""+accessToken+"\"}"
         );
-
         assertEquals(accessToken, client.getCamaraAccessToken("+447900000001", RETRIEVE_SIM_SWAP_DATE));
     }
 

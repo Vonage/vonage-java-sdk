@@ -16,6 +16,7 @@
 package com.vonage.client.auth.camara;
 
 import com.vonage.client.auth.BearerAuthMethod;
+import com.vonage.client.common.E164;
 
 public class FraudBackendAuthMethod extends BearerAuthMethod {
     private final NetworkAuthClient networkAuthClient;
@@ -26,7 +27,7 @@ public class FraudBackendAuthMethod extends BearerAuthMethod {
                                   String telNumber,
                                   FraudPreventionDetectionScope scope) {
         this.networkAuthClient = client;
-        this.msisdn = telNumber;
+        this.msisdn = new E164(telNumber).toString();
         this.scope = scope;
     }
 
