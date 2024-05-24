@@ -15,12 +15,14 @@
  */
 package com.vonage.client.auth;
 
+import com.vonage.client.auth.hashutils.AbstractAuthMethod;
+
 /**
  * Base class for auth methods which use the {@code Authorization: Bearer } header.
  *
  * @since 8.8.0
  */
-public abstract class BearerAuthMethod extends HeaderAuthMethod {
+public abstract class BearerAuthMethod extends AbstractAuthMethod implements HeaderAuthMethod {
 
     protected abstract String getBearerToken();
 

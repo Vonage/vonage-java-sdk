@@ -15,19 +15,12 @@
  */
 package com.vonage.client.auth;
 
-import com.vonage.client.auth.hashutils.AbstractAuthMethod;
-
 /**
- * Base class for auth methods which use the {@code Authorization: Basic } header.
+ * Signifies that the auth method has an API key.
  *
  * @since 8.8.0
  */
-public abstract class BasicAuthMethod extends AbstractAuthMethod implements HeaderAuthMethod {
+public interface ApiKeyAuthMethod extends AuthMethod {
 
-    protected abstract String getBasicToken();
-
-    @Override
-    public final String getHeaderValue() {
-        return "Basic " + getBasicToken();
-    }
+    String getApiKey();
 }

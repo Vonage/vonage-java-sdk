@@ -146,14 +146,8 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
         if (am instanceof JWTAuthMethod) {
             return ((JWTAuthMethod) am).getApplicationId();
         }
-        if (am instanceof ApiKeyHeaderAuthMethod) {
-            return ((ApiKeyHeaderAuthMethod) am).getApiKey();
-        }
-        if (am instanceof ApiKeyQueryParamsAuthMethod) {
-            return ((ApiKeyQueryParamsAuthMethod) am).getApiKey();
-        }
-        if (am instanceof SignatureAuthMethod) {
-            return ((SignatureAuthMethod) am).getApiKey();
+        else if (am instanceof ApiKeyAuthMethod) {
+            return ((ApiKeyAuthMethod) am).getApiKey();
         }
         throw new IllegalStateException(am.getClass().getSimpleName() + " does not have API key.");
     }

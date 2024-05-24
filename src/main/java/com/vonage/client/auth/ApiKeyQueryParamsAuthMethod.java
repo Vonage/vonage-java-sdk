@@ -23,7 +23,7 @@ import java.util.Map;
  *
  * @since 8.8.0
  */
-public class ApiKeyQueryParamsAuthMethod extends QueryParamsAuthMethod {
+public class ApiKeyQueryParamsAuthMethod extends QueryParamsAuthMethod implements ApiKeyAuthMethod {
     private static final int SORT_KEY = 30;
 
     private final String apiKey, apiSecret;
@@ -42,6 +42,7 @@ public class ApiKeyQueryParamsAuthMethod extends QueryParamsAuthMethod {
         return new ApiKeyHeaderAuthMethod(apiKey, apiSecret);
     }
 
+    @Override
     public String getApiKey() {
         return apiKey;
     }

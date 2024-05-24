@@ -22,7 +22,7 @@ import org.apache.commons.codec.binary.Base64;
  *
  * @since 8.8.0
  */
-public class ApiKeyHeaderAuthMethod extends BasicAuthMethod {
+public class ApiKeyHeaderAuthMethod extends BasicAuthMethod implements ApiKeyAuthMethod {
     private static final int SORT_KEY = 40;
 
     private final String apiKey, apiSecret;
@@ -32,6 +32,7 @@ public class ApiKeyHeaderAuthMethod extends BasicAuthMethod {
         this.apiSecret = apiSecret;
     }
 
+    @Override
     public String getApiKey() {
         return apiKey;
     }

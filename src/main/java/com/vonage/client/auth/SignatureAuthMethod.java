@@ -19,7 +19,7 @@ import com.vonage.client.auth.hashutils.HashUtil;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class SignatureAuthMethod extends QueryParamsAuthMethod {
+public class SignatureAuthMethod extends QueryParamsAuthMethod implements ApiKeyAuthMethod {
     private static final int SORT_KEY = 20;
 
     private final String apiKey, sigSecret;
@@ -35,6 +35,7 @@ public class SignatureAuthMethod extends QueryParamsAuthMethod {
         this.hashType = hashType;
     }
 
+    @Override
     public String getApiKey() {
         return apiKey;
     }
