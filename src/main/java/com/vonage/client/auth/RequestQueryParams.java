@@ -15,21 +15,23 @@
  */
 package com.vonage.client.auth;
 
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 /**
- * Base class for auth methods that are appended to the request's query parameters.
+ * Represents query parameters in a HTTP request without depending on a specific implementation.
  *
  * @since 8.8.0
  */
-public abstract class QueryParamsAuthMethod extends AuthMethod {
+public class RequestQueryParams extends ArrayList<AbstractMap.SimpleEntry<String, String>> {
 
-    /**
-     * Gets the auth parameters to be included in the query string.
-     *
-     * @param requestParams List of existing request parameters, which may be used in the computation.
-     *
-     * @return A new Map containing only the authentication parameters.
-     */
-    public abstract Map<String, String> getAuthParams(RequestQueryParams requestParams);
+    public Map<String, String> toMap() {
+        return stream().collect(Collectors.toMap(
+                Entry::getKey, Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new
+        ));
+    }
 }

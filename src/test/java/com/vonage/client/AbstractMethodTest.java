@@ -181,7 +181,8 @@ public class AbstractMethodTest {
         when(mockWrapper.getAuthCollection()).thenReturn(qpApiKeyAuthCollection);
         request = method.makeRequest();
         assertEquals(request, method.applyAuth(request));
-        var paramsMap = AbstractMethod.requestParamsToMap(request);
+        assertEquals(4, request.getParameters().size());
+        var paramsMap = AbstractMethod.normalRequestParams(request).toMap();
         assertEquals(4, paramsMap.size());
         assertEquals(API_KEY, paramsMap.get("api_key"));
         assertEquals(API_SECRET, paramsMap.get("api_secret"));
@@ -193,7 +194,8 @@ public class AbstractMethodTest {
 
         request = method.makeRequest();
         assertEquals(request, method.applyAuth(request));
-        paramsMap = AbstractMethod.requestParamsToMap(request);
+        assertEquals(5, request.getParameters().size());
+        paramsMap = AbstractMethod.normalRequestParams(request).toMap();
         assertEquals(5, paramsMap.size());
         assertEquals(API_KEY, paramsMap.get("api_key"));
         assertEquals("Yes", paramsMap.get("BAZINGA"));

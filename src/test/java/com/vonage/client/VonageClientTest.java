@@ -29,7 +29,6 @@ import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Map;
 
 public class VonageClientTest extends AbstractClientTest<VonageClient> {
     private final TestUtils testUtils = new TestUtils();
@@ -141,7 +140,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
                     .apiKey(API_KEY).signatureSecret(SIGNATURE_SECRET).hashType(hashType).build();
 
             var sigAuthMethod = vonageClient.getHttpWrapper().getAuthCollection().getAuth(SignatureAuthMethod.class);
-            var params = sigAuthMethod.getAuthParams(Map.of());
+            var params = sigAuthMethod.getAuthParams(new RequestQueryParams());
 
             // This is messy but trying to generate a signature auth method and then comparing with
             // what's on the request could have a race condition depending on the returned timestamp.

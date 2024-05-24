@@ -47,7 +47,7 @@ public class ApiKeyQueryParamsAuthMethod extends QueryParamsAuthMethod {
     }
 
     @Override
-    public Map<String, String> getQueryParams() {
+    public Map<String, String> getAuthParams(RequestQueryParams requestParams) {
         Map<String, String> params = new LinkedHashMap<>(4);
         params.put("api_key", apiKey);
         params.put("api_secret", apiSecret);

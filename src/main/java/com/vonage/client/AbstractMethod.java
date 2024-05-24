@@ -18,14 +18,13 @@ package com.vonage.client;
 import com.vonage.client.auth.*;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
+import java.util.AbstractMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -109,33 +108,20 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
      */
     protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
         AuthMethod am = getAuthMethod();
-
-        if (am instanceof SignatureAuthMethod) {
-            ((SignatureAuthMethod) am).getAuthParams(requestParamsToMap(request))
-                    .forEach(request::addParameter);
-        }
-        else if (am instanceof HeaderAuthMethod) {
+        if (am instanceof HeaderAuthMethod) {
             request.setHeader("Authorization", ((HeaderAuthMethod) am).getHeaderValue());
         }
         else if (am instanceof QueryParamsAuthMethod) {
-            ((QueryParamsAuthMethod) am).getQueryParams().forEach(request::addParameter);
+            RequestQueryParams qp = am instanceof ApiKeyQueryParamsAuthMethod ? null : normalRequestParams(request);
+            ((QueryParamsAuthMethod) am).getAuthParams(qp).forEach(request::addParameter);
         }
         return request;
     }
 
-    /**
-     * Converts the request's parameters to a Map, for easier querying.
-     *
-     * @param request The request to obtain parameters from.
-     *
-     * @return A new Map representation of the request's query parameters.
-     *
-     * @since 8.8.0
-     */
-    protected static Map<String, String> requestParamsToMap(RequestBuilder request) {
-        return request.getParameters().stream().collect(Collectors.toMap(
-                NameValuePair::getName, NameValuePair::getValue
-        ));
+    static RequestQueryParams normalRequestParams(RequestBuilder request) {
+        return request.getParameters().stream()
+                .map(nvp -> new AbstractMap.SimpleEntry<>(nvp.getName(), nvp.getValue()))
+                .collect(Collectors.toCollection(RequestQueryParams::new));
     }
 
     /**

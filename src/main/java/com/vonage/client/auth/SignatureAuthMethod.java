@@ -19,7 +19,7 @@ import com.vonage.client.auth.hashutils.HashUtil;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class SignatureAuthMethod extends AuthMethod {
+public class SignatureAuthMethod extends QueryParamsAuthMethod {
     private static final int SORT_KEY = 20;
 
     private final String apiKey, sigSecret;
@@ -44,21 +44,12 @@ public class SignatureAuthMethod extends AuthMethod {
         return SORT_KEY;
     }
 
-    /**
-     * Gets the auth parameters to be included in the query string.
-     *
-     * @param requestParams The current query parameters.
-     *
-     * @return A new Map containing the additional authentication signature parameters.
-     * @since 8.8.0
-     */
-    public Map<String, String> getAuthParams(Map<String, String> requestParams) {
-        Map<String, String> outParams = new LinkedHashMap<>(4), inParams = new LinkedHashMap<>(requestParams);
+    @Override
+    public Map<String, String> getAuthParams(RequestQueryParams requestParams) {
+        Map<String, String> inParams = requestParams.toMap(), outParams = new LinkedHashMap<>(4);
         outParams.put("api_key", apiKey);
         inParams.putAll(outParams);
-        outParams.putAll(RequestSigning.getSignatureForRequestParameters(
-                inParams, sigSecret, hashType
-        ));
+        outParams.putAll(RequestSigning.getSignatureForRequestParameters(inParams, sigSecret, hashType));
         return outParams;
     }
 }

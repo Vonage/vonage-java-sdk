@@ -36,7 +36,7 @@ public class ApiKeySecretAuthMethodTest {
         assertEquals(key, split[0]);
         assertEquals(secret, split[1]);
 
-        var params = auth.asQueryParams().getQueryParams();
+        var params = auth.asQueryParams().getAuthParams(null);
         assertNotNull(params);
         assertEquals(2, params.size());
         assertEquals(key, params.get("api_key"));
