@@ -15,7 +15,6 @@
  */
 package com.vonage.client.auth;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -23,13 +22,13 @@ import java.util.Map;
  *
  * @since 8.8.0
  */
-public class ApiKeyQueryParamsAuthMethod extends QueryParamsAuthMethod implements ApiKeyAuthMethod {
+public class ApiKeyQueryParamsAuthMethod extends AbstractApiKeyQueryParamsAuthMethod {
     private static final int SORT_KEY = 30;
 
-    private final String apiKey, apiSecret;
+    private final String apiSecret;
 
     public ApiKeyQueryParamsAuthMethod(String apiKey, String apiSecret) {
-        this.apiKey = apiKey;
+        super(apiKey);
         this.apiSecret = apiSecret;
     }
 
@@ -43,14 +42,8 @@ public class ApiKeyQueryParamsAuthMethod extends QueryParamsAuthMethod implement
     }
 
     @Override
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    @Override
     public Map<String, String> getAuthParams(RequestQueryParams requestParams) {
-        Map<String, String> params = new LinkedHashMap<>(4);
-        params.put("api_key", apiKey);
+        Map<String, String> params = super.getAuthParams(requestParams);
         params.put("api_secret", apiSecret);
         return params;
     }

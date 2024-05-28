@@ -18,11 +18,11 @@ package com.vonage.client.auth;
 import java.util.Map;
 
 /**
- * Base class for auth methods that are appended to the request's query parameters.
+ * Auth methods that are appended to the request's query parameters.
  *
  * @since 8.8.0
  */
-public abstract class QueryParamsAuthMethod extends AuthMethod {
+public interface QueryParamsAuthMethod extends AuthMethod {
 
     /**
      * Gets the auth parameters to be included in the query string.
@@ -31,5 +31,5 @@ public abstract class QueryParamsAuthMethod extends AuthMethod {
      *
      * @return A new Map containing only the authentication parameters.
      */
-    public abstract Map<String, String> getAuthParams(RequestQueryParams requestParams);
+    Map<String, String> getAuthParams(RequestQueryParams requestParams);
 }

@@ -97,7 +97,7 @@ public class AuthCollectionTest {
         assertTrue(ac.hasAuthMethod(ApiKeyHeaderAuthMethod.class));
         assertFalse(ac.hasAuthMethod(SignatureAuthMethod.class));
 
-        var apiKeyClasses = Set.of(ApiKeyQueryParamsAuthMethod.class, ApiKeyHeaderAuthMethod.class);
+        Set<Class<? extends AuthMethod>> apiKeyClasses = Set.of(ApiKeyAuthMethod.class);
         assertNotNull(ac.getAcceptableAuthMethod(JWT_AUTH_CLASS_SET));
         assertEquals(ApiKeyQueryParamsAuthMethod.class, ac.getAcceptableAuthMethod(apiKeyClasses).getClass());
         assertThrows(VonageUnacceptableAuthException.class, () ->
