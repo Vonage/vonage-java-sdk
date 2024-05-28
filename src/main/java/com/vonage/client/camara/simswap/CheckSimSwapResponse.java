@@ -13,15 +13,21 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+package com.vonage.client.camara.simswap;
 
-/**
- * This package contains classes to support usage of the
- * <a href=https://developer.vonage.com/en/api/camara/auth>Vonage Network Auth API</a>. Please refer to
- * <a href=https://developer.vonage.com/en/getting-started-network/authentication>the developer documentation</a>
- * for an overview of the concepts. <br>
- * Note that this package is not part of the SDK's public API and thus not considered relevant as part of
- * semantic versioning for breaking changes.
- *
- * @since 8.8.0
- */
-package com.vonage.client.auth.camara;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
+
+class CheckSimSwapResponse extends JsonableBaseObject {
+    private Boolean swapped;
+
+    /**
+     * Indicates whether the SIM card has been swapped during the period within the provided age.
+     *
+     * @return Whether the SIM was swapped.
+     */
+    @JsonProperty("swapped")
+    public boolean getSwapped() {
+        return swapped != null ? swapped : false;
+    }
+}

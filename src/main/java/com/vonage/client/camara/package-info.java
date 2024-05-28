@@ -15,13 +15,9 @@
  */
 
 /**
- * This package contains classes to support usage of the
- * <a href=https://developer.vonage.com/en/api/camara/auth>Vonage Network Auth API</a>. Please refer to
- * <a href=https://developer.vonage.com/en/getting-started-network/authentication>the developer documentation</a>
- * for an overview of the concepts. <br>
- * Note that this package is not part of the SDK's public API and thus not considered relevant as part of
- * semantic versioning for breaking changes.
+ * This package contains classes and subpackages to support usage of the
+ * <a href=https://developer.vonage.com/en/getting-started-network/what-are-network-apis>Vonage Network APIs</a>.
  *
  * @since 8.8.0
  */
-package com.vonage.client.auth.camara;
+package com.vonage.client.camara;

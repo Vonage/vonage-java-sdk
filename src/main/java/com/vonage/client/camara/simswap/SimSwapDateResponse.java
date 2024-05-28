@@ -13,15 +13,22 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+package com.vonage.client.camara.simswap;
 
-/**
- * This package contains classes to support usage of the
- * <a href=https://developer.vonage.com/en/api/camara/auth>Vonage Network Auth API</a>. Please refer to
- * <a href=https://developer.vonage.com/en/getting-started-network/authentication>the developer documentation</a>
- * for an overview of the concepts. <br>
- * Note that this package is not part of the SDK's public API and thus not considered relevant as part of
- * semantic versioning for breaking changes.
- *
- * @since 8.8.0
- */
-package com.vonage.client.auth.camara;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
+import java.time.Instant;
+
+class SimSwapDateResponse extends JsonableBaseObject {
+    private Instant latestSimChange;
+
+    /**
+     * Timestamp of latest SIM swap performed in ISO-8601 format.
+     *
+     * @return The last SIM swap date-time as an Instant, or {@code null} if unknown.
+     */
+    @JsonProperty("latestSimChange")
+    public Instant getLatestSimChange() {
+        return latestSimChange;
+    }
+}
