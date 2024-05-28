@@ -18,17 +18,18 @@ package com.vonage.client.camara.simswap;
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
+import com.vonage.client.auth.camara.FraudBackendAuthMethod;
 import com.vonage.client.auth.camara.FraudPreventionDetectionScope;
 import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.CHECK_SIM_SWAP;
 import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.RETRIEVE_SIM_SWAP_DATE;
-import com.vonage.client.camara.CamaraResponseException;
-import org.junit.jupiter.api.*;
+import com.vonage.client.auth.camara.NetworkAuthClient;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 import java.time.Instant;
 
 public class SimSwapClientTest extends AbstractClientTest<SimSwapClient> {
-    final String phoneNumber = "491512 3456789", invalidNumber = TestUtils.API_SECRET;
+    final String phoneNumber = "+49 151 23456789", invalidNumber = TestUtils.API_SECRET;
 
     public SimSwapClientTest() {
         client = new SimSwapClient(wrapper);
@@ -44,46 +45,59 @@ public class SimSwapClientTest extends AbstractClientTest<SimSwapClient> {
                "message": "Client does not have sufficient permissions to perform this action"
             }
         """;
+        // TODO implement
+    }
 
-        var parsed = assertApiResponseException(status, responseJson, CamaraResponseException.class, invocation);
-        assertEquals(code, parsed.getCode());
+    void setAuth(FraudPreventionDetectionScope type) {
+        wrapper.getAuthCollection().add(new FraudBackendAuthMethod(
+                new NetworkAuthClient(wrapper), phoneNumber, type
+        ));
     }
 
     @Test
     public void testCheckSimSwap() throws Exception {
-        stubResponse("{\"swapped\":true}");
+        setAuth(CHECK_SIM_SWAP);
+        final String trueResponse = "{\"swapped\":true}";
+
+        stubNetworkResponse(trueResponse);
         assertTrue(client.checkSimSwap(phoneNumber, 2400));
 
-        stubResponse("{\"swapped\":false}");
+        stubNetworkResponse("{\"swapped\":false}");
         assertFalse(client.checkSimSwap(phoneNumber, 1));
 
-        stubResponse("{}");
+        stubNetworkResponse("{}");
         assertFalse(client.checkSimSwap(phoneNumber, 240));
 
-        stubResponse("{\"swapped\":\"true\"}");
+        stubNetworkResponse("{\"swapped\":\"true\"}");
         assertTrue(client.checkSimSwap(phoneNumber));
 
-        stubResponse("{\"swapped\":\"false\"}");
+        stubNetworkResponse("{\"swapped\":\"false\"}");
         assertFalse(client.checkSimSwap(phoneNumber));
 
+        stubNetworkResponse(trueResponse);
         assertThrows(IllegalArgumentException.class, () -> client.checkSimSwap(phoneNumber, 0));
+
+        stubNetworkResponse(trueResponse);
         assertThrows(IllegalArgumentException.class, () -> client.checkSimSwap(phoneNumber, 2401));
-        stubResponseAndAssertThrows(200, () -> client.checkSimSwap(null), NullPointerException.class);
-        stubResponseAndAssertThrows(200,
-                () -> client.checkSimSwap(invalidNumber, 350),
-                IllegalArgumentException.class
-        );
+
+        stubNetworkResponse(trueResponse);
+        assertThrows(NullPointerException.class, () -> client.checkSimSwap(null));
+
+        stubNetworkResponse(trueResponse);
+        assertThrows(IllegalArgumentException.class, () -> client.checkSimSwap(invalidNumber, 350));
 
         assert403ResponseException(() -> client.checkSimSwap(phoneNumber));
     }
 
     @Test
     public void testRetrieveSimSwapDate() throws Exception {
+        setAuth(RETRIEVE_SIM_SWAP_DATE);
+
         var timestampStr = "2019-08-24T14:15:22Z";
         var timestamp = Instant.parse(timestampStr);
         var response = "{\"latestSimChange\": \""+timestampStr+"\"}";
 
-        stubResponse(200, timestampStr);
+        stubNetworkResponse(response);
         assertEquals(timestamp, client.retrieveSimSwapDate(phoneNumber));
 
         stubResponseAndAssertThrows(timestampStr,

@@ -32,7 +32,6 @@ import java.util.UUID;
 
 public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient> {
     final UUID authReqId = UUID.randomUUID();
-    final String accessToken = "youMayProceed";
 
     public NetworkAuthClientTest() {
         client = new NetworkAuthClient(wrapper);
@@ -65,11 +64,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
                 .pathGetter((de, req) -> TEST_BASE_URI).build();
 
         var expectedResponse = "Hello, GNP!";
-        stubResponse(200,
-                "{\"auth_req_id\": \""+authReqId+"\"}",
-                "{\"access_token\": \""+accessToken+"\"}",
-                expectedResponse
-        );
+        stubNetworkResponse(expectedResponse);
 
         assertEquals(expectedResponse, endpoint.execute(null));
     }

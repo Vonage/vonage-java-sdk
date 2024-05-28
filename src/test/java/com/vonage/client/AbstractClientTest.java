@@ -15,9 +15,9 @@
  */
 package com.vonage.client;
 
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
-import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.hashutils.HashUtil;
 import org.apache.http.HttpEntity;
@@ -69,6 +69,14 @@ public abstract class AbstractClientTest<T> {
         when(response.getEntity()).thenReturn(entity);
 
         return result;
+    }
+
+    protected void stubNetworkResponse(String mainResponse) throws Exception {
+        stubResponse(200,
+                "{\"auth_req_id\": \"0dadaeb4-7c79-4d39-b4b0-5a6cc08bf537\"}",
+                "{\"access_token\": \"youMayProceed\"}",
+                mainResponse
+        );
     }
 
     protected void stubResponse(int code, String response, String... additionalResponses) throws Exception {
@@ -145,7 +153,7 @@ public abstract class AbstractClientTest<T> {
             int statusCode, String response, Class<E> exClass, Executable invocation) throws Exception {
         E expectedResponse = (E) exClass.getDeclaredMethod("fromJson", String.class).invoke(exClass, response);
         String expectedJson = expectedResponse.toJson();
-        wrapper.setHttpClient(stubHttpClient(statusCode, expectedJson));
+        stubResponse(statusCode, expectedJson);
         java.lang.reflect.Method setStatusCode = exClass.getDeclaredMethod("setStatusCode", int.class);
         setStatusCode.setAccessible(true);
         setStatusCode.invoke(expectedResponse, statusCode);

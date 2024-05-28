@@ -23,6 +23,7 @@ import com.vonage.client.auth.camara.FraudBackendAuthMethod;
 import com.vonage.client.auth.camara.FraudPreventionDetectionScope;
 import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.CHECK_SIM_SWAP;
 import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.RETRIEVE_SIM_SWAP_DATE;
+import com.vonage.client.auth.camara.NetworkAuthClient;
 import com.vonage.client.camara.CamaraResponseException;
 import com.vonage.client.common.HttpMethod;
 import java.time.Instant;
@@ -41,14 +42,18 @@ public class SimSwapClient {
      * @param wrapper Http Wrapper used to create requests.
      */
     public SimSwapClient(HttpWrapper wrapper) {
+        final NetworkAuthClient nac = new NetworkAuthClient(wrapper);
 
         @SuppressWarnings("unchecked")
-        class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+        class Endpoint<R> extends DynamicEndpoint<SimSwapRequest, R> {
             Endpoint(String path, FraudPreventionDetectionScope scope, R... type) {
-                super(DynamicEndpoint.<T, R> builder(type)
+                super(DynamicEndpoint.<SimSwapRequest, R> builder(type)
                         .authMethod(FraudBackendAuthMethod.class)
                         .responseExceptionType(CamaraResponseException.class)
                         .requestMethod(HttpMethod.POST).wrapper(wrapper).pathGetter((de, req) -> {
+                            de.getHttpWrapper().getAuthCollection().add(
+                                    new FraudBackendAuthMethod(nac, req.getPhoneNumber(), scope)
+                            );
                             String base = de.getHttpWrapper().getHttpConfig().getApiEuBaseUri();
                             return base + "/camara/sim-swap/v040/" + path;
                         })
