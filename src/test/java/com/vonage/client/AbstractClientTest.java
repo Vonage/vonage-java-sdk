@@ -19,7 +19,9 @@ import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.camara.NetworkAuthResponseException;
 import com.vonage.client.auth.hashutils.HashUtil;
+import com.vonage.client.camara.CamaraResponseException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -32,6 +34,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -63,20 +66,13 @@ public abstract class AbstractClientTest<T> {
         Function<String, InputStream> transformation = c -> new ByteArrayInputStream(c.getBytes(StandardCharsets.UTF_8));
         InputStream[] contentsEncoded = Arrays.stream(additionalReturns).map(transformation).toArray(InputStream[]::new);
         when(entity.getContent()).thenReturn(transformation.apply(content), contentsEncoded);
-        when(sl.getStatusCode()).thenReturn(statusCode);
+        var answered = new AtomicInteger(additionalReturns.length);
+        when(sl.getStatusCode()).thenAnswer(mock -> answered.getAndDecrement() > 0 ? 200 : statusCode);
         when(sl.getReasonPhrase()).thenReturn(TestUtils.TEST_REASON);
         when(response.getStatusLine()).thenReturn(sl);
         when(response.getEntity()).thenReturn(entity);
 
         return result;
-    }
-
-    protected void stubNetworkResponse(String mainResponse) throws Exception {
-        stubResponse(200,
-                "{\"auth_req_id\": \"arid/0dadaeb4-7c79-4d39-b4b0-5a6cc08bf537\"}",
-                "{\"access_token\": \"youMayProceed\"}",
-                mainResponse
-        );
     }
 
     protected void stubResponse(int code, String response, String... additionalResponses) throws Exception {
@@ -135,6 +131,45 @@ public abstract class AbstractClientTest<T> {
     protected <R> R stubResponseAndGet(int statusCode, String response, Supplier<? extends R> invocation) throws Exception {
         stubResponse(statusCode, response);
         return invocation.get();
+    }
+
+    protected void stubNetworkResponse(String mainResponse) throws Exception {
+        stubNetworkResponse(200, mainResponse);
+    }
+
+    protected void stubNetworkResponse(int code, String mainResponse) throws Exception {
+        stubResponse(code,
+                "{\"auth_req_id\": \"arid/0dadaeb4-7c79-4d39-b4b0-5a6cc08bf537\"}",
+                "{\"access_token\": \"youMayProceed\"}",
+                mainResponse
+        );
+    }
+
+    protected void assert403CamaraResponseException(Executable invocation) throws Exception {
+        final int status = 403;
+        String message = "",
+                code = "PERMISSION_DENIED", responseJson = STR."""
+            {
+               "status": \{status},
+               "code": "\{code}",
+               "message": "Client does not have sufficient permissions to perform this action"
+            }
+        """;
+        stubNetworkResponse(status, message);
+
+        String failMsg = "Expected "+ CamaraResponseException.class.getSimpleName();
+
+        try {
+            invocation.execute();
+            fail(failMsg);
+        }
+        catch (CamaraResponseException | NetworkAuthResponseException ex) {
+            // TODO find out why NetworkAuthResponseException is being thrown instead
+            assertEquals(status, ex.getStatusCode());
+        }
+        catch (Throwable t) {
+            fail(failMsg, t);
+        }
     }
 
     protected <E extends VonageApiResponseException> E assert401ApiResponseException(

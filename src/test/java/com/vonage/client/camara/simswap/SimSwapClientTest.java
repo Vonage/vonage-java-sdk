@@ -25,7 +25,6 @@ import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.RETRIE
 import com.vonage.client.auth.camara.NetworkAuthClient;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.function.Executable;
 import java.time.Instant;
 
 public class SimSwapClientTest extends AbstractClientTest<SimSwapClient> {
@@ -33,19 +32,6 @@ public class SimSwapClientTest extends AbstractClientTest<SimSwapClient> {
 
     public SimSwapClientTest() {
         client = new SimSwapClient(wrapper);
-    }
-
-    void assert403ResponseException(Executable invocation) throws Exception {
-        final int status = 403;
-        String message = "",
-                code = "PERMISSION_DENIED", responseJson = STR."""
-            {
-               "status": \{status},
-               "code": "\{code}",
-               "message": "Client does not have sufficient permissions to perform this action"
-            }
-        """;
-        // TODO implement
     }
 
     void setAuth(FraudPreventionDetectionScope type) {
@@ -86,7 +72,7 @@ public class SimSwapClientTest extends AbstractClientTest<SimSwapClient> {
         stubNetworkResponse(trueResponse);
         assertThrows(IllegalArgumentException.class, () -> client.checkSimSwap(invalidNumber, 350));
 
-        assert403ResponseException(() -> client.checkSimSwap(phoneNumber));
+        assert403CamaraResponseException(() -> client.checkSimSwap(phoneNumber));
     }
 
     @Test
@@ -110,7 +96,7 @@ public class SimSwapClientTest extends AbstractClientTest<SimSwapClient> {
                 IllegalArgumentException.class
         );
 
-        assert403ResponseException(() -> client.retrieveSimSwapDate(phoneNumber));
+        assert403CamaraResponseException(() -> client.retrieveSimSwapDate(phoneNumber));
     }
 
     @Test

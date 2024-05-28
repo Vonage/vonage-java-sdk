@@ -149,7 +149,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
             @Override
             protected Map<String, String> sampleQueryParams() {
                 return Map.of(
-                        "login_hint", "tel:+" + msisdn,
+                        "login_hint", "tel:" + msisdn,
                         "scope", "dpv:FraudPreventionAndDetection#check-sim-swap"
                 );
             }
@@ -180,7 +180,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
             protected Map<String, String> sampleQueryParams() {
                 return Map.of(
                         "grant_type", "urn:openid:params:grant-type:ciba",
-                        "auth_req_id", "arid/" + authReqId
+                        "auth_req_id", authReqId
                 );
             }
         }

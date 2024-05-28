@@ -114,7 +114,7 @@ public class SimSwapClient {
     }
 
     /**
-     * Get timestamp of last MSISDN <-> IMSI pairing change for a mobile user account.
+     * Get timestamp of last MSISDN to IMSI pairing change for a mobile user account.
      *
      * @param phoneNumber Subscriber number in E.164 format (starting with country code). Optionally prefixed with '+'.
      *
