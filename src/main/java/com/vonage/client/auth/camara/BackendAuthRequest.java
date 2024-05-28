@@ -31,8 +31,8 @@ public final class BackendAuthRequest implements QueryParamsRequest {
      * @param scope The scope of the request as an enum.
      */
     public BackendAuthRequest(String msisdn, FraudPreventionDetectionScope scope) {
-        params.put("login_hint", "tel:+" + new E164(msisdn));
-        params.put("scope", "dpv:FraudPreventionAndDetection#" +
+        params.put("login_hint", "tel:" + new E164(msisdn));
+        params.put("scope", "openid dpv:FraudPreventionAndDetection#" +
                 Objects.requireNonNull(scope, "Scope is required.")
         );
     }

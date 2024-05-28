@@ -16,9 +16,6 @@
 package com.vonage.client.auth;
 
 import com.vonage.jwt.Jwt;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class JWTAuthMethod extends BearerAuthMethod {
     private static final int SORT_KEY = 10;
@@ -30,10 +27,6 @@ public class JWTAuthMethod extends BearerAuthMethod {
         jwt = Jwt.builder()
                 .applicationId(this.applicationId = applicationId)
                 .privateKeyContents(new String(privateKey)).build();
-    }
-
-    public JWTAuthMethod(String applicationId, Path path) throws IOException {
-        this(applicationId, Files.readAllBytes(path));
     }
 
     public String generateToken() {
@@ -55,7 +48,7 @@ public class JWTAuthMethod extends BearerAuthMethod {
     }
 
     @Override
-    protected String getBearerToken() {
+    protected final String getBearerToken() {
         return generateToken();
     }
 

@@ -19,6 +19,7 @@ import com.vonage.client.TestUtils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.*;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class JWTAuthMethodTest {
@@ -32,7 +33,9 @@ public class JWTAuthMethodTest {
 
     @Test
     public void testSavedKeyUsingPath() throws Exception {
-        auth = new JWTAuthMethod("application-id", Paths.get("src/test/resources/com/vonage/client/test/keys/application_key2"));
+        auth = new JWTAuthMethod("application-id", Files.readAllBytes(Paths.get(
+                "src/test/resources/com/vonage/client/test/keys/application_key2"
+        )));
     }
 
     @Test

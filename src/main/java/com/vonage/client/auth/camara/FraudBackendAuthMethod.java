@@ -24,10 +24,10 @@ public class FraudBackendAuthMethod extends BearerAuthMethod {
     private final FraudPreventionDetectionScope scope;
 
     public FraudBackendAuthMethod(NetworkAuthClient client,
-                                  String telNumber,
+                                  String msisdn,
                                   FraudPreventionDetectionScope scope) {
         this.networkAuthClient = client;
-        this.msisdn = new E164(telNumber).toString();
+        this.msisdn = new E164(msisdn).toString();
         this.scope = scope;
     }
 
