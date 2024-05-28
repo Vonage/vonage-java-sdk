@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient> {
-    final UUID authReqId = UUID.randomUUID();
+    final String authReqId = "arid/"+UUID.randomUUID();
 
     public NetworkAuthClientTest() {
         client = new NetworkAuthClient(wrapper);

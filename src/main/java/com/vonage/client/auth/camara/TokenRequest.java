@@ -19,16 +19,13 @@ import com.vonage.client.QueryParamsRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 final class TokenRequest implements QueryParamsRequest {
     private final Map<String, String> params = new LinkedHashMap<>(4);
 
-    TokenRequest(UUID authReqId) {
+    TokenRequest(String authReqId) {
         params.put("grant_type", "urn:openid:params:grant-type:ciba");
-        params.put("auth_req_id", "arid/" +
-                Objects.requireNonNull(authReqId, "Auth request ID is required.")
-        );
+        params.put("auth_req_id", Objects.requireNonNull(authReqId, "Auth request ID is required."));
     }
 
     @Override

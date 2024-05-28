@@ -58,7 +58,7 @@ public class NetworkAuthClient {
         return backendAuth.execute(Objects.requireNonNull(request));
     }
 
-    TokenResponse sendTokenRequest(UUID authRequestId) {
+    TokenResponse sendTokenRequest(String authRequestId) {
         return tokenRequest.execute(new TokenRequest(authRequestId));
     }
 

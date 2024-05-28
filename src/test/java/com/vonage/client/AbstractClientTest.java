@@ -73,7 +73,7 @@ public abstract class AbstractClientTest<T> {
 
     protected void stubNetworkResponse(String mainResponse) throws Exception {
         stubResponse(200,
-                "{\"auth_req_id\": \"0dadaeb4-7c79-4d39-b4b0-5a6cc08bf537\"}",
+                "{\"auth_req_id\": \"arid/0dadaeb4-7c79-4d39-b4b0-5a6cc08bf537\"}",
                 "{\"access_token\": \"youMayProceed\"}",
                 mainResponse
         );
