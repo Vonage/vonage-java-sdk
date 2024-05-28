@@ -23,7 +23,7 @@ class SimSwapRequest extends JsonableBaseObject {
     private String phoneNumber;
     private Integer maxAge;
 
-    SimSwapRequest() {
+    private SimSwapRequest() {
         super();
     }
 
