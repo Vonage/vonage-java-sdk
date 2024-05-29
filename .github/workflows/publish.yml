@@ -29,21 +29,15 @@ jobs:
         with:
           java-version: 17
           distribution: 'temurin'
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
-      - name: Publish with Gradle
+          cache: maven
+          server-id: nexus-releases
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.SIGNING_KEY }}
+          gpg-passphrase: GPG_PASSWORD
+      - name: Publish package
         env:
-          signingKey: ${{secrets.SIGNING_KEY}}
-          signingPassword: ${{secrets.SIGNING_PASSWORD}}
-          OSS_USERNAME: ${{secrets.OSS_USERNAME}}
-          OSS_PASSWORD: ${{secrets.OSS_PASSWORD}}
-        run: |
-          OSS_USERNAME=$OSS_USERNAME OSS_PASSWORD=$OSS_PASSWORD
-          signingKey=$signingKey signingPassword=$signingPassword
-          gradle publishToSonatype closeAndReleaseStagingRepositories --info
+          MAVEN_USERNAME: ${{ secrets.OSS_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSS_PASSWORD }}
+          GPG_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: mvn --no-transfer-progress --batch-mode deploy
