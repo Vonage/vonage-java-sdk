@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public final class BackendAuthRequest implements QueryParamsRequest {
+final class BackendAuthRequest implements QueryParamsRequest {
     private final Map<String, String> params = new LinkedHashMap<>(4);
 
     /**
@@ -31,7 +31,7 @@ public final class BackendAuthRequest implements QueryParamsRequest {
      * @param scope The scope of the request as an enum.
      */
     public BackendAuthRequest(String msisdn, FraudPreventionDetectionScope scope) {
-        params.put("login_hint", "tel:+" + new E164(msisdn));
+        params.put("login_hint", "tel:" + new E164(msisdn));
         params.put("scope", "dpv:FraudPreventionAndDetection#" +
                 Objects.requireNonNull(scope, "Scope is required.")
         );

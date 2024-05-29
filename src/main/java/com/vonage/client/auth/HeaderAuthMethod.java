@@ -16,12 +16,12 @@
 package com.vonage.client.auth;
 
 /**
- * Base class for auth methods which use the {@code Authorization: } header.
+ * Interface for auth methods which use the {@code Authorization: } header.
  *
  * @since 8.8.0
  */
-public abstract class HeaderAuthMethod extends AuthMethod {
+public interface HeaderAuthMethod extends AuthMethod {
 
-    public abstract String getHeaderValue();
+    String getHeaderValue();
 
 }

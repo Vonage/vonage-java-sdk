@@ -10,7 +10,7 @@ plugins {
 
 group = "com.vonage"
 archivesBaseName = "server-sdk"
-version = "8.7.0"
+version = "8.8.0"
 
 ext.githubPath = 'Vonage/vonage-java-sdk'
 

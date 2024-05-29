@@ -21,7 +21,6 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * Used for obtaining access tokens for use with Vonage CAMARA APIs.
@@ -58,13 +57,21 @@ public class NetworkAuthClient {
         return backendAuth.execute(Objects.requireNonNull(request));
     }
 
-    TokenResponse sendTokenRequest(UUID authRequestId) {
+    TokenResponse sendTokenRequest(String authRequestId) {
         return tokenRequest.execute(new TokenRequest(authRequestId));
     }
 
+    /**
+     * Obtains a new access token for the given phone number and permission scope.
+     *
+     * @param msisdn The phone number in E.164 format.
+     * @param scope Purpose of the token.
+     * @return The access token as a string.
+     * @throws NetworkAuthResponseException If an error was encountered during the workflow.
+     */
     public String getCamaraAccessToken(String msisdn, FraudPreventionDetectionScope scope) {
-        return sendTokenRequest(sendAuthRequest(
-                new BackendAuthRequest(msisdn, scope)).getAuthReqId()
-        ).getAccessToken();
+        BackendAuthResponse bar = sendAuthRequest(new BackendAuthRequest(msisdn, scope));
+        TokenResponse tr = sendTokenRequest(bar.getAuthReqId());
+        return tr.getAccessToken();
     }
 }

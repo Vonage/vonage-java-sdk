@@ -15,17 +15,29 @@
  */
 package com.vonage.client.auth;
 
+import java.util.Objects;
+
 /**
- * Base class for auth methods which use the {@code Authorization: Bearer } header.
+ * Base class for all AuthMethod implementations.
  *
  * @since 8.8.0
  */
-public abstract class BearerAuthMethod extends AbstractAuthMethod implements HeaderAuthMethod {
-
-    protected abstract String getBearerToken();
+public abstract class AbstractAuthMethod implements AuthMethod {
 
     @Override
-    public final String getHeaderValue() {
-        return "Bearer " + getBearerToken();
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof AuthMethod)) {
+            return false;
+        }
+        return ((AuthMethod) obj).getSortKey() == this.getSortKey() &&
+                obj.getClass().equals(this.getClass());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSortKey(), getClass());
     }
 }

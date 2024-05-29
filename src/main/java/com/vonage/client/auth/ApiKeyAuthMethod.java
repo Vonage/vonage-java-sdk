@@ -16,16 +16,11 @@
 package com.vonage.client.auth;
 
 /**
- * Base class for auth methods which use the {@code Authorization: Bearer } header.
+ * Signifies that the auth method has an API key.
  *
  * @since 8.8.0
  */
-public abstract class BearerAuthMethod extends AbstractAuthMethod implements HeaderAuthMethod {
+public interface ApiKeyAuthMethod extends AuthMethod {
 
-    protected abstract String getBearerToken();
-
-    @Override
-    public final String getHeaderValue() {
-        return "Bearer " + getBearerToken();
-    }
+    String getApiKey();
 }

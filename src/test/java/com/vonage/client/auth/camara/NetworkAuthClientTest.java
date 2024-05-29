@@ -31,8 +31,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient> {
-    final UUID authReqId = UUID.randomUUID();
-    final String accessToken = "youMayProceed";
+    final String authReqId = "arid/"+UUID.randomUUID();
 
     public NetworkAuthClientTest() {
         client = new NetworkAuthClient(wrapper);
@@ -65,11 +64,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
                 .pathGetter((de, req) -> TEST_BASE_URI).build();
 
         var expectedResponse = "Hello, GNP!";
-        stubResponse(200,
-                "{\"auth_req_id\": \""+authReqId+"\"}",
-                "{\"access_token\": \""+accessToken+"\"}",
-                expectedResponse
-        );
+        stubNetworkResponse(expectedResponse);
 
         assertEquals(expectedResponse, endpoint.execute(null));
     }
@@ -108,12 +103,14 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
 
     @Test
     public void testTokenRequest() throws Exception {
-        String access = "accessTokStr1", refresh = "F5", type = "magical";
+        Integer expires = 29;
+        String access = "accessTokStr1", refresh = "F5", type = "bearer";
         var responseJson = STR."""
             {
                "access_token": "\{access}",
                "token_type": "\{type}",
-               "refresh_token": "\{refresh}"
+               "refresh_token": "\{refresh}",
+               "expires_in": \{expires}
             }
         """;
 
@@ -123,6 +120,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
         assertEquals(access, parsed.getAccessToken());
         assertEquals(refresh, parsed.getRefreshToken());
         assertEquals(type, parsed.getTokenType());
+        assertEquals(expires, parsed.getExpiresIn());
 
         stubResponseAndAssertThrows(200, responseJson,
                 () -> client.sendTokenRequest(null), NullPointerException.class
@@ -154,7 +152,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
             @Override
             protected Map<String, String> sampleQueryParams() {
                 return Map.of(
-                        "login_hint", "tel:+" + msisdn,
+                        "login_hint", "tel:" + msisdn,
                         "scope", "dpv:FraudPreventionAndDetection#check-sim-swap"
                 );
             }
@@ -185,7 +183,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
             protected Map<String, String> sampleQueryParams() {
                 return Map.of(
                         "grant_type", "urn:openid:params:grant-type:ciba",
-                        "auth_req_id", "arid/" + authReqId
+                        "auth_req_id", authReqId
                 );
             }
         }

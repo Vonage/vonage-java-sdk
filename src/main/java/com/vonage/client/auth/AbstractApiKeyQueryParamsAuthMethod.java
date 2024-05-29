@@ -15,17 +15,28 @@
  */
 package com.vonage.client.auth;
 
-/**
- * Base class for auth methods which use the {@code Authorization: Bearer } header.
- *
- * @since 8.8.0
- */
-public abstract class BearerAuthMethod extends AbstractAuthMethod implements HeaderAuthMethod {
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-    protected abstract String getBearerToken();
+/**
+ * Intermediate class for auth methods that use query params and have an API key.
+ */
+abstract class AbstractApiKeyQueryParamsAuthMethod extends AbstractAuthMethod implements QueryParamsAuthMethod, ApiKeyAuthMethod {
+    final String apiKey;
+
+    AbstractApiKeyQueryParamsAuthMethod(String apiKey) {
+        this.apiKey = apiKey;
+    }
 
     @Override
-    public final String getHeaderValue() {
-        return "Bearer " + getBearerToken();
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    @Override
+    public Map<String, String> getAuthParams(RequestQueryParams requestParams) {
+        Map<String, String> params = new LinkedHashMap<>(4);
+        params.put("api_key", apiKey);
+        return params;
     }
 }

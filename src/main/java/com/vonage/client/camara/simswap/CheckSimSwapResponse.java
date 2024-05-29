@@ -13,19 +13,21 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.auth;
+package com.vonage.client.camara.simswap;
 
-/**
- * Base class for auth methods which use the {@code Authorization: Bearer } header.
- *
- * @since 8.8.0
- */
-public abstract class BearerAuthMethod extends AbstractAuthMethod implements HeaderAuthMethod {
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 
-    protected abstract String getBearerToken();
+class CheckSimSwapResponse extends JsonableBaseObject {
+    private Boolean swapped;
 
-    @Override
-    public final String getHeaderValue() {
-        return "Bearer " + getBearerToken();
+    /**
+     * Indicates whether the SIM card has been swapped during the period within the provided age.
+     *
+     * @return Whether the SIM was swapped.
+     */
+    @JsonProperty("swapped")
+    public boolean getSwapped() {
+        return swapped != null ? swapped : false;
     }
 }

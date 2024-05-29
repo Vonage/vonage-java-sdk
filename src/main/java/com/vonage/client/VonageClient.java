@@ -19,6 +19,7 @@ import com.vonage.client.account.AccountClient;
 import com.vonage.client.application.ApplicationClient;
 import com.vonage.client.auth.*;
 import com.vonage.client.auth.hashutils.HashUtil;
+import com.vonage.client.camara.simswap.SimSwapClient;
 import com.vonage.client.conversations.ConversationsClient;
 import com.vonage.client.conversion.ConversionClient;
 import com.vonage.client.insight.InsightClient;
@@ -69,6 +70,7 @@ public class VonageClient {
     private final VideoClient video;
     private final NumberInsight2Client numberInsight2;
     private final ConversationsClient conversations;
+    private final SimSwapClient simSwap;
 
     private VonageClient(Builder builder) {
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
@@ -92,6 +94,7 @@ public class VonageClient {
         video = new VideoClient(httpWrapper);
         numberInsight2 = new NumberInsight2Client(httpWrapper);
         conversations = new ConversationsClient(httpWrapper);
+        simSwap = new SimSwapClient(httpWrapper);
     }
 
     public AccountClient getAccountClient() {
@@ -214,6 +217,16 @@ public class VonageClient {
      */
     public ConversationsClient getConversationsClient() {
         return conversations;
+    }
+
+    /**
+     * Returns the CAMARA SIM Swap client.
+     *
+     * @return The SIM Swap client.
+     * @since 8.8.0
+     */
+    public SimSwapClient getSimSwapClient() {
+        return simSwap;
     }
 
     /**

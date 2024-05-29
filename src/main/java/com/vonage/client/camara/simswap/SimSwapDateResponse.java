@@ -13,19 +13,22 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.auth;
+package com.vonage.client.camara.simswap;
 
-/**
- * Base class for auth methods which use the {@code Authorization: Bearer } header.
- *
- * @since 8.8.0
- */
-public abstract class BearerAuthMethod extends AbstractAuthMethod implements HeaderAuthMethod {
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
+import java.time.Instant;
 
-    protected abstract String getBearerToken();
+class SimSwapDateResponse extends JsonableBaseObject {
+    private Instant latestSimChange;
 
-    @Override
-    public final String getHeaderValue() {
-        return "Bearer " + getBearerToken();
+    /**
+     * Timestamp of latest SIM swap performed in ISO-8601 format.
+     *
+     * @return The last SIM swap date-time as an Instant, or {@code null} if unknown.
+     */
+    @JsonProperty("latestSimChange")
+    public Instant getLatestSimChange() {
+        return latestSimChange;
     }
 }

@@ -17,10 +17,9 @@ package com.vonage.client.auth.camara;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
-import java.util.UUID;
 
-public final class BackendAuthResponse extends JsonableBaseObject {
-    private UUID authReqId;
+final class BackendAuthResponse extends JsonableBaseObject {
+    private String authReqId;
     private Integer expiresIn, interval;
 
     private BackendAuthResponse() {}
@@ -31,7 +30,7 @@ public final class BackendAuthResponse extends JsonableBaseObject {
      * @return The authentication request ID.
      */
     @JsonProperty("auth_req_id")
-    public UUID getAuthReqId() {
+    public String getAuthReqId() {
         return authReqId;
     }
 

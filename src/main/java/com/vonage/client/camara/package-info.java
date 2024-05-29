@@ -13,19 +13,11 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.auth;
 
 /**
- * Base class for auth methods which use the {@code Authorization: Bearer } header.
+ * This package contains classes and subpackages to support usage of the
+ * <a href=https://developer.vonage.com/en/getting-started-network/what-are-network-apis>Vonage Network APIs</a>.
  *
  * @since 8.8.0
  */
-public abstract class BearerAuthMethod extends AbstractAuthMethod implements HeaderAuthMethod {
-
-    protected abstract String getBearerToken();
-
-    @Override
-    public final String getHeaderValue() {
-        return "Bearer " + getBearerToken();
-    }
-}
+package com.vonage.client.camara;

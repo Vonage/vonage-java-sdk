@@ -13,19 +13,13 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.auth;
 
 /**
- * Base class for auth methods which use the {@code Authorization: Bearer } header.
+ * This package contains classes to support usage of the
+ * <a href=https://developer.vonage.com/en/api/camara/sim-swap>SIM Swap API</a>. Please refer to
+ * <a href=https://developer.vonage.com/en/sim-swap/overview>the developer documentation</a>
+ * for an overview of the concepts.
  *
  * @since 8.8.0
  */
-public abstract class BearerAuthMethod extends AbstractAuthMethod implements HeaderAuthMethod {
-
-    protected abstract String getBearerToken();
-
-    @Override
-    public final String getHeaderValue() {
-        return "Bearer " + getBearerToken();
-    }
-}
+package com.vonage.client.camara.simswap;

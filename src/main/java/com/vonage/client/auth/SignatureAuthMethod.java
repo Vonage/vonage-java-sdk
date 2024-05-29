@@ -16,13 +16,12 @@
 package com.vonage.client.auth;
 
 import com.vonage.client.auth.hashutils.HashUtil;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class SignatureAuthMethod extends QueryParamsAuthMethod {
+public class SignatureAuthMethod extends AbstractApiKeyQueryParamsAuthMethod {
     private static final int SORT_KEY = 20;
 
-    private final String apiKey, sigSecret;
+    private final String sigSecret;
     private final HashUtil.HashType hashType;
 
     public SignatureAuthMethod(String apiKey, String sigSecret) {
@@ -30,13 +29,9 @@ public class SignatureAuthMethod extends QueryParamsAuthMethod {
     }
 
     public SignatureAuthMethod(String apiKey, String sigSecret, HashUtil.HashType hashType) {
-        this.apiKey = apiKey;
+        super(apiKey);
         this.sigSecret = sigSecret;
         this.hashType = hashType;
-    }
-
-    public String getApiKey() {
-        return apiKey;
     }
 
     @Override
@@ -46,8 +41,7 @@ public class SignatureAuthMethod extends QueryParamsAuthMethod {
 
     @Override
     public Map<String, String> getAuthParams(RequestQueryParams requestParams) {
-        Map<String, String> inParams = requestParams.toMap(), outParams = new LinkedHashMap<>(4);
-        outParams.put("api_key", apiKey);
+        Map<String, String> inParams = requestParams.toMap(), outParams = super.getAuthParams(requestParams);
         inParams.putAll(outParams);
         outParams.putAll(RequestSigning.getSignatureForRequestParameters(inParams, sigSecret, hashType));
         return outParams;

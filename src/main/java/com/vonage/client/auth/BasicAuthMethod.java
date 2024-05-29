@@ -20,7 +20,7 @@ package com.vonage.client.auth;
  *
  * @since 8.8.0
  */
-public abstract class BasicAuthMethod extends HeaderAuthMethod {
+public abstract class BasicAuthMethod extends AbstractAuthMethod implements HeaderAuthMethod {
 
     protected abstract String getBasicToken();
 

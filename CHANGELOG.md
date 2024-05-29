@@ -4,13 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.8.0] - 2024-0?-??
+# [8.8.0] - 2024-05-??
 - Refactored auth
   - Split `TokenAuthMethod` into `ApiKeyQueryParamsAuthMethod` and `ApiKeyHeaderAuthMethod`
   - `AuthMethod#apply(RequestBuilder)` removed to decouple from Apache HttpClient
   - Refactored `RequestSigning`
     - Deprecated methods that use `NameValuePair` and modify the input collection
   - Improved testing of auth method application
+  - Introduced intermediate interfaces
 - Added Vonage Network Auth API (intended for internal use only)
 - Added CAMARA SIM Swap API
 
