@@ -15,7 +15,7 @@
  */
 package com.vonage.client.auth;
 
-import org.apache.commons.codec.binary.Base64;
+import java.util.Base64;
 
 /**
  * API key and secret in the header.
@@ -48,7 +48,7 @@ public class ApiKeyHeaderAuthMethod extends BasicAuthMethod implements ApiKeyAut
 
     @Override
     protected String getBasicToken() {
-        return Base64.encodeBase64String((apiKey + ":" + apiSecret).getBytes());
+        return Base64.getEncoder().encodeToString((apiKey + ":" + apiSecret).getBytes());
     }
 
     @Override
