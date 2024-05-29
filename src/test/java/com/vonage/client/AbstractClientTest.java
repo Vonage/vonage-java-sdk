@@ -34,7 +34,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -66,8 +65,18 @@ public abstract class AbstractClientTest<T> {
         Function<String, InputStream> transformation = c -> new ByteArrayInputStream(c.getBytes(StandardCharsets.UTF_8));
         InputStream[] contentsEncoded = Arrays.stream(additionalReturns).map(transformation).toArray(InputStream[]::new);
         when(entity.getContent()).thenReturn(transformation.apply(content), contentsEncoded);
-        var answered = new AtomicInteger(additionalReturns.length);
-        when(sl.getStatusCode()).thenAnswer(mock -> answered.getAndDecrement() > 0 ? 200 : statusCode);
+
+        if (additionalReturns.length > 0) {
+            final int success = 200;
+            Integer[] statusCodeReturns = new Integer[additionalReturns.length];
+            for (int i = 0; i < statusCodeReturns.length - 1; statusCodeReturns[i++] = success);
+            statusCodeReturns[statusCodeReturns.length - 1] = statusCode;
+            when(sl.getStatusCode()).thenReturn(success, statusCodeReturns);
+        }
+        else {
+            when(sl.getStatusCode()).thenReturn(statusCode);
+        }
+
         when(sl.getReasonPhrase()).thenReturn(TestUtils.TEST_REASON);
         when(response.getStatusLine()).thenReturn(sl);
         when(response.getEntity()).thenReturn(entity);
@@ -147,15 +156,14 @@ public abstract class AbstractClientTest<T> {
 
     protected void assert403CamaraResponseException(Executable invocation) throws Exception {
         final int status = 403;
-        String message = "",
-                code = "PERMISSION_DENIED", responseJson = STR."""
+        String code = "PERMISSION_DENIED", responseJson = STR."""
             {
                "status": \{status},
                "code": "\{code}",
                "message": "Client does not have sufficient permissions to perform this action"
             }
         """;
-        stubNetworkResponse(status, message);
+        stubNetworkResponse(status, responseJson);
 
         String failMsg = "Expected "+ CamaraResponseException.class.getSimpleName();
 
