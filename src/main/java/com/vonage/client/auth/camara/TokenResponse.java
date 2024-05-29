@@ -18,8 +18,9 @@ package com.vonage.client.auth.camara;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
-public final class TokenResponse extends JsonableBaseObject {
+final class TokenResponse extends JsonableBaseObject {
     private String accessToken, refreshToken, tokenType;
+    private Integer expiresIn;
 
     private TokenResponse() {}
 
@@ -36,5 +37,10 @@ public final class TokenResponse extends JsonableBaseObject {
     @JsonProperty("token_type")
     public String getTokenType() {
         return tokenType;
+    }
+
+    @JsonProperty("expires_in")
+    public Integer getExpiresIn() {
+        return expiresIn;
     }
 }

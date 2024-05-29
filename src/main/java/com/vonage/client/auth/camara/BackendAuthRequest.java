@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public final class BackendAuthRequest implements QueryParamsRequest {
+final class BackendAuthRequest implements QueryParamsRequest {
     private final Map<String, String> params = new LinkedHashMap<>(4);
 
     /**

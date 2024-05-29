@@ -103,12 +103,14 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
 
     @Test
     public void testTokenRequest() throws Exception {
-        String access = "accessTokStr1", refresh = "F5", type = "magical";
+        Integer expires = 29;
+        String access = "accessTokStr1", refresh = "F5", type = "bearer";
         var responseJson = STR."""
             {
                "access_token": "\{access}",
                "token_type": "\{type}",
-               "refresh_token": "\{refresh}"
+               "refresh_token": "\{refresh}",
+               "expires_in": \{expires}
             }
         """;
 
@@ -118,6 +120,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
         assertEquals(access, parsed.getAccessToken());
         assertEquals(refresh, parsed.getRefreshToken());
         assertEquals(type, parsed.getTokenType());
+        assertEquals(expires, parsed.getExpiresIn());
 
         stubResponseAndAssertThrows(200, responseJson,
                 () -> client.sendTokenRequest(null), NullPointerException.class

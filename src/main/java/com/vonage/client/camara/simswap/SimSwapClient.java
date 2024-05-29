@@ -118,7 +118,7 @@ public class SimSwapClient {
      *
      * @param phoneNumber Subscriber number in E.164 format (starting with country code). Optionally prefixed with '+'.
      *
-     * @return Time of the latest SIM swap performed, or {@code null} if unknown.
+     * @return Time of the latest SIM swap performed, or {@code null} if unknown / not applicable.
      *
      * @throws CamaraResponseException If the request was unsuccessful. This could be for the following reasons:
 	 * <ul>
