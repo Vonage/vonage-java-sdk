@@ -15,7 +15,6 @@
  */
 package com.vonage.client.auth;
 
-import com.vonage.client.auth.hashutils.AbstractAuthMethod;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

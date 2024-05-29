@@ -15,8 +15,6 @@
  */
 package com.vonage.client.auth;
 
-import com.vonage.client.auth.hashutils.AbstractAuthMethod;
-
 /**
  * Base class for auth methods which use the {@code Authorization: Bearer } header.
  *

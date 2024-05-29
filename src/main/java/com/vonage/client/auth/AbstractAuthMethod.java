@@ -13,9 +13,8 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.auth.hashutils;
+package com.vonage.client.auth;
 
-import com.vonage.client.auth.AuthMethod;
 import java.util.Objects;
 
 /**
@@ -24,11 +23,6 @@ import java.util.Objects;
  * @since 8.8.0
  */
 public abstract class AbstractAuthMethod implements AuthMethod {
-
-    @Override
-    public final int compareTo(AuthMethod other) {
-        return AuthMethod.super.compareTo(other);
-    }
 
     @Override
     public boolean equals(Object obj) {
