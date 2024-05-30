@@ -29,25 +29,14 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v4
-
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: ${{ matrix.java }}
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
-
-      - name: Build with Gradle
-        run: ./gradlew build -x test
+          cache: maven
+      - name: Compile with Maven
+        run: mvn --batch-mode compile
 
   test:
     runs-on: ${{ matrix.os }}
@@ -59,25 +48,13 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v4
-
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
-
-      - name: Build with Gradle
-        run: ./gradlew build
-
+          cache: maven
+      - name: Test with Maven
+        run: mvn --batch-mode verify
       - name: Run Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4

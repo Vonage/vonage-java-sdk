@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.8.0] - 2024-05-??
+# [8.8.0] - 2024-05-30
 - Refactored auth
   - Split `TokenAuthMethod` into `ApiKeyQueryParamsAuthMethod` and `ApiKeyHeaderAuthMethod`
   - `AuthMethod#apply(RequestBuilder)` removed to decouple from Apache HttpClient
@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Introduced intermediate interfaces
 - Added Vonage Network Auth API (intended for internal use only)
 - Added CAMARA SIM Swap API
+- Migrated to Maven from Gradle
 
 # [8.7.0] - 2024-05-16
 - Added missing supported languages to `TextToSpeechLanguage` enum

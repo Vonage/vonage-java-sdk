@@ -63,13 +63,13 @@ Alternatively you can clone the repo and build the JAR file yourself:
 
 ```bash
 git clone git@github.com:vonage/vonage-java-sdk.git
-gradle build
+mvn install
 ```
 
 ### Download everything in a ZIP file
 
 **Note**: We *strongly recommend* that you use a tool that supports dependency management,
-such as [Gradle](https://gradle.org/), [Maven](https://maven.apache.org/) or [Ivy](http://ant.apache.org/ivy/).
+such as [Maven](https://maven.apache.org/), [Gradle](https://gradle.org/) or [Ivy](http://ant.apache.org/ivy/).
 
 We provide a [ZIP file for each release](https://github.com/Vonage/vonage-java-sdk/releases/),
 containing the Java Server SDK JAR, along with all the dependencies. Download the file, unzip it, and add the JAR files
