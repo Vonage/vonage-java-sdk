@@ -116,11 +116,11 @@
 
   <distributionManagement>
     <snapshotRepository>
-      <id>ossrh</id>
+      <id>nexus-snapshots</id>
       <url>${nexusUrl}/content/repositories/snapshots/</url>
     </snapshotRepository>
     <repository>
-      <id>ossrh</id>
+      <id>nexus-releases</id>
       <url>${nexusUrl}/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
@@ -226,8 +226,6 @@
         <version>1.7.0</version>
         <extensions>true</extensions>
         <configuration>
-          <serverId>ossrh</serverId>
-          <extensions>true</extensions>
           <serverId>ossrh</serverId>
           <nexusUrl>${nexusUrl}</nexusUrl>
           <autoReleaseAfterClose>false</autoReleaseAfterClose>
