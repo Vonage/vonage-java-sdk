@@ -6,6 +6,7 @@
   <groupId>com.vonage</groupId>
   <artifactId>server-sdk</artifactId>
   <version>8.8.0</version>
+
   <packaging>jar</packaging>
   <name>Vonage Java Server SDK</name>
   <description>Java client for Vonage APIs</description>
@@ -129,6 +130,29 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <replace
+                        file="src/main/java/com/vonage/client/HttpWrapper.java"
+                        token="CLIENT_VERSION = &quot;.*?&quot;"
+                        value="CLIENT_VERSION = &quot;${project.version}&quot;"
+                />
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.13.0</version>
