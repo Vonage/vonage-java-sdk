@@ -40,4 +40,4 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSS_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSS_PASSWORD }}
           GPG_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-        run: mvn --no-transfer-progress --batch-mode deploy
+        run: mvn --no-transfer-progress --batch-mode deploy -P release-sign-artifacts
