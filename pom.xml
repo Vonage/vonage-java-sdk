@@ -26,7 +26,7 @@
   <developers>
     <developer>
       <id>devrel</id>
-      <name>Vonage Devrel</name>
+      <name>Vonage DevRel</name>
       <email>devrel@vonage.com</email>
     </developer>
   </developers>
@@ -42,18 +42,11 @@
   </issueManagement>
 
   <properties>
+    <jackson.version>2.17.1</jackson.version>
     <jdk.version>8</jdk.version>
     <jdk.testVersion>21</jdk.testVersion>
-
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-    <maven.archive.manifest.addDefaultImplementationEntries>true</maven.archive.manifest.addDefaultImplementationEntries>
-    <maven.archive.manifest.addBuildEnvironmentEntries>true</maven.archive.manifest.addBuildEnvironmentEntries>
-
     <nexusUrl>https://oss.sonatype.org</nexusUrl>
-
-    <jackson.version>2.17.1</jackson.version>
-    <httpclient.version>4.5.14</httpclient.version>
   </properties>
 
   <dependencies>
@@ -74,13 +67,8 @@
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-      <version>${httpclient.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpmime</artifactId>
-      <version>${httpclient.version}</version>
+      <version>4.5.14</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
