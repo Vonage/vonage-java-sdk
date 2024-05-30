@@ -3,6 +3,7 @@
 .gradle
 .project
 .settings
+dependency-reduced-pom.xml
 /build
 /target
 /html

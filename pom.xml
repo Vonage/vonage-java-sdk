@@ -47,9 +47,6 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <maven.archive.index>true</maven.archive.index>
-    <maven.archive.manifest.addClasspath>false</maven.archive.manifest.addClasspath>
-    <maven.archive.manifest.addDefaultEntries>true</maven.archive.manifest.addDefaultEntries>
     <maven.archive.manifest.addDefaultImplementationEntries>true</maven.archive.manifest.addDefaultImplementationEntries>
     <maven.archive.manifest.addBuildEnvironmentEntries>true</maven.archive.manifest.addBuildEnvironmentEntries>
 
@@ -225,6 +222,41 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.4.1</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+            <manifestEntries>
+              <Build-Time>${maven.build.timestamp}</Build-Time>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.5.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <minimizeJar>true</minimizeJar>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <shadedClassifierName>all</shadedClassifierName>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -237,9 +269,9 @@
           <value>true</value>
         </property>
       </activation>
+
       <build>
         <plugins>
-
           <plugin>
             <artifactId>maven-gpg-plugin</artifactId>
             <version>3.2.4</version>
@@ -271,7 +303,6 @@
               <autoReleaseAfterClose>false</autoReleaseAfterClose>
             </configuration>
           </plugin>
-
         </plugins>
       </build>
     </profile>
