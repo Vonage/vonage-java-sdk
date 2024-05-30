@@ -24,10 +24,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.release.target_commitish }}
-      - name: Install GPG secret key
-        run: |
-          cat <(echo -e "${{ secrets.SIGNING_KEY }}") | gpg --batch --import
-          gpg --list-secret-keys --keyid-format LONG
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -44,7 +40,5 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSS_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSS_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.SIGNING_PASSWORD }}
-        run: |
-          MAVEN_USERNAME=$MAVEN_USERNAME MAVEN_PASSWORD=$MAVEN_PASSWORD
-          MAVEN_GPG_PASSPHRASE=$MAVEN_GPG_PASSPHRASE
-          mvn --no-transfer-progress --batch-mode deploy -P release-sign-artifacts
+          MAVEN_GPG_KEYNAME: ${{ secrets.GPG_KEY_NAME }}
+        run: mvn --no-transfer-progress --batch-mode deploy -Dgpg.keyname=$MAVEN_GPG_KEYNAME -P release-sign-artifacts
