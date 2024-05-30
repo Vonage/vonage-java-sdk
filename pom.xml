@@ -298,7 +298,7 @@
             <version>1.7.0</version>
             <extensions>true</extensions>
             <configuration>
-              <serverId>ossrh</serverId>
+              <serverId>nexus-releases</serverId>
               <nexusUrl>${nexusUrl}</nexusUrl>
               <autoReleaseAfterClose>false</autoReleaseAfterClose>
             </configuration>
