@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Introduced intermediate interfaces
 - Added Vonage Network Auth API (intended for internal use only)
 - Added CAMARA SIM Swap API
+- Migrated to Maven from Gradle
 
 # [8.7.0] - 2024-05-16
 - Added missing supported languages to `TextToSpeechLanguage` enum
