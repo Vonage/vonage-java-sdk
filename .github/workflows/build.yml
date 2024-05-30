@@ -35,8 +35,8 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ matrix.java }}
           cache: maven
-      - name: Build with Maven
-        run: mvn --batch-mode verify -DskipTests
+      - name: Compile with Maven
+        run: mvn --batch-mode compile
 
   test:
     runs-on: ${{ matrix.os }}
