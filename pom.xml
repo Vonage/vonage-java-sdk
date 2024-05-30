@@ -142,10 +142,10 @@
             </goals>
             <configuration>
               <target>
-                <replace
+                <replaceregexp
                         file="src/main/java/com/vonage/client/HttpWrapper.java"
-                        token="CLIENT_VERSION = &quot;.*?&quot;"
-                        value="CLIENT_VERSION = &quot;${project.version}&quot;"
+                        match="CLIENT_VERSION = &quot;.+&quot;"
+                        replace="CLIENT_VERSION = &quot;${project.version}&quot;"
                 />
               </target>
             </configuration>
