@@ -46,7 +46,7 @@ public abstract class AbstractClientTest<T> {
                 new ApiKeyHeaderAuthMethod(TestUtils.API_KEY, TestUtils.API_SECRET),
                 new ApiKeyQueryParamsAuthMethod(TestUtils.API_KEY, TestUtils.API_SECRET),
                 new SignatureAuthMethod(TestUtils.API_KEY, TestUtils.SIGNATURE_SECRET, HashUtil.HashType.HMAC_SHA256),
-                new JWTAuthMethod(TestUtils.APPLICATION_ID, new byte[0])
+                new JWTAuthMethod(TestUtils.APPLICATION_ID_STR, new byte[0])
         );
     }
 

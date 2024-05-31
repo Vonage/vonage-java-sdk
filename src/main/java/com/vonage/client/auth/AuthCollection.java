@@ -42,7 +42,7 @@ public class AuthCollection {
         authList = authMethods;
     }
 
-    public AuthCollection(String applicationId, byte[] privateKeyContents, String key, String secret, HashUtil.HashType hashType, String signature) {
+    public AuthCollection(UUID applicationId, byte[] privateKeyContents, String key, String secret, HashUtil.HashType hashType, String signature) {
 
         this();
 
@@ -71,7 +71,7 @@ public class AuthCollection {
             authList.add(new SignatureAuthMethod(key, signature, hashType));
         }
         if (applicationId != null) {
-            authList.add(new JWTAuthMethod(applicationId, privateKeyContents));
+            authList.add(new JWTAuthMethod(applicationId.toString(), privateKeyContents));
         }
     }
 

@@ -260,7 +260,8 @@ public class VonageClient {
         private AuthCollection authCollection;
         private HttpConfig httpConfig = HttpConfig.defaultConfig();
         private HttpClient httpClient;
-        private String applicationId, apiKey, apiSecret, signatureSecret;
+        private String apiKey, apiSecret, signatureSecret;
+        private UUID applicationId;
         private byte[] privateKeyContents;
         private HashUtil.HashType hashType = HashUtil.HashType.MD5;
 
@@ -298,7 +299,8 @@ public class VonageClient {
          * @since 7.11.0
          */
         public Builder applicationId(UUID applicationId) {
-            return applicationId(applicationId.toString());
+            this.applicationId = applicationId;
+            return this;
         }
 
         /**
@@ -309,8 +311,7 @@ public class VonageClient {
          * @return This builder.
          */
         public Builder applicationId(String applicationId) {
-            this.applicationId = applicationId;
-            return this;
+            return applicationId(UUID.fromString(applicationId));
         }
 
         /**

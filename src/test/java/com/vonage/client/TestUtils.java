@@ -34,8 +34,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class TestUtils {
+    public static final UUID APPLICATION_ID = UUID.randomUUID();
     public static final String
-            APPLICATION_ID = UUID.randomUUID().toString(),
+            APPLICATION_ID_STR = APPLICATION_ID.toString(),
             API_KEY = "a1b2c3d4",
             API_SECRET = "1234567890abcdef",
             SIGNATURE_SECRET = "kTCRawcijyNTfQ1sNqVrz3ZDyRQRZXoL8IhaYTrMxKg153UcHT",
