@@ -227,6 +227,24 @@
           </archive>
         </configuration>
       </plugin>
+
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.7.1</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -272,32 +290,6 @@
               <nexusUrl>${nexusUrl}</nexusUrl>
               <autoReleaseAfterClose>false</autoReleaseAfterClose>
             </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>uber-jar</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>3.5.3</version>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>shade</goal>
-                </goals>
-                <configuration>
-                  <minimizeJar>true</minimizeJar>
-                  <shadedArtifactAttached>true</shadedArtifactAttached>
-                  <shadedClassifierName>all</shadedClassifierName>
-                </configuration>
-              </execution>
-            </executions>
           </plugin>
         </plugins>
       </build>

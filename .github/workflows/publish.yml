@@ -40,5 +40,4 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSS_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSS_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.SIGNING_PASSWORD }}
-          MAVEN_GPG_KEYNAME: ${{ secrets.GPG_KEY_NAME }}
-        run: mvn --no-transfer-progress --batch-mode deploy -Dgpg.keyname=$MAVEN_GPG_KEYNAME -P release-sign-artifacts
+        run: mvn --no-transfer-progress --batch-mode deploy -P release-sign-artifacts
