@@ -779,7 +779,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 	public void testCreateConversationEndpoint() throws Exception {
 		new ConversationsEndpointTestSpec<Conversation, Conversation>() {
 			final Callback callback = Callback.builder().url("http://example.com/callback")
-					.eventMask("Test value").applicationId(TestUtils.APPLICATION_ID)
+					.eventMask("Test value").applicationId(TestUtils.APPLICATION_ID_STR)
 					.nccoUrl("http://example.com/ncco").method(HttpMethod.POST).build();
 
 			@Override

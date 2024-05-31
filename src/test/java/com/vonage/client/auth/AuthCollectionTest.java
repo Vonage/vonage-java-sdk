@@ -16,10 +16,12 @@
 package com.vonage.client.auth;
 
 import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Collections;
 import java.util.Set;
+import java.util.UUID;
 
 public class AuthCollectionTest {
     private static final Set<Class<? extends AuthMethod>>
@@ -27,10 +29,8 @@ public class AuthCollectionTest {
             TOKEN_AUTH_CLASS_SET = Collections.singleton(ApiKeyHeaderAuthMethod.class);
 
     final byte[] privateKeyContents = new TestUtils().loadKey("test/keys/application_key");
-    final String applicationId = TestUtils.APPLICATION_ID,
-            apiKey = TestUtils.API_KEY, apiSecret = TestUtils.API_SECRET;
 
-    final JWTAuthMethod jwtAuth = new JWTAuthMethod(applicationId, privateKeyContents);
+    final JWTAuthMethod jwtAuth = new JWTAuthMethod(APPLICATION_ID_STR, privateKeyContents);
 
     public AuthCollectionTest() throws Exception {
     }
@@ -65,7 +65,7 @@ public class AuthCollectionTest {
 
     @Test
     public void testAuthMethodPrecedence() throws Exception {
-        ApiKeyHeaderAuthMethod tAuth = new ApiKeyHeaderAuthMethod(apiKey, apiSecret);
+        ApiKeyHeaderAuthMethod tAuth = new ApiKeyHeaderAuthMethod(API_KEY, API_SECRET);
         AuthCollection auths = new AuthCollection();
         auths.add(tAuth);
         auths.add(jwtAuth);
@@ -76,7 +76,7 @@ public class AuthCollectionTest {
 
     @Test
     public void testIncompatibleAuths() throws Exception {
-        ApiKeyHeaderAuthMethod tAuth = new ApiKeyHeaderAuthMethod(apiKey, apiSecret);
+        ApiKeyHeaderAuthMethod tAuth = new ApiKeyHeaderAuthMethod(API_KEY, API_SECRET);
         AuthCollection auths = new AuthCollection();
         auths.add(tAuth);
 
@@ -90,7 +90,7 @@ public class AuthCollectionTest {
 
     @Test
     public void testLongConstructorJwtAndApiSecret() throws Exception {
-        var ac = new AuthCollection(applicationId, privateKeyContents, apiKey, apiSecret, null, null);
+        var ac = new AuthCollection(APPLICATION_ID, privateKeyContents, API_KEY, API_SECRET, null, null);
 
         assertTrue(ac.hasAuthMethod(JWTAuthMethod.class));
         assertTrue(ac.hasAuthMethod(ApiKeyQueryParamsAuthMethod.class));
@@ -114,7 +114,7 @@ public class AuthCollectionTest {
     public void testAddReplacesExistingAuthMethod() throws Exception {
         class CustomJwt extends JWTAuthMethod {
             public CustomJwt() {
-                super(applicationId, privateKeyContents);
+                super(APPLICATION_ID_STR, privateKeyContents);
             }
         }
 

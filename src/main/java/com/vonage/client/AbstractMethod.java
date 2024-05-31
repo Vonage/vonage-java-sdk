@@ -111,7 +111,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
         if (am instanceof HeaderAuthMethod) {
             request.setHeader("Authorization", ((HeaderAuthMethod) am).getHeaderValue());
         }
-        else if (am instanceof QueryParamsAuthMethod) {
+        if (am instanceof QueryParamsAuthMethod) {
             RequestQueryParams qp = am instanceof ApiKeyQueryParamsAuthMethod ? null : normalRequestParams(request);
             ((QueryParamsAuthMethod) am).getAuthParams(qp).forEach(request::addParameter);
         }
@@ -146,7 +146,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
         if (am instanceof JWTAuthMethod) {
             return ((JWTAuthMethod) am).getApplicationId();
         }
-        else if (am instanceof ApiKeyAuthMethod) {
+        if (am instanceof ApiKeyAuthMethod) {
             return ((ApiKeyAuthMethod) am).getApiKey();
         }
         throw new IllegalStateException(am.getClass().getSimpleName() + " does not have API key.");

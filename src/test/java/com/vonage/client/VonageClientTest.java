@@ -25,6 +25,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PublicKey;
@@ -32,6 +33,12 @@ import java.security.spec.X509EncodedKeySpec;
 
 public class VonageClientTest extends AbstractClientTest<VonageClient> {
     private final TestUtils testUtils = new TestUtils();
+    private final Path privateKeyPath;
+
+    public VonageClientTest() throws Exception {
+        privateKeyPath = Paths.get(getClass().getResource("test/keys/application_key").toURI());
+    }
+
 
     @Test
     public void testConstructVonageClient() throws Exception {
@@ -77,7 +84,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
         byte[] privateKeyBytes = testUtils.loadKey("test/keys/application_key");
         VonageClient client = VonageClient.builder()
                 .privateKeyContents(privateKeyBytes)
-                .applicationId(APPLICATION_ID).build();
+                .applicationId(APPLICATION_ID_STR).build();
 
         String constructedToken = client.generateJwt();
 
@@ -88,7 +95,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
 
         Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(constructedToken).getPayload();
 
-        assertEquals(APPLICATION_ID, claims.get("application_id"));
+        assertEquals(APPLICATION_ID_STR, claims.get("application_id"));
     }
 
     @Test
@@ -115,7 +122,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
     @Test
     public void testSoloApplicationId() {
         assertThrows(VonageClientCreationException.class, () ->
-                VonageClient.builder().applicationId(APPLICATION_ID).build()
+                VonageClient.builder().applicationId(APPLICATION_ID_STR).build()
         );
     }
 
@@ -160,7 +167,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
         byte[] keyBytes = testUtils.loadKey("test/keys/application_key");
 
         VonageClient vonageClient = VonageClient.builder()
-                .applicationId(APPLICATION_ID)
+                .applicationId(APPLICATION_ID_STR)
                 .privateKeyContents(keyBytes)
                 .build();
 
@@ -173,7 +180,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
         TestUtils testUtils = new TestUtils();
         String key = new String(testUtils.loadKey("test/keys/application_key"));
 
-        VonageClient vonageClient = VonageClient.builder().applicationId(APPLICATION_ID).privateKeyContents(key).build();
+        VonageClient vonageClient = VonageClient.builder().applicationId(APPLICATION_ID_STR).privateKeyContents(key).build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
         assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));
     }
@@ -181,8 +188,8 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
     @Test
     public void testApplicationIdWithCertPath() throws Exception {
         VonageClient vonageClient = VonageClient.builder()
-                .applicationId(APPLICATION_ID)
-                .privateKeyPath(Paths.get(getClass().getResource("test/keys/application_key").toURI()))
+                .applicationId(APPLICATION_ID_STR)
+                .privateKeyPath(privateKeyPath)
                 .build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
         assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));
@@ -192,10 +199,17 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
     public void testApplicationIdWithCertPathAsString() throws Exception {
       VonageClient vonageClient = VonageClient.builder()
                 .applicationId(APPLICATION_ID)
-                .privateKeyPath(Paths.get(getClass().getResource("test/keys/application_key").toURI()).toString())
+                .privateKeyPath(privateKeyPath)
                 .build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
         assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));
+    }
+
+    @Test
+    public void testInvalidApplicationId() throws Exception {
+        assertThrows(IllegalArgumentException.class, () -> VonageClient.builder()
+                .privateKeyPath(privateKeyPath).applicationId(API_KEY).build()
+        );
     }
 
     @Test

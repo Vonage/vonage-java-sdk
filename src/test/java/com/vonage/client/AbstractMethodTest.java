@@ -158,7 +158,7 @@ public class AbstractMethodTest {
         assertEquals(2, request.getParameters().size());
 
         var jwtAuthCollection = new AuthCollection(new JWTAuthMethod(
-                APPLICATION_ID, new TestUtils().loadKey("test/keys/application_key")
+                APPLICATION_ID_STR, new TestUtils().loadKey("test/keys/application_key")
         ));
         when(mockWrapper.getAuthCollection()).thenReturn(jwtAuthCollection);
         request = method.makeRequest();
