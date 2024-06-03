@@ -42,11 +42,11 @@
   </issueManagement>
 
   <properties>
-    <jackson.version>2.17.1</jackson.version>
-    <jdk.version>8</jdk.version>
-    <jdk.testVersion>21</jdk.testVersion>
+    <java.version>8</java.version>
+    <java.testVersion>21</java.testVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <nexusUrl>https://oss.sonatype.org</nexusUrl>
+    <jackson.version>2.17.1</jackson.version>
   </properties>
 
   <dependencies>
@@ -132,7 +132,7 @@
                   <version>3.6.3</version>
                 </requireMavenVersion>
                 <requireJavaVersion>
-                  <version>1.8</version>
+                  <version>${java.version}</version>
                 </requireJavaVersion>
               </rules>
             </configuration>
@@ -167,12 +167,10 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.13.0</version>
         <configuration>
-          <source>${jdk.version}</source>
-          <target>${jdk.version}</target>
-          <release>${jdk.version}</release>
-          <testSource>${jdk.testVersion}</testSource>
-          <testTarget>${jdk.testVersion}</testTarget>
-          <testRelease>${jdk.testVersion}</testRelease>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <release>${java.version}</release>
+          <testRelease>${java.testVersion}</testRelease>
           <testCompilerArgument>--enable-preview</testCompilerArgument>
         </configuration>
       </plugin>
