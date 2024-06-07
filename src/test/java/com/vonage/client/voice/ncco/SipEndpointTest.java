@@ -17,21 +17,26 @@ package com.vonage.client.voice.ncco;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import java.net.URI;
 import java.util.Collections;
 
 public class SipEndpointTest {
 
     @Test
     public void testAllFields() {
-        SipEndpoint endpoint = SipEndpoint.builder("")
-                .uri("sip:test@example.com")
-                .headers(Collections.singletonMap("k1", "v1"))
-                .build();
+        assertThrows(IllegalArgumentException.class, () -> SipEndpoint.builder(",}").build());
+        String uri = "sip:test@example.com";
+        String user2UserHeader = "342342ef34;encoding=hex";
+        SipEndpoint endpoint = SipEndpoint.builder(URI.create("foo"))
+                .uri(uri).headers(Collections.singletonMap("k1", "v1"))
+                .userToUserHeader(user2UserHeader).build();
 
         ConnectAction connect = ConnectAction.builder(endpoint).build();
 
-        String expectedJson = "[{\"endpoint\":[{\"uri\":\"sip:test@example.com\"," +
-                "\"headers\":{\"k1\":\"v1\"},\"type\":\"sip\"}],\"action\":\"connect\"}]";
+        String expectedJson = "[{\"endpoint\":[{\"uri\":\""+uri+"\"," +
+                "\"headers\":{\"k1\":\"v1\"}," +
+                "\"standardHeaders\":{\"User-to-User\":\""+user2UserHeader+"\"}," +
+                "\"type\":\"sip\"}],\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
     }
 }

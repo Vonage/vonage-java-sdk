@@ -1,4 +1,4 @@
-name: Publish to Nexus
+name: Publish to Maven Central
 on:
   release:
     types: [published]
