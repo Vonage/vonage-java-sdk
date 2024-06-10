@@ -19,6 +19,7 @@ import com.vonage.client.voice.AdvancedMachineDetection;
 import com.vonage.client.voice.MachineDetection;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.Map;
 
 public class ConnectActionTest {
 
@@ -67,18 +68,21 @@ public class ConnectActionTest {
 
     @Test
     public void testAllFieldsWithSipEndpoint() {
-        SipEndpoint endpoint = SipEndpoint.builder("sip:test@sip.example.com").build();
+        String uri = "sip:test@sip.example.com", user2User = "someRandomValue;encoding=L0L";
+        SipEndpoint endpoint = SipEndpoint.builder(uri)
+                .userToUserHeader(user2User).headers(Map.of()).build();
+
         ConnectAction connect = ConnectAction.builder(endpoint)
                 .from("15554449876")
                 .eventType(EventType.SYNCHRONOUS)
-                .timeOut(3)
-                .limit(2)
+                .timeOut(3).limit(2)
                 .machineDetection(MachineDetection.CONTINUE)
                 .eventUrl("https://example.com")
                 .eventMethod(EventMethod.POST)
                 .build();
 
-        String expectedJson = "[{\"endpoint\":[{\"uri\":\"sip:test@sip.example.com\",\"type\":\"sip\"}]," +
+        String expectedJson = "[{\"endpoint\":[{\"uri\":\""+uri+"\",\"headers\":{},\"standardHeaders\":" +
+                "{\"User-to-User\":\""+user2User+"\"},\"type\":\"sip\"}]," +
                 "\"from\":\"15554449876\",\"eventType\":\"synchronous\",\"limit\":2,\"timeout\":3," +
                 "\"machineDetection\":\"continue\",\"eventUrl\":[\"https://example.com\"]," +
                 "\"eventMethod\":\"POST\",\"action\":\"connect\"}]";

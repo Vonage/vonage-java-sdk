@@ -33,7 +33,7 @@
 
   <scm>
     <connection>scm:git@github.com:Vonage/vonage-java-sdk</connection>
-    <developerConnection>scm:git@github.com:Vonage/vonage-java-sdk</developerConnection>
+    <developerConnection>${project.scm.connection}</developerConnection>
     <url>${project.url}</url>
   </scm>
   <issueManagement>

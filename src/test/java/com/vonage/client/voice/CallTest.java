@@ -291,13 +291,19 @@ public class CallTest {
 
     @Test
     public void testConstructAllParams() {
+        var sipCustomHeaders = Map.of("ab", List.of("C", 2, 'd'));
+        var sipUri = "sip://example.com";
+        var sipUser2User = "unvalidated_content";
+
         Call call = Call.builder()
                 .from("447900000001")
                 .to(
                     new AppEndpoint("nexmo"),
-                    new SipEndpoint("sip://example.com"),
+                    new SipEndpoint(sipUri, sipCustomHeaders),
                     new VbcEndpoint("7890"),
-                    new WebSocketEndpoint("wss://example.org", "audio/l16", Collections.emptyMap())
+                    new WebSocketEndpoint("wss://example.org", "audio/l16", Collections.emptyMap()),
+                    new SipEndpoint(sipUri, sipUser2User),
+                    new SipEndpoint(sipUri, sipCustomHeaders, sipUser2User)
                 )
                 .ncco(
                     TalkAction.builder("Hello").build(),
@@ -320,11 +326,19 @@ public class CallTest {
         assertEquals(MachineDetection.HANGUP, call.getMachineDetection());
         assertEquals("phone", call.getFrom().getType());
         Endpoint[] to = call.getTo();
-        assertEquals(4, to.length);
+        assertEquals(6, to.length);
         assertEquals("app", to[0].getType());
         assertEquals("sip", to[1].getType());
         assertEquals("vbc", to[2].getType());
         assertEquals("websocket", to[3].getType());
+        assertEquals(sipUri, ((SipEndpoint) to[4]).getUri());
+        assertEquals(sipUser2User, ((SipEndpoint) to[4])
+                .getStandardHeaders().get(SipHeader.fromString("User-to-User"))
+        );
+        assertNull(((SipEndpoint) to[4]).getHeaders());
+        assertEquals(sipUri, ((SipEndpoint) to[5]).getUri());
+        assertEquals(1, ((SipEndpoint) to[5]).getStandardHeaders().size());
+        assertEquals(sipCustomHeaders, ((SipEndpoint) to[5]).getHeaders());
         assertNotNull(to[0].toLog());
         assertNotNull(to[1].toLog());
         assertNotNull(to[2].toLog());
