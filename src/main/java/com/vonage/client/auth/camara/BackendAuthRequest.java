@@ -15,30 +15,18 @@
  */
 package com.vonage.client.auth.camara;
 
-import com.vonage.client.QueryParamsRequest;
-import com.vonage.client.common.E164;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
-
-final class BackendAuthRequest implements QueryParamsRequest {
-    private final Map<String, String> params = new LinkedHashMap<>(4);
+/**
+ * Back-End auth request parameters for the first step in an OAuth2 three-legged check workflow.
+ */
+public final class BackendAuthRequest extends AuthRequest {
 
     /**
      * Creates the parameters for a Back-End Authorization OIDC request.
      *
-     * @param msisdn The MSISDN of the user you want to authenticate.
+     * @param msisdn The phone number of the user you want to authenticate in E.164 format.
      * @param scope The scope of the request as an enum.
      */
     public BackendAuthRequest(String msisdn, FraudPreventionDetectionScope scope) {
-        params.put("login_hint", "tel:" + new E164(msisdn));
-        params.put("scope", "dpv:FraudPreventionAndDetection#" +
-                Objects.requireNonNull(scope, "Scope is required.")
-        );
-    }
-
-    @Override
-    public Map<String, String> makeParams() {
-        return params;
+        super(msisdn, scope);
     }
 }

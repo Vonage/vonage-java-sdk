@@ -13,15 +13,26 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.auth.camara;
+package com.vonage.client.camara.numberverification;
 
-public enum FraudPreventionDetectionScope {
-    CHECK_SIM_SWAP,
-    RETRIEVE_SIM_SWAP_DATE,
-    NUMBER_VERIFICATION_VERIFY_READ;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.common.E164;
 
-    @Override
-    public String toString() {
-        return name().toLowerCase().replace('_', '-');
+class VerifyNumberRequest extends JsonableBaseObject {
+    private final String phoneNumber;
+
+    VerifyNumberRequest(String phoneNumber) {
+        this.phoneNumber = new E164(phoneNumber).toString();
+    }
+
+    /**
+     * Gets the MSISDN for this request.
+     *
+     * @return The phone number in E.164 format.
+     */
+    @JsonProperty("phoneNumber")
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 }

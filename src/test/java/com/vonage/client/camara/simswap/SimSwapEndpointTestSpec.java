@@ -18,7 +18,7 @@ package com.vonage.client.camara.simswap;
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.auth.AuthMethod;
-import com.vonage.client.auth.camara.FraudBackendAuthMethod;
+import com.vonage.client.auth.camara.NetworkAuthMethod;
 import com.vonage.client.auth.camara.FraudPreventionDetectionScope;
 import com.vonage.client.camara.CamaraResponseException;
 import com.vonage.client.common.HttpMethod;
@@ -29,7 +29,7 @@ abstract class SimSwapEndpointTestSpec<R> extends DynamicEndpointTestSpec<SimSwa
 
 	@Override
 	protected Set<Class<? extends AuthMethod>> expectedAuthMethods() {
-		return Set.of(FraudBackendAuthMethod.class);
+		return Set.of(NetworkAuthMethod.class);
 	}
 
 	@Override
@@ -55,6 +55,7 @@ abstract class SimSwapEndpointTestSpec<R> extends DynamicEndpointTestSpec<SimSwa
 	@Override
 	protected final String expectedEndpointUri(SimSwapRequest request) {
 		return "/camara/sim-swap/v040/" + switch (getScope()) {
+			default -> throw new IllegalStateException();
 			case CHECK_SIM_SWAP -> "check";
 			case RETRIEVE_SIM_SWAP_DATE -> "retrieve-date";
 		};

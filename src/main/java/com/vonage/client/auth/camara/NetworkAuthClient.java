@@ -26,8 +26,9 @@ import java.util.Objects;
  * Used for obtaining access tokens for use with Vonage CAMARA APIs.
  */
 public class NetworkAuthClient {
-    RestEndpoint<BackendAuthRequest, BackendAuthResponse> backendAuth;
-    RestEndpoint<TokenRequest, TokenResponse> tokenRequest;
+    final RestEndpoint<BackendAuthRequest, AuthResponse> backendAuth;
+    final RestEndpoint<FrontendAuthRequest, AuthResponse> frontendAuth;
+    final RestEndpoint<TokenRequest, TokenResponse> tokenRequest;
 
     /**
      * Create a new NetworkAuthClient.
@@ -37,41 +38,66 @@ public class NetworkAuthClient {
     public NetworkAuthClient(HttpWrapper wrapper) {
         @SuppressWarnings("unchecked")
         final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
-            Endpoint(String path, R... type) {
+            Endpoint(String path, HttpMethod method, R... type) {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .responseExceptionType(NetworkAuthResponseException.class)
-                        .wrapper(wrapper).requestMethod(HttpMethod.POST)
+                        .wrapper(wrapper).requestMethod(method)
                         .authMethod(JWTAuthMethod.class).urlFormEncodedContentType(true)
-                        .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig()
-                                .getApiEuBaseUri() + "/oauth2/" + path
+                        .pathGetter((de, req) -> (method == HttpMethod.POST ?
+                                de.getHttpWrapper().getHttpConfig().getApiEuBaseUri() :
+                                "https://oidc.idp.vonage.com")
+                                + "/oauth2/" + path
                         )
                 );
             }
         }
 
-        backendAuth = new Endpoint<>("bc-authorize");
-        tokenRequest = new Endpoint<>("token");
+        frontendAuth = new Endpoint<>("auth", HttpMethod.GET);
+        backendAuth = new Endpoint<>("bc-authorize", HttpMethod.POST);
+        tokenRequest = new Endpoint<>("token", HttpMethod.POST);
     }
 
-    BackendAuthResponse sendAuthRequest(BackendAuthRequest request) {
-        return backendAuth.execute(Objects.requireNonNull(request));
+    /**
+     * First step in the three-legged OAuth2 flow. Initiates an OIDC request,
+     * automatically determining the appropriate endpoint based on the provided parameters.
+     *
+     * @param request The request parameters.
+     * @return The server response wrapped in an object.
+     * @throws IllegalArgumentException If the request is an unhandled type.
+     */
+    AuthResponse sendAuthRequest(AuthRequest request) {
+        if (request instanceof BackendAuthRequest) {
+            return backendAuth.execute((BackendAuthRequest) request);
+        }
+        else if (request instanceof FrontendAuthRequest) {
+            return frontendAuth.execute((FrontendAuthRequest) request);
+        }
+        else {
+            throw new IllegalArgumentException("Unknown auth request type: "+request);
+        }
     }
 
+    /**
+     * Second step in the three-legged OAuth2 flow. Obtains an access token from the given request ID.
+     *
+     * @param authRequestId The result from {@link AuthResponse#getAuthReqId()}
+     * @return The API response, which contains the access token.
+     */
     TokenResponse sendTokenRequest(String authRequestId) {
         return tokenRequest.execute(new TokenRequest(authRequestId));
     }
 
     /**
-     * Obtains a new access token for the given phone number and permission scope.
+     * Obtains a new access token.
      *
-     * @param msisdn The phone number in E.164 format.
-     * @param scope Purpose of the token.
+     * @param authRequest The request parameters.
      * @return The access token as a string.
      * @throws NetworkAuthResponseException If an error was encountered during the workflow.
+     * @since 8.9.0
      */
-    public String getCamaraAccessToken(String msisdn, FraudPreventionDetectionScope scope) {
-        BackendAuthResponse bar = sendAuthRequest(new BackendAuthRequest(msisdn, scope));
-        TokenResponse tr = sendTokenRequest(bar.getAuthReqId());
+    public String getCamaraAccessToken(AuthRequest authRequest) {
+        AuthResponse ar = sendAuthRequest(authRequest);
+        TokenResponse tr = sendTokenRequest(ar.getAuthReqId());
         return tr.getAccessToken();
     }
 }

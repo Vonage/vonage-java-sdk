@@ -13,15 +13,13 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.auth.camara;
 
-public enum FraudPreventionDetectionScope {
-    CHECK_SIM_SWAP,
-    RETRIEVE_SIM_SWAP_DATE,
-    NUMBER_VERIFICATION_VERIFY_READ;
-
-    @Override
-    public String toString() {
-        return name().toLowerCase().replace('_', '-');
-    }
-}
+/**
+ * This package contains classes to support usage of the
+ * <a href=https://developer.vonage.com/en/api/camara/number-verification>Number Verification API</a>.
+ * Please refer to <a href=https://developer.vonage.com/en/number-verification/overview>
+ * the developer documentation</a> for an overview of the concepts.
+ *
+ * @since 8.9.0
+ */
+package com.vonage.client.camara.numberverification;

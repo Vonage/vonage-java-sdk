@@ -19,12 +19,13 @@ import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageClient;
-import com.vonage.client.auth.camara.FraudBackendAuthMethod;
+import com.vonage.client.auth.camara.BackendAuthRequest;
+import com.vonage.client.auth.camara.NetworkAuthMethod;
 import com.vonage.client.auth.camara.FraudPreventionDetectionScope;
 import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.CHECK_SIM_SWAP;
 import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.RETRIEVE_SIM_SWAP_DATE;
-import com.vonage.client.auth.camara.NetworkAuthClient;
 import com.vonage.client.camara.CamaraResponseException;
+import com.vonage.client.camara.NetworkApiClient;
 import com.vonage.client.common.HttpMethod;
 import java.time.Instant;
 
@@ -32,7 +33,7 @@ import java.time.Instant;
  * A client for communicating with the Vonage SIM Swap API. The standard way to obtain an instance
  * of this class is to use {@link VonageClient#getSimSwapClient()}.
  */
-public class SimSwapClient {
+public class SimSwapClient extends NetworkApiClient {
     final RestEndpoint<SimSwapRequest, CheckSimSwapResponse> check;
     final RestEndpoint<SimSwapRequest, SimSwapDateResponse> retrieveDate;
 
@@ -42,20 +43,17 @@ public class SimSwapClient {
      * @param wrapper Http Wrapper used to create requests.
      */
     public SimSwapClient(HttpWrapper wrapper) {
-        final NetworkAuthClient nac = new NetworkAuthClient(wrapper);
+        super(wrapper);
 
         @SuppressWarnings("unchecked")
         class Endpoint<R> extends DynamicEndpoint<SimSwapRequest, R> {
             Endpoint(String path, FraudPreventionDetectionScope scope, R... type) {
                 super(DynamicEndpoint.<SimSwapRequest, R> builder(type)
-                        .authMethod(FraudBackendAuthMethod.class)
+                        .authMethod(NetworkAuthMethod.class)
                         .responseExceptionType(CamaraResponseException.class)
                         .requestMethod(HttpMethod.POST).wrapper(wrapper).pathGetter((de, req) -> {
-                            de.getHttpWrapper().getAuthCollection().add(
-                                    new FraudBackendAuthMethod(nac, req.getPhoneNumber(), scope)
-                            );
-                            String base = de.getHttpWrapper().getHttpConfig().getApiEuBaseUri();
-                            return base + "/camara/sim-swap/v040/" + path;
+                            setNetworkAuth(new BackendAuthRequest(req.getPhoneNumber(), scope));
+                            return getCamaraBaseUri() + "sim-swap/v040/" + path;
                         })
                 );
             }

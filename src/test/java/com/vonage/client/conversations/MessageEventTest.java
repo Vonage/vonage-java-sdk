@@ -15,8 +15,8 @@
  */
 package com.vonage.client.conversations;
 
-import com.vonage.client.OrderedJsonMap;
-import static com.vonage.client.OrderedJsonMap.entry;
+import com.vonage.client.OrderedMap;
+import static com.vonage.client.OrderedMap.entry;
 import com.vonage.client.common.MessageType;
 import static com.vonage.client.common.MessageType.*;
 import static com.vonage.client.conversations.MessageEvent.builder;
@@ -27,7 +27,7 @@ import java.net.URI;
 public class MessageEventTest extends AbstractEventTest {
     final String text = "Hello world", url = "https://www.example.com/path/to/media.flv";
 
-    MessageEvent testMessageEvent(MessageEvent.Builder builder, OrderedJsonMap fields) {
+    MessageEvent testMessageEvent(MessageEvent.Builder builder, OrderedMap fields) {
         return testBaseEvent(EventType.MESSAGE, builder, fields);
     }
 
@@ -38,7 +38,7 @@ public class MessageEventTest extends AbstractEventTest {
         for (var messageType : messageTypes) {
             var event = testMessageEvent(
                     MessageEvent.builder(messageType).url(url),
-                    new OrderedJsonMap(
+                    new OrderedMap(
                             entry("message_type", messageType),
                             entry(messageType.toString(), entry("url", url))
                     )
@@ -58,7 +58,7 @@ public class MessageEventTest extends AbstractEventTest {
     public void testTextEvent() {
         var event = testMessageEvent(
                 builder(TEXT).text(text),
-                new OrderedJsonMap(
+                new OrderedMap(
                     entry("message_type", "text"),
                     entry("text", text)
                 )
@@ -82,9 +82,9 @@ public class MessageEventTest extends AbstractEventTest {
 
         var event = testMessageEvent(
                 builder(LOCATION).location(location),
-                new OrderedJsonMap(
+                new OrderedMap(
                         entry("message_type", "location"),
-                        entry("location", new OrderedJsonMap(
+                        entry("location", new OrderedMap(
                                 entry("longitude", longitude),
                                 entry("latitude", latitude),
                                 entry("name", name),

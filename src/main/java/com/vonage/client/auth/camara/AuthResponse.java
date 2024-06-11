@@ -18,11 +18,11 @@ package com.vonage.client.auth.camara;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
-final class BackendAuthResponse extends JsonableBaseObject {
+final class AuthResponse extends JsonableBaseObject {
     private String authReqId;
     private Integer expiresIn, interval;
 
-    private BackendAuthResponse() {}
+    private AuthResponse() {}
 
     /**
      * ID of the authentication request.

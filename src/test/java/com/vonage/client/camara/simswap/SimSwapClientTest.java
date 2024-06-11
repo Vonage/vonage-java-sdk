@@ -18,7 +18,8 @@ package com.vonage.client.camara.simswap;
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
-import com.vonage.client.auth.camara.FraudBackendAuthMethod;
+import com.vonage.client.auth.camara.BackendAuthRequest;
+import com.vonage.client.auth.camara.NetworkAuthMethod;
 import com.vonage.client.auth.camara.FraudPreventionDetectionScope;
 import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.CHECK_SIM_SWAP;
 import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.RETRIEVE_SIM_SWAP_DATE;
@@ -35,8 +36,8 @@ public class SimSwapClientTest extends AbstractClientTest<SimSwapClient> {
     }
 
     void setAuth(FraudPreventionDetectionScope type) {
-        wrapper.getAuthCollection().add(new FraudBackendAuthMethod(
-                new NetworkAuthClient(wrapper), phoneNumber, type
+        wrapper.getAuthCollection().add(new NetworkAuthMethod(
+                new NetworkAuthClient(wrapper), new BackendAuthRequest(phoneNumber, type)
         ));
     }
 

@@ -182,7 +182,7 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 					.collect(Collectors.toMap(Map.Entry::getKey, entry -> {
 						Object value = entry.getValue();
 						return value instanceof Object[] ? Arrays.asList((Object[]) value) : value;
-					}, (v1, v2) -> v1, LinkedHashMap::new));
+					}, (v1, _) -> v1, LinkedHashMap::new));
 			assertEquals(normalExpectedParams, paramsMap);
 		}
 

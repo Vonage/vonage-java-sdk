@@ -13,15 +13,21 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.auth.camara;
+package com.vonage.client.camara.numberverification;
 
-public enum FraudPreventionDetectionScope {
-    CHECK_SIM_SWAP,
-    RETRIEVE_SIM_SWAP_DATE,
-    NUMBER_VERIFICATION_VERIFY_READ;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 
-    @Override
-    public String toString() {
-        return name().toLowerCase().replace('_', '-');
+class VerifyNumberResponse extends JsonableBaseObject {
+    private Boolean devicePhoneNumberVerified;
+
+    /**
+     * Indicates whether the phone number matches for the device.
+     *
+     * @return {@code true} if the number matches, {@code false} if unknown or unmatched.
+     */
+    @JsonProperty("devicePhoneNumberVerified")
+    public boolean getDevicePhoneNumberVerified() {
+        return devicePhoneNumberVerified != null ? devicePhoneNumberVerified : false;
     }
 }

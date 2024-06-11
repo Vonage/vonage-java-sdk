@@ -37,7 +37,8 @@ abstract class NetworkAuthEndpointTestSpec<T, R> extends DynamicEndpointTestSpec
 
 	@Override
 	protected String expectedDefaultBaseUri() {
-		return "https://api-eu.vonage.com";
+		return expectedHttpMethod() == HttpMethod.POST ?
+				"https://api-eu.vonage.com" : "https://oidc.idp.vonage.com";
 	}
 
 	@Override
@@ -46,10 +47,5 @@ abstract class NetworkAuthEndpointTestSpec<T, R> extends DynamicEndpointTestSpec
 	}
 
 	@Override
-	protected HttpMethod expectedHttpMethod() {
-		return HttpMethod.POST;
-	}
-
-	@Override
-	protected abstract Map<String, String> sampleQueryParams();
+	protected abstract Map<String, ?> sampleQueryParams();
 }

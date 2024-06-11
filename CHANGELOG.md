@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 # [8.9.0] - 2024-06-??
 - Added `User-to-User` header in Voice Connect SIP endpoint
 - Added missing custom `headers` field in `com.vonage.client.voice.SipEndpoint`
+- Added CAMARA Number Verification API
 
 # [8.8.1] - 2024-05-30
 - Fixes Maven POM metadata

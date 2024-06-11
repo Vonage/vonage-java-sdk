@@ -18,22 +18,21 @@ package com.vonage.client.auth.camara;
 import com.vonage.client.auth.BearerAuthMethod;
 import com.vonage.client.common.E164;
 
-public class FraudBackendAuthMethod extends BearerAuthMethod {
+/**
+ * Auth method for Vonage Network APIs. Designed to be replaced on each request.
+ */
+public class NetworkAuthMethod extends BearerAuthMethod {
     private final NetworkAuthClient networkAuthClient;
-    private final String msisdn;
-    private final FraudPreventionDetectionScope scope;
+    private final AuthRequest request;
 
-    public FraudBackendAuthMethod(NetworkAuthClient client,
-                                  String msisdn,
-                                  FraudPreventionDetectionScope scope) {
+    public NetworkAuthMethod(NetworkAuthClient client, AuthRequest request) {
         this.networkAuthClient = client;
-        this.msisdn = new E164(msisdn).toString();
-        this.scope = scope;
+        this.request = request;
     }
 
     @Override
     protected final String getBearerToken() {
-        return networkAuthClient.getCamaraAccessToken(msisdn, scope);
+        return networkAuthClient.getCamaraAccessToken(request);
     }
 
     @Override

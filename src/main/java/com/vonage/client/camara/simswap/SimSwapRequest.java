@@ -20,8 +20,8 @@ import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.E164;
 
 class SimSwapRequest extends JsonableBaseObject {
-    private String phoneNumber;
-    private Integer maxAge;
+    private final String phoneNumber;
+    private final Integer maxAge;
 
     SimSwapRequest(String phoneNumber) {
         this(phoneNumber, null);
@@ -37,7 +37,7 @@ class SimSwapRequest extends JsonableBaseObject {
     /**
      * Gets the MSISDN for this request.
      *
-     * @return The phone number in E.164 format, or {@code null} if unspecified.
+     * @return The phone number in E.164 format.
      */
     @JsonProperty("phoneNumber")
     public String getPhoneNumber() {
