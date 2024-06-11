@@ -19,3 +19,5 @@ valid_application_key.pem
 *.iml
 out/
 .DS_Store
+pom.xml.releaseBackup
+pom.xml.versionsBackup

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.9.0] - 2024-06-??
+- Added `User-to-User` header in Voice Connect SIP endpoint
+- Added missing custom `headers` field in `com.vonage.client.voice.SipEndpoint`
+
 # [8.8.1] - 2024-05-30
 - Fixes Maven POM metadata
 
