@@ -19,6 +19,7 @@ import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.auth.NoAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.Objects;
 
@@ -26,8 +27,8 @@ import java.util.Objects;
  * Used for obtaining access tokens for use with Vonage CAMARA APIs.
  */
 public class NetworkAuthClient {
-    final RestEndpoint<BackendAuthRequest, AuthResponse> backendAuth;
-    final RestEndpoint<FrontendAuthRequest, AuthResponse> frontendAuth;
+    final RestEndpoint<BackendAuthRequest, BackendAuthResponse> backendAuth;
+    final RestEndpoint<FrontendAuthRequest, Void> frontendAuth;
     final RestEndpoint<TokenRequest, TokenResponse> tokenRequest;
 
     /**
@@ -41,8 +42,8 @@ public class NetworkAuthClient {
             Endpoint(String path, HttpMethod method, R... type) {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .responseExceptionType(NetworkAuthResponseException.class)
-                        .wrapper(wrapper).requestMethod(method)
-                        .authMethod(JWTAuthMethod.class).urlFormEncodedContentType(true)
+                        .wrapper(wrapper).requestMethod(method).urlFormEncodedContentType(true)
+                        .authMethod(method == HttpMethod.POST ? JWTAuthMethod.class : NoAuthMethod.class)
                         .pathGetter((de, req) -> (method == HttpMethod.POST ?
                                 de.getHttpWrapper().getHttpConfig().getApiEuBaseUri() :
                                 "https://oidc.idp.vonage.com")
@@ -57,47 +58,28 @@ public class NetworkAuthClient {
         tokenRequest = new Endpoint<>("token", HttpMethod.POST);
     }
 
-    /**
-     * First step in the three-legged OAuth2 flow. Initiates an OIDC request,
-     * automatically determining the appropriate endpoint based on the provided parameters.
-     *
-     * @param request The request parameters.
-     * @return The server response wrapped in an object.
-     * @throws IllegalArgumentException If the request is an unhandled type.
-     */
-    AuthResponse sendAuthRequest(AuthRequest request) {
-        if (request instanceof BackendAuthRequest) {
-            return backendAuth.execute((BackendAuthRequest) request);
-        }
-        else if (request instanceof FrontendAuthRequest) {
-            return frontendAuth.execute((FrontendAuthRequest) request);
-        }
-        else {
-            throw new IllegalArgumentException("Unknown auth request type: "+request);
-        }
+    private <R> R validateRequest(R request) {
+        return Objects.requireNonNull(request, "Request is required.");
+    }
+
+    public void makeOpenIDConnectRequest(FrontendAuthRequest request) {
+        frontendAuth.execute(validateRequest(request));
+    }
+
+    public BackendAuthResponse makeOpenIDConnectRequest(BackendAuthRequest request) {
+        return backendAuth.execute(validateRequest(request));
     }
 
     /**
-     * Second step in the three-legged OAuth2 flow. Obtains an access token from the given request ID.
+     * Obtains a new access token for a Back-End auth request.
      *
-     * @param authRequestId The result from {@link AuthResponse#getAuthReqId()}
-     * @return The API response, which contains the access token.
-     */
-    TokenResponse sendTokenRequest(String authRequestId) {
-        return tokenRequest.execute(new TokenRequest(authRequestId));
-    }
-
-    /**
-     * Obtains a new access token.
-     *
-     * @param authRequest The request parameters.
+     * @param request The token request parameters.
      * @return The access token as a string.
      * @throws NetworkAuthResponseException If an error was encountered during the workflow.
      * @since 8.9.0
      */
-    public String getCamaraAccessToken(AuthRequest authRequest) {
-        AuthResponse ar = sendAuthRequest(authRequest);
-        TokenResponse tr = sendTokenRequest(ar.getAuthReqId());
+    public String getCamaraAccessToken(TokenRequest request) {
+        TokenResponse tr = tokenRequest.execute(validateRequest(request));
         return tr.getAccessToken();
     }
 }

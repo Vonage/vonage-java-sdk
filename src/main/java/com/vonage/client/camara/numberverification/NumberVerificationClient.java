@@ -19,31 +19,59 @@ import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageClient;
+import com.vonage.client.auth.camara.BackendAuthRequest;
+import com.vonage.client.auth.camara.FrontendAuthRequest;
 import com.vonage.client.auth.camara.NetworkAuthMethod;
+import com.vonage.client.auth.camara.TokenRequest;
+import com.vonage.client.camara.CamaraResponseException;
 import com.vonage.client.camara.NetworkApiClient;
+import com.vonage.client.common.HttpMethod;
+import java.net.URI;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A client for communicating with the Vonage Number Verification API. The standard way to obtain an instance
  * of this class is to use {@link VonageClient#getNumberVerificationClient()}.
  */
 public class NumberVerificationClient extends NetworkApiClient {
-    //final RestEndpoint<VerifyNumberRequest, VerifyNumberResponse> verifyNumber;
+    final RestEndpoint<VerifyNumberRequest, VerifyNumberResponse> verifyNumber;
+    private final UUID applicationId;
+    private VerifyNumberRequest cachedRequest;
 
     /**
-     * Create a new SimSwapClient.
+     * Create a new NumberVerificationClient.
      *
      * @param wrapper Http Wrapper used to create requests.
      */
+    @SuppressWarnings("unchecked")
     public NumberVerificationClient(HttpWrapper wrapper) {
         super(wrapper);
+        if ((applicationId = wrapper.getApplicationId()) == null) {
+            throw new IllegalStateException("Application ID is unavailable.");
+        }
 
-        /*@SuppressWarnings("unchecked")
-        class Endpoint extends DynamicEndpoint<VerifyNumberRequest, VerifyNumberResponse> {
-            Endpoint() {
-                super(DynamicEndpoint.builder(VerifyNumberResponse.class)
-                        .authMethod(NetworkAuthMethod.class)
-                )
-            }
-        }*/
+        verifyNumber = DynamicEndpoint.<VerifyNumberRequest, VerifyNumberResponse> builder(VerifyNumberResponse.class)
+                .authMethod(NetworkAuthMethod.class).requestMethod(HttpMethod.POST).wrapper(wrapper)
+                .responseExceptionType(CamaraResponseException.class).pathGetter((de, req) -> {
+                    setNetworkAuth(new TokenRequest(req.redirectUrl, req.code));
+                    return getCamaraBaseUri() + "number-verification/v031/verify";
+                })
+                .build();
+    }
+
+    public void initiateVerification(String phoneNumber, URI redirectUrl, String state) {
+        networkAuthClient.makeOpenIDConnectRequest(new FrontendAuthRequest(
+                phoneNumber, redirectUrl, applicationId, state
+        ));
+        cachedRequest = new VerifyNumberRequest(phoneNumber, redirectUrl);
+    }
+
+    public boolean verifyNumber(String code) {
+        if (cachedRequest == null) {
+            throw new IllegalStateException("You must first call initiateVerification using this client.");
+        }
+        cachedRequest.code = Objects.requireNonNull(code, "Code is required.");
+        return verifyNumber.execute(cachedRequest).getDevicePhoneNumberVerified();
     }
 }

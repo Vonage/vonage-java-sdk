@@ -21,18 +21,40 @@ import com.vonage.client.common.E164;
 /**
  * Auth method for Vonage Network APIs. Designed to be replaced on each request.
  */
-public class NetworkAuthMethod extends BearerAuthMethod {
+public final class NetworkAuthMethod extends BearerAuthMethod {
     private final NetworkAuthClient networkAuthClient;
-    private final AuthRequest request;
+    private TokenRequest tokenRequest;
+    private BackendAuthRequest backendParams;
 
-    public NetworkAuthMethod(NetworkAuthClient client, AuthRequest request) {
+    /**
+     * Creates a new Bearer auth method which uses the specified params to exchange for an access token.
+     *
+     * @param client The network auth client to use.
+     * @param request The token request parameters.
+     */
+    public NetworkAuthMethod(NetworkAuthClient client, TokenRequest request) {
         this.networkAuthClient = client;
-        this.request = request;
+        this.tokenRequest = request;
+    }
+
+    /**
+     * Creates a new Bearer auth method which uses the specified params to
+     * automatically obtain the token parameters in order to exchange them for an access token.
+     *
+     * @param client The network auth client to use.
+     * @param request The initial Back-End request parameters to use for obtaining the tokens.
+     */
+    public NetworkAuthMethod(NetworkAuthClient client, BackendAuthRequest request) {
+        this.networkAuthClient = client;
+        this.backendParams = request;
     }
 
     @Override
-    protected final String getBearerToken() {
-        return networkAuthClient.getCamaraAccessToken(request);
+    protected String getBearerToken() {
+        if (backendParams != null) {
+            tokenRequest = new TokenRequest(networkAuthClient.makeOpenIDConnectRequest(backendParams));
+        }
+        return networkAuthClient.getCamaraAccessToken(tokenRequest);
     }
 
     @Override

@@ -26,6 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -142,14 +143,13 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
      * @throws IllegalStateException If the AuthMethod does not have an Application ID or API key.
      */
     public String getApplicationIdOrApiKey() throws VonageUnexpectedException {
-        AuthMethod am = getAuthMethod();
-        if (am instanceof JWTAuthMethod) {
-            return ((JWTAuthMethod) am).getApplicationId();
+        UUID appId = httpWrapper.getApplicationId();
+        if (appId != null) return appId.toString();
+        String apiKey = httpWrapper.getApiKey();
+        if (apiKey == null) {
+            throw new IllegalStateException("Application ID / API key is unavailable.");
         }
-        if (am instanceof ApiKeyAuthMethod) {
-            return ((ApiKeyAuthMethod) am).getApiKey();
-        }
-        throw new IllegalStateException(am.getClass().getSimpleName() + " does not have API key.");
+        else return apiKey;
     }
 
     protected abstract Set<Class<? extends AuthMethod>> getAcceptableAuthMethods();

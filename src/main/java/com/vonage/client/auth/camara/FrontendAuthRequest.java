@@ -17,6 +17,7 @@ package com.vonage.client.auth.camara;
 
 import java.net.URI;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Front-End auth request parameters for the first step in an OAuth2 three-legged check workflow.
@@ -28,13 +29,15 @@ public class FrontendAuthRequest extends AuthRequest {
      *
      * @param msisdn The phone number of the user you want to authenticate in E.164 format.
      * @param redirectUrl The URL to Application's Redirect URI.
+     * @param applicationId The Vonage Application ID.
      * @param state A unique identifier for the request. This is meant for the client to be able to know which
      *              request it is when it comes back to their redirect_uri. Useful to prevent CSRF attacks.
      */
-    public FrontendAuthRequest(String msisdn, URI redirectUrl, String state) {
+    public FrontendAuthRequest(String msisdn, URI redirectUrl, UUID applicationId, String state) {
         super(msisdn, FraudPreventionDetectionScope.NUMBER_VERIFICATION_VERIFY_READ);
+        params.put("client_id", Objects.requireNonNull(applicationId).toString());
         params.put("redirect_uri", Objects.requireNonNull(redirectUrl, "Redirect URL is required.").toString());
-        params.put("state", state);
         params.put("response_type", "code");
+        params.put("state", state);
     }
 }

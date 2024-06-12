@@ -15,15 +15,21 @@
  */
 package com.vonage.client.camara.numberverification;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.E164;
+import java.net.URI;
+import java.util.Objects;
 
 class VerifyNumberRequest extends JsonableBaseObject {
     private final String phoneNumber;
+    @JsonIgnore final URI redirectUrl;
+    @JsonIgnore String code;
 
-    VerifyNumberRequest(String phoneNumber) {
+    VerifyNumberRequest(String phoneNumber, URI redirectUrl) {
         this.phoneNumber = new E164(phoneNumber).toString();
+        this.redirectUrl = Objects.requireNonNull(redirectUrl, "Redirect URL is required.");
     }
 
     /**

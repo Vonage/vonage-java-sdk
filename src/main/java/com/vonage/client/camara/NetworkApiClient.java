@@ -16,10 +16,8 @@
 package com.vonage.client.camara;
 
 import com.vonage.client.HttpWrapper;
-import com.vonage.client.auth.camara.AuthRequest;
-import com.vonage.client.auth.camara.NetworkAuthMethod;
-import com.vonage.client.auth.camara.FraudPreventionDetectionScope;
-import com.vonage.client.auth.camara.NetworkAuthClient;
+import com.vonage.client.auth.camara.*;
+import java.util.UUID;
 
 /**
  * Base class for Vonage Network API clients.
@@ -28,7 +26,7 @@ import com.vonage.client.auth.camara.NetworkAuthClient;
  */
 public abstract class NetworkApiClient {
     private final HttpWrapper httpWrapper;
-    private final NetworkAuthClient networkAuthClient;
+    protected final NetworkAuthClient networkAuthClient;
 
     protected NetworkApiClient(HttpWrapper wrapper) {
         networkAuthClient = new NetworkAuthClient(httpWrapper = wrapper);
@@ -38,7 +36,11 @@ public abstract class NetworkApiClient {
         return httpWrapper.getHttpConfig().getApiEuBaseUri() + "/camara/";
     }
 
-    protected void setNetworkAuth(AuthRequest request) {
+    protected void setNetworkAuth(BackendAuthRequest request) {
+        httpWrapper.getAuthCollection().add(new NetworkAuthMethod(networkAuthClient, request));
+    }
+
+    protected void setNetworkAuth(TokenRequest request) {
         httpWrapper.getAuthCollection().add(new NetworkAuthMethod(networkAuthClient, request));
     }
 }

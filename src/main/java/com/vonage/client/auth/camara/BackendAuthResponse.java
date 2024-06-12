@@ -18,11 +18,14 @@ package com.vonage.client.auth.camara;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
-final class AuthResponse extends JsonableBaseObject {
+/**
+ * Represents the response from the first step in an OAuth2 three-legged workflow.
+ */
+public final class BackendAuthResponse extends JsonableBaseObject {
     private String authReqId;
     private Integer expiresIn, interval;
 
-    private AuthResponse() {}
+    private BackendAuthResponse() {}
 
     /**
      * ID of the authentication request.

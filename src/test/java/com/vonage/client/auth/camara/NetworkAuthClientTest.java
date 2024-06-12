@@ -17,9 +17,8 @@ package com.vonage.client.auth.camara;
 
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.DynamicEndpoint;
-import com.vonage.client.OrderedMap;
-import static com.vonage.client.OrderedMap.entry;
 import com.vonage.client.RestEndpoint;
+import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.TEST_BASE_URI;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.CHECK_SIM_SWAP;
@@ -143,10 +142,10 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
 
     @Test
     public void testBackendAuthEndpoint() throws Exception {
-        new NetworkAuthEndpointTestSpec<BackendAuthRequest, AuthResponse>() {
+        new NetworkAuthEndpointTestSpec<BackendAuthRequest, BackendAuthResponse>() {
 
             @Override
-            protected RestEndpoint<BackendAuthRequest, AuthResponse> endpoint() {
+            protected RestEndpoint<BackendAuthRequest, BackendAuthResponse> endpoint() {
                 return client.backendAuth;
             }
 
@@ -161,10 +160,10 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
             }
 
             @Override
-            protected Map<String, ?> sampleQueryParams() {
-                return new OrderedMap(
-                        entry("login_hint", "tel:+" + msisdn),
-                        entry("scope", "dpv:FraudPreventionAndDetection#check-sim-swap")
+            protected Map<String, String> sampleQueryParams() {
+                return Map.of(
+                        "login_hint", "tel:+" + msisdn,
+                        "scope", "dpv:FraudPreventionAndDetection#check-sim-swap"
                 );
             }
 
@@ -178,10 +177,10 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
 
     @Test
     public void testFrontendAuthEndpoint() throws Exception {
-        new NetworkAuthEndpointTestSpec<FrontendAuthRequest, AuthResponse>() {
+        new NetworkAuthEndpointTestSpec<FrontendAuthRequest, Void>() {
 
             @Override
-            protected RestEndpoint<FrontendAuthRequest, AuthResponse> endpoint() {
+            protected RestEndpoint<FrontendAuthRequest, Void> endpoint() {
                 return client.frontendAuth;
             }
 
@@ -198,17 +197,18 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
 
             @Override
             protected FrontendAuthRequest sampleRequest() {
-                return new FrontendAuthRequest(msisdn, redirectUrl, state);
+                return new FrontendAuthRequest(msisdn, redirectUrl, TestUtils.APPLICATION_ID, state);
             }
 
             @Override
             protected Map<String, ?> sampleQueryParams() {
-                return new OrderedMap(
-                        entry("login_hint", "tel:+" + msisdn),
-                        entry("scope", "dpv:FraudPreventionAndDetection#number-verification-verify-read"),
-                        entry("redirect_uri", redirectUrl.toString()),
-                        entry("state", state),
-                        entry("response_type", "code")
+                return Map.of(
+                        "client_id", TestUtils.APPLICATION_ID_STR,
+                        "login_hint", "tel:+" + msisdn,
+                        "scope", "dpv:FraudPreventionAndDetection#number-verification-verify-read",
+                        "redirect_uri", redirectUrl.toString(),
+                        "state", state,
+                        "response_type", "code"
                 );
             }
 
@@ -240,10 +240,10 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
             }
 
             @Override
-            protected Map<String, ?> sampleQueryParams() {
-                return new OrderedMap(
-                        entry("grant_type", "urn:openid:params:grant-type:ciba"),
-                        entry("auth_req_id", authReqId)
+            protected Map<String, String> sampleQueryParams() {
+                return Map.of(
+                        "grant_type", "urn:openid:params:grant-type:ciba",
+                        "auth_req_id", authReqId
                 );
             }
 
