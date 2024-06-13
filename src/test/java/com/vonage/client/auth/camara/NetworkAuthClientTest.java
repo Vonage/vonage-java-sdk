@@ -61,7 +61,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
                 .pathGetter((_, _) -> TEST_BASE_URI).build();
 
         var expectedResponse = "Hello, GNP!";
-        stubNetworkResponse(expectedResponse);
+        stubBackendNetworkResponse(expectedResponse);
 
         assertEquals(expectedResponse, endpoint.execute(null));
     }

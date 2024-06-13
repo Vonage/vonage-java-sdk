@@ -18,7 +18,7 @@ package com.vonage.client.camara.numberverification;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
-class VerifyNumberResponse extends JsonableBaseObject {
+final class VerifyNumberResponse extends JsonableBaseObject {
     private Boolean devicePhoneNumberVerified;
 
     /**

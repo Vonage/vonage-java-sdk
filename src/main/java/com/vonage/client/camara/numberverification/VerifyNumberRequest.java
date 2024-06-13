@@ -28,7 +28,7 @@ class VerifyNumberRequest extends JsonableBaseObject {
     @JsonIgnore String code;
 
     VerifyNumberRequest(String phoneNumber, URI redirectUrl) {
-        this.phoneNumber = new E164(phoneNumber).toString();
+        this.phoneNumber = '+' + new E164(phoneNumber).toString();
         this.redirectUrl = Objects.requireNonNull(redirectUrl, "Redirect URL is required.");
     }
 

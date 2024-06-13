@@ -46,31 +46,31 @@ public class SimSwapClientTest extends AbstractClientTest<SimSwapClient> {
         setAuth(CHECK_SIM_SWAP);
         final String trueResponse = "{\"swapped\":true}";
 
-        stubNetworkResponse(trueResponse);
+        stubBackendNetworkResponse(trueResponse);
         assertTrue(client.checkSimSwap(phoneNumber, 2400));
 
-        stubNetworkResponse("{\"swapped\":false}");
+        stubBackendNetworkResponse("{\"swapped\":false}");
         assertFalse(client.checkSimSwap(phoneNumber, 1));
 
-        stubNetworkResponse("{}");
+        stubBackendNetworkResponse("{}");
         assertFalse(client.checkSimSwap(phoneNumber, 240));
 
-        stubNetworkResponse("{\"swapped\":\"true\"}");
+        stubBackendNetworkResponse("{\"swapped\":\"true\"}");
         assertTrue(client.checkSimSwap(phoneNumber));
 
-        stubNetworkResponse("{\"swapped\":\"false\"}");
+        stubBackendNetworkResponse("{\"swapped\":\"false\"}");
         assertFalse(client.checkSimSwap(phoneNumber));
 
-        stubNetworkResponse(trueResponse);
+        stubBackendNetworkResponse(trueResponse);
         assertThrows(IllegalArgumentException.class, () -> client.checkSimSwap(phoneNumber, 0));
 
-        stubNetworkResponse(trueResponse);
+        stubBackendNetworkResponse(trueResponse);
         assertThrows(IllegalArgumentException.class, () -> client.checkSimSwap(phoneNumber, 2401));
 
-        stubNetworkResponse(trueResponse);
+        stubBackendNetworkResponse(trueResponse);
         assertThrows(NullPointerException.class, () -> client.checkSimSwap(null));
 
-        stubNetworkResponse(trueResponse);
+        stubBackendNetworkResponse(trueResponse);
         assertThrows(IllegalArgumentException.class, () -> client.checkSimSwap(invalidNumber, 350));
 
         assert403CamaraResponseException(() -> client.checkSimSwap(phoneNumber));
@@ -84,7 +84,7 @@ public class SimSwapClientTest extends AbstractClientTest<SimSwapClient> {
         var timestamp = Instant.parse(timestampStr);
         var response = "{\"latestSimChange\": \""+timestampStr+"\"}";
 
-        stubNetworkResponse(response);
+        stubBackendNetworkResponse(response);
         assertEquals(timestamp, client.retrieveSimSwapDate(phoneNumber));
 
         stubResponseAndAssertThrows(timestampStr,

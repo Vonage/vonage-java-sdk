@@ -37,6 +37,9 @@ import java.util.function.Supplier;
 public abstract class AbstractClientTest<T> {
     protected HttpWrapper wrapper;
     protected T client;
+    final String
+            backendNetworkAuthResponse = "{\"auth_req_id\": \"arid/0dadaeb4-7c79-4d39-b4b0-5a6cc08bf537\"}",
+            networkTokenResponse = "{\"access_token\": \"youMayProceed\"}";
 
     protected AbstractClientTest() {
         wrapper = new HttpWrapper(
@@ -139,16 +142,20 @@ public abstract class AbstractClientTest<T> {
         return invocation.get();
     }
 
-    protected void stubNetworkResponse(String mainResponse) throws Exception {
-        stubNetworkResponse(200, mainResponse);
+    protected void stubBackendNetworkResponse(String mainResponse) throws Exception {
+        stubBackendNetworkResponse(200, mainResponse);
     }
 
-    protected void stubNetworkResponse(int code, String mainResponse) throws Exception {
-        stubResponse(code,
-                "{\"auth_req_id\": \"arid/0dadaeb4-7c79-4d39-b4b0-5a6cc08bf537\"}",
-                "{\"access_token\": \"youMayProceed\"}",
-                mainResponse
-        );
+    protected void stubBackendNetworkResponse(int code, String mainResponse) throws Exception {
+        stubResponse(code, backendNetworkAuthResponse, networkTokenResponse, mainResponse);
+    }
+
+    protected void stubFrontendNetworkResponse(String mainResponse) throws Exception {
+        stubFrontendNetworkResponse(200, mainResponse);
+    }
+
+    protected void stubFrontendNetworkResponse(int code, String mainResponse) throws Exception {
+        stubResponse(code, networkTokenResponse, mainResponse);
     }
 
     protected void assert403CamaraResponseException(Executable invocation) throws Exception {
@@ -160,7 +167,7 @@ public abstract class AbstractClientTest<T> {
                "message": "Client does not have sufficient permissions to perform this action"
             }
         """;
-        stubNetworkResponse(status, responseJson);
+        stubBackendNetworkResponse(status, responseJson);
 
         String failMsg = "Expected "+ CamaraResponseException.class.getSimpleName();
 
