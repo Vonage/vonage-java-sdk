@@ -46,7 +46,7 @@ public class NetworkAuthClient {
                         .authMethod(method == HttpMethod.POST ? JWTAuthMethod.class : NoAuthMethod.class)
                         .pathGetter((de, req) -> (method == HttpMethod.POST ?
                                 de.getHttpWrapper().getHttpConfig().getApiEuBaseUri() :
-                                "https://oidc.idp.vonage.com")
+                                de.getHttpWrapper().getHttpConfig().getOidcBaseUri())
                                 + "/oauth2/" + path
                         )
                 );

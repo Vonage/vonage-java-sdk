@@ -15,15 +15,18 @@
  */
 package com.vonage.client;
 
+import java.net.URI;
+
 public class HttpConfig {
     private static final String
             DEFAULT_API_BASE_URI = "https://api.nexmo.com",
             DEFAULT_REST_BASE_URI = "https://rest.nexmo.com",
             DEFAULT_API_EU_BASE_URI = "https://api-eu.vonage.com",
-            DEFAULT_VIDEO_BASE_URI = "https://video.api.vonage.com";
+            DEFAULT_VIDEO_BASE_URI = "https://video.api.vonage.com",
+            DEFAULT_OIDC_BASE_URI = "https://oidc.idp.vonage.com";
 
     private final int timeoutMillis;
-    private final String apiBaseUri, restBaseUri, apiEuBaseUri, videoBaseUri;
+    private final String apiBaseUri, restBaseUri, apiEuBaseUri, videoBaseUri, oidcBaseUri;
 
     private HttpConfig(Builder builder) {
         if ((timeoutMillis = builder.timeoutMillis) < 10) {
@@ -33,6 +36,7 @@ public class HttpConfig {
         restBaseUri = builder.restBaseUri;
         videoBaseUri = builder.videoBaseUri;
         apiEuBaseUri = builder.apiEuBaseUri;
+        oidcBaseUri = builder.oidcBaseUri;
     }
 
     /**
@@ -61,6 +65,10 @@ public class HttpConfig {
         return apiEuBaseUri;
     }
 
+    public String getOidcBaseUri() {
+        return oidcBaseUri;
+    }
+
     public boolean isDefaultApiBaseUri() {
         return DEFAULT_API_BASE_URI.equals(apiBaseUri);
     }
@@ -75,6 +83,10 @@ public class HttpConfig {
 
     public boolean isDefaultVideoBaseUri() {
         return DEFAULT_VIDEO_BASE_URI.equals(videoBaseUri);
+    }
+
+    public boolean isDefaultOidcBaseUri() {
+        return DEFAULT_OIDC_BASE_URI.equals(oidcBaseUri);
     }
 
     public String getVersionedApiBaseUri(String version) {
@@ -98,23 +110,29 @@ public class HttpConfig {
     }
 
     /**
+     * Creates a standard HttpConfig.
+     *
      * @return an HttpConfig object with sensible defaults.
      */
     public static HttpConfig defaultConfig() {
-        return new Builder().build();
+        return builder().build();
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder for configuring the base URI and timeout of the client.
+     */
     public static class Builder {
         private int timeoutMillis = 60_000;
         private String
                 apiBaseUri = DEFAULT_API_BASE_URI,
                 restBaseUri = DEFAULT_REST_BASE_URI,
                 apiEuBaseUri = DEFAULT_API_EU_BASE_URI,
-                videoBaseUri = DEFAULT_VIDEO_BASE_URI;
+                videoBaseUri = DEFAULT_VIDEO_BASE_URI,
+                oidcBaseUri = DEFAULT_OIDC_BASE_URI;
 
         /**
          * Sets the socket timeout for requests. By default, this is one minute (60000 ms).
@@ -135,8 +153,9 @@ public class HttpConfig {
         }
 
         /**
-         * @param apiBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_API_BASE_URI}.
+         * Replaces the URI used in "api" endpoints.
          *
+         * @param apiBaseUri The base uri to use.
          * @return This builder.
          */
         public Builder apiBaseUri(String apiBaseUri) {
@@ -145,8 +164,9 @@ public class HttpConfig {
         }
 
         /**
-         * @param restBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI}.
+         * Replaces the base URI used in "rest" endpoints.
          *
+         * @param restBaseUri The base uri to use.
          * @return This builder.
          */
         public Builder restBaseUri(String restBaseUri) {
@@ -155,8 +175,9 @@ public class HttpConfig {
         }
 
         /**
-         * @param apiEuBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_API_EU_BASE_URI}
+         * Replaces the base URI used in "api-eu" endpoints.
          *
+         * @param apiEuBaseUri The base URI to use.
          * @return This builder.
          */
         public Builder apiEuBaseUri(String apiEuBaseUri) {
@@ -165,9 +186,11 @@ public class HttpConfig {
         }
 
         /**
-         * @param videoBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_VIDEO_BASE_URI}.
+         * Replaces the base URI used in "video" endpoints.
          *
+         * @param videoBaseUri The base URI to use.
          * @return This builder.
+         * @since 8.0.0
          */
         public Builder videoBaseUri(String videoBaseUri) {
             this.videoBaseUri = sanitizeUri(videoBaseUri);
@@ -175,10 +198,21 @@ public class HttpConfig {
         }
 
         /**
-         * @param baseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI},
-         * {@link HttpConfig#DEFAULT_API_BASE_URI}, {@link HttpConfig#DEFAULT_API_EU_BASE_URI} and
-         * {@link HttpConfig#DEFAULT_VIDEO_BASE_URI}.
+         * Replaces the base URI used in "oidc" endpoints.
          *
+         * @param oidcBaseUri The base URI to use.
+         * @return This builder.
+         * @since 8.9.0
+         */
+        public Builder oidcBaseUri(String oidcBaseUri) {
+            this.oidcBaseUri = sanitizeUri(oidcBaseUri);
+            return this;
+        }
+
+        /**
+         * Replaces the base URI used in all requests with the specified parameter.
+         *
+         * @param baseUri The base URI to use.
          * @return This builder.
          */
         public Builder baseUri(String baseUri) {
@@ -187,11 +221,25 @@ public class HttpConfig {
             restBaseUri = sanitizedUri;
             apiEuBaseUri = sanitizedUri;
             videoBaseUri = sanitizedUri;
+            oidcBaseUri = sanitizedUri;
             return this;
         }
 
         /**
-         * @return A new {@link HttpConfig} object from the stored builder options.
+         * Replaces the base URI used in all requests with the specified parameter.
+         *
+         * @param baseUri The base URI to use.
+         * @return This builder.
+         * @since 8.9.0
+         */
+        public Builder baseUri(URI baseUri) {
+            return baseUri(baseUri.toString());
+        }
+
+        /**
+         * Builds the HttpConfig.
+         *
+         * @return A new HttpConfig object from the stored builder options.
          */
         public HttpConfig build() {
             return new HttpConfig(this);

@@ -185,12 +185,6 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
             }
 
             @Override
-            protected String customBaseUri() {
-                // This is hardcoded
-                return expectedDefaultBaseUri();
-            }
-
-            @Override
             protected String expectedEndpointUri(FrontendAuthRequest request) {
                 return "/oauth2/auth";
             }
