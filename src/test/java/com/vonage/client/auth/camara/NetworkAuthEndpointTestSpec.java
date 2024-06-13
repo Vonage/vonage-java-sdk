@@ -28,7 +28,8 @@ abstract class NetworkAuthEndpointTestSpec<T, R> extends DynamicEndpointTestSpec
 
 	@Override
 	protected Set<Class<? extends AuthMethod>> expectedAuthMethods() {
-		return Set.of(JWTAuthMethod.class, NoAuthMethod.class);
+		return expectedHttpMethod() == HttpMethod.POST ?
+				Set.of(JWTAuthMethod.class) : Set.of(NoAuthMethod.class);
 	}
 
 	@Override

@@ -41,9 +41,9 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
 
     void assert403ResponseException(Executable invocation) throws Exception {
         final int status = 403;
-        String message = "",
-                code = "PERMISSION_DENIED", responseJson = "{\"status\": "+status+", \"code\": \""+code +
-                "\"message\": \"Client does not have sufficient permissions to perform this action\"}";
+        String message = "Client does not have sufficient permissions to perform this action",
+                code = "PERMISSION_DENIED",
+                responseJson = "{\"status\": "+status+", \"code\": \""+code+"\",\"message\": \""+message+"\"}";
 
         var parsed = assertApiResponseException(status, responseJson, NetworkAuthResponseException.class, invocation);
         assertEquals(code, parsed.getCode());
@@ -70,8 +70,8 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
     public void testMakeOIDCBackendRequest() throws Exception {
         final int expiresIn = 120, interval = 3;
         final String state = "Unique app id";
-        String msisdn = "+49 151 1234567", responseJson = "{\"auth_req_id\": \"" +
-               authReqId + "\", expires_in\": \""+expiresIn+"\", \"interval\": \""+interval+"\"}";
+        String msisdn = "+49 151 1234567", responseJson = "{\"auth_req_id\": \"" + authReqId +
+                "\", \"expires_in\": \""+expiresIn+"\", \"interval\": \""+interval+"\"}";
 
         var scope = FraudPreventionDetectionScope.RETRIEVE_SIM_SWAP_DATE;
         var request = new BackendAuthRequest(msisdn, scope);
@@ -89,7 +89,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
 
         stubResponseAndAssertThrows(200, responseJson,
                 () -> client.makeOpenIDConnectRequest((BackendAuthRequest) null),
-                IllegalArgumentException.class
+                NullPointerException.class
         );
 
         assert403ResponseException(() -> client.makeOpenIDConnectRequest(request));
@@ -109,7 +109,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
 
         stubResponseAndAssertThrows(302,
                 () -> client.makeOpenIDConnectRequest((FrontendAuthRequest) null),
-                IllegalArgumentException.class
+                NullPointerException.class
         );
 
         assert403ResponseException(() -> client.makeOpenIDConnectRequest(request));

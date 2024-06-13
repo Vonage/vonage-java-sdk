@@ -233,6 +233,9 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			if (statusCode >= 200 && statusCode < 300) {
 				return parseResponseSuccess(response);
 			}
+			else if (statusCode == 302 && Void.class.equals(responseType)) {
+				return null;
+			}
 			else {
 				return parseResponseFailure(response);
 			}

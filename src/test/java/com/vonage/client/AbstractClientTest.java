@@ -15,10 +15,7 @@
  */
 package com.vonage.client;
 
-import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
-import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
-import com.vonage.client.auth.JWTAuthMethod;
-import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.*;
 import com.vonage.client.auth.camara.NetworkAuthResponseException;
 import com.vonage.client.auth.hashutils.HashUtil;
 import com.vonage.client.camara.CamaraResponseException;
@@ -46,7 +43,7 @@ public abstract class AbstractClientTest<T> {
                 new ApiKeyHeaderAuthMethod(TestUtils.API_KEY, TestUtils.API_SECRET),
                 new ApiKeyQueryParamsAuthMethod(TestUtils.API_KEY, TestUtils.API_SECRET),
                 new SignatureAuthMethod(TestUtils.API_KEY, TestUtils.SIGNATURE_SECRET, HashUtil.HashType.HMAC_SHA256),
-                new JWTAuthMethod(TestUtils.APPLICATION_ID_STR, new byte[0])
+                new JWTAuthMethod(TestUtils.APPLICATION_ID_STR, new byte[0]), new NoAuthMethod()
         );
     }
 
