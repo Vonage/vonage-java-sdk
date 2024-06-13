@@ -135,23 +135,6 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
         return httpWrapper.getAuthCollection().getAcceptableAuthMethod(getAcceptableAuthMethods());
     }
 
-    /**
-     * Utility method for obtaining the Application ID or API key from the auth method.
-     *
-     * @return The Application ID or API key.
-     * @throws VonageUnexpectedException If no AuthMethod is available.
-     * @throws IllegalStateException If the AuthMethod does not have an Application ID or API key.
-     */
-    public String getApplicationIdOrApiKey() throws VonageUnexpectedException {
-        UUID appId = httpWrapper.getApplicationId();
-        if (appId != null) return appId.toString();
-        String apiKey = httpWrapper.getApiKey();
-        if (apiKey == null) {
-            throw new IllegalStateException("Application ID / API key is unavailable.");
-        }
-        else return apiKey;
-    }
-
     protected abstract Set<Class<? extends AuthMethod>> getAcceptableAuthMethods();
 
     /**

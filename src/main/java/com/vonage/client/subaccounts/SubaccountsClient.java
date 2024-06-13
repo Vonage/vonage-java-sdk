@@ -39,6 +39,8 @@ public class SubaccountsClient {
 	 * @param wrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
 	public SubaccountsClient(HttpWrapper wrapper) {
+		final String apiKey = wrapper.getApiKey();
+
 		@SuppressWarnings("unchecked")
 		final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
 			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
@@ -48,11 +50,11 @@ public class SubaccountsClient {
 						.pathGetter((de, req) -> {
 								if (req instanceof CreateSubaccountRequest) {
 									CreateSubaccountRequest csr = (CreateSubaccountRequest) req;
-									csr.primaryAccountApiKey = de.getApplicationIdOrApiKey();
+									csr.primaryAccountApiKey = apiKey;
 								}
 								return String.format(
 										de.getHttpWrapper().getHttpConfig().getApiBaseUri()
-										+ "/accounts/%s/", de.getApplicationIdOrApiKey()
+										+ "/accounts/%s/", apiKey
 								) + pathGetter.apply(req);
 						})
 				);
