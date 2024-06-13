@@ -39,7 +39,6 @@ public class SubaccountsClient {
 	 * @param wrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
 	public SubaccountsClient(HttpWrapper wrapper) {
-		final String apiKey = wrapper.getApiKey();
 
 		@SuppressWarnings("unchecked")
 		final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
@@ -48,14 +47,18 @@ public class SubaccountsClient {
 						.responseExceptionType(SubaccountsResponseException.class)
 						.wrapper(wrapper).requestMethod(method).authMethod(ApiKeyHeaderAuthMethod.class)
 						.pathGetter((de, req) -> {
-								if (req instanceof CreateSubaccountRequest) {
-									CreateSubaccountRequest csr = (CreateSubaccountRequest) req;
-									csr.primaryAccountApiKey = apiKey;
-								}
-								return String.format(
-										de.getHttpWrapper().getHttpConfig().getApiBaseUri()
-										+ "/accounts/%s/", apiKey
-								) + pathGetter.apply(req);
+							final String apiKey = de.getHttpWrapper().getApiKey();
+							if (apiKey == null) {
+								throw new IllegalStateException("Primary account API key is unavailable.");
+							}
+							if (req instanceof CreateSubaccountRequest) {
+								CreateSubaccountRequest csr = (CreateSubaccountRequest) req;
+								csr.primaryAccountApiKey = apiKey;
+							}
+							return String.format(
+									de.getHttpWrapper().getHttpConfig().getApiBaseUri()
+									+ "/accounts/%s/", apiKey
+							) + pathGetter.apply(req);
 						})
 				);
 			}

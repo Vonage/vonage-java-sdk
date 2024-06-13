@@ -35,7 +35,7 @@ public class FrontendAuthRequest extends AuthRequest {
      */
     public FrontendAuthRequest(String msisdn, URI redirectUrl, UUID applicationId, String state) {
         super(msisdn, FraudPreventionDetectionScope.NUMBER_VERIFICATION_VERIFY_READ);
-        params.put("client_id", Objects.requireNonNull(applicationId).toString());
+        params.put("client_id", Objects.requireNonNull(applicationId, "Application ID is required.").toString());
         params.put("redirect_uri", Objects.requireNonNull(redirectUrl, "Redirect URL is required.").toString());
         params.put("response_type", "code");
         params.put("state", state);

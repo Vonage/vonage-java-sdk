@@ -16,7 +16,6 @@
 package com.vonage.client.auth.camara;
 
 import com.vonage.client.auth.BearerAuthMethod;
-import com.vonage.client.common.E164;
 
 /**
  * Auth method for Vonage Network APIs. Designed to be replaced on each request.
@@ -52,9 +51,9 @@ public final class NetworkAuthMethod extends BearerAuthMethod {
     @Override
     protected String getBearerToken() {
         if (backendParams != null) {
-            tokenRequest = new TokenRequest(networkAuthClient.makeOpenIDConnectRequest(backendParams));
+            tokenRequest = new TokenRequest(networkAuthClient.makeOpenIDConnectRequest(backendParams).getAuthReqId());
         }
-        return networkAuthClient.getCamaraAccessToken(tokenRequest);
+        return networkAuthClient.getCamaraToken(tokenRequest).getAccessToken();
     }
 
     @Override

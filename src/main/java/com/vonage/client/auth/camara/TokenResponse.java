@@ -18,7 +18,7 @@ package com.vonage.client.auth.camara;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
-final class TokenResponse extends JsonableBaseObject {
+public final class TokenResponse extends JsonableBaseObject {
     private String accessToken, refreshToken, tokenType;
     private Integer expiresIn;
 

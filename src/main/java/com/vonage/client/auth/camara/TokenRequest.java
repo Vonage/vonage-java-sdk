@@ -30,11 +30,11 @@ public final class TokenRequest implements QueryParamsRequest {
     /**
      * Creates a new Back-End token request.
      *
-     * @param bar The response from calling {@link NetworkAuthClient#makeOpenIDConnectRequest(BackendAuthRequest)}.
+     * @param authReqId The auth request ID, as obtained from {@link BackendAuthResponse#getAuthReqId()}.
      */
-    public TokenRequest(BackendAuthResponse bar) {
+    public TokenRequest(String authReqId) {
         params.put("grant_type", "urn:openid:params:grant-type:ciba");
-        params.put("auth_req_id", Objects.requireNonNull(bar.getAuthReqId(), "Auth request ID is required."));
+        params.put("auth_req_id", Objects.requireNonNull(authReqId, "Auth request ID is required."));
     }
 
     /**

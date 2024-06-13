@@ -19,6 +19,7 @@ import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.auth.NoAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +28,7 @@ abstract class NetworkAuthEndpointTestSpec<T, R> extends DynamicEndpointTestSpec
 
 	@Override
 	protected Set<Class<? extends AuthMethod>> expectedAuthMethods() {
-		return Set.of(JWTAuthMethod.class);
+		return Set.of(JWTAuthMethod.class, NoAuthMethod.class);
 	}
 
 	@Override

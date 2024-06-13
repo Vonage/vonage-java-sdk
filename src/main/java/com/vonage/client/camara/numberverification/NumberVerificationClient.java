@@ -29,6 +29,7 @@ import com.vonage.client.common.HttpMethod;
 import java.net.URI;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * A client for communicating with the Vonage Number Verification API. The standard way to obtain an instance
@@ -36,7 +37,7 @@ import java.util.UUID;
  */
 public class NumberVerificationClient extends NetworkApiClient {
     final RestEndpoint<VerifyNumberRequest, VerifyNumberResponse> verifyNumber;
-    private final UUID applicationId;
+    private final Supplier<UUID> applicationIdGetter;
     private VerifyNumberRequest cachedRequest;
 
     /**
@@ -47,9 +48,7 @@ public class NumberVerificationClient extends NetworkApiClient {
     @SuppressWarnings("unchecked")
     public NumberVerificationClient(HttpWrapper wrapper) {
         super(wrapper);
-        if ((applicationId = wrapper.getApplicationId()) == null) {
-            throw new IllegalStateException("Application ID is unavailable.");
-        }
+        applicationIdGetter = wrapper::getApplicationId;
 
         verifyNumber = DynamicEndpoint.<VerifyNumberRequest, VerifyNumberResponse> builder(VerifyNumberResponse.class)
                 .authMethod(NetworkAuthMethod.class).requestMethod(HttpMethod.POST).wrapper(wrapper)
@@ -62,7 +61,7 @@ public class NumberVerificationClient extends NetworkApiClient {
 
     public void initiateVerification(String phoneNumber, URI redirectUrl, String state) {
         networkAuthClient.makeOpenIDConnectRequest(new FrontendAuthRequest(
-                phoneNumber, redirectUrl, applicationId, state
+                phoneNumber, redirectUrl, applicationIdGetter.get(), state
         ));
         cachedRequest = new VerifyNumberRequest(phoneNumber, redirectUrl);
     }

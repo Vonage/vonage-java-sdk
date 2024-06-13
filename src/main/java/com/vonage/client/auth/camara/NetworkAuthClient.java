@@ -74,12 +74,11 @@ public class NetworkAuthClient {
      * Obtains a new access token for a Back-End auth request.
      *
      * @param request The token request parameters.
-     * @return The access token as a string.
+     * @return The response containing the access token.
      * @throws NetworkAuthResponseException If an error was encountered during the workflow.
      * @since 8.9.0
      */
-    public String getCamaraAccessToken(TokenRequest request) {
-        TokenResponse tr = tokenRequest.execute(validateRequest(request));
-        return tr.getAccessToken();
+    public TokenResponse getCamaraToken(TokenRequest request) {
+        return tokenRequest.execute(validateRequest(request));
     }
 }
