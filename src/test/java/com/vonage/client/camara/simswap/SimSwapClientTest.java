@@ -18,14 +18,13 @@ package com.vonage.client.camara.simswap;
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
-import com.vonage.client.auth.camara.BackendAuthRequest;
-import com.vonage.client.auth.camara.NetworkAuthMethod;
-import com.vonage.client.auth.camara.FraudPreventionDetectionScope;
+import com.vonage.client.auth.camara.*;
 import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.CHECK_SIM_SWAP;
 import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.RETRIEVE_SIM_SWAP_DATE;
-import com.vonage.client.auth.camara.NetworkAuthClient;
+import com.vonage.client.camara.CamaraResponseException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.function.Executable;
 import java.time.Instant;
 
 public class SimSwapClientTest extends AbstractClientTest<SimSwapClient> {
@@ -39,6 +38,27 @@ public class SimSwapClientTest extends AbstractClientTest<SimSwapClient> {
         wrapper.getAuthCollection().add(new NetworkAuthMethod(
                 new NetworkAuthClient(wrapper), new BackendAuthRequest(phoneNumber, type)
         ));
+    }
+
+    void assert403CamaraResponseException(Executable invocation) throws Exception {
+        final int status = 403;
+        String code = "PERMISSION_DENIED", responseJson = "{\"status\": " +
+                status+", \"code\": \""+code+"\",\"message\":\"Test msg\"}";
+
+        stubBackendNetworkResponse(status, responseJson);
+
+        String failMsg = "Expected "+ CamaraResponseException.class.getSimpleName();
+
+        try {
+            invocation.execute();
+            fail(failMsg);
+        }
+        catch (CamaraResponseException ex) {
+            assertEquals(status, ex.getStatusCode());
+        }
+        catch (Throwable t) {
+            fail(failMsg, t);
+        }
     }
 
     @Test

@@ -58,7 +58,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
         var endpoint = DynamicEndpoint.<Void, String> builder(String.class)
                 .wrapper(wrapper).requestMethod(HttpMethod.POST)
                 .authMethod(NetworkAuthMethod.class)
-                .pathGetter((_, _) -> TEST_BASE_URI).build();
+                .pathGetter((de, req) -> TEST_BASE_URI).build();
 
         var expectedResponse = "Hello, GNP!";
         stubBackendNetworkResponse(expectedResponse);

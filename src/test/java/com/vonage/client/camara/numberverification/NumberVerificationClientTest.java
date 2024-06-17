@@ -22,6 +22,7 @@ import com.vonage.client.camara.CamaraResponseException;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.function.Executable;
 import java.net.URI;
 import java.util.Set;
 
@@ -39,6 +40,27 @@ public class NumberVerificationClientTest extends AbstractClientTest<NumberVerif
         wrapper.getAuthCollection().add(new NetworkAuthMethod(
                 new NetworkAuthClient(wrapper), new TokenRequest(redirectUrl, code)
         ));
+    }
+
+    void assert403CamaraResponseException(Executable invocation) throws Exception {
+        final int status = 403;
+        String code = "PERMISSION_DENIED", responseJson = "{\"status\": " +
+                status+", \"code\": \""+code+"\",\"message\":\"Test msg\"}";
+
+        stubFrontendNetworkResponse(status, responseJson);
+
+        String failMsg = "Expected "+ CamaraResponseException.class.getSimpleName();
+
+        try {
+            invocation.execute();
+            fail(failMsg);
+        }
+        catch (CamaraResponseException ex) {
+            assertEquals(status, ex.getStatusCode());
+        }
+        catch (Throwable t) {
+            fail(failMsg, t);
+        }
     }
 
     @Test

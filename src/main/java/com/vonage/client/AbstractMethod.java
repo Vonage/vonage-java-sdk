@@ -46,8 +46,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
     static {
         LogFactory.getLog(AbstractMethod.class);
     }
-
-    protected static final BasicResponseHandler basicResponseHandler = new BasicResponseHandler();
+    
     protected final HttpWrapper httpWrapper;
 
     public AbstractMethod(HttpWrapper httpWrapper) {

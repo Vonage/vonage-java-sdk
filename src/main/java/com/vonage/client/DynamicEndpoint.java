@@ -269,7 +269,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			return (R) EntityUtils.toByteArray(response.getEntity());
 		}
 		else {
-			String deser = basicResponseHandler.handleResponse(response);
+			String deser = EntityUtils.toString(response.getEntity());
 
 			if (responseType.equals(String.class)) {
 				return (R) deser;

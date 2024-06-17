@@ -158,32 +158,6 @@ public abstract class AbstractClientTest<T> {
         stubResponse(code, networkTokenResponse, mainResponse);
     }
 
-    protected void assert403CamaraResponseException(Executable invocation) throws Exception {
-        final int status = 403;
-        String code = "PERMISSION_DENIED", responseJson = STR."""
-            {
-               "status": \{status},
-               "code": "\{code}",
-               "message": "Client does not have sufficient permissions to perform this action"
-            }
-        """;
-        stubBackendNetworkResponse(status, responseJson);
-
-        String failMsg = "Expected "+ CamaraResponseException.class.getSimpleName();
-
-        try {
-            invocation.execute();
-            fail(failMsg);
-        }
-        catch (CamaraResponseException | NetworkAuthResponseException ex) {
-            // TODO find out why NetworkAuthResponseException is being thrown instead
-            assertEquals(status, ex.getStatusCode());
-        }
-        catch (Throwable t) {
-            fail(failMsg, t);
-        }
-    }
-
     protected <E extends VonageApiResponseException> E assert401ApiResponseException(
             Class<E> exClass, Executable invocation) throws Exception {
         String responseJson = "{\n" +
