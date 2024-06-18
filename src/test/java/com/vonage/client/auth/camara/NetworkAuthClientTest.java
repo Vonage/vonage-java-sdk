@@ -179,10 +179,10 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
 
     @Test
     public void testFrontendAuthEndpoint() throws Exception {
-        new NetworkAuthEndpointTestSpec<FrontendAuthRequest, Void>() {
+        new NetworkAuthEndpointTestSpec<FrontendAuthRequest, URI>() {
 
             @Override
-            protected RestEndpoint<FrontendAuthRequest, Void> endpoint() {
+            protected RestEndpoint<FrontendAuthRequest, URI> endpoint() {
                 return client.frontendAuth;
             }
 

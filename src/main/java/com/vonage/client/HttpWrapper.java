@@ -140,6 +140,7 @@ public class HttpWrapper {
                 .setUserAgent(USER_AGENT)
                 .setDefaultRequestConfig(requestConfig)
                 .useSystemProperties()
+                .disableRedirectHandling()
                 .build();
     }
 

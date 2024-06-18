@@ -19,6 +19,7 @@ import com.vonage.client.auth.*;
 import com.vonage.client.auth.camara.NetworkAuthResponseException;
 import com.vonage.client.auth.hashutils.HashUtil;
 import com.vonage.client.camara.CamaraResponseException;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -80,6 +81,9 @@ public abstract class AbstractClientTest<T> {
         when(sl.getReasonPhrase()).thenReturn(TestUtils.TEST_REASON);
         when(response.getStatusLine()).thenReturn(sl);
         when(response.getEntity()).thenReturn(entity);
+        Header locationHeader = mock(Header.class);
+        when(response.getFirstHeader("Location")).thenReturn(locationHeader);
+        when(locationHeader.getValue()).thenReturn(TestUtils.TEST_REDIRECT_URI);
 
         return result;
     }

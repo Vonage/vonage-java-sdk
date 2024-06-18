@@ -21,6 +21,7 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.NoAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import java.net.URI;
 import java.util.Objects;
 
 /**
@@ -28,7 +29,7 @@ import java.util.Objects;
  */
 public class NetworkAuthClient {
     final RestEndpoint<BackendAuthRequest, BackendAuthResponse> backendAuth;
-    final RestEndpoint<FrontendAuthRequest, Void> frontendAuth;
+    final RestEndpoint<FrontendAuthRequest, URI> frontendAuth;
     final RestEndpoint<TokenRequest, TokenResponse> tokenRequest;
 
     /**
@@ -62,8 +63,8 @@ public class NetworkAuthClient {
         return Objects.requireNonNull(request, "Request is required.");
     }
 
-    public void makeOpenIDConnectRequest(FrontendAuthRequest request) {
-        frontendAuth.execute(validateRequest(request));
+    public URI makeOpenIDConnectRequest(FrontendAuthRequest request) {
+        return frontendAuth.execute(validateRequest(request));
     }
 
     public BackendAuthResponse makeOpenIDConnectRequest(BackendAuthRequest request) {

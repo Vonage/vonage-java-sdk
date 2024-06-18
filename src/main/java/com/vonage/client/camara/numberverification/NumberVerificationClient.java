@@ -59,13 +59,24 @@ public class NumberVerificationClient extends NetworkApiClient {
                 .build();
     }
 
-    public void initiateVerification(String phoneNumber, URI redirectUrl, String state) {
-        networkAuthClient.makeOpenIDConnectRequest(new FrontendAuthRequest(
+    /**
+     *
+     * @param phoneNumber
+     * @param redirectUrl
+     * @param state
+     */
+    public URI initiateVerification(String phoneNumber, URI redirectUrl, String state) {
+        cachedRequest = new VerifyNumberRequest(phoneNumber, redirectUrl);
+        return networkAuthClient.makeOpenIDConnectRequest(new FrontendAuthRequest(
                 phoneNumber, redirectUrl, applicationIdGetter.get(), state
         ));
-        cachedRequest = new VerifyNumberRequest(phoneNumber, redirectUrl);
     }
 
+    /**
+     *
+     * @param code
+     * @return
+     */
     public boolean verifyNumber(String code) {
         if (cachedRequest == null) {
             throw new IllegalStateException("You must first call initiateVerification using this client.");

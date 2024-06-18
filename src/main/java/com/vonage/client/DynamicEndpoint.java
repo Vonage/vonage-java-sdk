@@ -26,6 +26,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -233,8 +234,8 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			if (statusCode >= 200 && statusCode < 300) {
 				return parseResponseSuccess(response);
 			}
-			else if (statusCode == 302 && Void.class.equals(responseType)) {
-				return null;
+			else if (statusCode >= 300 && statusCode < 400) {
+				return parseResponseRedirect(response);
 			}
 			else {
 				return parseResponseFailure(response);
@@ -259,6 +260,20 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	protected R parseResponseFromString(String response) {
 		return null;
+	}
+
+	private R parseResponseRedirect(HttpResponse response) throws ReflectiveOperationException, IOException {
+		final String location = response.getFirstHeader("Location").getValue();
+
+		if (java.net.URI.class.equals(responseType)) {
+			return (R) URI.create(location);
+		}
+		else if (String.class.equals(responseType)) {
+			return (R) location;
+		}
+		else {
+			return parseResponseSuccess(response);
+		}
 	}
 
 	private R parseResponseSuccess(HttpResponse response) throws IOException, ReflectiveOperationException {

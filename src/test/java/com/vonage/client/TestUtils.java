@@ -41,7 +41,8 @@ public class TestUtils {
             API_SECRET = "1234567890abcdef",
             SIGNATURE_SECRET = "kTCRawcijyNTfQ1sNqVrz3ZDyRQRZXoL8IhaYTrMxKg153UcHT",
             TEST_BASE_URI = "http://localhost:8081",
-            TEST_REASON = "Test reason";
+            TEST_REASON = "Test reason",
+            TEST_REDIRECT_URI = TEST_BASE_URI;
 
     public static final HttpConfig TEST_HTTP_CONFIG = HttpConfig.builder().baseUri(TEST_BASE_URI).build();
 
