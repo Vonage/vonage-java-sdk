@@ -69,7 +69,6 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
     @Test
     public void testMakeOIDCBackendRequest() throws Exception {
         final int expiresIn = 120, interval = 3;
-        final String state = "Unique app id";
         String msisdn = "+49 151 1234567", responseJson = "{\"auth_req_id\": \"" + authReqId +
                 "\", \"expires_in\": \""+expiresIn+"\", \"interval\": \""+interval+"\"}";
 
@@ -165,7 +164,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
             protected Map<String, String> sampleQueryParams() {
                 return Map.of(
                         "login_hint", "tel:+" + msisdn,
-                        "scope", "dpv:FraudPreventionAndDetection#check-sim-swap"
+                        "scope", "openid dpv:FraudPreventionAndDetection#check-sim-swap"
                 );
             }
 
@@ -201,7 +200,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
                 return Map.of(
                         "client_id", TestUtils.APPLICATION_ID_STR,
                         "login_hint", "tel:+" + msisdn,
-                        "scope", "dpv:FraudPreventionAndDetection#number-verification-verify-read",
+                        "scope", "openid dpv:FraudPreventionAndDetection#number-verification-verify-read",
                         "redirect_uri", redirectUrl.toString(),
                         "state", state,
                         "response_type", "code"

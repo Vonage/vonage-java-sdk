@@ -36,7 +36,7 @@ public abstract class AuthRequest implements QueryParamsRequest {
      */
     protected AuthRequest(String msisdn, FraudPreventionDetectionScope scope) {
         params.put("login_hint", "tel:+" + new E164(msisdn));
-        params.put("scope", "dpv:FraudPreventionAndDetection#" +
+        params.put("scope", "openid dpv:FraudPreventionAndDetection#" +
                 Objects.requireNonNull(scope, "Scope is required.")
         );
     }
