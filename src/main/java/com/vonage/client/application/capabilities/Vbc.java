@@ -15,7 +15,6 @@
  */
 package com.vonage.client.application.capabilities;
 
-
 /**
  * VBC capability configuration settings.
  */
