@@ -86,7 +86,14 @@ public abstract class Capability extends JsonableBaseObject {
          *
          * @since 8.6.0
          */
-        VERIFY
+        VERIFY,
+
+        /**
+         * Network APIs
+         *
+         * @since 8.9.0
+         */
+        NETWORK
     }
 
     @SuppressWarnings("unchecked")
