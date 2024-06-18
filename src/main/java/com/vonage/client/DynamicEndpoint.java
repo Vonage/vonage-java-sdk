@@ -182,6 +182,31 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 	}
 
+	private static void applyQueryParams(Map<String, ?> params, RequestBuilder rqb) {
+		params.forEach((k, v) -> {
+			Consumer<Object> logic = obj -> rqb.addParameter(k, String.valueOf(obj));
+			if (v instanceof Object[]) {
+				for (Object nested : (Object[]) v) {
+					logic.accept(nested);
+				}
+			}
+			else if (v instanceof Iterable<?>) {
+				for (Object nested : (Iterable<?>) v) {
+					logic.accept(nested);
+				}
+			}
+			else {
+				logic.accept(v);
+			}
+		});
+	}
+
+	public static URI buildUri(String base, Map<String, ?> requestParams) {
+		RequestBuilder requestBuilder = RequestBuilder.get(base);
+		applyQueryParams(requestParams, requestBuilder);
+		return requestBuilder.build().getURI();
+	}
+
 	@Override
 	protected final RequestBuilder makeRequest(T requestBody) {
 		if (requestBody instanceof Jsonable && responseType.isAssignableFrom(requestBody.getClass())) {
@@ -196,23 +221,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			rqb.setHeader("Accept", accept);
 		}
 		if (requestBody instanceof QueryParamsRequest) {
-			Map<String, ?> params = ((QueryParamsRequest) requestBody).makeParams();
-			params.forEach((k, v) -> {
-				Consumer<Object> logic = obj -> rqb.addParameter(k, String.valueOf(obj));
-				if (v instanceof Object[]) {
-					for (Object nested : (Object[]) v) {
-						logic.accept(nested);
-					}
-				}
-				else if (v instanceof Iterable<?>) {
-					for (Object nested : (Iterable<?>) v) {
-						logic.accept(nested);
-					}
-				}
-				else {
-					logic.accept(v);
-				}
-			});
+			applyQueryParams(((QueryParamsRequest) requestBody).makeParams(), rqb);
 		}
 		if (requestBody instanceof Jsonable) {
 			rqb.setEntity(new StringEntity(((Jsonable) requestBody).toJson(), ContentType.APPLICATION_JSON));

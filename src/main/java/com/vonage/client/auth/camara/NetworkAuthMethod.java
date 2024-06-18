@@ -51,7 +51,7 @@ public final class NetworkAuthMethod extends BearerAuthMethod {
     @Override
     protected String getBearerToken() {
         if (backendParams != null) {
-            tokenRequest = new TokenRequest(networkAuthClient.makeOpenIDConnectRequest(backendParams).getAuthReqId());
+            tokenRequest = new TokenRequest(networkAuthClient.buildOidcUrl(backendParams).getAuthReqId());
         }
         return networkAuthClient.getCamaraToken(tokenRequest).getAccessToken();
     }

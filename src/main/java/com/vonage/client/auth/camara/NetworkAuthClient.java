@@ -29,7 +29,6 @@ import java.util.Objects;
  */
 public class NetworkAuthClient {
     final RestEndpoint<BackendAuthRequest, BackendAuthResponse> backendAuth;
-    final RestEndpoint<FrontendAuthRequest, URI> frontendAuth;
     final RestEndpoint<TokenRequest, TokenResponse> tokenRequest;
 
     /**
@@ -44,17 +43,14 @@ public class NetworkAuthClient {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .responseExceptionType(NetworkAuthResponseException.class)
                         .wrapper(wrapper).requestMethod(method).urlFormEncodedContentType(true)
-                        .authMethod(method == HttpMethod.POST ? JWTAuthMethod.class : NoAuthMethod.class)
-                        .pathGetter((de, req) -> (method == HttpMethod.POST ?
-                                de.getHttpWrapper().getHttpConfig().getApiEuBaseUri() :
-                                de.getHttpWrapper().getHttpConfig().getOidcBaseUri())
-                                + "/oauth2/" + path
+                        .authMethod(JWTAuthMethod.class)
+                        .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig()
+                                .getApiEuBaseUri() + "/oauth2/" + path
                         )
                 );
             }
         }
 
-        frontendAuth = new Endpoint<>("auth", HttpMethod.GET);
         backendAuth = new Endpoint<>("bc-authorize", HttpMethod.POST);
         tokenRequest = new Endpoint<>("token", HttpMethod.POST);
     }
@@ -63,11 +59,7 @@ public class NetworkAuthClient {
         return Objects.requireNonNull(request, "Request is required.");
     }
 
-    public URI makeOpenIDConnectRequest(FrontendAuthRequest request) {
-        return frontendAuth.execute(validateRequest(request));
-    }
-
-    public BackendAuthResponse makeOpenIDConnectRequest(BackendAuthRequest request) {
+    public BackendAuthResponse buildOidcUrl(BackendAuthRequest request) {
         return backendAuth.execute(validateRequest(request));
     }
 

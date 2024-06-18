@@ -19,7 +19,6 @@ import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageClient;
-import com.vonage.client.auth.camara.BackendAuthRequest;
 import com.vonage.client.auth.camara.FrontendAuthRequest;
 import com.vonage.client.auth.camara.NetworkAuthMethod;
 import com.vonage.client.auth.camara.TokenRequest;
@@ -67,9 +66,8 @@ public class NumberVerificationClient extends NetworkApiClient {
      */
     public URI initiateVerification(String phoneNumber, URI redirectUrl, String state) {
         cachedRequest = new VerifyNumberRequest(phoneNumber, redirectUrl);
-        return networkAuthClient.makeOpenIDConnectRequest(new FrontendAuthRequest(
-                phoneNumber, redirectUrl, applicationIdGetter.get(), state
-        ));
+        return new FrontendAuthRequest(phoneNumber, redirectUrl, applicationIdGetter.get(), state)
+                .buildOidcUrl();
     }
 
     /**

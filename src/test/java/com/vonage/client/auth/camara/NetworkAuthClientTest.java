@@ -31,9 +31,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient> {
-    final URI redirectUrl = URI.create("http://example.org/redirect");
-    final String authReqId = "arid/"+UUID.randomUUID(),
-            msisdn = "447700900001", state = "MyApp_state123";
+    final String authReqId = "arid/"+UUID.randomUUID();
+    final String msisdn = "34123456789";
 
     public NetworkAuthClientTest() {
         client = new NetworkAuthClient(wrapper);
@@ -76,7 +75,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
         var request = new BackendAuthRequest(msisdn, scope);
 
         stubResponse(200, responseJson);
-        var parsed = client.makeOpenIDConnectRequest(request);
+        var parsed = client.buildOidcUrl(request);
         testJsonableBaseObject(parsed);
         assertEquals(authReqId, parsed.getAuthReqId());
         assertEquals(expiresIn, parsed.getExpiresIn());
@@ -87,31 +86,11 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
         assertThrows(IllegalArgumentException.class, () -> new BackendAuthRequest("foo", scope));
 
         stubResponseAndAssertThrows(200, responseJson,
-                () -> client.makeOpenIDConnectRequest((BackendAuthRequest) null),
+                () -> client.buildOidcUrl((BackendAuthRequest) null),
                 NullPointerException.class
         );
 
-        assert403ResponseException(() -> client.makeOpenIDConnectRequest(request));
-    }
-
-    @Test
-    public void testMakeOIDCFrontendRequest() throws Exception {
-        var request = new FrontendAuthRequest(msisdn, redirectUrl, APPLICATION_ID, state);
-
-        stubResponse(302);
-        client.makeOpenIDConnectRequest(request);
-
-        assertThrows(NullPointerException.class, () -> new FrontendAuthRequest(null, redirectUrl, APPLICATION_ID, state));
-        assertThrows(NullPointerException.class, () -> new FrontendAuthRequest(msisdn, null, APPLICATION_ID, state));
-        assertThrows(NullPointerException.class, () -> new FrontendAuthRequest(msisdn, redirectUrl, null, state));
-        assertNull(new FrontendAuthRequest(msisdn, redirectUrl, APPLICATION_ID, null).makeParams().get("state"));
-
-        stubResponseAndAssertThrows(302,
-                () -> client.makeOpenIDConnectRequest((FrontendAuthRequest) null),
-                NullPointerException.class
-        );
-
-        assert403ResponseException(() -> client.makeOpenIDConnectRequest(request));
+        assert403ResponseException(() -> client.buildOidcUrl(request));
     }
 
     @Test
@@ -171,45 +150,6 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
             @Override
             protected HttpMethod expectedHttpMethod() {
                 return HttpMethod.POST;
-            }
-        }
-        .runTests();
-    }
-
-    @Test
-    public void testFrontendAuthEndpoint() throws Exception {
-        new NetworkAuthEndpointTestSpec<FrontendAuthRequest, URI>() {
-
-            @Override
-            protected RestEndpoint<FrontendAuthRequest, URI> endpoint() {
-                return client.frontendAuth;
-            }
-
-            @Override
-            protected String expectedEndpointUri(FrontendAuthRequest request) {
-                return "/oauth2/auth";
-            }
-
-            @Override
-            protected FrontendAuthRequest sampleRequest() {
-                return new FrontendAuthRequest(msisdn, redirectUrl, APPLICATION_ID, state);
-            }
-
-            @Override
-            protected Map<String, ?> sampleQueryParams() {
-                return Map.of(
-                        "client_id", TestUtils.APPLICATION_ID_STR,
-                        "login_hint", "tel:+" + msisdn,
-                        "scope", "openid dpv:FraudPreventionAndDetection#number-verification-verify-read",
-                        "redirect_uri", redirectUrl.toString(),
-                        "state", state,
-                        "response_type", "code"
-                );
-            }
-
-            @Override
-            protected HttpMethod expectedHttpMethod() {
-                return HttpMethod.GET;
             }
         }
         .runTests();

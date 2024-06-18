@@ -15,7 +15,9 @@
  */
 package com.vonage.client.auth.camara;
 
+import com.vonage.client.DynamicEndpoint;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -39,5 +41,9 @@ public class FrontendAuthRequest extends AuthRequest {
         params.put("redirect_uri", Objects.requireNonNull(redirectUrl, "Redirect URL is required.").toString());
         params.put("response_type", "code");
         params.put("state", state);
+    }
+
+    public URI buildOidcUrl() {
+        return DynamicEndpoint.buildUri("https://oidc.idp.vonage.com/oauth2/auth", makeParams());
     }
 }
