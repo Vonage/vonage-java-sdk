@@ -58,6 +58,8 @@ public class DynamicEndpointTest {
                 .requestMethod(HttpMethod.UNKNOWN).build();
 
         assertThrows(IllegalStateException.class, () -> endpoint.execute("rest"));
+
+        assertEquals(HttpMethod.UNKNOWN, HttpMethod.fromString("TELEPORT"));
     }
 
     @Test

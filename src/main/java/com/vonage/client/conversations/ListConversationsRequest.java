@@ -27,12 +27,12 @@ public final class ListConversationsRequest extends AbstractConversationsFilterR
 
 	@Override
 	public Instant getStartDate() {
-		return startDate;
+		return super.getStartDate();
 	}
 
 	@Override
 	public Instant getEndDate() {
-		return endDate;
+		return super.getEndDate();
 	}
 
 	/**

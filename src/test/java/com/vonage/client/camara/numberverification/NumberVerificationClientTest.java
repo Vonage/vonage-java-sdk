@@ -49,7 +49,9 @@ public class NumberVerificationClientTest extends AbstractClientTest<NumberVerif
     void assert403CamaraResponseException(Executable invocation) throws Exception {
         final int status = 403;
         String code = "PERMISSION_DENIED", responseJson = "{\"status\": " +
-                status+", \"code\": \""+code+"\",\"message\":\"Test msg\"}";
+                status+", \"code\": \""+code+"\",\"message\":\""+TestUtils.TEST_REASON+"\"}";
+
+        var fromJsonEx = CamaraResponseException.fromJson(responseJson);
 
         stubFrontendNetworkResponse(status, responseJson);
 
@@ -61,6 +63,7 @@ public class NumberVerificationClientTest extends AbstractClientTest<NumberVerif
         }
         catch (CamaraResponseException ex) {
             assertEquals(status, ex.getStatusCode());
+            assertEquals(ex.getCode(), fromJsonEx.getCode());
         }
         catch (Throwable t) {
             fail(failMsg, t);
