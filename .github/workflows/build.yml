@@ -24,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [8, 11, 17]
+        java: [8, 17, 22]
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - name: Checkout the repo
@@ -32,7 +32,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: 'corretto'
           java-version: ${{ matrix.java }}
           cache: maven
       - name: Compile with Maven
