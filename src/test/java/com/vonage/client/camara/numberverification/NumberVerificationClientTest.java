@@ -36,7 +36,11 @@ public class NumberVerificationClientTest extends AbstractClientTest<NumberVerif
 
     void setUpVerifyNumber() throws Exception {
         stubResponse(302);
-        client.initiateVerification(msisdn, redirectUrl, null);
+        URI uri = client.initiateVerification(msisdn, redirectUrl, null);
+        assertEquals(uri, new FrontendAuthRequest(
+                msisdn, redirectUrl, TestUtils.APPLICATION_ID, null
+            ).buildOidcUrl()
+        );
         wrapper.getAuthCollection().add(new NetworkAuthMethod(
                 new NetworkAuthClient(wrapper), new TokenRequest(redirectUrl, code)
         ));
