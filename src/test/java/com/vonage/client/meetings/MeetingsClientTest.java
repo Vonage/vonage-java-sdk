@@ -18,11 +18,11 @@ package com.vonage.client.meetings;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
+import static com.vonage.client.TestUtils.stubHttpClient;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.common.HalLinks;
 import com.vonage.client.common.HttpMethod;
-import org.apache.http.client.HttpClient;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
@@ -344,8 +344,7 @@ public class MeetingsClientTest extends AbstractClientTest<MeetingsClient> {
 						"   }\n" +
 						"}";
 
-		HttpClient httpClient = stubHttpClient(200, firstJson, secondJson);
-		wrapper.setHttpClient(httpClient);
+		stubResponse(200, firstJson, secondJson);
 		List<MeetingRoom> rooms = call.get();
 		assertEquals(10, rooms.size());
 		assertEquals(RANDOM_ID, rooms.get(0).getThemeId());
@@ -650,7 +649,7 @@ public class MeetingsClientTest extends AbstractClientTest<MeetingsClient> {
 				"}"
 		);
 
-		wrapper.setHttpClient(stubHttpClient(400, expectedResponse.toJson()));
+		stubResponse(400, expectedResponse.toJson());
 
 		try {
 			client.finalizeLogos(RANDOM_ID, Collections.singletonList(logoKey));

@@ -43,7 +43,6 @@ public class AuthCollection {
     }
 
     public AuthCollection(UUID applicationId, byte[] privateKeyContents, String key, String secret, HashUtil.HashType hashType, String signature) {
-
         this();
 
         if (key != null && secret == null && signature == null) {

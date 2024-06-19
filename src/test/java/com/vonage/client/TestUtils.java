@@ -157,11 +157,14 @@ public class TestUtils {
         );
     }
 
-    static HttpClient stubHttpClient(int statusCode) throws Exception {
+
+    // TODO make package-private after removing Meetings
+    public static HttpClient stubHttpClient(int statusCode) throws Exception {
         return stubHttpClient(statusCode, "");
     }
 
-    static HttpClient stubHttpClient(int statusCode, String content, String... additionalReturns) throws Exception {
+    // TODO make package-private after removing Meetings
+    public static HttpClient stubHttpClient(int statusCode, String content, String... additionalReturns) throws Exception {
         HttpClient result = mock(HttpClient.class);
 
         HttpResponse response = mock(HttpResponse.class);

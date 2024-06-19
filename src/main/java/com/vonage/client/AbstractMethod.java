@@ -75,8 +75,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
         try {
             HttpUriRequest httpRequest = applyAuth(makeRequest(request))
                     .setHeader("User-Agent", httpWrapper.getUserAgent())
-                    .setCharset(StandardCharsets.UTF_8)
-                    .build();
+                    .setCharset(StandardCharsets.UTF_8).build();
 
             HttpResponse response = httpWrapper.getHttpClient().execute(httpRequest);
             try {
