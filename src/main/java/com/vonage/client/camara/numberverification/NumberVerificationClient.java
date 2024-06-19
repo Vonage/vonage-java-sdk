@@ -28,7 +28,6 @@ import com.vonage.client.common.HttpMethod;
 import java.net.URI;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 /**
  * A client for communicating with the Vonage Number Verification API. The standard way to obtain an instance
@@ -52,7 +51,7 @@ public class NumberVerificationClient extends NetworkApiClient {
         verifyNumber = DynamicEndpoint.<VerifyNumberRequest, VerifyNumberResponse> builder(VerifyNumberResponse.class)
                 .authMethod(NetworkAuthMethod.class).requestMethod(HttpMethod.POST)
                 .responseExceptionType(CamaraResponseException.class).pathGetter((de, req) -> {
-                    setNetworkAuth(new TokenRequest(req.redirectUrl, req.code));
+                    setNetworkAuth(new TokenRequest(req.redirectUrl, req.getCode()));
                     return getCamaraBaseUri() + "number-verification/v031/verify";
                 })
                 .wrapper(wrapper).build();
@@ -102,7 +101,38 @@ public class NumberVerificationClient extends NetworkApiClient {
         if (cachedRequest == null) {
             throw new IllegalStateException("You must first call initiateVerification using this client.");
         }
-        cachedRequest.code = Objects.requireNonNull(code, "Code is required.");
-        return verifyNumber.execute(cachedRequest).getDevicePhoneNumberVerified();
+        return verifyNumber(cachedRequest.withCode(code));
+    }
+
+    /**
+     * Stateless implementation of {@link #verifyNumber(String)}, which creates a new request
+     * without having to call {@link #initiateVerification(String, URI, String)} first. This is
+     * useful in cases where concurrent verifications are required, or the URL is obtained another way.
+     *
+     * @param phoneNumber MSISDN of the target device to verify.
+     * @param redirectUri Redirect URL, as set in your Vonage application for Network APIs.
+     * @param code The code obtained from the inbound callback's query parameters.
+     *
+     * @return {@code true} if the device that followed the link was using the SIM card associated
+     * with the phone number provided in {@linkplain #initiateVerification(String, URI, String)},
+     * {@code false} otherwise (e.g. it was unknown, the link was not followed, the device that followed
+     * the link didn't use the SIM card with that phone number when doing so).
+     *
+     * @throws com.vonage.client.auth.camara.NetworkAuthResponseException If there was an error
+     * exchanging the code for an access token when using the Vonage Network Auth API.
+     *
+     * @throws CamaraResponseException If there was an error in communicating with the Number Verification API.
+     */
+    public boolean verifyNumber(String phoneNumber, URI redirectUri, String code) {
+        return verifyNumber(new VerifyNumberRequest(phoneNumber, redirectUri).withCode(code));
+    }
+
+    private boolean verifyNumber(VerifyNumberRequest request) {
+        try {
+            return verifyNumber.execute(request).getDevicePhoneNumberVerified();
+        }
+        finally {
+            cachedRequest = null;
+        }
     }
 }

@@ -28,13 +28,14 @@ import java.util.Set;
 
 public class NumberVerificationClientTest extends AbstractClientTest<NumberVerificationClient> {
     final URI redirectUrl = URI.create("https://domain.example.org/redirect");
-    final String msisdn = "346 661113334", code = "987123";
+    final String msisdn = "346 661113334", code = "987123",
+            trueResponse = "{\"devicePhoneNumberVerified\": true}";
 
     public NumberVerificationClientTest() {
         client = new NumberVerificationClient(wrapper);
     }
 
-    void setUpVerifyNumber() throws Exception {
+    void setUpCachedVerifyNumber() throws Exception {
         stubResponse(302);
         URI uri = client.initiateVerification(msisdn, redirectUrl, null);
         assertEquals(uri, new FrontendAuthRequest(
@@ -71,33 +72,66 @@ public class NumberVerificationClientTest extends AbstractClientTest<NumberVerif
     }
 
     @Test
-    public void testVerifyNumber() throws Exception {
-        final String trueResponse = "{\"devicePhoneNumberVerified\": true}";
+    public void testVerifyNumberCached() throws Exception {
+        stubFrontendNetworkResponse(trueResponse);
+        assertThrows(IllegalStateException.class, () -> client.verifyNumber(code));
+
+        setUpCachedVerifyNumber();
+        stubFrontendNetworkResponse(trueResponse);
+        assertTrue(client.verifyNumber(code));
 
         stubFrontendNetworkResponse(trueResponse);
         assertThrows(IllegalStateException.class, () -> client.verifyNumber(code));
 
-        setUpVerifyNumber();
-
-        stubFrontendNetworkResponse(trueResponse);
-        assertTrue(client.verifyNumber(code));
-
+        setUpCachedVerifyNumber();
         stubFrontendNetworkResponse("{\"devicePhoneNumberVerified\":false}");
         assertFalse(client.verifyNumber(code));
 
+        setUpCachedVerifyNumber();
         stubFrontendNetworkResponse("{}");
         assertFalse(client.verifyNumber(code));
 
+        setUpCachedVerifyNumber();
         stubFrontendNetworkResponse("{\"devicePhoneNumberVerified\":\"true\"}");
         assertTrue(client.verifyNumber(code));
 
+        setUpCachedVerifyNumber();
         stubFrontendNetworkResponse("{\"devicePhoneNumberVerified\": \"false\"}");
         assertFalse(client.verifyNumber(code));
 
+        setUpCachedVerifyNumber();
         stubFrontendNetworkResponse(trueResponse);
         assertThrows(NullPointerException.class, () -> client.verifyNumber(null));
 
+        setUpCachedVerifyNumber();
         assert403CamaraResponseException(() -> client.verifyNumber(code));
+    }
+
+    @Test
+    public void testVerifyNumberRaw() throws Exception {
+        stubFrontendNetworkResponse(trueResponse);
+        assertTrue(client.verifyNumber(msisdn, redirectUrl, code));
+
+        stubFrontendNetworkResponse(trueResponse);
+        assertThrows(NullPointerException.class, () -> client.verifyNumber(msisdn, redirectUrl, null));
+
+        stubFrontendNetworkResponse(trueResponse);
+        assertThrows(NullPointerException.class, () -> client.verifyNumber(msisdn, null, code));
+
+        stubFrontendNetworkResponse(trueResponse);
+        assertThrows(NullPointerException.class, () -> client.verifyNumber(null, redirectUrl, code));
+
+        assert403CamaraResponseException(() -> client.verifyNumber(msisdn, redirectUrl, code));
+    }
+
+    @Test
+    public void testVerifyNumberCacheClearedAfterRawCall() throws Exception {
+        setUpCachedVerifyNumber();
+        stubFrontendNetworkResponse(trueResponse);
+        assertTrue(client.verifyNumber(msisdn, redirectUrl, code));
+
+        stubFrontendNetworkResponse(trueResponse);
+        assertThrows(IllegalStateException.class, () -> client.verifyNumber(code));
     }
 
     @Test
@@ -131,9 +165,7 @@ public class NumberVerificationClientTest extends AbstractClientTest<NumberVerif
 
             @Override
             protected VerifyNumberRequest sampleRequest() {
-                var request = new VerifyNumberRequest(msisdn, redirectUrl);
-                request.code = code;
-                return request;
+                return new VerifyNumberRequest(msisdn, redirectUrl).withCode(code);
             }
 
             @Override

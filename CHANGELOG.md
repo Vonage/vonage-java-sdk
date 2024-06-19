@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.9.0] - 2024-06-19
+# [8.9.0] - 2024-06-20
 - Added `User-to-User` header in Voice Connect SIP endpoint
 - Added missing custom `headers` field in `com.vonage.client.voice.SipEndpoint`
 - Added CAMARA Number Verification API

@@ -25,11 +25,22 @@ import java.util.Objects;
 class VerifyNumberRequest extends JsonableBaseObject {
     private final String phoneNumber;
     @JsonIgnore final URI redirectUrl;
-    @JsonIgnore String code;
+    @JsonIgnore private String code;
 
     VerifyNumberRequest(String phoneNumber, URI redirectUrl) {
         this.phoneNumber = '+' + new E164(phoneNumber).toString();
         this.redirectUrl = Objects.requireNonNull(redirectUrl, "Redirect URL is required.");
+    }
+
+    @JsonIgnore
+    VerifyNumberRequest withCode(String code) {
+        this.code = Objects.requireNonNull(code, "Code is required.");
+        return this;
+    }
+
+    @JsonIgnore
+    String getCode() {
+        return code;
     }
 
     /**
