@@ -26,6 +26,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -48,11 +49,11 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	protected DynamicEndpoint(Builder<T, R> builder) {
 		super(builder.wrapper);
-		authMethods = builder.authMethods;
-		requestMethod = builder.requestMethod;
-		pathGetter = builder.pathGetter;
+		authMethods = Objects.requireNonNull(builder.authMethods, "At least one auth method must be defined.");
+		requestMethod = Objects.requireNonNull(builder.requestMethod, "HTTP request method is required.");
+		pathGetter = Objects.requireNonNull(builder.pathGetter, "Path function is required.");
+		responseType = Objects.requireNonNull(builder.responseType, "Response type is required.");
 		responseExceptionType = builder.responseExceptionType;
-		responseType = builder.responseType;
 		contentType = builder.contentType;
 		if ((accept = builder.accept) == null &&
 				(Jsonable.class.isAssignableFrom(responseType) || isJsonableArrayResponse())
@@ -111,7 +112,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 		public Builder<T, R> authMethod(Class<? extends AuthMethod> primary, Class<? extends AuthMethod>... others) {
 			authMethods = new LinkedHashSet<>(2);
-			authMethods.add(Objects.requireNonNull(primary, "Primary auth method cannot be null"));
+			authMethods.add(Objects.requireNonNull(primary, "Primary auth method cannot be null."));
 			if (others != null) {
 				for (Class<? extends AuthMethod> amc : others) {
 					if (amc != null) {
@@ -181,6 +182,31 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 	}
 
+	private static void applyQueryParams(Map<String, ?> params, RequestBuilder rqb) {
+		params.forEach((k, v) -> {
+			Consumer<Object> logic = obj -> rqb.addParameter(k, String.valueOf(obj));
+			if (v instanceof Object[]) {
+				for (Object nested : (Object[]) v) {
+					logic.accept(nested);
+				}
+			}
+			else if (v instanceof Iterable<?>) {
+				for (Object nested : (Iterable<?>) v) {
+					logic.accept(nested);
+				}
+			}
+			else {
+				logic.accept(v);
+			}
+		});
+	}
+
+	public static URI buildUri(String base, Map<String, ?> requestParams) {
+		RequestBuilder requestBuilder = RequestBuilder.get(base);
+		applyQueryParams(requestParams, requestBuilder);
+		return requestBuilder.build().getURI();
+	}
+
 	@Override
 	protected final RequestBuilder makeRequest(T requestBody) {
 		if (requestBody instanceof Jsonable && responseType.isAssignableFrom(requestBody.getClass())) {
@@ -195,23 +221,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			rqb.setHeader("Accept", accept);
 		}
 		if (requestBody instanceof QueryParamsRequest) {
-			Map<String, ?> params = ((QueryParamsRequest) requestBody).makeParams();
-			params.forEach((k, v) -> {
-				Consumer<Object> logic = obj -> rqb.addParameter(k, String.valueOf(obj));
-				if (v instanceof Object[]) {
-					for (Object nested : (Object[]) v) {
-						logic.accept(nested);
-					}
-				}
-				else if (v instanceof Iterable<?>) {
-					for (Object nested : (Iterable<?>) v) {
-						logic.accept(nested);
-					}
-				}
-				else {
-					logic.accept(v);
-				}
-			});
+			applyQueryParams(((QueryParamsRequest) requestBody).makeParams(), rqb);
 		}
 		if (requestBody instanceof Jsonable) {
 			rqb.setEntity(new StringEntity(((Jsonable) requestBody).toJson(), ContentType.APPLICATION_JSON));
@@ -232,6 +242,9 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		try {
 			if (statusCode >= 200 && statusCode < 300) {
 				return parseResponseSuccess(response);
+			}
+			else if (statusCode >= 300 && statusCode < 400) {
+				return parseResponseRedirect(response);
 			}
 			else {
 				return parseResponseFailure(response);
@@ -258,15 +271,29 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		return null;
 	}
 
+	private R parseResponseRedirect(HttpResponse response) throws ReflectiveOperationException, IOException {
+		final String location = response.getFirstHeader("Location").getValue();
+
+		if (java.net.URI.class.equals(responseType)) {
+			return (R) URI.create(location);
+		}
+		else if (String.class.equals(responseType)) {
+			return (R) location;
+		}
+		else {
+			return parseResponseSuccess(response);
+		}
+	}
+
 	private R parseResponseSuccess(HttpResponse response) throws IOException, ReflectiveOperationException {
-		if (responseType == null || responseType.equals(Void.class)) {
+		if (Void.class.equals(responseType)) {
 			return null;
 		}
 		else if (byte[].class.equals(responseType)) {
 			return (R) EntityUtils.toByteArray(response.getEntity());
 		}
 		else {
-			String deser = basicResponseHandler.handleResponse(response);
+			String deser = EntityUtils.toString(response.getEntity());
 
 			if (responseType.equals(String.class)) {
 				return (R) deser;

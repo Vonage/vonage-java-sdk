@@ -18,20 +18,26 @@ package com.vonage.client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.ProtocolVersion;
+import com.vonage.client.auth.*;
+import com.vonage.client.auth.hashutils.HashUtil;
+import org.apache.http.*;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Function;
 
 public class TestUtils {
     public static final UUID APPLICATION_ID = UUID.randomUUID();
@@ -41,7 +47,8 @@ public class TestUtils {
             API_SECRET = "1234567890abcdef",
             SIGNATURE_SECRET = "kTCRawcijyNTfQ1sNqVrz3ZDyRQRZXoL8IhaYTrMxKg153UcHT",
             TEST_BASE_URI = "http://localhost:8081",
-            TEST_REASON = "Test reason";
+            TEST_REASON = "Test reason",
+            TEST_REDIRECT_URI = "https://www.example.org/login/challenge?key="+API_KEY;
 
     public static final HttpConfig TEST_HTTP_CONFIG = HttpConfig.builder().baseUri(TEST_BASE_URI).build();
 
@@ -139,5 +146,62 @@ public class TestUtils {
             fail(ex);
             return null;
         }
+    }
+
+    public static HttpWrapper httpWrapperWithAllAuthMethods() {
+        return new HttpWrapper(new NoAuthMethod(),
+                new ApiKeyHeaderAuthMethod(API_KEY, API_SECRET),
+                new ApiKeyQueryParamsAuthMethod(API_KEY, API_SECRET),
+                new SignatureAuthMethod(API_KEY, SIGNATURE_SECRET, HashUtil.HashType.HMAC_SHA256),
+                new JWTAuthMethod(APPLICATION_ID_STR, new byte[0])
+        );
+    }
+
+
+    // TODO make package-private after removing Meetings
+    public static HttpClient stubHttpClient(int statusCode) throws Exception {
+        return stubHttpClient(statusCode, "");
+    }
+
+    // TODO make package-private after removing Meetings
+    public static HttpClient stubHttpClient(int statusCode, String content, String... additionalReturns) throws Exception {
+        HttpClient result = mock(HttpClient.class);
+
+        HttpResponse response = mock(HttpResponse.class);
+        StatusLine sl = mock(StatusLine.class);
+        HttpEntity entity = mock(HttpEntity.class);
+
+        when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
+        Function<String, InputStream> transformation = c -> new ByteArrayInputStream(c.getBytes(StandardCharsets.UTF_8));
+        InputStream[] contentsEncoded = Arrays.stream(additionalReturns).map(transformation).toArray(InputStream[]::new);
+        when(entity.getContent()).thenReturn(transformation.apply(content), contentsEncoded);
+
+        if (additionalReturns.length > 0) {
+            final int success = 200;
+            Integer[] statusCodeReturns = new Integer[additionalReturns.length];
+            for (int i = 0; i < statusCodeReturns.length - 1; statusCodeReturns[i++] = success);
+            statusCodeReturns[statusCodeReturns.length - 1] = statusCode;
+            when(sl.getStatusCode()).thenReturn(success, statusCodeReturns);
+        }
+        else {
+            when(sl.getStatusCode()).thenReturn(statusCode);
+        }
+
+        when(sl.getReasonPhrase()).thenReturn(TestUtils.TEST_REASON);
+        when(response.getStatusLine()).thenReturn(sl);
+        when(response.getEntity()).thenReturn(entity);
+        Header locationHeader = mock(Header.class);
+        when(response.getFirstHeader("Location")).thenReturn(locationHeader);
+        when(locationHeader.getValue()).thenReturn(TestUtils.TEST_REDIRECT_URI);
+
+        return result;
+    }
+
+    public static void stubResponse(HttpWrapper wrapper, int code, String response, String... additionalResponses) throws Exception {
+        wrapper.setHttpClient(stubHttpClient(code, response, additionalResponses));
+    }
+
+    public void stubResponse(HttpWrapper wrapper, int statusCode) throws Exception {
+        wrapper.setHttpClient(stubHttpClient(statusCode, ""));
     }
 }

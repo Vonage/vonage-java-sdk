@@ -15,8 +15,8 @@
  */
 package com.vonage.client.conversations;
 
-import com.vonage.client.OrderedJsonMap;
-import static com.vonage.client.OrderedJsonMap.entry;
+import com.vonage.client.OrderedMap;
+import static com.vonage.client.OrderedMap.entry;
 import com.vonage.client.voice.TextToSpeechLanguage;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,8 +42,8 @@ public class AudioRecordEventTest extends AbstractEventTest {
                     .detectSpeech(detectSpeech).multitrack(multitrack).format(format)
                     .channels(channels).validity(validity).language(language),
 
-                new OrderedJsonMap(
-                entry("transcription", new OrderedJsonMap(
+                new OrderedMap(
+                entry("transcription", new OrderedMap(
                             entry("language", language.getLanguage()),
                             entry("sentiment_analysis", sentimentAnalysis)
                         )),

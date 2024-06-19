@@ -21,11 +21,7 @@ import com.vonage.client.VonageApiResponseException;
 /**
  * Response returned when a network request fails (i.e. returns a non-2xx status code).
  */
-public final class CamaraResponseException extends VonageApiResponseException {
-
-	void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
+public class CamaraResponseException extends VonageApiResponseException {
 
 	/**
 	 * Creates an instance of this class from a JSON payload.

@@ -26,6 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -45,8 +46,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
     static {
         LogFactory.getLog(AbstractMethod.class);
     }
-
-    protected static final BasicResponseHandler basicResponseHandler = new BasicResponseHandler();
+    
     protected final HttpWrapper httpWrapper;
 
     public AbstractMethod(HttpWrapper httpWrapper) {
@@ -75,8 +75,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
         try {
             HttpUriRequest httpRequest = applyAuth(makeRequest(request))
                     .setHeader("User-Agent", httpWrapper.getUserAgent())
-                    .setCharset(StandardCharsets.UTF_8)
-                    .build();
+                    .setCharset(StandardCharsets.UTF_8).build();
 
             HttpResponse response = httpWrapper.getHttpClient().execute(httpRequest);
             try {
@@ -132,24 +131,6 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
      */
     protected AuthMethod getAuthMethod() throws VonageUnexpectedException {
         return httpWrapper.getAuthCollection().getAcceptableAuthMethod(getAcceptableAuthMethods());
-    }
-
-    /**
-     * Utility method for obtaining the Application ID or API key from the auth method.
-     *
-     * @return The Application ID or API key.
-     * @throws VonageUnexpectedException If no AuthMethod is available.
-     * @throws IllegalStateException If the AuthMethod does not have an Application ID or API key.
-     */
-    public String getApplicationIdOrApiKey() throws VonageUnexpectedException {
-        AuthMethod am = getAuthMethod();
-        if (am instanceof JWTAuthMethod) {
-            return ((JWTAuthMethod) am).getApplicationId();
-        }
-        if (am instanceof ApiKeyAuthMethod) {
-            return ((ApiKeyAuthMethod) am).getApiKey();
-        }
-        throw new IllegalStateException(am.getClass().getSimpleName() + " does not have API key.");
     }
 
     protected abstract Set<Class<? extends AuthMethod>> getAcceptableAuthMethods();

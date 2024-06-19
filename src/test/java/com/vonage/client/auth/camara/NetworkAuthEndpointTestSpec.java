@@ -19,6 +19,7 @@ import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.auth.NoAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +28,8 @@ abstract class NetworkAuthEndpointTestSpec<T, R> extends DynamicEndpointTestSpec
 
 	@Override
 	protected Set<Class<? extends AuthMethod>> expectedAuthMethods() {
-		return Set.of(JWTAuthMethod.class);
+		return expectedHttpMethod() == HttpMethod.POST ?
+				Set.of(JWTAuthMethod.class) : Set.of(NoAuthMethod.class);
 	}
 
 	@Override
@@ -37,7 +39,8 @@ abstract class NetworkAuthEndpointTestSpec<T, R> extends DynamicEndpointTestSpec
 
 	@Override
 	protected String expectedDefaultBaseUri() {
-		return "https://api-eu.vonage.com";
+		return expectedHttpMethod() == HttpMethod.POST ?
+				"https://api-eu.vonage.com" : "https://oidc.idp.vonage.com";
 	}
 
 	@Override
@@ -46,10 +49,5 @@ abstract class NetworkAuthEndpointTestSpec<T, R> extends DynamicEndpointTestSpec
 	}
 
 	@Override
-	protected HttpMethod expectedHttpMethod() {
-		return HttpMethod.POST;
-	}
-
-	@Override
-	protected abstract Map<String, String> sampleQueryParams();
+	protected abstract Map<String, ?> sampleQueryParams();
 }

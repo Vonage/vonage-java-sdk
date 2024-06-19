@@ -15,8 +15,8 @@
  */
 package com.vonage.client.conversations;
 
-import com.vonage.client.OrderedJsonMap;
-import static com.vonage.client.OrderedJsonMap.entry;
+import com.vonage.client.OrderedMap;
+import static com.vonage.client.OrderedMap.entry;
 import com.vonage.client.voice.TextToSpeechLanguage;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -28,7 +28,7 @@ public class AudioOutEventTest extends AbstractEventTest {
     private final String text = "Hello, hi testing", streamUrl = "ftp://example.com/path/to/audio.mp3";
 
     <E extends AudioOutEvent<?>, B extends AudioOutEvent.Builder<E, B>> E testAudioOutEventAllFields(
-            EventType type, B builder, OrderedJsonMap bodyFields) {
+            EventType type, B builder, OrderedMap bodyFields) {
 
         boolean queue = true;
         double level = 0.35;
@@ -36,7 +36,7 @@ public class AudioOutEventTest extends AbstractEventTest {
 
         var event = testBaseEvent(type,
                 builder.loop(loop).level(level).queue(queue),
-                new OrderedJsonMap(
+                new OrderedMap(
                         entry("queue", queue),
                         entry("level", level),
                         entry("loop", loop)
@@ -49,7 +49,7 @@ public class AudioOutEventTest extends AbstractEventTest {
     }
 
     <E extends AudioOutEvent<?>, B extends AudioOutEvent.Builder<E, B>> E testAudioOutEventRequiredFields(
-            EventType type, B builder, OrderedJsonMap bodyFields) {
+            EventType type, B builder, OrderedMap bodyFields) {
 
         var event = testBaseEvent(type, builder, bodyFields);
         assertNull(event.getQueue());
@@ -62,7 +62,7 @@ public class AudioOutEventTest extends AbstractEventTest {
     public void testAudioPlayEventAllFields() {
         var event = testAudioOutEventAllFields(EventType.AUDIO_PLAY,
                 AudioPlayEvent.builder().streamUrl(streamUrl),
-                new OrderedJsonMap(entry("stream_url", List.of(streamUrl)))
+                new OrderedMap(entry("stream_url", List.of(streamUrl)))
         );
         assertNull(event.getPlayId());
         assertEquals(URI.create(streamUrl), event.getStreamUrl());
@@ -71,7 +71,7 @@ public class AudioOutEventTest extends AbstractEventTest {
     @Test
     public void testAudioPlayEventRequiredFields() {
         var event = testAudioOutEventRequiredFields(EventType.AUDIO_PLAY,
-                AudioPlayEvent.builder().streamUrl(streamUrl), new OrderedJsonMap()
+                AudioPlayEvent.builder().streamUrl(streamUrl), new OrderedMap()
         );
         assertEquals(URI.create(streamUrl), event.getStreamUrl());
         assertNull(event.getPlayId());
@@ -86,7 +86,7 @@ public class AudioOutEventTest extends AbstractEventTest {
         var event = testAudioOutEventAllFields(EventType.AUDIO_SAY,
                 AudioSayEvent.builder().text(text).language(language)
                         .style(style).premium(premium).ssml(ssml),
-                new OrderedJsonMap(
+                new OrderedMap(
                         entry("text", text),
                         entry("style", style),
                         entry("language", language),
@@ -106,7 +106,7 @@ public class AudioOutEventTest extends AbstractEventTest {
     public void testAudioSayEventRequiredFields() {
         var event = testAudioOutEventRequiredFields(EventType.AUDIO_SAY,
                 AudioSayEvent.builder().text(text),
-                new OrderedJsonMap(entry("text", text))
+                new OrderedMap(entry("text", text))
         );
         assertEquals(text, event.getText());
         assertNull(event.getSayId());

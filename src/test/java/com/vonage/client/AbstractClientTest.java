@@ -15,77 +15,20 @@
  */
 package com.vonage.client;
 
-import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
-import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
-import com.vonage.client.auth.JWTAuthMethod;
-import com.vonage.client.auth.SignatureAuthMethod;
-import com.vonage.client.auth.camara.NetworkAuthResponseException;
-import com.vonage.client.auth.hashutils.HashUtil;
-import com.vonage.client.camara.CamaraResponseException;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpUriRequest;
+import static com.vonage.client.TestUtils.stubHttpClient;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.function.Executable;
-import static org.mockito.Mockito.*;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public abstract class AbstractClientTest<T> {
-    protected HttpWrapper wrapper;
+    protected HttpWrapper wrapper = TestUtils.httpWrapperWithAllAuthMethods();
     protected T client;
-
-    protected AbstractClientTest() {
-        wrapper = new HttpWrapper(
-                new ApiKeyHeaderAuthMethod(TestUtils.API_KEY, TestUtils.API_SECRET),
-                new ApiKeyQueryParamsAuthMethod(TestUtils.API_KEY, TestUtils.API_SECRET),
-                new SignatureAuthMethod(TestUtils.API_KEY, TestUtils.SIGNATURE_SECRET, HashUtil.HashType.HMAC_SHA256),
-                new JWTAuthMethod(TestUtils.APPLICATION_ID_STR, new byte[0])
-        );
-    }
-
-    protected HttpClient stubHttpClient(int statusCode) throws Exception {
-        return stubHttpClient(statusCode, "");
-    }
-
-    protected HttpClient stubHttpClient(int statusCode, String content, String... additionalReturns) throws Exception {
-        HttpClient result = mock(HttpClient.class);
-
-        HttpResponse response = mock(HttpResponse.class);
-        StatusLine sl = mock(StatusLine.class);
-        HttpEntity entity = mock(HttpEntity.class);
-
-        when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
-        Function<String, InputStream> transformation = c -> new ByteArrayInputStream(c.getBytes(StandardCharsets.UTF_8));
-        InputStream[] contentsEncoded = Arrays.stream(additionalReturns).map(transformation).toArray(InputStream[]::new);
-        when(entity.getContent()).thenReturn(transformation.apply(content), contentsEncoded);
-
-        if (additionalReturns.length > 0) {
-            final int success = 200;
-            Integer[] statusCodeReturns = new Integer[additionalReturns.length];
-            for (int i = 0; i < statusCodeReturns.length - 1; statusCodeReturns[i++] = success);
-            statusCodeReturns[statusCodeReturns.length - 1] = statusCode;
-            when(sl.getStatusCode()).thenReturn(success, statusCodeReturns);
-        }
-        else {
-            when(sl.getStatusCode()).thenReturn(statusCode);
-        }
-
-        when(sl.getReasonPhrase()).thenReturn(TestUtils.TEST_REASON);
-        when(response.getStatusLine()).thenReturn(sl);
-        when(response.getEntity()).thenReturn(entity);
-
-        return result;
-    }
+    final String
+            backendNetworkAuthResponse = "{\"auth_req_id\": \"arid/0dadaeb4-7c79-4d39-b4b0-5a6cc08bf537\"}",
+            networkTokenResponse = "{\"access_token\": \"youMayProceed\"}";
 
     protected void stubResponse(int code, String response, String... additionalResponses) throws Exception {
-        wrapper.setHttpClient(stubHttpClient(code, response, additionalResponses));
+        TestUtils.stubResponse(wrapper, code, response, additionalResponses);
     }
 
     protected void stubResponse(String response) throws Exception {
@@ -142,42 +85,20 @@ public abstract class AbstractClientTest<T> {
         return invocation.get();
     }
 
-    protected void stubNetworkResponse(String mainResponse) throws Exception {
-        stubNetworkResponse(200, mainResponse);
+    protected void stubBackendNetworkResponse(String mainResponse) throws Exception {
+        stubBackendNetworkResponse(200, mainResponse);
     }
 
-    protected void stubNetworkResponse(int code, String mainResponse) throws Exception {
-        stubResponse(code,
-                "{\"auth_req_id\": \"arid/0dadaeb4-7c79-4d39-b4b0-5a6cc08bf537\"}",
-                "{\"access_token\": \"youMayProceed\"}",
-                mainResponse
-        );
+    protected void stubBackendNetworkResponse(int code, String mainResponse) throws Exception {
+        stubResponse(code, backendNetworkAuthResponse, networkTokenResponse, mainResponse);
     }
 
-    protected void assert403CamaraResponseException(Executable invocation) throws Exception {
-        final int status = 403;
-        String code = "PERMISSION_DENIED", responseJson = STR."""
-            {
-               "status": \{status},
-               "code": "\{code}",
-               "message": "Client does not have sufficient permissions to perform this action"
-            }
-        """;
-        stubNetworkResponse(status, responseJson);
+    protected void stubFrontendNetworkResponse(String mainResponse) throws Exception {
+        stubFrontendNetworkResponse(200, mainResponse);
+    }
 
-        String failMsg = "Expected "+ CamaraResponseException.class.getSimpleName();
-
-        try {
-            invocation.execute();
-            fail(failMsg);
-        }
-        catch (CamaraResponseException | NetworkAuthResponseException ex) {
-            // TODO find out why NetworkAuthResponseException is being thrown instead
-            assertEquals(status, ex.getStatusCode());
-        }
-        catch (Throwable t) {
-            fail(failMsg, t);
-        }
+    protected void stubFrontendNetworkResponse(int code, String mainResponse) throws Exception {
+        stubResponse(code, networkTokenResponse, mainResponse);
     }
 
     protected <E extends VonageApiResponseException> E assert401ApiResponseException(

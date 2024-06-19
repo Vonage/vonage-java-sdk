@@ -13,25 +13,23 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.camara.simswap;
+package com.vonage.client.camara.numberverification;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.E164;
+import java.net.URI;
+import java.util.Objects;
 
-class SimSwapRequest extends JsonableBaseObject {
+class VerifyNumberRequest extends JsonableBaseObject {
     private final String phoneNumber;
-    private final Integer maxAge;
+    @JsonIgnore final URI redirectUrl;
+    @JsonIgnore String code;
 
-    SimSwapRequest(String phoneNumber) {
-        this(phoneNumber, null);
-    }
-
-    SimSwapRequest(String phoneNumber, Integer maxAge) {
-        this.phoneNumber = new E164(phoneNumber).toString();
-        if ((this.maxAge = maxAge) != null && (maxAge < 1 || maxAge > 2400)) {
-            throw new IllegalArgumentException("maxAge must be between 1 and 2400 hours.");
-        }
+    VerifyNumberRequest(String phoneNumber, URI redirectUrl) {
+        this.phoneNumber = '+' + new E164(phoneNumber).toString();
+        this.redirectUrl = Objects.requireNonNull(redirectUrl, "Redirect URL is required.");
     }
 
     /**
@@ -42,15 +40,5 @@ class SimSwapRequest extends JsonableBaseObject {
     @JsonProperty("phoneNumber")
     public String getPhoneNumber() {
         return phoneNumber;
-    }
-
-    /**
-     * The maximum period in hours for the check, if specified.
-     *
-     * @return The maxAge field as an Integer, or {@code null} if unspecified.
-     */
-    @JsonProperty("maxAge")
-    public Integer getMaxAge() {
-        return maxAge;
     }
 }

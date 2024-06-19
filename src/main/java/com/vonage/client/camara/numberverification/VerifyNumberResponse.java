@@ -13,20 +13,21 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.auth.camara;
+package com.vonage.client.camara.numberverification;
 
-/**
- * Back-End auth request parameters for the first step in an OAuth2 three-legged check workflow.
- */
-public final class BackendAuthRequest extends AuthRequest {
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
+
+final class VerifyNumberResponse extends JsonableBaseObject {
+    private Boolean devicePhoneNumberVerified;
 
     /**
-     * Creates the parameters for a Back-End Authorization OIDC request.
+     * Indicates whether the phone number matches for the device.
      *
-     * @param msisdn The phone number of the user you want to authenticate in E.164 format.
-     * @param scope The scope of the request as an enum.
+     * @return {@code true} if the number matches, {@code false} if unknown or unmatched.
      */
-    public BackendAuthRequest(String msisdn, FraudPreventionDetectionScope scope) {
-        super(msisdn, scope);
+    @JsonProperty("devicePhoneNumberVerified")
+    public boolean getDevicePhoneNumberVerified() {
+        return devicePhoneNumberVerified != null ? devicePhoneNumberVerified : false;
     }
 }

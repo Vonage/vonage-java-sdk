@@ -43,7 +43,6 @@ public class AuthCollection {
     }
 
     public AuthCollection(UUID applicationId, byte[] privateKeyContents, String key, String secret, HashUtil.HashType hashType, String signature) {
-
         this();
 
         if (key != null && secret == null && signature == null) {
@@ -63,6 +62,7 @@ public class AuthCollection {
             throw new IllegalStateException("You must provide a private key in addition to your application id.");
         }
 
+        authList.add(new NoAuthMethod());
         if (key != null && secret != null) {
             authList.add(new ApiKeyHeaderAuthMethod(key, secret));
             authList.add(new ApiKeyQueryParamsAuthMethod(key, secret));

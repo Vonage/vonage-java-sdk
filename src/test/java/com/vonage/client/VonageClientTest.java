@@ -249,6 +249,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
         assertNotNull(client.getMessagesClient());
         assertNotNull(client.getNumberInsight2Client());
         assertNotNull(client.getNumbersClient());
+        assertNotNull(client.getNumberVerificationClient());
         assertNotNull(client.getProactiveConnectClient());
         assertNotNull(client.getRedactClient());
         assertNotNull(client.getSimSwapClient());

@@ -27,6 +27,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import static org.junit.jupiter.api.Assertions.*;
@@ -68,7 +69,7 @@ public class AbstractMethodTest {
 
         @Override
         public String parseResponse(HttpResponse response) throws IOException {
-            return basicResponseHandler.handleResponse(response);
+            return new BasicResponseHandler().handleResponse(response);
         }
     }
 

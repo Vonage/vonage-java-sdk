@@ -15,8 +15,10 @@
  */
 package com.vonage.client;
 
+import com.vonage.client.auth.ApiKeyAuthMethod;
 import com.vonage.client.auth.AuthCollection;
 import com.vonage.client.auth.AuthMethod;
+import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.ConnectionConfig;
@@ -24,6 +26,7 @@ import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 /**
  * Internal class that holds available authentication methods and a shared HttpClient.
@@ -63,10 +66,42 @@ public class HttpWrapper {
         return httpClient;
     }
 
+    /**
+     * Returns the application ID if it was set when creating the client.
+     *
+     * @return The application ID, or {@code null} if unavailable.
+     * @since 8.9.0
+     */
+    public UUID getApplicationId() {
+        try {
+            return UUID.fromString(getAuthCollection().getAuth(JWTAuthMethod.class).getApplicationId());
+        }
+        catch (RuntimeException ex) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the API key if it was set when creating the client.
+     *
+     * @return The API key, or {@code null} if unavailable.
+     * @since 8.9.0
+     */
+    public String getApiKey() {
+        try {
+            return getAuthCollection().getAuth(ApiKeyAuthMethod.class).getApiKey();
+        }
+        catch (RuntimeException ex) {
+            return null;
+        }
+    }
+
+    @Deprecated
     public void setHttpClient(HttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
+    @Deprecated
     public void setHttpConfig(HttpConfig httpConfig) {
         this.httpConfig = httpConfig;
     }
@@ -75,6 +110,7 @@ public class HttpWrapper {
         return authCollection;
     }
 
+    @Deprecated
     public void setAuthCollection(AuthCollection authCollection) {
         this.authCollection = authCollection;
     }
@@ -104,6 +140,7 @@ public class HttpWrapper {
                 .setUserAgent(USER_AGENT)
                 .setDefaultRequestConfig(requestConfig)
                 .useSystemProperties()
+                .disableRedirectHandling()
                 .build();
     }
 

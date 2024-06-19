@@ -17,8 +17,8 @@ package com.vonage.client.video;
 
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.HttpWrapper;
-import com.vonage.client.OrderedJsonMap;
-import static com.vonage.client.OrderedJsonMap.entry;
+import com.vonage.client.OrderedMap;
+import static com.vonage.client.OrderedMap.entry;
 import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.*;
 import com.vonage.client.auth.JWTAuthMethod;
@@ -2025,7 +2025,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 
 			@Override
 			protected Map<String, ?> sampleQueryParams() {
-				return new OrderedJsonMap(
+				return new OrderedMap(
 						entry("offset", "78"),
 						entry("count", "25")
 				);

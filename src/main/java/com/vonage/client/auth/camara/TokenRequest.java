@@ -16,16 +16,37 @@
 package com.vonage.client.auth.camara;
 
 import com.vonage.client.QueryParamsRequest;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-final class TokenRequest implements QueryParamsRequest {
+/**
+ * Represents the request parameters for the intermediate (second) step in an OAuth2 three-legged workflow.
+ */
+public final class TokenRequest implements QueryParamsRequest {
     private final Map<String, String> params = new LinkedHashMap<>(4);
 
-    TokenRequest(String authReqId) {
+    /**
+     * Creates a new Back-End token request.
+     *
+     * @param authReqId The auth request ID, as obtained from {@link BackendAuthResponse#getAuthReqId()}.
+     */
+    public TokenRequest(String authReqId) {
         params.put("grant_type", "urn:openid:params:grant-type:ciba");
         params.put("auth_req_id", Objects.requireNonNull(authReqId, "Auth request ID is required."));
+    }
+
+    /**
+     * Creates a new Front-End token request.
+     *
+     * @param redirectUrl The Redirect URI set in the Vonage Application.
+     * @param code The authentication code that is used to exchange for an access token.
+     */
+    public TokenRequest(URI redirectUrl, String code) {
+        params.put("grant_type", "authorization_code");
+        params.put("code", Objects.requireNonNull(code, "Code is required."));
+        params.put("redirect_uri", Objects.requireNonNull(redirectUrl, "Redirect URI is required.").toString());
     }
 
     @Override

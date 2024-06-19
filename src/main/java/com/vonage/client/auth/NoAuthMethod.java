@@ -13,15 +13,17 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.auth.camara;
+package com.vonage.client.auth;
 
-public enum FraudPreventionDetectionScope {
-    CHECK_SIM_SWAP,
-    RETRIEVE_SIM_SWAP_DATE,
-    NUMBER_VERIFICATION_VERIFY_READ;
+/**
+ * Represents a no-op AuthMethod, for when no authentication is necessary.
+ *
+ * @since 8.9.0
+ */
+public final class NoAuthMethod extends AbstractAuthMethod {
 
     @Override
-    public String toString() {
-        return name().toLowerCase().replace('_', '-');
+    public int getSortKey() {
+        return 90;
     }
 }

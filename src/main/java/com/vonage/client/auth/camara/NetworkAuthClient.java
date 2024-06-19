@@ -19,15 +19,17 @@ import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.auth.NoAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import java.net.URI;
 import java.util.Objects;
 
 /**
  * Used for obtaining access tokens for use with Vonage CAMARA APIs.
  */
 public class NetworkAuthClient {
-    RestEndpoint<BackendAuthRequest, BackendAuthResponse> backendAuth;
-    RestEndpoint<TokenRequest, TokenResponse> tokenRequest;
+    final RestEndpoint<BackendAuthRequest, BackendAuthResponse> backendAuth;
+    final RestEndpoint<TokenRequest, TokenResponse> tokenRequest;
 
     /**
      * Create a new NetworkAuthClient.
@@ -37,11 +39,11 @@ public class NetworkAuthClient {
     public NetworkAuthClient(HttpWrapper wrapper) {
         @SuppressWarnings("unchecked")
         final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
-            Endpoint(String path, R... type) {
+            Endpoint(String path, HttpMethod method, R... type) {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .responseExceptionType(NetworkAuthResponseException.class)
-                        .wrapper(wrapper).requestMethod(HttpMethod.POST)
-                        .authMethod(JWTAuthMethod.class).urlFormEncodedContentType(true)
+                        .wrapper(wrapper).requestMethod(method).urlFormEncodedContentType(true)
+                        .authMethod(JWTAuthMethod.class)
                         .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig()
                                 .getApiEuBaseUri() + "/oauth2/" + path
                         )
@@ -49,29 +51,27 @@ public class NetworkAuthClient {
             }
         }
 
-        backendAuth = new Endpoint<>("bc-authorize");
-        tokenRequest = new Endpoint<>("token");
+        backendAuth = new Endpoint<>("bc-authorize", HttpMethod.POST);
+        tokenRequest = new Endpoint<>("token", HttpMethod.POST);
     }
 
-    BackendAuthResponse sendAuthRequest(BackendAuthRequest request) {
-        return backendAuth.execute(Objects.requireNonNull(request));
+    private <R> R validateRequest(R request) {
+        return Objects.requireNonNull(request, "Request is required.");
     }
 
-    TokenResponse sendTokenRequest(String authRequestId) {
-        return tokenRequest.execute(new TokenRequest(authRequestId));
+    public BackendAuthResponse buildOidcUrl(BackendAuthRequest request) {
+        return backendAuth.execute(validateRequest(request));
     }
 
     /**
-     * Obtains a new access token for the given phone number and permission scope.
+     * Obtains a new access token for a Back-End auth request.
      *
-     * @param msisdn The phone number in E.164 format.
-     * @param scope Purpose of the token.
-     * @return The access token as a string.
+     * @param request The token request parameters.
+     * @return The response containing the access token.
      * @throws NetworkAuthResponseException If an error was encountered during the workflow.
+     * @since 8.9.0
      */
-    public String getCamaraAccessToken(String msisdn, FraudPreventionDetectionScope scope) {
-        BackendAuthResponse bar = sendAuthRequest(new BackendAuthRequest(msisdn, scope));
-        TokenResponse tr = sendTokenRequest(bar.getAuthReqId());
-        return tr.getAccessToken();
+    public TokenResponse getCamaraToken(TokenRequest request) {
+        return tokenRequest.execute(validateRequest(request));
     }
 }

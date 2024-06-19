@@ -18,20 +18,21 @@ package com.vonage.client.auth.camara;
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.RestEndpoint;
-import static com.vonage.client.TestUtils.TEST_BASE_URI;
-import static com.vonage.client.TestUtils.testJsonableBaseObject;
+import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.*;
 import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.CHECK_SIM_SWAP;
 import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.RETRIEVE_SIM_SWAP_DATE;
 import com.vonage.client.common.HttpMethod;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.function.Executable;
+import java.net.URI;
 import java.util.Map;
 import java.util.UUID;
 
 public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient> {
     final String authReqId = "arid/"+UUID.randomUUID();
+    final String msisdn = "34123456789";
 
     public NetworkAuthClientTest() {
         client = new NetworkAuthClient(wrapper);
@@ -39,14 +40,9 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
 
     void assert403ResponseException(Executable invocation) throws Exception {
         final int status = 403;
-        String message = "",
-                code = "PERMISSION_DENIED", responseJson = STR."""
-            {
-               "status": \{status},
-               "code": "\{code}",
-               "message": "Client does not have sufficient permissions to perform this action"
-            }
-        """;
+        String message = "Client does not have sufficient permissions to perform this action",
+                code = "PERMISSION_DENIED",
+                responseJson = "{\"status\": "+status+", \"code\": \""+code+"\",\"message\": \""+message+"\"}";
 
         var parsed = assertApiResponseException(status, responseJson, NetworkAuthResponseException.class, invocation);
         assertEquals(code, parsed.getCode());
@@ -55,36 +51,31 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testFraudBackendAuthMethod() throws Exception {
-        var fbam = new FraudBackendAuthMethod(client, "+34 91 12345678", RETRIEVE_SIM_SWAP_DATE);
+    public void testNetworkAuthMethod() throws Exception {
+        var fbam = new NetworkAuthMethod(client, new BackendAuthRequest("+34 91 12345678", RETRIEVE_SIM_SWAP_DATE));
         wrapper.getAuthCollection().add(fbam);
         var endpoint = DynamicEndpoint.<Void, String> builder(String.class)
                 .wrapper(wrapper).requestMethod(HttpMethod.POST)
-                .authMethod(FraudBackendAuthMethod.class)
+                .authMethod(NetworkAuthMethod.class)
                 .pathGetter((de, req) -> TEST_BASE_URI).build();
 
         var expectedResponse = "Hello, GNP!";
-        stubNetworkResponse(expectedResponse);
+        stubBackendNetworkResponse(expectedResponse);
 
         assertEquals(expectedResponse, endpoint.execute(null));
     }
 
     @Test
-    public void testBackendAuth() throws Exception {
+    public void testMakeOIDCBackendRequest() throws Exception {
         final int expiresIn = 120, interval = 3;
-        String responseJson = STR."""
-            {
-               "auth_req_id": "\{authReqId}",
-               "expires_in": "\{expiresIn}",
-               "interval": "\{interval}"
-            }
-        """, msisdn = "+49 151 1234567";
+        String msisdn = "+49 151 1234567", responseJson = "{\"auth_req_id\": \"" + authReqId +
+                "\", \"expires_in\": \""+expiresIn+"\", \"interval\": \""+interval+"\"}";
+
         var scope = FraudPreventionDetectionScope.RETRIEVE_SIM_SWAP_DATE;
         var request = new BackendAuthRequest(msisdn, scope);
 
         stubResponse(200, responseJson);
-        var parsed = client.sendAuthRequest(request);
-
+        var parsed = client.buildOidcUrl(request);
         testJsonableBaseObject(parsed);
         assertEquals(authReqId, parsed.getAuthReqId());
         assertEquals(expiresIn, parsed.getExpiresIn());
@@ -95,27 +86,27 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
         assertThrows(IllegalArgumentException.class, () -> new BackendAuthRequest("foo", scope));
 
         stubResponseAndAssertThrows(200, responseJson,
-                () -> client.sendAuthRequest(null), NullPointerException.class
+                () -> client.buildOidcUrl((BackendAuthRequest) null),
+                NullPointerException.class
         );
 
-        assert403ResponseException(() -> client.sendAuthRequest(request));
+        assert403ResponseException(() -> client.buildOidcUrl(request));
     }
 
     @Test
-    public void testTokenRequest() throws Exception {
+    public void testCamaraToken() throws Exception {
         Integer expires = 29;
         String access = "accessTokStr1", refresh = "F5", type = "bearer";
-        var responseJson = STR."""
-            {
-               "access_token": "\{access}",
-               "token_type": "\{type}",
-               "refresh_token": "\{refresh}",
-               "expires_in": \{expires}
-            }
-        """;
+        var responseJson = "{\n"+
+               "\"access_token\": \""+access+"\",\n"+
+               "\"token_type\": \""+type+"\",\n" +
+               "\"refresh_token\": \""+refresh+"\",\n" +
+               "\"expires_in\": "+expires+"\n}";
+
+        var request = new TokenRequest(authReqId);
 
         stubResponse(200, responseJson);
-        var parsed = client.sendTokenRequest(authReqId);
+        var parsed = client.getCamaraToken(request);
         testJsonableBaseObject(parsed);
         assertEquals(access, parsed.getAccessToken());
         assertEquals(refresh, parsed.getRefreshToken());
@@ -123,16 +114,15 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
         assertEquals(expires, parsed.getExpiresIn());
 
         stubResponseAndAssertThrows(200, responseJson,
-                () -> client.sendTokenRequest(null), NullPointerException.class
+                () -> client.getCamaraToken(null), NullPointerException.class
         );
 
-        assert403ResponseException(() -> client.sendTokenRequest(authReqId));
+        assert403ResponseException(() -> client.getCamaraToken(request));
     }
 
     @Test
     public void testBackendAuthEndpoint() throws Exception {
         new NetworkAuthEndpointTestSpec<BackendAuthRequest, BackendAuthResponse>() {
-            final String msisdn = "447700900000";
 
             @Override
             protected RestEndpoint<BackendAuthRequest, BackendAuthResponse> endpoint() {
@@ -152,9 +142,14 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
             @Override
             protected Map<String, String> sampleQueryParams() {
                 return Map.of(
-                        "login_hint", "tel:" + msisdn,
-                        "scope", "dpv:FraudPreventionAndDetection#check-sim-swap"
+                        "login_hint", "tel:+" + msisdn,
+                        "scope", "openid dpv:FraudPreventionAndDetection#check-sim-swap"
                 );
+            }
+
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.POST;
             }
         }
         .runTests();
@@ -185,6 +180,11 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
                         "grant_type", "urn:openid:params:grant-type:ciba",
                         "auth_req_id", authReqId
                 );
+            }
+
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.POST;
             }
         }
         .runTests();
