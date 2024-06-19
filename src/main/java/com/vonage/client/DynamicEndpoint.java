@@ -49,11 +49,11 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	protected DynamicEndpoint(Builder<T, R> builder) {
 		super(builder.wrapper);
-		authMethods = builder.authMethods;
-		requestMethod = builder.requestMethod;
-		pathGetter = builder.pathGetter;
+		authMethods = Objects.requireNonNull(builder.authMethods, "At least one auth method must be defined.");
+		requestMethod = Objects.requireNonNull(builder.requestMethod, "HTTP request method is required.");
+		pathGetter = Objects.requireNonNull(builder.pathGetter, "Path function is required.");
+		responseType = Objects.requireNonNull(builder.responseType, "Response type is required.");
 		responseExceptionType = builder.responseExceptionType;
-		responseType = builder.responseType;
 		contentType = builder.contentType;
 		if ((accept = builder.accept) == null &&
 				(Jsonable.class.isAssignableFrom(responseType) || isJsonableArrayResponse())
@@ -112,7 +112,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 		public Builder<T, R> authMethod(Class<? extends AuthMethod> primary, Class<? extends AuthMethod>... others) {
 			authMethods = new LinkedHashSet<>(2);
-			authMethods.add(Objects.requireNonNull(primary, "Primary auth method cannot be null"));
+			authMethods.add(Objects.requireNonNull(primary, "Primary auth method cannot be null."));
 			if (others != null) {
 				for (Class<? extends AuthMethod> amc : others) {
 					if (amc != null) {
