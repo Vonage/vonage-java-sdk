@@ -17,10 +17,13 @@ package com.vonage.client;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import java.net.URI;
 
 public class HttpConfigTest {
-    static final String EXPECTED_DEFAULT_API_BASE_URI = "https://api.nexmo.com";
-    static final String EXPECTED_DEFAULT_REST_BASE_URI = "https://rest.nexmo.com";
+    static final String
+            EXPECTED_DEFAULT_API_BASE_URI = "https://api.nexmo.com",
+            EXPECTED_DEFAULT_REST_BASE_URI = "https://rest.nexmo.com",
+            EXAMPLE_BASE_URI = "https://example.com";
 
     static void assertDefaults(HttpConfig config) {
         assertEquals(60000, config.getTimeoutMillis());
@@ -35,25 +38,27 @@ public class HttpConfigTest {
 
     @Test
     public void testApiBaseUriOnly() {
-        HttpConfig config = HttpConfig.builder().apiBaseUri("https://example.com").build();
+        HttpConfig config = HttpConfig.builder().apiBaseUri(EXAMPLE_BASE_URI).build();
 
-        assertEquals("https://example.com", config.getApiBaseUri());
+        assertEquals(EXAMPLE_BASE_URI, config.getApiBaseUri());
         assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
     }
 
     @Test
     public void testApiRestUriOnly() {
-        HttpConfig config = HttpConfig.builder().restBaseUri("https://example.com").build();
+        HttpConfig config = HttpConfig.builder().restBaseUri(EXAMPLE_BASE_URI).build();
 
         assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
-        assertEquals("https://example.com", config.getRestBaseUri());
+        assertEquals(EXAMPLE_BASE_URI, config.getRestBaseUri());
     }
 
     @Test
     public void testAllBaseUri() {
-        HttpConfig config = HttpConfig.builder().baseUri("https://example.com").build();
+        HttpConfig config = HttpConfig.builder().baseUri(URI.create(EXAMPLE_BASE_URI)).build();
 
-        assertEquals("https://example.com", config.getApiBaseUri());
-        assertEquals("https://example.com", config.getRestBaseUri());
+        assertEquals(EXAMPLE_BASE_URI, config.getApiBaseUri());
+        assertEquals(EXAMPLE_BASE_URI, config.getRestBaseUri());
+        assertEquals(EXAMPLE_BASE_URI, config.getApiEuBaseUri());
+        assertEquals(EXAMPLE_BASE_URI, config.getVideoBaseUri());
     }
 }

@@ -286,7 +286,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	}
 
 	private R parseResponseSuccess(HttpResponse response) throws IOException, ReflectiveOperationException {
-		if (responseType == null || responseType.equals(Void.class)) {
+		if (Void.class.equals(responseType)) {
 			return null;
 		}
 		else if (byte[].class.equals(responseType)) {
