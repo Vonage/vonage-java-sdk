@@ -28,7 +28,7 @@ public class FrontendAuthRequestTest {
     final FrontendAuthRequest allParamsRequest = new FrontendAuthRequest(msisdn, redirectUrl, APPLICATION_ID, state);
 
     @Test
-    public void testValidation() throws Exception {
+    public void testValidation() {
         assertThrows(NullPointerException.class, () -> new FrontendAuthRequest(null, redirectUrl, APPLICATION_ID, state));
         assertThrows(NullPointerException.class, () -> new FrontendAuthRequest(msisdn, null, APPLICATION_ID, state));
         assertThrows(NullPointerException.class, () -> new FrontendAuthRequest(msisdn, redirectUrl, null, state));
