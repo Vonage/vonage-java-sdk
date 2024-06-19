@@ -30,7 +30,7 @@ public class DynamicEndpointTest {
         var endpoint = DynamicEndpoint.builder(URI.class)
                 .wrapper(wrapper).authMethod(NoAuthMethod.class)
                 .pathGetter((de, req) -> TestUtils.TEST_BASE_URI + req)
-                .requestMethod(HttpMethod.GET).build();
+                .requestMethod(HttpMethod.GET).acceptHeader("text").build();
 
         String redirectUri = TestUtils.TEST_REDIRECT_URI;
         TestUtils.stubResponse(wrapper, 302, redirectUri);
