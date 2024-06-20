@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added missing custom `headers` field in `com.vonage.client.voice.SipEndpoint`
 - Added CAMARA Number Verification API
 - Refactored Network auth
+- Reduced Verify v2 minimum channel timeout
 
 # [8.8.1] - 2024-05-30
 - Fixes Maven POM metadata

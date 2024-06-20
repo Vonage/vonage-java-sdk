@@ -262,7 +262,7 @@ public class VerificationRequestTest {
 	public void testChannelTimeoutBoundaries() {
 		Builder builder = getBuilderAllParamsSingleWorkflow(Channel.VOICE);
 		assertEquals(CHANNEL_TIMEOUT, builder.build().getChannelTimeout().intValue());
-		int min = 60, max = 900;
+		int min = 15, max = 900;
 		builder.channelTimeout(min - 1);
 		assertThrows(IllegalArgumentException.class, builder::build);
 		builder.channelTimeout(min);
