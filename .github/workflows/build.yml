@@ -11,10 +11,10 @@ permissions:
   contents: read
   deployments: read
   issues: write
-  discussions: read
+  discussions: none
   packages: none
   pages: read
-  pull-requests: write
+  pull-requests: read
   security-events: write
   statuses: write
 
