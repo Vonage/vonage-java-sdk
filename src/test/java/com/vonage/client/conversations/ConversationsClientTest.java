@@ -96,7 +96,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 			CHANNEL_TYPE_STR = "phone",
 			CHANNEL_TYPE_FROM_STR = "sms",
 			CHANNEL_TYPE_TO_STR = "mms",
-			ORDER_STR = SortOrder.fromString("desc").toString(),
+			ORDER_STR = "desc",
 			CUSTOM_EVENT_TYPE_STR = "custom",
 			KNOWN_EVENT_TYPE_STR = "audio:say:done",
 			CONVERSATION_TYPE = "quick_chat",

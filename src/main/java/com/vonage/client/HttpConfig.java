@@ -79,18 +79,22 @@ public class HttpConfig {
         return DEFAULT_VIDEO_BASE_URI.equals(videoBaseUri);
     }
 
+    @Deprecated
     public String getVersionedApiBaseUri(String version) {
         return appendVersionToUri(apiBaseUri, version);
     }
 
+    @Deprecated
     public String getVersionedRestBaseUri(String version) {
         return appendVersionToUri(restBaseUri, version);
     }
 
+    @Deprecated
     public String getVersionedApiEuBaseUri(String version) {
         return appendVersionToUri(apiEuBaseUri, version);
     }
 
+    @Deprecated
     public String getVersionedVideoBaseUri(String version) {
         return appendVersionToUri(videoBaseUri, version);
     }

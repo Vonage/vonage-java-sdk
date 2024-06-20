@@ -23,12 +23,22 @@ public class HttpConfigTest {
     static final String
             EXPECTED_DEFAULT_API_BASE_URI = "https://api.nexmo.com",
             EXPECTED_DEFAULT_REST_BASE_URI = "https://rest.nexmo.com",
+            EXPECTED_DEFAULT_API_EU_BASE_URI = "https://api-eu.vonage.com",
+            EXPECTED_DEFAULT_VIDEO_BASE_URI = "https://video.api.vonage.com",
             EXAMPLE_BASE_URI = "https://example.com";
 
     static void assertDefaults(HttpConfig config) {
         assertEquals(60000, config.getTimeoutMillis());
+
+        assertTrue(config.isDefaultApiBaseUri());
+        assertTrue(config.isDefaultRestBaseUri());
+        assertTrue(config.isDefaultApiEuBaseUri());
+        assertTrue(config.isDefaultVideoBaseUri());
+
         assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
         assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
+        assertEquals(EXPECTED_DEFAULT_API_EU_BASE_URI, config.getApiEuBaseUri());
+        assertEquals(EXPECTED_DEFAULT_VIDEO_BASE_URI, config.getVideoBaseUri());
     }
 
     @Test
@@ -42,6 +52,8 @@ public class HttpConfigTest {
 
         assertEquals(EXAMPLE_BASE_URI, config.getApiBaseUri());
         assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
+        assertEquals(EXPECTED_DEFAULT_API_EU_BASE_URI, config.getApiEuBaseUri());
+        assertEquals(EXPECTED_DEFAULT_VIDEO_BASE_URI, config.getVideoBaseUri());
     }
 
     @Test
@@ -50,11 +62,33 @@ public class HttpConfigTest {
 
         assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
         assertEquals(EXAMPLE_BASE_URI, config.getRestBaseUri());
+        assertEquals(EXPECTED_DEFAULT_API_EU_BASE_URI, config.getApiEuBaseUri());
+        assertEquals(EXPECTED_DEFAULT_VIDEO_BASE_URI, config.getVideoBaseUri());
+    }
+
+    @Test
+    public void testApiEuUriOnly() {
+        HttpConfig config = HttpConfig.builder().apiEuBaseUri(EXAMPLE_BASE_URI).build();
+
+        assertEquals(EXAMPLE_BASE_URI, config.getApiEuBaseUri());
+        assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
+        assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
+        assertEquals(EXPECTED_DEFAULT_VIDEO_BASE_URI, config.getVideoBaseUri());
+    }
+
+    @Test
+    public void testVideoUriOnly() {
+        HttpConfig config = HttpConfig.builder().videoBaseUri(EXAMPLE_BASE_URI).build();
+
+        assertEquals(EXAMPLE_BASE_URI, config.getVideoBaseUri());
+        assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
+        assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
+        assertEquals(EXPECTED_DEFAULT_API_EU_BASE_URI, config.getApiEuBaseUri());
     }
 
     @Test
     public void testAllBaseUri() {
-        HttpConfig config = HttpConfig.builder().baseUri(URI.create(EXAMPLE_BASE_URI)).build();
+        HttpConfig config = HttpConfig.builder().baseUri(URI.create(EXAMPLE_BASE_URI + '/')).build();
 
         assertEquals(EXAMPLE_BASE_URI, config.getApiBaseUri());
         assertEquals(EXAMPLE_BASE_URI, config.getRestBaseUri());

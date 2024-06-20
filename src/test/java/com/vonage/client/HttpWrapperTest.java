@@ -20,11 +20,6 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpWrapperTest {
-    private static final String
-            EXPECTED_DEFAULT_API_BASE_URI = "https://api.nexmo.com",
-            EXPECTED_DEFAULT_REST_BASE_URI = "https://rest.nexmo.com",
-            EXPECTED_DEFAULT_VIDEO_BASE_URI = "https://video.api.vonage.com";
-
     private HttpWrapper wrapper;
 
     @BeforeEach
@@ -35,6 +30,11 @@ public class HttpWrapperTest {
     @Test
     public void basicTest() {
         assertNotNull(wrapper.getHttpClient());
+    }
+
+    @Test
+    public void testGetApiKey() {
+        assertNull(wrapper.getApiKey());
     }
 
     @Test
@@ -49,8 +49,5 @@ public class HttpWrapperTest {
         HttpConfig config = wrapper.getHttpConfig();
         assertNotNull(config);
         HttpConfigTest.assertDefaults(config);
-        assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
-        assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
-        assertEquals(EXPECTED_DEFAULT_VIDEO_BASE_URI, config.getVideoBaseUri());
     }
 }
