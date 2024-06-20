@@ -104,10 +104,6 @@
   </dependencies>
 
   <distributionManagement>
-    <snapshotRepository>
-      <id>nexus-snapshots</id>
-      <url>${nexusUrl}/content/repositories/snapshots/</url>
-    </snapshotRepository>
     <repository>
       <id>nexus-releases</id>
       <url>${nexusUrl}/service/local/staging/deploy/maven2/</url>
