@@ -114,8 +114,8 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 					  "updated": "\{TIMESTAMP_UPDATED_STR}",
 					  "destroyed": "\{TIMESTAMP_DESTROYED_STR}"
 				   },""",
-			SAMPLE_BASE_CONVERSATION_RESPONSE = STR."\{SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL
-                    .substring(0, SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL.length() - 1)}\n\t}",
+			SAMPLE_BASE_CONVERSATION_RESPONSE = SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL
+                    .substring(0, SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL.length() - 1)+"\n\t}",
 			SAMPLE_CONVERSATION_RESPONSE_PARTIAL = SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL + STR."""
 				   "state": "\{CONVERSATION_STATE_STR}",
 				   "sequence_number": \{CONVERSATION_SEQUENCE_NUMBER},
@@ -206,30 +206,6 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 					   }
 					}
 			 	}
-			""",
-			SAMPLE_LIST_USER_SESSIONS_RESPONSE = STR."""
-   				{
-				   "page_size": \{PAGE_SIZE},
-				   "_embedded": {
-					  "sessions": [
-						 {}, \{SAMPLE_USER_SESSION_RESPONSE}, {"_embedded":{"user":{}}}
-					  ]
-				   },
-				   "_links": {
-					  "first": {
-						 "href": "https://api.nexmo.com/v1/users/USR-82e028d9-5201-4f1e-8188-604b2d3471ec/sessions?order=desc&page_size=10"
-					  },
-					  "self": {
-						 "href": "https://api.nexmo.com/v1/users/USR-82e028d9-5201-4f1e-8188-604b2d3471ec/sessions?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg="
-					  },
-					  "next": {
-						 "href": "https://api.nexmo.com/v1/users/USR-82e028d9-5201-4f1e-8188-604b2d3471ec/sessions?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg="
-					  },
-					  "prev": {
-						 "href": "https://api.nexmo.com/v1/users/USR-82e028d9-5201-4f1e-8188-604b2d3471ec/sessions?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg="
-					  }
-				   }
-				}
 			""",
 			SAMPLE_BASE_MEMBER_RESPONSE_PARTIAL = STR."""
 				{
@@ -349,10 +325,12 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 					"_links": {
 					  "first": {},"self": {},"next": {},"prev": {}
 					},
-					"_embedded": [
-						\{SAMPLE_EVENT_RESPONSE},
-						{}, {"type": "\{KNOWN_EVENT_TYPE_STR}"}
-					]
+					"_embedded": {
+						"events": [
+							\{SAMPLE_EVENT_RESPONSE},
+							{}, {"type": "\{KNOWN_EVENT_TYPE_STR}"}
+						]
+					}
 			   }
 			""";
 

@@ -36,7 +36,7 @@ class GenericEvent extends EventWithBody<Map<String, ?>> {
     }
 
     @SuppressWarnings("unchecked")
-    static abstract class Builder<E extends GenericEvent,
+    public static abstract class Builder<E extends GenericEvent,
             B extends Builder<? extends E, ? extends  B>>
             extends EventWithBody.Builder<GenericEvent, Builder<E, B>> {
 
