@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 # [8.9.1] - 2024-07-09
 - Fixed parsing issue in `ConversationsClient#listEvents`
+- `body` method in `CustomEvent.Builder` is now accessible
 - Bumped JWT library version to 1.1.3
 
 # [8.9.0] - 2024-06-20
