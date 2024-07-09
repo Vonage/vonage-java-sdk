@@ -31,6 +31,7 @@ You'll need to have [created a Vonage account](https://dashboard.nexmo.com/sign-
 - [Messages](https://developer.vonage.com/en/messages/overview)
 - [Number Insight](https://developer.vonage.com/en/number-insight/overview)
 - [Number Management](https://developer.vonage.com/en/numbers/overview)
+- [Number Verification](https://developer.vonage.com/en/number-verification/overview)
 - [Proactive Connect](https://developer.vonage.com/en/proactive-connect/overview)
 - [Redact](https://developer.vonage.com/en/redact/overview)
 - [SIM Swap](https://developer.vonage.com/en/sim-swap/overview)
@@ -44,6 +45,7 @@ You'll need to have [created a Vonage account](https://dashboard.nexmo.com/sign-
 
 We also provide server SDKs in other languages:
 
+- [Kotlin](https://github.com/Vonage/vonage-kotlin-sdk)
 - [.NET](https://github.com/Vonage/vonage-dotnet-sdk)
 - [PHP](https://github.com/Vonage/vonage-php-sdk)
 - [Python](https://github.com/Vonage/vonage-python-sdk)
