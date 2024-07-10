@@ -28,7 +28,7 @@ public class VonageUnacceptableAuthExceptionTest {
         VonageUnacceptableAuthException exception = new VonageUnacceptableAuthException(
                 Arrays.asList(new ApiKeyHeaderAuthMethod(null, null),
                         new SignatureAuthMethod(null, null),
-                        new JWTAuthMethod("application_id", new TestUtils().loadKey("test/keys/application_key"))),
+                        new JWTAuthMethod(TestUtils.APPLICATION_ID_STR, new TestUtils().loadKey("test/keys/application_key"))),
                 Arrays.asList(ApiKeyHeaderAuthMethod.class, SignatureAuthMethod.class, JWTAuthMethod.class)
         );
 

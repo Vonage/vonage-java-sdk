@@ -15,19 +15,18 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.TestUtils;
 import com.vonage.jwt.Jwt;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.*;
 
 public class TokenOptionsTest {
-	final String applicationId = UUID.randomUUID().toString();
-	final String privateKeyContents = "blah";
 
 	Jwt buildJwtWithClaims(TokenOptions options) {
-		Jwt.Builder jwtBuilder = Jwt.builder().applicationId(applicationId).privateKeyContents(privateKeyContents);
+		Jwt.Builder jwtBuilder = Jwt.builder().applicationId(TestUtils.APPLICATION_ID).unsigned();
 		options.addClaims(jwtBuilder);
 		return jwtBuilder.build();
 	}
@@ -46,12 +45,12 @@ public class TokenOptionsTest {
 
 		Jwt jwt = buildJwtWithClaims(options);
 
-		ZonedDateTime expiresAt = jwt.getExpiresAt();
-		assertFalse(expiresAt.isAfter(ZonedDateTime.now().plus(ttl)));
-		assertTrue(expiresAt.minus(ttl).isBefore(ZonedDateTime.now().plusSeconds(1)));
+		Instant expiresAt = jwt.getExpiresAt();
+		assertFalse(expiresAt.isAfter(Instant.now().plus(ttl)));
+		assertTrue(expiresAt.minus(ttl).isBefore(Instant.now().plusSeconds(1)));
 
 		Map<String, ?> claims = jwt.getClaims();
-		assertEquals(4, claims.size());
+		assertEquals(5, claims.size());
 		assertEquals(data, claims.get("connection_data"));
 		assertEquals(String.join(" ", layoutClassList), claims.get("initial_layout_class_list"));
 		assertEquals(role.toString(), claims.get("role"));
@@ -69,7 +68,7 @@ public class TokenOptionsTest {
 		Jwt jwt = buildJwtWithClaims(options);
 
 		Map<String, ?> claims = jwt.getClaims();
-		assertEquals(2, claims.size());
+		assertEquals(3, claims.size());
 		assertEquals("publisher", claims.get("role").toString());
 		assertNull(claims.get("connection_data"));
 		assertNull(claims.get("initial_layout_class_list"));
@@ -96,7 +95,7 @@ public class TokenOptionsTest {
 		Jwt jwt = buildJwtWithClaims(options);
 
 		Map<String, ?> claims = jwt.getClaims();
-		assertEquals(2, claims.size());
+		assertEquals(3, claims.size());
 		assertEquals("publisheronly", claims.get("role").toString());
 	}
 }
