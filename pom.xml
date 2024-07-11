@@ -7,7 +7,6 @@
   <artifactId>server-sdk</artifactId>
   <version>8.9.1</version>
 
-  <packaging>jar</packaging>
   <name>Vonage Java Server SDK</name>
   <description>Java client for Vonage APIs</description>
   <url>https://github.com/Vonage/vonage-java-sdk</url>
