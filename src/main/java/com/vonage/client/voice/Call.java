@@ -62,8 +62,10 @@ public class Call extends JsonableBaseObject {
             case GET: case POST: break;
             default: throw new IllegalArgumentException("Event method must be GET or POST");
         }
-        from = builder.from;
-        if ((fromRandomNumber = builder.fromRandomNumber) != null && fromRandomNumber && from != null) {
+        if ((from = builder.from) == null) {
+            fromRandomNumber = true;
+        }
+        else if ((fromRandomNumber = builder.fromRandomNumber) != null && fromRandomNumber) {
             throw new IllegalStateException("From number shouldn't be set if using random.");
         }
         answerUrl = builder.answerUrl;

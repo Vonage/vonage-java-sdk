@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 # [8.9.2] - 2024-07-12
 - Refactoring to accommodate using v2.0.0 of Vonage JWT library
 - Fixed `SpeechSettings.Language.NEPALI` (de)serialisation
+- `fromRandomNumber` true if `from` is not specified in `Call.Builder`
 - Fixed `com.vonage.client.voice.EventWebhook` deserialisation issue
   - `getCallUuid()` and `getRecordingUuid()` now return String instead of UUID
 

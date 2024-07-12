@@ -355,6 +355,7 @@ public class CallTest {
     @Test
     public void testConstructRequiredParams() {
         Call call = Call.builder().to(new VbcEndpoint("123")).build();
+        assertTrue(call.getFromRandomNumber());
         assertNull(call.getEventUrl());
         assertNull(call.getAnswerUrl());
         assertNull(call.getNcco());
@@ -364,7 +365,6 @@ public class CallTest {
         assertNull(call.getRingingTimer());
         assertNull(call.getMachineDetection());
         assertNull(call.getAdvancedMachineDetection());
-        assertNull(call.getFromRandomNumber());
         assertNull(call.getFrom());
         assertEquals("123", call.getTo()[0].toLog());
         assertThrows(IllegalStateException.class, () -> Call.builder().build());
@@ -417,5 +417,15 @@ public class CallTest {
         assertEquals(max, builder.lengthTimer(max).build().getLengthTimer().intValue());
         assertThrows(IllegalArgumentException.class, () -> builder.lengthTimer(max+1).build());
         assertThrows(IllegalArgumentException.class, () -> builder.lengthTimer(0).build());
+    }
+
+    @Test
+    public void testRandomNumberIsTrueWhenFromIsNotSet() {
+        var call = Call.builder().to(new AppEndpoint("user123")).build();
+        assertTrue(call.getFromRandomNumber());
+        assertNull(call.getFrom());
+        call = Call.builder().to(call.getTo()).from(new AppEndpoint("admin")).build();
+        assertNotNull(call.getFrom());
+        assertNull(call.getFromRandomNumber());
     }
 }
