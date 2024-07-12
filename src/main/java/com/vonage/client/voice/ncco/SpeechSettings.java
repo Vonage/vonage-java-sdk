@@ -355,7 +355,7 @@ public class SpeechSettings extends JsonableBaseObject {
         MALAY("ms-MY"),
         MALAYALAM("ml-IN"),
         MARATHI("mr-IN"),
-        NEPALI("-"),
+        NEPALI("ne-NP"),
         NORWEGIAN_BOKMAL("nb-NO"),
         PERSIAN("fa-IR"),
         POLISH("pl-PL"),
