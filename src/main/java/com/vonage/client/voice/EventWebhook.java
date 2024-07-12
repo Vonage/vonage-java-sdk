@@ -42,8 +42,8 @@ public class EventWebhook extends JsonableBaseObject {
     private Integer duration, size;
     private Double rate, price;
     private URI recordingUrl;
-    private UUID callUuid, recordingUuid;
-    private String to, from, conversationUuid, conversationUuidFrom, conversationUuidTo, network, reason;
+    private String to, from, network, reason,
+            callUuid, recordingUuid, conversationUuid, conversationUuidFrom, conversationUuidTo;
 
     protected EventWebhook() {}
 
@@ -195,21 +195,21 @@ public class EventWebhook extends JsonableBaseObject {
     /**
      * Unique identifier for the call event.
      *
-     * @return The call ID, or {@code null} not applicable.
+     * @return The call ID as a string, or {@code null} not applicable.
      */
     @JsonProperty("uuid")
     @JsonAlias({"uuid", "call_uuid"})
-    public UUID getCallUuid() {
+    public String getCallUuid() {
         return callUuid;
     }
 
     /**
      * Unique identifier for the recording. This is only present for recording events.
      *
-     * @return The recording ID, or {@code null} if not applicable.
+     * @return The recording ID as a string, or {@code null} if not applicable.
      */
     @JsonProperty("recording_uuid")
-    public UUID getRecordingUuid() {
+    public String getRecordingUuid() {
         return recordingUuid;
     }
 

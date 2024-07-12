@@ -48,7 +48,9 @@ public class EventWebhookTest {
                 speechResultText1 = "sales",
                 speechResultText2 = "customer";
 
-        UUID callUuid = UUID.randomUUID(), recordingUuid = UUID.randomUUID();
+        String callUuid = UUID.randomUUID().toString().replace("-", ""),
+                recordingUuid = UUID.randomUUID().toString().replace("-", "");
+
         boolean dtmfTimedOut = true;
         int duration = 6, size = 12228;
         double rate = 0.00450000,
@@ -131,7 +133,7 @@ public class EventWebhookTest {
         List<SpeechTranscript> speechResults = speech.getResults();
         assertNotNull(speechResults);
         assertEquals(2, speechResults.size());
-        SpeechTranscript speechResult1 = speechResults.get(0);
+        SpeechTranscript speechResult1 = speechResults.getFirst();
         assertNotNull(speechResult1);
         assertEquals(speechResultConfidence1, speechResult1.getConfidence());
         assertEquals(speechResultText1, speechResult1.getText());
@@ -175,7 +177,8 @@ public class EventWebhookTest {
 
     @Test
     public void testCallUuidPrimaryOnly() {
-        UUID callUuid = UUID.randomUUID(), uuid = UUID.randomUUID();
+        String callUuid = UUID.randomUUID().toString().replace("-", ""),
+                uuid = UUID.randomUUID().toString().replace("-", "");
         String json = "{\"call_uuid\":\""+callUuid+"\",\"uuid\":\""+uuid+"\"}";
         EventWebhook event = EventWebhook.fromJson(json);
         TestUtils.testJsonableBaseObject(event);
