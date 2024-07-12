@@ -21,6 +21,11 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ *
+ * @deprecated This class will be made package-private in the next major release.
+ */
+@Deprecated
 public class ConversionRequest implements QueryParamsRequest {
     private final Type type;
     private final String messageId;
@@ -55,10 +60,15 @@ public class ConversionRequest implements QueryParamsRequest {
         LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
         params.put("message-id", messageId);
         params.put("delivered", String.valueOf(delivered));
-        params.put("timestamp", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timestamp));
+        if (timestamp != null) {
+            params.put("timestamp", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timestamp));
+        }
         return params;
     }
 
+    /**
+     * This enum will be moved to its own class in the next major release.
+     */
     public enum Type {
         SMS, VOICE
     }

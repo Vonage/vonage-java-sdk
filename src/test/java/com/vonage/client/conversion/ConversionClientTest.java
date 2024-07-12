@@ -28,10 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ConversionClientTest extends AbstractClientTest<ConversionClient> {
 
@@ -40,21 +37,24 @@ public class ConversionClientTest extends AbstractClientTest<ConversionClient> {
     }
 
     @Test
-    public void testSuccessfulResponse() throws Exception {
+    public void testSuccessWithTimestamp() throws Exception {
         stubResponse(200);
-        client.submitConversion(ConversionRequest.Type.VOICE,
-                             "MESSAGE-ID",
-                             true,
-                             new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
+        client.submitConversion(ConversionRequest.Type.VOICE, UUID.randomUUID().toString(), false,
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12")
+        );
+    }
+
+    @Test
+    public void testSuccessWithoutTimestamp() throws Exception {
+        stubResponse(200);
+        client.submitConversion(ConversionRequest.Type.SMS, "MESSAGE-ID", true, null);
     }
 
     @Test
     public void testWrongCredentials() throws Exception {
         stubResponse(401);
         assertThrows(VonageApiResponseException.class, () -> client.submitConversion(
-                    ConversionRequest.Type.SMS,
-                     "MESSAGE-ID",
-                    true,
+                    ConversionRequest.Type.SMS, "MESSAGE-ID", true,
                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12")
         ));
     }
