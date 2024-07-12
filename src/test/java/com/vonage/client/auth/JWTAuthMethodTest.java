@@ -16,6 +16,7 @@
 package com.vonage.client.auth;
 
 import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.APPLICATION_ID_STR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.*;
@@ -28,18 +29,18 @@ public class JWTAuthMethodTest {
     @BeforeEach
     public void setUp() throws Exception {
         byte[] keyBytes = new TestUtils().loadKey("test/keys/application_key");
-        auth = new JWTAuthMethod("application-id", keyBytes);
+        auth = new JWTAuthMethod(APPLICATION_ID_STR, keyBytes);
     }
 
     @Test
     public void testSavedKeyUsingPath() throws Exception {
-        auth = new JWTAuthMethod("application-id", Files.readAllBytes(Paths.get(
+        auth = new JWTAuthMethod(APPLICATION_ID_STR, Files.readAllBytes(Paths.get(
                 "src/test/resources/com/vonage/client/test/keys/application_key2"
         )));
     }
 
     @Test
-    public void testApply() throws Exception {
+    public void testApply() {
         String header = auth.getHeaderValue();
         assertNotNull(header);
         assertEquals("Bearer ", header.substring(0, 7));

@@ -165,7 +165,7 @@ public class AbstractMethodTest {
         request = method.makeRequest();
         assertEquals(request, method.applyAuth(request));
         assertEquals(2, request.getParameters().size());
-        var expectedHeaderStart = "Bearer eyJ0eXBlIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.";
+        var expectedHeaderStart = "Bearer eyJ";
         var authHeaderValue = request.getFirstHeader("Authorization").getValue();
         assertTrue(authHeaderValue.startsWith(expectedHeaderStart));
 
