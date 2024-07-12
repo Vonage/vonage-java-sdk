@@ -18,6 +18,7 @@ package com.vonage.client.verify2;
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
+import com.vonage.client.TestUtils;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
-	static final UUID REQUEST_ID = UUID.randomUUID();
+	static final UUID REQUEST_ID = UUID.fromString("90596ac8-e1f1-46a9-a80f-ebd55e2296ae");
 	static final String CODE = "1234";
 	static final String VERIFICATION_RESPONSE = "{\"request_id\": \""+REQUEST_ID+"\"}";
 
@@ -192,8 +193,17 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 	}
 
 	@Test
-	public void testVerifyCodeSuccess() throws Exception {
+	public void testVerifyCodeSuccessNoResponse() throws Exception {
 		stubResponseAndRun(204, () -> client.checkVerificationCode(REQUEST_ID, CODE));
+	}
+
+	@Test
+	public void testVerifyCodeSuccess() throws Exception {
+		stubResponse(200, VERIFICATION_RESPONSE.replace("}", ",\"status\":\"completed\"}"));
+		VerifyCodeResponse parsed = client.checkVerificationCode(REQUEST_ID, CODE);
+		TestUtils.testJsonableBaseObject(parsed);
+		assertEquals(REQUEST_ID, parsed.getRequestId());
+		assertEquals(VerificationStatus.COMPLETED, parsed.getStatus());
 	}
 
 	@Test
@@ -212,10 +222,10 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 
 	@Test
 	public void testVerifyCodeEndpoint() throws Exception {
-		new Verify2EndpointTestSpec<VerifyCodeRequestWrapper, Void>() {
+		new Verify2EndpointTestSpec<VerifyCodeRequestWrapper, VerifyCodeResponse>() {
 
 			@Override
-			protected RestEndpoint<VerifyCodeRequestWrapper, Void> endpoint() {
+			protected RestEndpoint<VerifyCodeRequestWrapper, VerifyCodeResponse> endpoint() {
 				return client.verifyRequest;
 			}
 

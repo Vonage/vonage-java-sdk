@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 # [8.9.2] - 2024-07-12
 - Refactoring to accommodate using v2.0.0 of Vonage JWT library
 - Made `timestamp` optional in Conversion API
+- Added response object to `Verify2Client.checkVerificationCode`
 - Fixed `SpeechSettings.Language.NEPALI` (de)serialisation
 - `fromRandomNumber` true if `from` is not specified in `Call.Builder`
 - Fixed `com.vonage.client.voice.EventWebhook` deserialisation issue

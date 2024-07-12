@@ -28,7 +28,7 @@ import java.util.function.Function;
 public class Verify2Client {
 	final boolean hasJwtAuthMethod;
 	final RestEndpoint<VerificationRequest, VerificationResponse> verifyUser;
-	final RestEndpoint<VerifyCodeRequestWrapper, Void> verifyRequest;
+	final RestEndpoint<VerifyCodeRequestWrapper, VerifyCodeResponse> verifyRequest;
 	final RestEndpoint<UUID, Void> cancel, nextWorkflow;
 
 	/**
@@ -115,10 +115,12 @@ public class Verify2Client {
 	 * @param requestId ID of the verify request, obtained from {@link VerificationResponse#getRequestId()}.
 	 * @param code The code supplied by the user.
 	 *
+	 * @return Details of the verification request (if the code matched).
+	 *
 	 * @throws VerifyResponseException If the code was invalid, or any other error.
 	 */
-	public void checkVerificationCode(UUID requestId, String code) {
-		verifyRequest.execute(new VerifyCodeRequestWrapper(
+	public VerifyCodeResponse checkVerificationCode(UUID requestId, String code) {
+		return verifyRequest.execute(new VerifyCodeRequestWrapper(
 				validateRequestId(requestId).toString(),
 				Objects.requireNonNull(code, "Code is required.")
 		));
