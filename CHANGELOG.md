@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.9.2] - 2024-07-12
+- Refactoring to accommodate using v2.0.0 of Vonage JWT library
+- 
+
 # [8.9.1] - 2024-07-09
 - Fixed parsing issue in `ConversationsClient#listEvents`
 - `body` method in `CustomEvent.Builder` is now accessible
@@ -10,7 +14,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 # [8.9.0] - 2024-06-20
 - Added `User-to-User` header in Voice Connect SIP endpoint
 - Added missing custom `headers` field in `com.vonage.client.voice.SipEndpoint`
-- Added CAMARA Number Verification API
+- Added Number Verification API
 - Refactored Network auth
 - Reduced Verify v2 minimum channel timeout
 
@@ -26,7 +30,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   - Improved testing of auth method application
   - Introduced intermediate interfaces
 - Added Vonage Network Auth API (intended for internal use only)
-- Added CAMARA SIM Swap API
+- Added SIM Swap API
 - Migrated to Maven from Gradle
 
 # [8.7.0] - 2024-05-16

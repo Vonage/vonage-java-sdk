@@ -26,7 +26,8 @@ public class JWTAuthMethod extends BearerAuthMethod {
     public JWTAuthMethod(final String applicationId, final byte[] privateKey) {
         jwt = Jwt.builder()
                 .applicationId(this.applicationId = applicationId)
-                .privateKeyContents(this.privateKeyContents = new String(privateKey)).build();
+                .privateKeyContents(this.privateKeyContents = new String(privateKey))
+                .build();
     }
 
     public String generateToken() {
