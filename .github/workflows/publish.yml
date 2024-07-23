@@ -9,7 +9,7 @@ permissions:
   contents: write
   deployments: read
   issues: write
-  discussions: write
+  discussions: none
   packages: write
   pages: write
   pull-requests: write
