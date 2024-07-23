@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.9.3] - 2024-07-23
+- Made `com.vonage.client.conversations.GenericEvent` public
+
 # [8.9.2] - 2024-07-12
 - Refactoring to accommodate using v2.0.0 of Vonage JWT library
 - Made `timestamp` optional in Conversion API
