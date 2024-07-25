@@ -239,7 +239,7 @@ public class ConnectActionTest {
 
     @Test
     public void testRandomFromNumber() {
-        ConnectAction.Builder builder = ConnectAction.builder(VbcEndpoint.builder("789").build());
+        var builder = ConnectAction.builder(VbcEndpoint.builder("789").build());
         ConnectAction connect = builder.randomFromNumber(true).build();
         String expectedJson = "[{\"endpoint\":[{\"extension\":\"789\",\"type\":\"vbc\"}]," +
                 "\"randomFromNumber\":true,\"action\":\"connect\"}]";
@@ -250,5 +250,30 @@ public class ConnectActionTest {
         connect = builder.from(null).build();
         expectedJson = expectedJson.replace("true", "false");
         assertEquals(expectedJson, new Ncco(connect).toJson());
+    }
+
+    @Test
+    public void testEndpointRequired() {
+        assertThrows(IllegalStateException.class, () -> ConnectAction.builder().build());
+    }
+
+    @Test
+    public void testLimitBoundaries() {
+        var builder = ConnectAction.builder(AppEndpoint.builder("Me").build());
+        int max = 7200;
+        assertEquals(max, builder.limit(max).build().getLimit());
+        assertThrows(IllegalArgumentException.class, () -> builder.limit(max + 1).build());
+        assertEquals(1, builder.limit(1).build().getLimit());
+        assertThrows(IllegalArgumentException.class, () -> builder.limit(0).build());
+    }
+
+    @Test
+    public void testTimeOutBoundaries() {
+        var builder = ConnectAction.builder(AppEndpoint.builder("Me").build());
+        int min = 3, max = 7200;
+        assertEquals(max, builder.timeOut(max).build().getTimeOut());
+        assertThrows(IllegalArgumentException.class, () -> builder.timeOut(max + 1).build());
+        assertEquals(min, builder.timeOut(min).build().getTimeOut());
+        assertThrows(IllegalArgumentException.class, () -> builder.timeOut(min - 1).build());
     }
 }

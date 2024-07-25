@@ -43,19 +43,25 @@ public class ConnectAction extends JsonableBaseObject implements Action {
     ConnectAction() {}
 
     private ConnectAction(Builder builder) {
-        endpoint = builder.endpoint;
+        if ((endpoint = builder.endpoint) == null || endpoint.isEmpty()) {
+            throw new IllegalStateException("An endpoint must be specified.");
+        }
+        if ((limit = builder.limit) != null && (limit < 1 || limit > 7200)) {
+            throw new IllegalArgumentException("'limit' must be positive and less than 7200 seconds.");
+        }
+        if ((timeOut = builder.timeOut) != null && (timeOut < 3 || timeOut > 7200)) {
+            throw new IllegalArgumentException("'timeOut' must be between 3 and 7200 seconds.");
+        }
         from = builder.from;
+        if ((randomFromNumber = builder.randomFromNumber) != null && from != null) {
+            throw new IllegalStateException("'randomFromNumber' and 'from' cannot be used together.");
+        }
         eventType = builder.eventType;
-        timeOut = builder.timeOut;
-        limit = builder.limit;
         machineDetection = builder.machineDetection;
         advancedMachineDetection = builder.advancedMachineDetection;
         eventUrl = builder.eventUrl;
         eventMethod = builder.eventMethod;
         ringbackTone = builder.ringbackTone;
-        if ((randomFromNumber = builder.randomFromNumber) != null && from != null) {
-            throw new IllegalStateException("'randomFromNumber' and 'from' cannot be used together.");
-        }
     }
 
     @JsonProperty("action")
@@ -163,7 +169,9 @@ public class ConnectAction extends JsonableBaseObject implements Action {
          * @param endpoint The endpoints to connect to.
          *
          * @return This builder.
+         * @deprecated This will be removed in the next major release.
          */
+        @Deprecated
         public Builder endpoint(Collection<Endpoint> endpoint) {
             this.endpoint = endpoint;
             return this;
@@ -213,8 +221,10 @@ public class ConnectAction extends JsonableBaseObject implements Action {
         }
 
         /**
-         * @param timeOut If the call is unanswered, set the number in seconds before Vonage stops ringing endpoint.
-         *                The default value is 60.
+         * If the call is unanswered, set the number in seconds before Vonage stops ringing endpoint.
+         * The default value is 60, minimum is 3 and maximum is 7200 (2 hours).
+         *
+         * @param timeOut The call timeout in seconds.
          *
          * @return This builder.
          */

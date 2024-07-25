@@ -2,8 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.9.4] - 2024-07-25
+- Fixed UUID validation in `ConversationAction.Builder#canHear` and `canSpeak`
+  - Changed signature of `canHear` and `canSpeak` methods to return Strings instead of UUIDs
+- Validation for `endpoint`, `limit` and `timeOut` in `ConnectAction`
+- Added Builder to `DtmfSettings` with validation
+
 # [8.9.3] - 2024-07-23
 - Made `com.vonage.client.conversations.GenericEvent` public
+- Bumped `commons-codec` and `commons-lang3` versions
 
 # [8.9.2] - 2024-07-12
 - Refactoring to accommodate using v2.0.0 of Vonage JWT library

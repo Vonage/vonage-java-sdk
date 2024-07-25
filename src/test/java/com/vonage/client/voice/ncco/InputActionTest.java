@@ -16,6 +16,7 @@
 package com.vonage.client.voice.ncco;
 
 import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Arrays;
@@ -32,26 +33,20 @@ public class InputActionTest {
 
     @Test
     public void testAllFields() {
-        SpeechSettings speechSettings = new SpeechSettings();
-        speechSettings.setUuid(Collections.singletonList("aaaaaaaa-bbbb-cccc-dddd-0123456789ab"));
-        speechSettings.setStartTimeout(3);
-        speechSettings.setEndOnSilence(5);
-        speechSettings.setLanguage(SpeechSettings.Language.ENGLISH_NIGERIA);
-        speechSettings.setMaxDuration(50);
-        speechSettings.setContext(Arrays.asList("support", "buy", "credit"));
+        var speechSettings = SpeechSettings.builder()
+                .uuid("aaaaaaaa-bbbb-cccc-dddd-0123456789ab")
+                .startTimeout(3).endOnSilence(5).maxDuration(50)
+                .language(SpeechSettings.Language.ENGLISH_NIGERIA)
+                .context(Arrays.asList("support", "buy", "credit")).build();
 
-        DtmfSettings dtmfSettings = new DtmfSettings();
-        dtmfSettings.setMaxDigits(4);
-        dtmfSettings.setSubmitOnHash(true);
-        dtmfSettings.setTimeOut(10);
+        var dtmfSettings = DtmfSettings.builder().maxDigits(4).submitOnHash(true).timeOut(10).build();
 
         InputAction input = InputAction.builder()
                 .type(Arrays.asList("speech", "dtmf"))
                 .dtmf(dtmfSettings)
                 .eventUrl("http://example.com")
                 .eventMethod(EventMethod.POST)
-                .speech(speechSettings)
-                .build();
+                .speech(speechSettings).build();
 
         String expectedJson = "[" +
                 "{\"type\":[\"speech\",\"dtmf\"]," +
@@ -92,12 +87,31 @@ public class InputActionTest {
 
     @Test
     public void testDtmfOnly() {
-        DtmfSettings dtmfSettings = new DtmfSettings();
-        dtmfSettings.setMaxDigits(4);
+        var dtmfSettings = DtmfSettings.builder().maxDigits(4).build();
 
         InputAction input = InputAction.builder().type(Collections.singletonList("dtmf")).dtmf(dtmfSettings).build();
         String expectedJson = "[{\"type\":[\"dtmf\"],\"dtmf\":{\"maxDigits\":4},\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());
+    }
+
+    @Test
+    public void testDtmfSettingsBoundaries() {
+        var blank = DtmfSettings.builder().build();
+        testJsonableBaseObject(blank);
+        assertNull(blank.isSubmitOnHash());
+        assertNull(blank.getMaxDigits());
+        assertNull(blank.getTimeOut());
+
+        int timeOutMin = 0, timeOutMax = 10, maxDigitsMin = 0, maxDigitsMax = 20;
+        assertEquals(timeOutMin, DtmfSettings.builder().timeOut(timeOutMin).build().getTimeOut());
+        assertThrows(IllegalArgumentException.class, () -> DtmfSettings.builder().timeOut(timeOutMin - 1).build());
+        assertEquals(timeOutMax, DtmfSettings.builder().timeOut(timeOutMax).build().getTimeOut());
+        assertThrows(IllegalArgumentException.class, () -> DtmfSettings.builder().timeOut(timeOutMax + 1).build());
+
+        assertEquals(maxDigitsMin, DtmfSettings.builder().maxDigits(maxDigitsMin).build().getMaxDigits());
+        assertThrows(IllegalArgumentException.class, () -> DtmfSettings.builder().maxDigits(maxDigitsMin - 1).build());
+        assertEquals(maxDigitsMax, DtmfSettings.builder().maxDigits(maxDigitsMax).build().getMaxDigits());
+        assertThrows(IllegalArgumentException.class, () -> DtmfSettings.builder().maxDigits(maxDigitsMax + 1).build());
     }
 
     @Test
@@ -109,7 +123,7 @@ public class InputActionTest {
                 .context("hint1", "Hint 2").uuid(uuid)
                 .saveAudio(true).maxDuration(60).build();
 
-        TestUtils.testJsonableBaseObject(speechSettings);
+        testJsonableBaseObject(speechSettings);
         InputAction input = InputAction.builder().type(Collections.singletonList("speech")).speech(speechSettings).build();
         String expectedJson = "[{\"type\":[\"speech\"],\"speech\":{\"uuid\":[\""+uuid+"\"],\"context\":" +
                 "[\"hint1\",\"Hint 2\"],\"endOnSilence\":2.0,\"startTimeout\":10," +
@@ -120,7 +134,7 @@ public class InputActionTest {
 
     @Test
     public void testSpeechSettingsBoundaries() {
-        TestUtils.testJsonableBaseObject(SpeechSettings.builder().build());
+        testJsonableBaseObject(SpeechSettings.builder().build());
 
         assertNotNull(SpeechSettings.builder().maxDuration(1).build());
         assertNotNull(SpeechSettings.builder().maxDuration(60).build());

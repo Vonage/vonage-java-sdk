@@ -18,6 +18,7 @@ package com.vonage.client.voice.ncco;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * An NCCO conversation action which enables the ability to host conference calls.
@@ -28,8 +29,7 @@ public class ConversationAction extends JsonableBaseObject implements Action {
     private String name;
     private Boolean startOnEnter, endOnExit, record, mute;
     private EventMethod eventMethod;
-    private Collection<String> musicOnHoldUrl, eventUrl;
-    private Collection<UUID> canSpeak, canHear;
+    private Collection<String> musicOnHoldUrl, eventUrl, canSpeak, canHear;
     private TranscriptionSettings transcription;
 
     ConversationAction() {}
@@ -96,12 +96,12 @@ public class ConversationAction extends JsonableBaseObject implements Action {
     }
 
     @JsonProperty("canSpeak")
-    public Collection<UUID> getCanSpeak() {
+    public Collection<String> getCanSpeak() {
         return canSpeak;
     }
 
     @JsonProperty("canHear")
-    public Collection<UUID> getCanHear() {
+    public Collection<String> getCanHear() {
         return canHear;
     }
 
@@ -121,12 +121,14 @@ public class ConversationAction extends JsonableBaseObject implements Action {
         return new Builder(name);
     }
 
+    /**
+     * Builder for specifying the properties of a Conversation NCCO.
+     */
     public static class Builder {
         private String name;
         private EventMethod eventMethod;
         private Boolean startOnEnter, endOnExit, record, mute;
-        private Collection<String> musicOnHoldUrl, eventUrl;
-        private Collection<UUID> canSpeak, canHear;
+        private Collection<String> musicOnHoldUrl, eventUrl, canSpeak, canHear;
         private TranscriptionSettings transcription;
 
         Builder(String name) {
@@ -134,7 +136,9 @@ public class ConversationAction extends JsonableBaseObject implements Action {
         }
 
         /**
-         * @param name The name of the Conversation room.
+         * Sets the name of the Conversation room.
+         *
+         * @param name The conversation name.
          *
          * @return This builder.
          */
@@ -150,17 +154,21 @@ public class ConversationAction extends JsonableBaseObject implements Action {
          *                       conversation, set startOnEnter to false for all users other than the moderator.
          *
          * @return This builder.
+         * @deprecated This will be removed in the next major release.
          */
+        @Deprecated
         public Builder musicOnHoldUrl(Collection<String> musicOnHoldUrl) {
             this.musicOnHoldUrl = musicOnHoldUrl;
             return this;
         }
 
         /**
-         * @param musicOnHoldUrl A URL to the mp3 file to stream to participants until the conversation starts.
-         *                       By default, the conversation starts when the first person calls the virtual number
-         *                       associated with your Voice app. To stream this mp3 before the moderator joins the
-         *                       conversation, set startOnEnter to false for all users other than the moderator.
+         * A URL to the mp3 file to stream to participants until the conversation starts.
+         * By default, the conversation starts when the first person calls the virtual number
+         * associated with your Voice app. To stream this mp3 before the moderator joins the
+         * conversation, set startOnEnter to false for all users other than the moderator.
+         *
+         * @param musicOnHoldUrl Absolute URL to the hold music in MP3 format, as a string.
          *
          * @return This builder.
          */
@@ -169,8 +177,10 @@ public class ConversationAction extends JsonableBaseObject implements Action {
         }
 
         /**
-         * @param startOnEnter The default value of true ensures that the conversation starts when this caller joins
-         *                     conversation name. Set to false for attendees in a moderated conversation.
+         * The default value of {@code true} ensures that the conversation starts when this caller joins
+         * the conversation. Set to false for attendees in a moderated conversation.
+         *
+         * @param startOnEnter Whether to start the conversation when joining.
          *
          * @return This builder.
          */
@@ -180,10 +190,11 @@ public class ConversationAction extends JsonableBaseObject implements Action {
         }
 
         /**
-         * @param endOnExit For moderated conversations, set to true in the moderator NCCO so the conversation is
-         *                  ended when the moderator hangs up. The default value of false means the conversation
-         *                  is not terminated when a caller hangs up; the conversation ends when the last caller
-         *                  hangs up.
+         * For moderated conversations, set to {@code true} in the moderator NCCO so the conversation is ended
+         * when the moderator hangs up. The default value of false means the conversation is not terminated
+         * when a caller hangs up; the conversation ends when the last caller hangs up.
+         *
+         * @param endOnExit Whether to end the conversation when the moderator hangs up.
          *
          * @return This builder.
          */
@@ -193,13 +204,17 @@ public class ConversationAction extends JsonableBaseObject implements Action {
         }
 
         /**
-         * @param record Set to true to record this conversation. For standard conversations, recordings start when one
-         *               or more attendees connects to the conversation. For moderated conversations, recordings start
-         *               when the moderator joins. That is, when an NCCO is executed for the named conversation where
-         *               startOnEnter is set to true. When the recording is terminated, the URL you download the
-         *               recording from is sent to the event URL.
-         *               <p>
-         *               By default, audio is recorded in MP3 format. See the <a href="https://developer.nexmo.com/voice/voice-api/guides/recordingfile-formats">recording guide</a> for more details
+         * Set to {@code true} to record this conversation. For standard conversations, recordings start
+         * when one or more attendees connects to the conversation. For moderated conversations, recordings
+         * start when the moderator joins. That is, when an NCCO is executed for the named conversation where
+         * startOnEnter is set to true. When the recording is terminated, the URL you download the recording
+         * from is sent to the event URL.
+         * <p>
+         * By default, audio is recorded in MP3 format. See the
+         * <a href="https://developer.nexmo.com/voice/voice-api/guides/recordingfile-formats">recording guide</a>
+         * for more details.
+         *
+         * @param record Whether to enable recording.
          *
          * @return This builder.
          */
@@ -213,15 +228,19 @@ public class ConversationAction extends JsonableBaseObject implements Action {
          *                 <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flowcall-states">Call States</a>.
          *
          * @return This builder.
+         * @deprecated This will be removed in the next major release.
          */
+        @Deprecated
         public Builder eventUrl(Collection<String> eventUrl) {
             this.eventUrl = eventUrl;
             return this;
         }
 
         /**
-         * @param eventUrl Set the URL to the webhook endpoint Vonage calls asynchronously on each of the
-         *                 <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flowcall-states">Call States</a>.
+         * Set the URL to the webhook endpoint Vonage calls asynchronously on each of the
+         * <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flowcall-states">Call States</a>.
+         *
+         * @param eventUrl The event URL as a string.
          *
          * @return This builder.
          */
@@ -230,7 +249,9 @@ public class ConversationAction extends JsonableBaseObject implements Action {
         }
 
         /**
-         * @param eventMethod Set the HTTP method used to make the request to eventUrl. The default value is POST.
+         * Set the HTTP method used to make the request to eventUrl. The default value is POST.
+         *
+         * @param eventMethod The event method as an enum.
          *
          * @return This builder.
          */
@@ -264,11 +285,11 @@ public class ConversationAction extends JsonableBaseObject implements Action {
          * @since 8.2.0
          * @see #canSpeak(Collection)
          */
-        public Builder addCanSpeak(String uuid) {
+        public Builder addCanSpeak(String... uuid) {
             if (canSpeak == null) {
                 canSpeak = new LinkedHashSet<>();
             }
-            canSpeak.add(UUID.fromString(uuid));
+            canSpeak.addAll(Arrays.asList(uuid));
             return this;
         }
 
@@ -280,13 +301,12 @@ public class ConversationAction extends JsonableBaseObject implements Action {
          *
          * @return This builder.
          * @since 8.2.0
-         * @see #canHear(Collection)
          */
-        public Builder addCanHear(String uuid) {
+        public Builder addCanHear(String... uuid) {
             if (canHear == null) {
-                canHear = new LinkedHashSet<>();
+                canHear = new LinkedHashSet<>(uuid.length);
             }
-            canHear.add(UUID.fromString(uuid));
+            canHear.addAll(Arrays.asList(uuid));
             return this;
         }
 
@@ -299,15 +319,10 @@ public class ConversationAction extends JsonableBaseObject implements Action {
          *
          * @return This builder.
          * @since 8.2.0
-         * @see #addCanSpeak(String)
+         * @see #addCanSpeak(String...)
          */
-        public Builder canSpeak(Collection<UUID> canSpeak) {
-            if (canSpeak == null) {
-                this.canSpeak = null;
-            }
-            else {
-                this.canSpeak = new LinkedHashSet<>(canSpeak);
-            }
+        public Builder canSpeak(Collection<String> canSpeak) {
+            this.canSpeak = canSpeak;
             return this;
         }
 
@@ -320,15 +335,10 @@ public class ConversationAction extends JsonableBaseObject implements Action {
          *
          * @return This builder.
          * @since 8.2.0
-         * @see #addCanHear(String)
+         * @see #addCanHear(String...)
          */
-        public Builder canHear(Collection<UUID> canHear) {
-            if (canHear == null) {
-                this.canHear = null;
-            }
-            else {
-                this.canHear = new LinkedHashSet<>(canHear);
-            }
+        public Builder canHear(Collection<String> canHear) {
+            this.canHear = canHear;
             return this;
         }
 
@@ -353,10 +363,10 @@ public class ConversationAction extends JsonableBaseObject implements Action {
          */
         public ConversationAction build() {
             if (canSpeak != null) {
-                canSpeak = new ArrayList<>(canSpeak);
+                canSpeak = canSpeak.stream().distinct().collect(Collectors.toList());
             }
             if (canHear != null) {
-                canHear = new ArrayList<>(canHear);
+                canHear = canHear.stream().distinct().collect(Collectors.toList());
             }
             return new ConversationAction(this);
         }
