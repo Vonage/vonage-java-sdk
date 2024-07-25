@@ -61,6 +61,9 @@ public class VbcEndpoint extends JsonableBaseObject implements Endpoint {
         return new Builder(extension);
     }
 
+    /**
+     * Builder for specifying properties of a VBC endpoint.
+     */
     public static class Builder {
         private String extension;
 

@@ -68,6 +68,7 @@ public class AppEndpoint extends JsonableBaseObject implements Endpoint {
             this.user = user;
         }
 
+        @Deprecated
         public Builder user(String user) {
             this.user = user;
             return this;

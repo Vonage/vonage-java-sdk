@@ -16,7 +16,7 @@
 package com.vonage.client.voice.ncco;
 
 /**
- * The type of request to use when connecting to an event url.
+ * The type of request to use when connecting to an event URL.
  */
 public enum EventMethod {
     POST, GET

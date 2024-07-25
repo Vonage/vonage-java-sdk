@@ -73,8 +73,7 @@ public class NccoTest {
     @Test
     public void testSerializeMultipleActions() {
         TalkAction talk = TalkAction.builder("Test message").language(TextToSpeechLanguage.BASQUE).build();
-        DtmfSettings dtmfSettings = new DtmfSettings();
-        dtmfSettings.setMaxDigits(5);
+        var dtmfSettings = DtmfSettings.builder().maxDigits(5).build();
         InputAction input = InputAction.builder().dtmf(dtmfSettings).type(Collections.singletonList("dtmf")).build();
         RecordAction record = RecordAction.builder().beepStart(true).build();
         ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build()).build();

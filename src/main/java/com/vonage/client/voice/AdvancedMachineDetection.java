@@ -124,6 +124,9 @@ public class AdvancedMachineDetection extends JsonableBaseObject {
 		return new Builder();
 	}
 
+	/**
+	 * Builder for specifying the Advanced Machine Detection properties.
+	 */
 	public static class Builder {
 		private MachineDetection behavior;
 		private Mode mode;

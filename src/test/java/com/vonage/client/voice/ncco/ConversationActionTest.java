@@ -113,17 +113,17 @@ public class ConversationActionTest {
 
     @Test
     public void testCanSpeak() {
-        String uuid1 = UUID.randomUUID().toString(), uuid2 = UUID.randomUUID().toString();
+        String uuid1 = UUID.randomUUID().toString().replace("-", ""), uuid2 = UUID.randomUUID().toString();
 
         ConversationAction.Builder builder = newBuilder().addCanSpeak(uuid1).addCanSpeak(uuid2);
 
         ConversationAction conversation = builder.build();
-        Collection<UUID> canSpeak = conversation.getCanSpeak();
+        var canSpeak = conversation.getCanSpeak();
         assertNotNull(canSpeak);
         assertEquals(2, canSpeak.size());
-        Iterator<UUID> iter = canSpeak.iterator();
-        assertEquals(uuid1, iter.next().toString());
-        assertEquals(uuid2, iter.next().toString());
+        Iterator<String> iter = canSpeak.iterator();
+        assertEquals(uuid1, iter.next());
+        assertEquals(uuid2, iter.next());
         assertTrue(conversation.toJson().contains("\"canSpeak\":[\""+uuid1+"\",\""+uuid2+"\"]"));
 
         conversation = builder.canSpeak(Collections.emptyList()).build();
@@ -150,17 +150,17 @@ public class ConversationActionTest {
 
     @Test
     public void testCanHear() {
-        String uuid1 = UUID.randomUUID().toString(), uuid2 = UUID.randomUUID().toString();
+        String uuid1 = UUID.randomUUID().toString(), uuid2 = UUID.randomUUID().toString().replace("-", "");
 
         ConversationAction.Builder builder = newBuilder().addCanHear(uuid1).addCanHear(uuid2);
 
         ConversationAction conversation = builder.build();
-        Collection<UUID> canHear = conversation.getCanHear();
+        var canHear = conversation.getCanHear();
         assertNotNull(canHear);
         assertEquals(2, canHear.size());
-        Iterator<UUID> iter = canHear.iterator();
-        assertEquals(uuid1, iter.next().toString());
-        assertEquals(uuid2, iter.next().toString());
+        Iterator<String> iter = canHear.iterator();
+        assertEquals(uuid1, iter.next());
+        assertEquals(uuid2, iter.next());
         assertTrue(conversation.toJson().contains("\"canHear\":[\""+uuid1+"\",\""+uuid2+"\"]"));
 
         conversation = builder.canHear(Collections.emptyList()).build();

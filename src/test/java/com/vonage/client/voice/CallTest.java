@@ -137,7 +137,7 @@ public class CallTest {
                 "      {\n" +
                 "         \"action\":\"input\",\n" +
                 "         \"dtmf\":{\n" +
-                "            \"timeOut\":30,\n" +
+                "            \"timeOut\":8,\n" +
                 "            \"maxDigits\":12,\n" +
                 "            \"submitOnHash\":false\n" +
                 "         }\n" +
@@ -201,7 +201,7 @@ public class CallTest {
 
         InputAction input = (InputAction) actionsIter.next();
         DtmfSettings dtmf = input.getDtmf();
-        assertEquals(Integer.valueOf(30), dtmf.getTimeOut());
+        assertEquals(Integer.valueOf(8), dtmf.getTimeOut());
         assertEquals(Integer.valueOf(12), dtmf.getMaxDigits());
         assertFalse(dtmf.isSubmitOnHash());
 
@@ -308,7 +308,7 @@ public class CallTest {
                 .ncco(
                     TalkAction.builder("Hello").build(),
                     RecordAction.builder().build(),
-                    ConnectAction.builder().build()
+                    ConnectAction.builder(com.vonage.client.voice.ncco.VbcEndpoint.builder("123").build()).build()
                 )
                 .answerMethod(HttpMethod.POST).eventMethod(HttpMethod.POST)
                 .eventUrl("https://example.com/voice/event")
