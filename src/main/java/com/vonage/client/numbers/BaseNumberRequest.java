@@ -16,15 +16,18 @@
 package com.vonage.client.numbers;
 
 import com.vonage.client.QueryParamsRequest;
+import com.vonage.client.common.E164;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-class BaseNumberRequest implements QueryParamsRequest {
+abstract class BaseNumberRequest implements QueryParamsRequest {
     private final String country, msisdn;
 
-    public BaseNumberRequest(String country, String msisdn) {
-        this.country = country;
-        this.msisdn = msisdn;
+    protected BaseNumberRequest(String country, String msisdn) {
+        if ((this.country = country) == null || country.length() != 2) {
+            throw new IllegalArgumentException("Country code is required in ISO 3166-1 alpha-2 format.");
+        }
+        this.msisdn = new E164(msisdn).toString();
     }
 
     public String getCountry() {

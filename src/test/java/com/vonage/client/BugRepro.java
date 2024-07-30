@@ -21,6 +21,8 @@
  */
 package com.vonage.client;
 
+import com.vonage.client.numbers.UpdateNumberRequest;
+
 /**
  * Convenience class for debugging / live testing.
  */

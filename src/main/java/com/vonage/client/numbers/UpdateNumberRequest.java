@@ -101,7 +101,13 @@ public class UpdateNumberRequest extends BaseNumberRequest {
     public enum CallbackType {
         SIP, TEL, VXML, APP;
 
+        @Deprecated
         public String paramValue() {
+            return toString();
+        }
+
+        @Override
+        public String toString() {
             return name().toLowerCase();
         }
     }

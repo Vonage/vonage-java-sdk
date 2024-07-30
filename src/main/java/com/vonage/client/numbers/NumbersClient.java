@@ -26,8 +26,7 @@ import com.vonage.client.common.HttpMethod;
 public class NumbersClient {
     final RestEndpoint<ListNumbersFilter, ListNumbersResponse> listNumbers;
     final RestEndpoint<SearchNumbersFilter, SearchNumbersResponse> searchNumbers;
-    final RestEndpoint<CancelNumberRequest, Void> cancelNumber;
-    final RestEndpoint<BuyNumberRequest, Void> buyNumber;
+    final RestEndpoint<BuyCancelNumberRequest, Void> buyNumber, cancelNumber;
     final RestEndpoint<UpdateNumberRequest, Void> updateNumber;
 
     public NumbersClient(HttpWrapper wrapper) {
@@ -105,27 +104,63 @@ public class NumbersClient {
     /**
      * Start renting a Vonage Virtual Number.
      *
-     * @param country A String containing a 2-character ISO country code.
-     * @param msisdn  The phone number to be bought.
+     * @param country The two character country code in ISO 3166-1 alpha-2 format.
+     * @param msisdn  The phone number to be bought in E.164 format.
      *
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @throws VonageClientException        if an error is returned by the server.
      */
-    public void buyNumber(String country, String msisdn) throws VonageResponseParseException, VonageClientException {
-        buyNumber.execute(new BuyNumberRequest(country, msisdn));
+    public void buyNumber(String country, String msisdn) {
+        buyNumber(country, msisdn, null);
+    }
+
+    /**
+     * Start renting a Vonage Virtual Number.
+     *
+     * @param country      The two character country code in ISO 3166-1 alpha-2 format.
+     * @param msisdn       The phone number to be bought in E.164 format.
+     * @param targetApiKey If you’d like to perform an action on a subaccount, provide the API key of that
+     *                     account here. If you’d like to perform an action on your own account,
+     *                     you do not need to provide this field.
+     *
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if an error is returned by the server.
+     * @see #buyNumber(String, String)
+     * @since 8.10.0
+     */
+    public void buyNumber(String country, String msisdn, String targetApiKey) {
+        buyNumber.execute(new BuyCancelNumberRequest(country, msisdn, targetApiKey));
     }
 
     /**
      * Stop renting a Vonage Virtual Number.
      *
-     * @param country A String containing a 2-character ISO country code.
-     * @param msisdn  The phone number to be cancelled.
+     * @param country The two character country code in ISO 3166-1 alpha-2 format.
+     * @param msisdn  The phone number to be cancelled in E.164 format.
      *
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @throws VonageClientException        if an error is returned by the server.
      */
-    public void cancelNumber(String country, String msisdn) throws VonageResponseParseException, VonageClientException {
-        cancelNumber.execute(new CancelNumberRequest(country, msisdn));
+    public void cancelNumber(String country, String msisdn) {
+        cancelNumber(country, msisdn, null);
+    }
+
+    /**
+     * Stop renting a Vonage Virtual Number.
+     *
+     * @param country      The two character country code in ISO 3166-1 alpha-2 format.
+     * @param msisdn       The phone number to be cancelled in E.164 format.
+     * @param targetApiKey If you’d like to perform an action on a subaccount, provide the API key of that
+     *                     account here. If you’d like to perform an action on your own account,
+     *                     you do not need to provide this field.
+     *
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if an error is returned by the server.
+     * @see #cancelNumber(String, String)
+     * @since 8.10.0
+     */
+    public void cancelNumber(String country, String msisdn, String targetApiKey) {
+        cancelNumber.execute(new BuyCancelNumberRequest(country, msisdn, targetApiKey));
     }
 
     /**

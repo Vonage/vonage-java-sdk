@@ -15,9 +15,26 @@
  */
 package com.vonage.client.numbers;
 
-class BuyNumberRequest extends BaseNumberRequest {
+import java.util.Map;
 
-    public BuyNumberRequest(String country, String msisdn) {
+class BuyCancelNumberRequest extends BaseNumberRequest {
+    private final String targetApiKey;
+
+    BuyCancelNumberRequest(String country, String msisdn, String targetApiKey) {
         super(country, msisdn);
+        this.targetApiKey = targetApiKey;
+    }
+
+    public String getTargetApiKey() {
+        return targetApiKey;
+    }
+
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = super.makeParams();
+        if (targetApiKey != null) {
+            params.put("target_api_key", targetApiKey);
+        }
+        return params;
     }
 }

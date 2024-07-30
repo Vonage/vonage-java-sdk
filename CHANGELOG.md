@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.10.0] - 2024-08-??
+- Added `targetApiKey` for buy & cancel number endpoints
+- 
+
 # [8.9.4] - 2024-07-25
 - Fixed UUID validation in `ConversationAction.Builder#canHear` and `canSpeak`
   - Changed signature of `canHear` and `canSpeak` methods to return Strings instead of UUIDs

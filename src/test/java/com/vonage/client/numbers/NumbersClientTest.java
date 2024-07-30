@@ -31,15 +31,25 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
         client = new NumbersClient(wrapper);
     }
 
-    void assert401ResponseException(Executable invocation) throws Exception {
-        String response = "{\n" +
-                "   \"error-code\": \"401\",\n" +
-                "   \"error-code-label\": \"authentication failed\"\n" +
-                "}";
+    private void assert401ResponseException(Executable invocation) throws Exception {
+        String response = """
+                {
+                   "error-code": "401",
+                   "error-code-label": "authentication failed"
+                }""";
         NumbersResponseException ex = assertApiResponseException(
                 401, response, NumbersResponseException.class, invocation
         );
         assertEquals("authentication failed", ex.getErrorCodeLabel());
+    }
+
+    private void stubBaseSuccessResponse() throws Exception {
+        stubResponse(200, """
+            {
+              "error-code":"200",
+              "error-code-label":"success"
+            }"""
+        );
     }
 
     @Test
@@ -121,30 +131,21 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
     @Test
     public void testCancelNumber() throws Exception {
-        stubResponse(200, "{\n" +
-                "  \"error-code\":\"200\",\n" +
-                "  \"error-code-label\":\"success\"\n" +
-                "}");
+        stubBaseSuccessResponse();
         client.cancelNumber("AA", "447700900000");
         assert401ResponseException(() -> client.cancelNumber("UK", "447700900000"));
     }
 
     @Test
     public void testBuyNumber() throws Exception {
-        stubResponse(200, "{\n" +
-                "  \"error-code\":\"200\",\n" +
-                "  \"error-code-label\":\"success\"\n" +
-                "}");
+        stubBaseSuccessResponse();
         client.buyNumber("AA", "447700900000");
         assert401ResponseException(() -> client.buyNumber("UK", "447700900000"));
     }
 
     @Test
     public void testUpdateNumber() throws Exception {
-        stubResponse(200, "{\n" +
-                "  \"error-code\":\"200\",\n" +
-                "  \"error-code-label\":\"success\"\n" +
-                "}");
+        stubBaseSuccessResponse();
         UpdateNumberRequest request = new UpdateNumberRequest("447700900328", "UK");
         client.updateNumber(request);
         assert401ResponseException(() -> client.updateNumber(request));
@@ -152,10 +153,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
     @Test
     public void testLinkNumber() throws Exception {
-        stubResponse(200, "{\n" +
-                "  \"error-code\":\"200\",\n" +
-                "  \"error-code-label\":\"success\"\n" +
-                "}");
+        stubBaseSuccessResponse();
         client.linkNumber("447700900328", "UK", "my-app-id");
     }
 
@@ -254,40 +252,16 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
     @Test
     public void testBuyNumberEndpoint() throws Exception {
-        new NumbersEndpointTestSpec<BuyNumberRequest, Void>() {
+        new BuyCancelNumberRequestEndpointTestSpec() {
 
             @Override
-            protected String expectedContentTypeHeader(BuyNumberRequest request) {
-                return "application/x-www-form-urlencoded";
+            String endpointName() {
+                return "buy";
             }
 
             @Override
-            protected RestEndpoint<BuyNumberRequest, Void> endpoint() {
+            protected RestEndpoint<BuyCancelNumberRequest, Void> endpoint() {
                 return client.buyNumber;
-            }
-
-            @Override
-            protected HttpMethod expectedHttpMethod() {
-                return HttpMethod.POST;
-            }
-
-            @Override
-            protected String expectedEndpointUri(BuyNumberRequest request) {
-                return "/number/buy";
-            }
-
-            @Override
-            protected BuyNumberRequest sampleRequest() {
-                return new BuyNumberRequest("DE", "4930901820");
-            }
-
-            @Override
-            protected Map<String, String> sampleQueryParams() {
-                BuyNumberRequest request = sampleRequest();
-                Map<String, String> params = new LinkedHashMap<>(4);
-                params.put("country", request.getCountry());
-                params.put("msisdn", request.getMsisdn());
-                return params;
             }
         }
         .runTests();
@@ -295,39 +269,16 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
     @Test
     public void testCancelNumberEndpoint() throws Exception {
-        new NumbersEndpointTestSpec<CancelNumberRequest, Void>() {
+        new BuyCancelNumberRequestEndpointTestSpec() {
 
             @Override
-            protected String expectedContentTypeHeader(CancelNumberRequest request) {
-                return "application/x-www-form-urlencoded";
+            String endpointName() {
+                return "cancel";
             }
 
             @Override
-            protected RestEndpoint<CancelNumberRequest, Void> endpoint() {
+            protected RestEndpoint<BuyCancelNumberRequest, Void> endpoint() {
                 return client.cancelNumber;
-            }
-
-            @Override
-            protected HttpMethod expectedHttpMethod() {
-                return HttpMethod.POST;
-            }
-
-            @Override
-            protected String expectedEndpointUri(CancelNumberRequest request) {
-                return "/number/cancel";
-            }
-
-            @Override
-            protected CancelNumberRequest sampleRequest() {
-                return new CancelNumberRequest("DE", "4930901820");
-            }
-
-            @Override
-            protected Map<String, String> sampleQueryParams() {
-                Map<String, String> params = new LinkedHashMap<>(4);
-                params.put("country", "DE");
-                params.put("msisdn", "4930901820");
-                return params;
             }
         }
         .runTests();
@@ -335,26 +286,16 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
     @Test
     public void testUpdateNumberEndpoint() throws Exception {
-        new NumbersEndpointTestSpec<UpdateNumberRequest, Void>() {
+        new BaseNumberRequestEndpointTestSpec<UpdateNumberRequest>() {
 
             @Override
-            protected String expectedContentTypeHeader(UpdateNumberRequest request) {
-                return "application/x-www-form-urlencoded";
+            String endpointName() {
+                return "update";
             }
 
             @Override
             protected RestEndpoint<UpdateNumberRequest, Void> endpoint() {
                 return client.updateNumber;
-            }
-
-            @Override
-            protected HttpMethod expectedHttpMethod() {
-                return HttpMethod.POST;
-            }
-
-            @Override
-            protected String expectedEndpointUri(UpdateNumberRequest request) {
-                return "/number/update";
             }
 
             @Override
@@ -370,19 +311,15 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
             }
 
             @Override
-            protected Map<String, String> sampleQueryParams() {
-                UpdateNumberRequest request = sampleRequest();
-                Map<String, String> params = new LinkedHashMap<>();
-                params.put("country", request.getCountry());
-                params.put("msisdn", request.getMsisdn());
+            protected void populateSampleQueryParams(UpdateNumberRequest request) {
+                super.populateSampleQueryParams(request);
                 params.put("moHttpUrl", request.getMoHttpUrl());
                 params.put("moSmppSysType", request.getMoSmppSysType());
                 params.put("voiceCallbackValue", request.getVoiceCallbackValue());
-                params.put("voiceCallbackType", request.getVoiceCallbackType().paramValue());
+                params.put("voiceCallbackType", request.getVoiceCallbackType().toString());
                 params.put("voiceStatusCallback", request.getVoiceStatusCallback());
                 params.put("messagesCallbackValue", request.getMessagesCallbackValue());
                 params.put("messagesCallbackType", "app");
-                return params;
             }
         }
         .runTests();
