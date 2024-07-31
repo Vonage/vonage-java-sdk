@@ -15,6 +15,7 @@
  */
 package com.vonage.client.numbers;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.net.URI;
 import java.util.*;
 
@@ -64,7 +65,7 @@ public class UpdateNumberRequest extends BaseNumberRequest {
      * @return The inbound message webhook URL as a string, or {@code null} if unspecified.
      */
     public String getMoHttpUrl() {
-        return moHttpUrl.toString();
+        return moHttpUrl != null ? moHttpUrl.toString() : null;
     }
 
     /**
@@ -101,7 +102,7 @@ public class UpdateNumberRequest extends BaseNumberRequest {
      * @return The voice status callback URL as a string, or {@code null} if unspecified.
      */
     public String getVoiceStatusCallback() {
-        return voiceStatusCallback.toString();
+        return voiceStatusCallback != null ? voiceStatusCallback.toString() : null;
     }
 
     @Deprecated
@@ -181,6 +182,7 @@ public class UpdateNumberRequest extends BaseNumberRequest {
         @Deprecated
         APP;
 
+
         /**
          * Serialized enum.
          *
@@ -195,6 +197,20 @@ public class UpdateNumberRequest extends BaseNumberRequest {
         @Override
         public String toString() {
             return name().toLowerCase();
+        }
+
+        /**
+         * Creates the enum from its string representation.
+         *
+         * @param type The serialized callback type as a string.
+         *
+         * @return Enum representation of the callback type, or {@code null} if {@code type} is null.
+         * @since 8.10.0
+         */
+        @JsonCreator
+        public static CallbackType fromString(String type) {
+            if (type == null) return null;
+            return valueOf(type.toUpperCase());
         }
     }
 

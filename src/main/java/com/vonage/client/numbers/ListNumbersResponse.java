@@ -21,7 +21,11 @@ import com.vonage.client.JsonableBaseObject;
 
 /**
  * Response from a request to list the numbers currently being rented buy an account.
+ *
+ * @deprecated This will be made package-private in a future release and the return type of
+ * {@link NumbersClient#listNumbers(ListNumbersFilter)} will be replaced by {@code List<OwnedNumber>}.
  */
+@Deprecated
 public class ListNumbersResponse extends JsonableBaseObject {
     private int count;
     private OwnedNumber[] numbers;

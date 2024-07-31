@@ -25,6 +25,12 @@ class BuyCancelNumberRequest extends BaseNumberRequest {
         this.targetApiKey = targetApiKey;
     }
 
+    /**
+     * The subaccount API key to perform this action on.
+     *
+     * @return The account API key for this request, or {@code null} if unspecified / the main account.
+     * @since 8.10.0
+     */
     public String getTargetApiKey() {
         return targetApiKey;
     }

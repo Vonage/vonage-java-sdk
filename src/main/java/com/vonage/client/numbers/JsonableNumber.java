@@ -15,19 +15,42 @@
  */
 package com.vonage.client.numbers;
 
-public class AvailableNumber extends JsonableNumber {
-    private Double cost;
+import com.vonage.client.JsonableBaseObject;
+
+/**
+ * Base class for shared fields of {@link OwnedNumber} and {@link AvailableNumber}.
+ *
+ * @since 8.10.0
+ */
+class JsonableNumber extends JsonableBaseObject {
+    private String country, msisdn;
+    private Type type;
+    private Feature[] features;
+    
+    /**
+     * Two character country code in ISO 3166-1 alpha-2 format.
+     *
+     * @return The number's country code.
+     */
+    public String getCountry() {
+        return country;
+    }
 
     /**
-     * Constructor.
+     * Phone number in E.164 format.
      *
-     * @deprecated This will be made package-private in a future release.
+     * @return The MSISDN as a string.
      */
-    @Deprecated
-    public AvailableNumber() {}
+    public String getMsisdn() {
+        return msisdn;
+    }
 
-    public String getCost() {
-        return cost != null ? cost.toString() : null;
+    public String getType() {
+        return type != null ? type.toString() : null;
+    }
+
+    public String[] getFeatures() {
+        return Feature.getToString(features);
     }
 
     @Deprecated
@@ -41,13 +64,8 @@ public class AvailableNumber extends JsonableNumber {
     }
 
     @Deprecated
-    public void setCost(String cost) {
-        this.cost = cost;
-    }
-
-    @Deprecated
     public void setType(String type) {
-        this.type = type;
+        this.type = Type.fromString(type);
     }
 
     @Deprecated

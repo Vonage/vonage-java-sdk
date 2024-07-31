@@ -23,6 +23,7 @@ public class ListNumbersFilter implements QueryParamsRequest {
     private Integer index, size;
     private String pattern;
     private SearchPattern searchPattern;
+    private Type type;
 
     public ListNumbersFilter() {
         this(null, null, null, null);
@@ -43,28 +44,28 @@ public class ListNumbersFilter implements QueryParamsRequest {
         return index;
     }
 
-    public void setIndex(Integer index) {
-        this.index = index;
-    }
-
     public Integer getSize() {
         return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
     }
 
     public String getPattern() {
         return pattern;
     }
 
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
-    }
-
     public SearchPattern getSearchPattern() {
         return searchPattern;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
     }
 
     public void setSearchPattern(SearchPattern searchPattern) {
@@ -87,5 +88,9 @@ public class ListNumbersFilter implements QueryParamsRequest {
             params.put("search_pattern", Integer.toString(searchPattern.getValue()));
         }
         return params;
+    }
+
+    public static class Builder {
+
     }
 }
