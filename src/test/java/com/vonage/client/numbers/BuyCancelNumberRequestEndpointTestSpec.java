@@ -15,6 +15,8 @@
  */
 package com.vonage.client.numbers;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 abstract class BuyCancelNumberRequestEndpointTestSpec extends BaseNumberRequestEndpointTestSpec<BuyCancelNumberRequest> {
     final String targetApiKey = "1a2345b7";
 
@@ -26,12 +28,28 @@ abstract class BuyCancelNumberRequestEndpointTestSpec extends BaseNumberRequestE
     @Override
     public void runTests() throws Exception {
         super.runTests();
+        testGetters();
+        testValidation();
         testWithTargetApiKey();
+    }
+
+    private void testGetters() {
+        var sample = sampleRequest();
+        assertNull(sample.getTargetApiKey());
+        assertEquals(msisdn, sample.getMsisdn());
+        assertEquals(country, sample.getCountry());
+    }
+
+    private void testValidation() {
+        assertThrows(IllegalArgumentException.class, () -> new BuyCancelNumberRequest("GBR", msisdn, targetApiKey));
+        assertThrows(IllegalArgumentException.class, () -> new BuyCancelNumberRequest(null, msisdn, targetApiKey));
+        assertThrows(NullPointerException.class, () -> new BuyCancelNumberRequest(country, null, targetApiKey));
+        assertThrows(IllegalArgumentException.class, () -> new BuyCancelNumberRequest(country, targetApiKey, null));
     }
 
     private void testWithTargetApiKey() throws Exception {
         var request = new BuyCancelNumberRequest(country, msisdn, targetApiKey);
-        params.put("target_api_key", request.getTargetApiKey());
+        params.put("target_api_key", targetApiKey);
         assertRequestUriAndBody(request, params);
     }
 }

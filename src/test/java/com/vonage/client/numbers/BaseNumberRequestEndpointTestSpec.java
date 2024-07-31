@@ -47,7 +47,7 @@ abstract class BaseNumberRequestEndpointTestSpec<T extends BaseNumberRequest> ex
     abstract String endpointName();
 
     void populateSampleQueryParams(T request) {
-        params.put("msisdn", request.getMsisdn());
-        params.put("country", request.getCountry());
+        params.put("msisdn", msisdn);
+        params.put("country", country);
     }
 }

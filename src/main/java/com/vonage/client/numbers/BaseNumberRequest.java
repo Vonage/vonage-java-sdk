@@ -30,10 +30,20 @@ abstract class BaseNumberRequest implements QueryParamsRequest {
         this.msisdn = new E164(msisdn).toString();
     }
 
+    /**
+     * Two character country code in ISO 3166-1 alpha-2 format.
+     *
+     * @return The number's country code.
+     */
     public String getCountry() {
         return country;
     }
 
+    /**
+     * Phone number in E.164 format.
+     *
+     * @return The MSISDN as a string.
+     */
     public String getMsisdn() {
         return msisdn;
     }

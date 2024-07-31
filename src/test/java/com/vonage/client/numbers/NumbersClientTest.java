@@ -243,7 +243,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                 params.put("search_pattern", String.valueOf(filter.getSearchPattern().getValue()));
                 params.put("index", String.valueOf(filter.getIndex()));
                 params.put("size", String.valueOf(filter.getSize()));
-                params.put("type", filter.getType().getType());
+                params.put("type", filter.getType().name().toLowerCase().replace('_', '-'));
                 return params;
             }
         }
@@ -300,26 +300,47 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
             @Override
             protected UpdateNumberRequest sampleRequest() {
-                UpdateNumberRequest request = new UpdateNumberRequest("447700900013", "UK");
-                request.setMoHttpUrl("https://api.example.com/mo");
-                request.setMoSmppSysType("inbound");
-                request.setVoiceCallbackValue("1234-5678-9123-4567");
-                request.setVoiceCallbackType(UpdateNumberRequest.CallbackType.APP);
-                request.setVoiceStatusCallback("https://api.example.com/callback");
-                request.setMessagesCallbackValue("MESSAGES-APPLICATION-ID");
-                return request;
+                return UpdateNumberRequest.builder("447700900013", "UK")
+                        .applicationId(TestUtils.APPLICATION_ID_STR)
+                        .voiceStatusCallback("https://api.example.com/callback")
+                        .voiceCallback(UpdateNumberRequest.CallbackType.TEL, "1234-5678-9123-4567")
+                        .moHttpUrl("https://api.example.com/mo").moSmppSysType("inbound").build();
             }
 
             @Override
             protected void populateSampleQueryParams(UpdateNumberRequest request) {
                 super.populateSampleQueryParams(request);
+                params.put("country", request.getCountry());
+                params.put("msisdn", request.getMsisdn());
+                params.put("app_id", request.getApplicationId().toString());
                 params.put("moHttpUrl", request.getMoHttpUrl());
                 params.put("moSmppSysType", request.getMoSmppSysType());
                 params.put("voiceCallbackValue", request.getVoiceCallbackValue());
                 params.put("voiceCallbackType", request.getVoiceCallbackType().toString());
                 params.put("voiceStatusCallback", request.getVoiceStatusCallback());
-                params.put("messagesCallbackValue", request.getMessagesCallbackValue());
+            }
+
+            @Override
+            public void runTests() throws Exception {
+                super.runTests();
+                testDeprecated();
+            }
+
+            private void testDeprecated() throws Exception {
+                var sample = sampleRequest();
+                var setterReq = new UpdateNumberRequest(sample.getMsisdn(), sample.getCountry());
+                setterReq.setVoiceStatusCallback(sample.getVoiceStatusCallback());
+                setterReq.setVoiceCallbackValue(sample.getVoiceCallbackValue());
+                setterReq.setVoiceCallbackType(sample.getVoiceCallbackType());
+                setterReq.setMoHttpUrl(sample.getMoHttpUrl());
+                setterReq.setMoSmppSysType(sample.getMoSmppSysType());
+                setterReq.setMessagesCallbackValue("not-an-Application-ID");
+
+                params.remove("app_id");
+                params.put("messagesCallbackValue", setterReq.getMessagesCallbackValue());
                 params.put("messagesCallbackType", "app");
+
+                assertRequestUriAndBody(setterReq, params);
             }
         }
         .runTests();

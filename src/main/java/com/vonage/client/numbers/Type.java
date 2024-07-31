@@ -17,38 +17,47 @@ package com.vonage.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Enumeration representing the type of number.
  */
 public enum Type {
-    LANDLINE("landline"),
-    MOBILE_LVN("mobile-lvn"),
-    LANDLINE_TOLL_FREE("landline-toll-free"),
-    UNKNOWN("unknown");
+    LANDLINE,
+    MOBILE_LVN,
+    LANDLINE_TOLL_FREE,
+    UNKNOWN;
 
-    private static final Map<String, Type> TYPE_INDEX =
-        Arrays.stream(Type.values()).collect(Collectors.toMap(
-                Type::getType, Function.identity()
-        ));
-
-    private final String type;
-
-    Type(String type) {
-        this.type = type;
+    /**
+     * Serialized name.
+     *
+     * @return The string value.
+     * @deprecated Use {@link #toString()}
+     */
+    @Deprecated
+    public String getType() {
+        return toString();
     }
 
     @JsonValue
-    public String getType() {
-        return type;
+    @Override
+    public String toString() {
+        return name().toLowerCase().replace('_', '-');
     }
 
+    /**
+     * Creates an instance of this enum from its serialized string representation.
+     *
+     * @param type The number type as a string.
+     * @return An enum representation of the number type.
+     */
     @JsonCreator
     public static Type fromString(String type) {
-        return TYPE_INDEX.getOrDefault(type, UNKNOWN);
+        if (type == null) return null;
+        try {
+            return Type.valueOf(type.toUpperCase().replace('-', '_'));
+        }
+        catch (IllegalArgumentException ex) {
+            return UNKNOWN;
+        }
     }
 }

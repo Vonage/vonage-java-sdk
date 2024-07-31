@@ -30,9 +30,9 @@ public class TypeTest {
 
     @Test
     public void testName() {
-        assertEquals("landline", Type.LANDLINE.getType());
-        assertEquals("mobile-lvn", Type.MOBILE_LVN.getType());
-        assertEquals("landline-toll-free", Type.LANDLINE_TOLL_FREE.getType());
+        assertEquals("landline", Type.LANDLINE.toString());
+        assertEquals("mobile-lvn", Type.MOBILE_LVN.toString());
+        assertEquals("landline-toll-free", Type.LANDLINE_TOLL_FREE.toString());
         assertEquals("unknown", Type.UNKNOWN.getType());
     }
 }

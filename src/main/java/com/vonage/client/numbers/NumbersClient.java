@@ -80,8 +80,10 @@ public class NumbersClient {
     /**
      * Search for available Vonage Virtual Numbers.
      *
-     * @param country country to search available numbers from
-     * @return available Vonage Virtual Numbers
+     * @param country Country to search available numbers from.
+     *
+     * @return Available Vonage Virtual Numbers.
+     *
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @throws VonageClientException        if an error is returned by the server.
      */
@@ -186,9 +188,7 @@ public class NumbersClient {
      * @throws VonageClientException        if an error is returned by the server.
      */
     public void linkNumber(String msisdn, String country, String appId) throws VonageResponseParseException, VonageClientException {
-        UpdateNumberRequest request = new UpdateNumberRequest(msisdn, country);
-        request.setVoiceCallbackType(UpdateNumberRequest.CallbackType.APP);
-        request.setVoiceCallbackValue(appId);
-        updateNumber(request);
+        updateNumber(UpdateNumberRequest.builder(msisdn, country)
+                .voiceCallback(UpdateNumberRequest.CallbackType.APP, appId).build());
     }
 }

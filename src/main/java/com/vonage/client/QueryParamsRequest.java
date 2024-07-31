@@ -18,11 +18,20 @@ package com.vonage.client;
 import java.util.Map;
 
 /**
- * Indicates that a request object has query parameters.
+ * Indicates that a request object has query parameters. This interface
+ * is an internal implementation detail and not part of the SDK's public API.
  *
  * @since 7.7.0
  */
 public interface QueryParamsRequest {
 
+	/**
+	 * Internal method for serializing the fields of this class into query parameters.
+	 * The Map should be mutable so that subclasses can add fields, otherwise the
+	 * method or implementing class should be marked as {@code final}. Duplicate entries
+	 * can be handled by mapping the key to a list of the entries.
+	 *
+	 * @return The query parameters as unique key-value pairs.
+	 */
 	Map<String, ?> makeParams();
 }
