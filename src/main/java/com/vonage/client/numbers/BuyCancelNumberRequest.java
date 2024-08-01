@@ -17,6 +17,12 @@ package com.vonage.client.numbers;
 
 import java.util.Map;
 
+/**
+ * Base class for {@linkplain NumbersClient#buyNumber(String, String, String)} and
+ * {@linkplain NumbersClient#cancelNumber(String, String, String)} method request parameters.
+ *
+ * @since 8.10.0
+ */
 class BuyCancelNumberRequest extends BaseNumberRequest {
     private final String targetApiKey;
 

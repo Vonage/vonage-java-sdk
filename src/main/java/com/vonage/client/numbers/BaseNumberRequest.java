@@ -20,6 +20,11 @@ import com.vonage.client.common.E164;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Base class for number management queries.
+ *
+ * @since 8.10.0
+ */
 abstract class BaseNumberRequest implements QueryParamsRequest {
     private final String country, msisdn;
 

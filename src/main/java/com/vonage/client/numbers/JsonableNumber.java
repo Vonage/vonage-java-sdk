@@ -45,10 +45,20 @@ class JsonableNumber extends JsonableBaseObject {
         return msisdn;
     }
 
+    /**
+     * Type of number as a string. In a future release, this will be an enum.
+     *
+     * @return The type of number as a string.
+     */
     public String getType() {
         return type != null ? type.toString() : null;
     }
 
+    /**
+     * Capabilities of the number as an array of strings. In a future release, these will be enums.
+     *
+     * @return The number's capabilities as a string array.
+     */
     public String[] getFeatures() {
         return Feature.getToString(features);
     }

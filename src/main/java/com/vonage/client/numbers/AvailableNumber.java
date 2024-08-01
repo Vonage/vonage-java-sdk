@@ -15,8 +15,11 @@
  */
 package com.vonage.client.numbers;
 
+/**
+ * Represents a number that is available to buy.
+ */
 public class AvailableNumber extends JsonableNumber {
-    private Double cost;
+    private String cost;
 
     /**
      * Constructor.
@@ -26,32 +29,17 @@ public class AvailableNumber extends JsonableNumber {
     @Deprecated
     public AvailableNumber() {}
 
+    /**
+     * The monthly rental cost for this number, in Euros.
+     *
+     * @return The rental cost as a string.
+     */
     public String getCost() {
-        return cost != null ? cost.toString() : null;
-    }
-
-    @Deprecated
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    @Deprecated
-    public void setMsisdn(String msisdn) {
-        this.msisdn = msisdn;
+        return cost;
     }
 
     @Deprecated
     public void setCost(String cost) {
         this.cost = cost;
-    }
-
-    @Deprecated
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    @Deprecated
-    public void setFeatures(String[] features) {
-        this.features = Feature.setFromString(features);
     }
 }

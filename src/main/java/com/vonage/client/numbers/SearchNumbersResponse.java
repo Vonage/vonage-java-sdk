@@ -27,7 +27,10 @@ public class SearchNumbersResponse extends JsonableBaseObject {
     private AvailableNumber[] numbers;
 
     /**
-     * @return  the number of responses returned by the Vonage API.
+     * Total amount of numbers available in the pool.
+     * Note that this is not the same as the size of {@linkplain #getNumbers()}.
+     *
+     * @return The total number of owned numbers.
      */
     @JsonProperty("count")
     public int getCount() {
@@ -35,14 +38,22 @@ public class SearchNumbersResponse extends JsonableBaseObject {
     }
 
     /**
-     * Obtain an array of matching numbers than are available to buy.
-     * @return Array of available numbers
+     * A paginated array of available numbers and their details.
+     * Number of results will depend on what you set in {@linkplain SearchNumbersFilter#getSize()}.
+     *
+     * @return The available numbers as an array.
      */
     @JsonProperty("numbers")
     public AvailableNumber[] getNumbers() {
         return numbers != null ? numbers : new AvailableNumber[0];
     }
 
+    /**
+     * Creates an instance of this class from a JSON payload.
+     *
+     * @param json The JSON string to parse.
+     * @return An instance of this class with all known fields populated from the JSON payload, if present.
+     */
     public static SearchNumbersResponse fromJson(String json) {
         return Jsonable.fromJson(json);
     }

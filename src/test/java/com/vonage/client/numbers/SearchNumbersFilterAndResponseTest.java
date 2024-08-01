@@ -31,7 +31,7 @@ public class SearchNumbersFilterAndResponseTest {
                 "      \"country\": \"GB\",\n" +
                 "      \"msisdn\": \"447700900000\",\n" +
                 "      \"cost\": \"0.50\",\n" +
-                "      \"type\": \"mobile\",\n" +
+                "      \"type\": \"mobile-lvn\",\n" +
                 "      \"features\": [\n" +
                 "        \"VOICE\",\n" +
                 "        \"SMS\"\n" +
@@ -46,7 +46,7 @@ public class SearchNumbersFilterAndResponseTest {
         assertEquals("GB", number.getCountry());
         assertEquals("447700900000", number.getMsisdn());
         assertEquals("0.50", number.getCost());
-        assertEquals("mobile", number.getType());
+        assertEquals("mobile-lvn", number.getType());
         assertArrayEquals(new String[]{"VOICE", "SMS"}, number.getFeatures());
     }
 

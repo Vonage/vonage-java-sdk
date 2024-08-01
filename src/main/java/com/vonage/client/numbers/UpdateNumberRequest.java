@@ -51,7 +51,9 @@ public class UpdateNumberRequest extends BaseNumberRequest {
     }
 
     /**
-     * @return The applicationId, or {@code null} if absent / unknown / not applicable.
+     * ID of the application that will handle inbound traffic to this number.
+     *
+     * @return The application ID, or {@code null} if unspecified.
      */
     public UUID getApplicationId() {
         return applicationId;

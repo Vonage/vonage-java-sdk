@@ -15,15 +15,15 @@
  */
 package com.vonage.client.numbers;
 
-import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 
-public class OwnedNumber extends JsonableBaseObject {
+/**
+ * Represents a number that is being rented by your account.
+ */
+public class OwnedNumber extends JsonableNumber {
     private URI moHttpUrl;
-    private Type type;
     private UpdateNumberRequest.CallbackType voiceCallbackType;
-    private String country, msisdn, voiceCallbackValue;
-    private Feature[] features;
+    private String voiceCallbackValue;
 
     /**
      * Constructor, not for public use.
@@ -35,48 +35,12 @@ public class OwnedNumber extends JsonableBaseObject {
     }
 
     /**
-     * Two character country code in ISO 3166-1 alpha-2 format.
-     *
-     * @return The number's country code.
-     */
-    public String getCountry() {
-        return country;
-    }
-
-    /**
-     * Phone number in E.164 format.
-     *
-     * @return The MSISDN as a string.
-     */
-    public String getMsisdn() {
-        return msisdn;
-    }
-
-    /**
      * URL of the webhook endpoint that handles inbound messages.
      *
      * @return The inbound message webhook URL as a string, or {@code null} if unspecified.
      */
     public String getMoHttpUrl() {
         return moHttpUrl != null ? moHttpUrl.toString() : null;
-    }
-
-    /**
-     * Type of number as a string. In a future release, this will be an enum.
-     *
-     * @return The type of number as a string.
-     */
-    public String getType() {
-        return type != null ? type.toString() : null;
-    }
-
-    /**
-     * Capabilities of the number as an array of strings. In a future release, these will be enums.
-     *
-     * @return The number's capabilities as a string array.
-     */
-    public String[] getFeatures() {
-        return Feature.getToString(features);
     }
 
     /**
@@ -97,31 +61,12 @@ public class OwnedNumber extends JsonableBaseObject {
         return voiceCallbackValue;
     }
 
-    @Deprecated
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    @Deprecated
-    public void setMsisdn(String msisdn) {
-        this.msisdn = msisdn;
-    }
 
     @Deprecated
     public void setMoHttpUrl(String moHttpUrl) {
         if (moHttpUrl != null) {
             this.moHttpUrl = URI.create(moHttpUrl);
         }
-    }
-
-    @Deprecated
-    public void setType(String type) {
-        this.type = Type.fromString(type);
-    }
-
-    @Deprecated
-    public void setFeatures(String[] features) {
-        this.features = Feature.setFromString(features);
     }
 
     @Deprecated
