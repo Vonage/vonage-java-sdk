@@ -21,12 +21,13 @@ import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 abstract class NumbersEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, R> {
 
 	@Override
 	protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-		return Arrays.asList(ApiKeyHeaderAuthMethod.class);
+		return List.of(ApiKeyHeaderAuthMethod.class);
 	}
 
 	@Override

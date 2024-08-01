@@ -15,7 +15,9 @@
  */
 package com.vonage.client.numbers;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
+import java.util.UUID;
 
 /**
  * Represents a number that is being rented by your account.
@@ -24,6 +26,7 @@ public class OwnedNumber extends JsonableNumber {
     private URI moHttpUrl;
     private UpdateNumberRequest.CallbackType voiceCallbackType;
     private String voiceCallbackValue;
+    private UUID messagesCallbackValue;
 
     /**
      * Constructor, not for public use.
@@ -39,6 +42,7 @@ public class OwnedNumber extends JsonableNumber {
      *
      * @return The inbound message webhook URL as a string, or {@code null} if unspecified.
      */
+    @JsonProperty("moHttpUrl")
     public String getMoHttpUrl() {
         return moHttpUrl != null ? moHttpUrl.toString() : null;
     }
@@ -48,6 +52,7 @@ public class OwnedNumber extends JsonableNumber {
      *
      * @return The voice webhook callback type as a string, or {@code null} if unknown.
      */
+    @JsonProperty("voiceCallbackType")
     public String getVoiceCallbackType() {
         return voiceCallbackType != null ? voiceCallbackType.toString() : null;
     }
@@ -57,10 +62,22 @@ public class OwnedNumber extends JsonableNumber {
      *
      * @return The voice webhook value as a string, or {@code null} if unknown.
      */
+    @JsonProperty("voiceCallbackValue")
     public String getVoiceCallbackValue() {
         return voiceCallbackValue;
     }
 
+    /**
+     * Application ID for inbound message handling, if applicable.
+     *
+     * @return The application ID that will handle inbound messages to this number, or {@code null} if not applicable.
+     *
+     * @since 8.10.0
+     */
+    @JsonProperty("messagesCallbackValue")
+    public UUID getMessagesCallbackValue() {
+        return messagesCallbackValue;
+    }
 
     @Deprecated
     public void setMoHttpUrl(String moHttpUrl) {

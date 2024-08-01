@@ -21,8 +21,20 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Provided to calls that match substrings, to indicate which part of the string should be considered a match.
  */
 public enum SearchPattern {
+    /**
+     * Search for numbers that start with the pattern (Note: all numbers are in E.164 format,
+     * so the starting pattern includes the country code, such as 1 for USA).
+     */
     STARTS_WITH(0),
+
+    /**
+     * Search for numbers that contain the pattern.
+     */
     ANYWHERE(1),
+
+    /**
+     * Search for numbers that end with the pattern.
+     */
     ENDS_WITH(2);
 
     private final int value;

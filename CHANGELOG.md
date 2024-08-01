@@ -2,10 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.10.0] - 2024-08-??
+# [8.10.0] - 2024-08-02
 - Added `targetApiKey` for buy & cancel number endpoints
 - Added Builder for `UpdateNumberRequest` and deprecated setters
 - Added `app_id` property to `UpdateNumberRequest` (replaces `messagesCallbackValue`)
+- Added `applicationId` and `hasApplication` to `ListNumbersFilter`
+- Builders for `ListNumbersFilter` and `SearchNumbersFilter`
+- Improved / added missing documentation in Numbers API
 - Deprecated setters in Numbers API
 
 # [8.9.4] - 2024-07-25

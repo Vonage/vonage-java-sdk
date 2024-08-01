@@ -18,12 +18,16 @@ package com.vonage.client.numbers;
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.common.HttpMethod;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.vonage.client.numbers.UpdateNumberRequest.CallbackType;
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.function.Executable;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
@@ -46,10 +50,73 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
     private void stubBaseSuccessResponse() throws Exception {
         stubResponse(200, """
             {
-              "error-code":"200",
-              "error-code-label":"success"
+              "error-code": "200",
+              "error-code-label": "success"
             }"""
         );
+    }
+
+    private void assertEqualsSampleListNumbers(Supplier<ListNumbersResponse> invocation) throws Exception {
+        int count = 127;
+        String country = "GB", msisdn = "447700900000", moHttpUrl = "https://example.com/mo",
+                voiceCallbackValue = "sip:nexmo@example.com ";
+
+        stubResponse(200, "{\n" +
+                "  \"count\": 1,\n" +
+                "  \"numbers\": [{\"features\": null},\n" +
+                "    {\n" +
+                "      \"country\": \""+country+"\",\n" +
+                "      \"msisdn\": \""+msisdn+"\",\n" +
+                "      \"moHttpUrl\": \""+moHttpUrl+"\",\n" +
+                "      \"type\": \"mobile-lvn\",\n" +
+                "      \"features\": [\n" +
+                "        \"VOICE\",\n" +
+                "        \"SMS\"\n" +
+                "      ],\n" +
+                "      \"messagesCallbackType\": \"app\",\n" +
+                "      \"messagesCallbackValue\": \""+TestUtils.APPLICATION_ID_STR+"\"\n" +
+                "      \"voiceCallbackType\": \"sip\",\n" +
+                "      \"voiceCallbackValue\": \""+voiceCallbackValue+"\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "       \"type\": \"landline-toll-free\",\n" +
+                "       \"features\": []\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}");
+
+        var parsed = invocation.get();
+        testJsonableBaseObject(parsed);
+        assertEquals(count, parsed.getCount());
+        var numbers = parsed.getNumbers();
+        assertNotNull(numbers);
+        assertEquals(3, numbers.length);
+        assertNotNull(numbers[0]);
+        assertNull(numbers[0].getFeatures());
+        var main = numbers[1];
+        testJsonableBaseObject(main);
+        assertEquals(country, main.getCountry());
+        assertEquals(msisdn, main.getMsisdn());
+        // TODO change to URI
+        assertEquals(URI.create(moHttpUrl).toString(), main.getMoHttpUrl());
+        // TODO change to enum
+        assertEquals(Type.MOBILE_LVN, Type.valueOf(main.getType()));
+        var features = main.getFeatures();
+        assertNotNull(features);
+        assertEquals(2, features.length);
+        // TODO change to enum
+        assertEquals(Feature.VOICE, Feature.fromString(features[0]));
+        assertEquals(Feature.SMS, Feature.fromString(features[1]));
+        // TODO change to enum
+        assertEquals(CallbackType.SIP, CallbackType.valueOf(main.getVoiceCallbackType()));
+        assertEquals(voiceCallbackValue, main.getVoiceCallbackValue());
+        assertEquals(TestUtils.APPLICATION_ID, main.getMessagesCallbackValue());
+        var last = numbers[3];
+        testJsonableBaseObject(last);
+        // TODO change to enum
+        assertEquals(Type.LANDLINE_TOLL_FREE, Type.fromString(last.getType()));
+        assertNotNull(last.getFeatures());
+        assertEquals(0, last.getFeatures().length);
     }
 
     @Test
@@ -72,7 +139,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                 "  ]\n" +
                 "}");
         ListNumbersResponse response = client.listNumbers();
-        TestUtils.testJsonableBaseObject(response);
+        testJsonableBaseObject(response);
         assertEquals(1, response.getCount());
         assert401ResponseException(client::listNumbers);
     }
@@ -88,8 +155,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                 "      \"moHttpUrl\": \"https://example.com/mo\",\n" +
                 "      \"type\": \"mobile-lvn\",\n" +
                 "      \"features\": [\n" +
-                "        \"VOICE\",\n" +
-                "        \"SMS\"\n" +
+                "        \"MMS\"\n" +
                 "      ],\n" +
                 "      \"voiceCallbackType\": \"app\",\n" +
                 "      \"voiceCallbackValue\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"\n" +
@@ -180,12 +246,9 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
             @Override
             protected ListNumbersFilter sampleRequest() {
-                ListNumbersFilter filter = new ListNumbersFilter();
-                filter.setIndex(10);
-                filter.setSize(20);
-                filter.setPattern("234");
-                filter.setSearchPattern(SearchPattern.STARTS_WITH);
-                return filter;
+                return ListNumbersFilter.builder()
+                    .pattern(SearchPattern.STARTS_WITH, "*234")
+                    .index(10).size(20).country("DE").build();
             }
 
             @Override
@@ -196,6 +259,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                 params.put("search_pattern", String.valueOf(request.getSearchPattern().getValue()));
                 params.put("index", String.valueOf(request.getIndex()));
                 params.put("size", String.valueOf(request.getSize()));
+                params.put("country", request.getCountry());
                 return params;
             }
         }
@@ -223,14 +287,11 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
             @Override
             protected SearchNumbersFilter sampleRequest() {
-                SearchNumbersFilter filter = new SearchNumbersFilter("BB");
-                filter.setIndex(11);
-                filter.setSize(25);
-                filter.setPattern("234");
-                filter.setFeatures(new String[]{"SMS", "VOICE"});
-                filter.setSearchPattern(SearchPattern.STARTS_WITH);
-                filter.setType(Type.LANDLINE_TOLL_FREE);
-                return filter;
+                return SearchNumbersFilter.builder()
+                        .country("BB").index(11).size(25)
+                        .pattern(SearchPattern.ENDS_WITH, "789")
+                        .features(Feature.SMS, Feature.VOICE)
+                        .type(Type.LANDLINE_TOLL_FREE).build();
             }
 
             @Override
@@ -303,7 +364,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                 return UpdateNumberRequest.builder("447700900013", "UK")
                         .applicationId(TestUtils.APPLICATION_ID_STR)
                         .voiceStatusCallback("https://api.example.com/callback")
-                        .voiceCallback(UpdateNumberRequest.CallbackType.TEL, "1234-5678-9123-4567")
+                        .voiceCallback(CallbackType.TEL, "1234-5678-9123-4567")
                         .moHttpUrl("https://api.example.com/mo").moSmppSysType("inbound").build();
             }
 

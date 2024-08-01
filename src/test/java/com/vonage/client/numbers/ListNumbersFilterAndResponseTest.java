@@ -55,20 +55,10 @@ public class ListNumbersFilterAndResponseTest {
     }
 
     @Test
-    public void testBadJson() throws Exception {
-        try {
-            ListNumbersResponse.fromJson("this-is-nonsense");
-            fail("VonageUnexpectedException should be raised for bad JSON data.");
-        } catch (VonageUnexpectedException nue) {
-            // Expected
-        }
-    }
-
-    @Test
     public void testFilterValues() throws Exception {
         ListNumbersFilter filter = new ListNumbersFilter(1, 50, "456", SearchPattern.ANYWHERE);
-        assertEquals(1, (long)filter.getIndex());
-        assertEquals(50, (long)filter.getSize());
+        assertEquals(1, filter.getIndex());
+        assertEquals(50, filter.getSize());
         assertEquals("456", filter.getPattern());
         assertEquals(1, filter.getSearchPattern().getValue());
     }
@@ -78,7 +68,5 @@ public class ListNumbersFilterAndResponseTest {
         assertEquals(0, SearchPattern.STARTS_WITH.getValue());
         assertEquals(1, SearchPattern.ANYWHERE.getValue());
         assertEquals(2, SearchPattern.ENDS_WITH.getValue());
-
-        assertEquals(SearchPattern.STARTS_WITH, SearchPattern.valueOf("STARTS_WITH"));
     }
 }

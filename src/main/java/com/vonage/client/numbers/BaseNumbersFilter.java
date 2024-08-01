@@ -43,10 +43,20 @@ abstract class BaseNumbersFilter implements QueryParamsRequest {
         searchPattern = builder.searchPattern;
     }
 
+    /**
+     * Page index to start return results from. Default is 1.
+     *
+     * @return The cursor index, or {@code null} if unspecified.
+     */
     public Integer getIndex() {
         return index;
     }
 
+    /**
+     * Page size. Default is 10, max is 100.
+     *
+     * @return The number of results to return, or {@code null} if unspecified.
+     */
     public Integer getSize() {
         return size;
     }
@@ -60,10 +70,20 @@ abstract class BaseNumbersFilter implements QueryParamsRequest {
         return country;
     }
 
+    /**
+     * Number pattern to narrow down the results by.
+     *
+     * @return The number pattern, or {@code null} if unspecified.
+     */
     public String getPattern() {
         return pattern;
     }
 
+    /**
+     * Strategy to use for matching.
+     *
+     * @return The pattern matching strategy as an enum, or {@code null} if unspecified.
+     */
     public SearchPattern getSearchPattern() {
         return searchPattern;
     }
@@ -92,7 +112,9 @@ abstract class BaseNumbersFilter implements QueryParamsRequest {
     /**
      * @param searchPattern The pattern you want to search for. Use the * wildcard to match the start or end of the number.
      *                      For example, *123* matches all numbers that contain the pattern 123.
+     * @deprecated Use {@link Builder#pattern(SearchPattern, String)}. This will be removed in the next major release.
      */
+    @Deprecated
     public void setSearchPattern(SearchPattern searchPattern) {
         this.searchPattern = searchPattern;
     }
@@ -128,9 +150,9 @@ abstract class BaseNumbersFilter implements QueryParamsRequest {
 
 
         /**
-         * TODO description
+         * Two character country code in ISO 3166-1 alpha-2 format.
          *
-         * @param country The TODO.
+         * @param country The country code.
          * @return This builder.
          */
         public B country(String country) {
@@ -139,9 +161,9 @@ abstract class BaseNumbersFilter implements QueryParamsRequest {
         }
 
         /**
-         * TODO description
+         * Page index to start return results from. Default is 1.
          *
-         * @param index The TODO.
+         * @param index The page index, starting from 1.
          * @return This builder.
          */
         public B index(int index) {
@@ -150,9 +172,9 @@ abstract class BaseNumbersFilter implements QueryParamsRequest {
         }
 
         /**
-         * TODO description
+         * Page size. Default is 10, max is 100.
          *
-         * @param size The TODO.
+         * @param size The number of results to return in the response.
          * @return This builder.
          */
         public B size(int size) {
@@ -161,10 +183,12 @@ abstract class BaseNumbersFilter implements QueryParamsRequest {
         }
 
         /**
-         * TODO description
+         * Use this method to filter numbers matching the specified pattern.
          *
-         * @param strategy
-         * @param pattern The TODO.
+         * @param strategy Strategy to use for matching.
+         * @param pattern Number pattern to narrow down the results by. Use the * wildcard to match the start or
+         *                end of the number. For example, *123* matches all numbers that contain the pattern 123.
+         *
          * @return This builder.
          */
         public B pattern(SearchPattern strategy, String pattern) {
