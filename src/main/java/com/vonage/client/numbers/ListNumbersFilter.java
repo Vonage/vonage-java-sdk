@@ -15,32 +15,27 @@
  */
 package com.vonage.client.numbers;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Filter criteria used in {@link NumbersClient#listNumbers(ListNumbersFilter)}.
  */
-public class ListNumbersFilter implements QueryParamsRequest {
-    private Integer index, size;
-    private String pattern;
-    private SearchPattern searchPattern;
-    private Type type;
+public class ListNumbersFilter extends BaseNumbersFilter {
+    private final UUID applicationId;
+    private final Boolean hasApplication;
 
     private ListNumbersFilter(Builder builder) {
-        if ((index = builder.index) != null && index < 1) {
-            throw new IllegalArgumentException("'index' must be positive.");
-        }
-        if ((size = builder.size) != null && (size < 1 || size > 100)) {
-            throw new IllegalArgumentException("'size' must be between 1 and 100.");
-        }
-        pattern = builder.pattern;
-        searchPattern = builder.searchPattern;
-        type = builder.type;
+        super(builder);
+        applicationId = builder.applicationId;
+        hasApplication = builder.hasApplication;
     }
 
+    /**
+     * Old constructor.
+     *
+     * @deprecated Use {@link #builder()}. This will be removed in the next major release.
+     */
     @Deprecated
     public ListNumbersFilter() {
         this(null, null, null, null);
@@ -52,60 +47,60 @@ public class ListNumbersFilter implements QueryParamsRequest {
             Integer size,
             String pattern,
             SearchPattern searchPattern) {
-        this.index = index;
-        this.size = size;
-        this.pattern = pattern;
-        this.searchPattern = searchPattern;
+        this(builder(index, size, pattern, searchPattern));
     }
 
-    public Integer getIndex() {
-        return index;
+    /**
+     * Application to return the numbers for.
+     *
+     * @return The selected application ID to list numbers from, or {@code null} if unspecified.
+     * @since 8.10.0
+     */
+    public UUID getApplicationId() {
+        return applicationId;
     }
 
-    public Integer getSize() {
-        return size;
-    }
-
-    public String getPattern() {
-        return pattern;
-    }
-
-    public SearchPattern getSearchPattern() {
-        return searchPattern;
-    }
-
-    public void setIndex(Integer index) {
-        this.index = index;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
-    }
-
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
-    }
-
-    public void setSearchPattern(SearchPattern searchPattern) {
-        this.searchPattern = searchPattern;
+    /**
+     * Whether results should be filtered to numbers assigned to an application.
+     *
+     * @return {@code true} if results should contain only numbers associated with an application,
+     * {@code false} if only numbers unassigned to an application should be returned, or {@code null}
+     * if unspecified (i.e. the application assignment status is not considered).
+     *
+     * @since 8.10.0
+     */
+    public Boolean getHasApplication() {
+        return hasApplication;
     }
 
     @Override
     public Map<String, String> makeParams() {
-        LinkedHashMap<String, String> params = new LinkedHashMap<>(8);
-        if (index != null) {
-            params.put("index", index.toString());
+        Map<String, String> params = super.makeParams();
+        if (applicationId != null) {
+            params.put("application_id", applicationId.toString());
         }
-        if (size != null) {
-            params.put("size", size.toString());
-        }
-        if (pattern != null) {
-            params.put("pattern", pattern);
-        }
-        if (searchPattern != null) {
-            params.put("search_pattern", Integer.toString(searchPattern.getValue()));
+        if (hasApplication != null) {
+            params.put("has_application", hasApplication.toString());
         }
         return params;
+    }
+
+    @Deprecated
+    private static Builder builder(Integer index,
+                                   Integer size,
+                                   String pattern,
+                                   SearchPattern searchPattern) {
+        Builder builder = builder();
+        if (index != null) {
+            builder.index(index);
+        }
+        if (size != null) {
+            builder.size(size);
+        }
+        if (pattern != null && searchPattern != null) {
+            builder.pattern(searchPattern, pattern);
+        }
+        return builder;
     }
 
     /**
@@ -123,65 +118,47 @@ public class ListNumbersFilter implements QueryParamsRequest {
      *
      * @since 8.10.0
      */
-    public static final class Builder {
-        private Integer index, size;
-        private String pattern;
-        private SearchPattern searchPattern;
-        private Type type;
+    public static final class Builder extends BaseNumbersFilter.Builder<ListNumbersFilter, Builder> {
+        private UUID applicationId;
+        private Boolean hasApplication;
 
-        private Builder() {}
+        Builder() {}
 
         /**
-         * TODO description
+         * Set this to only return numbers assigned to a specific application.
          *
-         * @param index The TODO.
+         * @param applicationId The application ID to return numbers for as a string.
          * @return This builder.
          */
-        public Builder index(Integer index) {
-            this.index = index;
+        public Builder applicationId(String applicationId) {
+            return applicationId(UUID.fromString(applicationId));
+        }
+
+        /**
+         * Set this to only return numbers assigned to a specific application.
+         *
+         * @param applicationId The application ID to return numbers for.
+         * @return This builder.
+         */
+        public Builder applicationId(UUID applicationId) {
+            this.applicationId = applicationId;
             return this;
         }
 
         /**
-         * TODO description
+         * Set this optional field to {@code true} to restrict your results to numbers associated with any
+         * application. Set to {@code false} to find all numbers not associated with an application. Omit the
+         * field to avoid filtering on whether or not the number is assigned to an application.
          *
-         * @param size The TODO.
+         * @param hasApplication Whether to return only numbers that are assigned to an application.
          * @return This builder.
          */
-        public Builder size(Integer size) {
-            this.size = size;
+        public Builder hasApplication(boolean hasApplication) {
+            this.hasApplication = hasApplication;
             return this;
         }
 
-        /**
-         * TODO description
-         *
-         * @param strategy
-         * @param pattern The TODO.
-         * @return This builder.
-         */
-        public Builder pattern(SearchPattern strategy, String pattern) {
-            this.searchPattern = Objects.requireNonNull(strategy, "Matching strategy is required.");
-            this.pattern = Objects.requireNonNull(pattern, "Pattern is required");
-            return this;
-        }
-
-        /**
-         * TODO description
-         *
-         * @param type The TODO.
-         * @return This builder.
-         */
-        public Builder type(Type type) {
-            this.type = type;
-            return this;
-        }
-
-        /**
-         * Builds the ListNumbersFilter request parameters.
-         *
-         * @return A new ListNumbersFilter instance with this builder's properties.
-         */
+        @Override
         public ListNumbersFilter build() {
             return new ListNumbersFilter(this);
         }

@@ -29,9 +29,7 @@ abstract class BaseNumberRequest implements QueryParamsRequest {
     private final String country, msisdn;
 
     protected BaseNumberRequest(String country, String msisdn) {
-        if ((this.country = country) == null || country.length() != 2) {
-            throw new IllegalArgumentException("Country code is required in ISO 3166-1 alpha-2 format.");
-        }
+        this.country = validateCountry(country);
         this.msisdn = new E164(msisdn).toString();
     }
 
@@ -59,5 +57,12 @@ abstract class BaseNumberRequest implements QueryParamsRequest {
         params.put("country", country);
         params.put("msisdn", msisdn);
         return params;
+    }
+
+    static String validateCountry(String country) {
+        if (country == null || country.length() != 2) {
+            throw new IllegalArgumentException("Country code is required in ISO 3166-1 alpha-2 format.");
+        }
+        return country;
     }
 }

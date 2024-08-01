@@ -181,7 +181,6 @@ public class UpdateNumberRequest extends BaseNumberRequest {
         @Deprecated
         VXML,
 
-        @Deprecated
         APP;
 
 
