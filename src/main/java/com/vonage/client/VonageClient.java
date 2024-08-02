@@ -158,7 +158,10 @@ public class VonageClient {
      *
      * @return The Meetings client.
      * @since 7.6.0
+     *
+     * @deprecated Support for this API will be removed in the next major release.
      */
+    @Deprecated
     public MeetingsClient getMeetingsClient() {
         return meetings;
     }

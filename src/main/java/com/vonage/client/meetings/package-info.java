@@ -21,5 +21,8 @@
  * for an overview of the concepts.
  *
  * @since 7.6.0
+ *
+ * @deprecated Support for this API will be removed in the next major release.
  */
+@Deprecated
 package com.vonage.client.meetings;
