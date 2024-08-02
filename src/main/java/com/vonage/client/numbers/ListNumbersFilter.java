@@ -15,77 +15,152 @@
  */
 package com.vonage.client.numbers;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
-public class ListNumbersFilter implements QueryParamsRequest {
-    private Integer index, size;
-    private String pattern;
-    private SearchPattern searchPattern;
+/**
+ * Filter criteria used in {@link NumbersClient#listNumbers(ListNumbersFilter)}.
+ */
+public class ListNumbersFilter extends BaseNumbersFilter {
+    private final UUID applicationId;
+    private final Boolean hasApplication;
 
+    private ListNumbersFilter(Builder builder) {
+        super(builder);
+        applicationId = builder.applicationId;
+        hasApplication = builder.hasApplication;
+    }
+
+    /**
+     * Old constructor.
+     *
+     * @deprecated Use {@link #builder()}. This will be removed in the next major release.
+     */
+    @Deprecated
     public ListNumbersFilter() {
         this(null, null, null, null);
     }
 
+    @Deprecated
     public ListNumbersFilter(
             Integer index,
             Integer size,
             String pattern,
             SearchPattern searchPattern) {
-        this.index = index;
-        this.size = size;
-        this.pattern = pattern;
-        this.searchPattern = searchPattern;
+        this(builder(index, size, pattern, searchPattern));
     }
 
-    public Integer getIndex() {
-        return index;
+    /**
+     * Application to return the numbers for.
+     *
+     * @return The selected application ID to list numbers from, or {@code null} if unspecified.
+     * @since 8.10.0
+     */
+    public UUID getApplicationId() {
+        return applicationId;
     }
 
-    public void setIndex(Integer index) {
-        this.index = index;
-    }
-
-    public Integer getSize() {
-        return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
-    }
-
-    public String getPattern() {
-        return pattern;
-    }
-
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
-    }
-
-    public SearchPattern getSearchPattern() {
-        return searchPattern;
-    }
-
-    public void setSearchPattern(SearchPattern searchPattern) {
-        this.searchPattern = searchPattern;
+    /**
+     * Whether results should be filtered to numbers assigned to an application.
+     *
+     * @return {@code true} if results should contain only numbers associated with an application,
+     * {@code false} if only numbers unassigned to an application should be returned, or {@code null}
+     * if unspecified (i.e. the application assignment status is not considered).
+     *
+     * @since 8.10.0
+     */
+    public Boolean getHasApplication() {
+        return hasApplication;
     }
 
     @Override
     public Map<String, String> makeParams() {
-        LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
-        if (index != null) {
-            params.put("index", index.toString());
+        Map<String, String> params = super.makeParams();
+        if (applicationId != null) {
+            params.put("application_id", applicationId.toString());
         }
-        if (size != null) {
-            params.put("size", size.toString());
-        }
-        if (pattern != null) {
-            params.put("pattern", pattern);
-        }
-        if (searchPattern != null) {
-            params.put("search_pattern", Integer.toString(searchPattern.getValue()));
+        if (hasApplication != null) {
+            params.put("has_application", hasApplication.toString());
         }
         return params;
+    }
+
+    @Deprecated
+    private static Builder builder(Integer index,
+                                   Integer size,
+                                   String pattern,
+                                   SearchPattern searchPattern) {
+        Builder builder = builder();
+        if (index != null) {
+            builder.index(index);
+        }
+        if (size != null) {
+            builder.size(size);
+        }
+        if (pattern != null && searchPattern != null) {
+            builder.pattern(searchPattern, pattern);
+        }
+        return builder;
+    }
+
+    /**
+     * Entrypoint for constructing an instance of this class.
+     *
+     * @return A new Builder.
+     * @since 8.10.0
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Builder for setting the parameters of ListNumbersFilter.
+     *
+     * @since 8.10.0
+     */
+    public static final class Builder extends BaseNumbersFilter.Builder<ListNumbersFilter, Builder> {
+        private UUID applicationId;
+        private Boolean hasApplication;
+
+        Builder() {}
+
+        /**
+         * Set this to only return numbers assigned to a specific application.
+         *
+         * @param applicationId The application ID to return numbers for as a string.
+         * @return This builder.
+         */
+        public Builder applicationId(String applicationId) {
+            return applicationId(UUID.fromString(applicationId));
+        }
+
+        /**
+         * Set this to only return numbers assigned to a specific application.
+         *
+         * @param applicationId The application ID to return numbers for.
+         * @return This builder.
+         */
+        public Builder applicationId(UUID applicationId) {
+            this.applicationId = applicationId;
+            return this;
+        }
+
+        /**
+         * Set this optional field to {@code true} to restrict your results to numbers associated with any
+         * application. Set to {@code false} to find all numbers not associated with an application. Omit the
+         * field to avoid filtering on whether or not the number is assigned to an application.
+         *
+         * @param hasApplication Whether to return only numbers that are assigned to an application.
+         * @return This builder.
+         */
+        public Builder hasApplication(boolean hasApplication) {
+            this.hasApplication = hasApplication;
+            return this;
+        }
+
+        @Override
+        public ListNumbersFilter build() {
+            return new ListNumbersFilter(this);
+        }
     }
 }

@@ -33,6 +33,12 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Function;
 
+/**
+ * Meetings API client.
+ *
+ * @deprecated Support for this API will be removed in the next major release.
+ */
+@Deprecated
 public class MeetingsClient {
 	HttpClient httpClient;
 

@@ -15,114 +15,122 @@
  */
 package com.vonage.client.numbers;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This class encapsulates a request to search for available Vonage Virtual Numbers.
  */
-public class SearchNumbersFilter implements QueryParamsRequest {
-    private final String country;
-    private String pattern;
-    private SearchPattern searchPattern;
-    private String[] features;
-    private Integer index, size;
+public class SearchNumbersFilter extends BaseNumbersFilter {
+    private Feature[] features;
     private Type type;
+
+    private SearchNumbersFilter(Builder builder) {
+        super(builder);
+        features = builder.features;
+        type = builder.type;
+    }
 
     /**
      * Construct a request with the only required parameter, the country code.
      *
      * @param country A String containing a two-character country code.
+     * @deprecated Use {@link #builder()}. This will be removed in the next major release.
      */
+    @Deprecated
     public SearchNumbersFilter(String country) {
-        this.country = country;
+        this(builder().country(country));
     }
 
-    public String getCountry() {
-        return country;
-    }
-
-    public String getPattern() {
-        return pattern;
-    }
-
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
-    }
-
-    public String[] getFeatures() {
-        return features;
-    }
-
+    @Deprecated
     public void setFeatures(String[] features) {
-        this.features = features;
+        this.features = Feature.setFromString(features);
     }
 
-    public Integer getIndex() {
-        return index;
-    }
-
-    public void setIndex(Integer index) {
-        this.index = index;
-    }
-
-    public Integer getSize() {
-        return size;
-    }
-
+    @Deprecated
     public void setType(Type type) {
         this.type = type;
     }
 
+    /**
+     * Desired capabilities as an array of strings. In a future release, these will be enums.
+     *
+     * @return The capabilities to search for as a string array, or {@code null} if unspecified.
+     */
+    public String[] getFeatures() {
+        return Feature.getToString(features);
+    }
+
+    /**
+     * Type of number to search for.
+     *
+     * @return The number type as an enum, or {@code null} if unspecified.
+     */
     public Type getType() {
         return type;
     }
 
-    /**
-     * Set the maximum number of matching results to be returned.
-     *
-     * @param size An Integer between 10 and 100 (inclusive) or null, to indicate that the default value should be
-     *             used.
-     */
-    public void setSize(Integer size) {
-        this.size = size;
-    }
-
-    public SearchPattern getSearchPattern() {
-        return searchPattern;
-    }
-
-    /**
-     * @param searchPattern The pattern you want to search for. Use the * wildcard to match the start or end of the number.
-     *                      For example, *123* matches all numbers that contain the pattern 123.
-     */
-    public void setSearchPattern(SearchPattern searchPattern) {
-        this.searchPattern = searchPattern;
-    }
-
     @Override
     public Map<String, String> makeParams() {
-        LinkedHashMap<String, String> params = new LinkedHashMap<>(8);
-        params.put("country", country);
+        Map<String, String> params = super.makeParams();
         if (features != null && features.length > 0) {
-            params.put("features", String.join(",", features));
-        }
-        if (index != null) {
-            params.put("index", index.toString());
-        }
-        if (size != null) {
-            params.put("size", size.toString());
-        }
-        if (pattern != null) {
-            params.put("pattern", pattern);
-        }
-        if (searchPattern != null) {
-            params.put("search_pattern", Integer.toString(searchPattern.getValue()));
+            params.put("features", Arrays.stream(features).map(Feature::toString).collect(Collectors.joining(",")));
         }
         if (type != null) {
-            params.put("type", type.getType());
+            params.put("type", type.toString());
         }
         return params;
+    }
+
+    /**
+     * Entrypoint for constructing an instance of this class.
+     *
+     * @return A new Builder.
+     * @since 8.10.0
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Builder for setting the parameters of SearchNumbersFilter.
+     *
+     * @since 8.10.0
+     */
+    public static final class Builder extends BaseNumbersFilter.Builder<SearchNumbersFilter, Builder> {
+        private Feature[] features;
+        private Type type;
+
+        private Builder() {}
+
+        /**
+         * Set this parameter to find numbers that have one or more features.
+         *
+         * @param features The desired features of the number as enums.
+         * @return This builder.
+         */
+        public Builder features(Feature... features) {
+            if (features != null) {
+                this.features = Arrays.stream(features).distinct().toArray(Feature[]::new);
+            }
+            return this;
+        }
+
+        /**
+         * Set this parameter to filter the type of number, such as mobile or landline.
+         *
+         * @param type The type of number as an enum.
+         * @return This builder.
+         */
+        public Builder type(Type type) {
+            this.type = type;
+            return this;
+        }
+
+        @Override
+        public SearchNumbersFilter build() {
+            return new SearchNumbersFilter(this);
+        }
     }
 }

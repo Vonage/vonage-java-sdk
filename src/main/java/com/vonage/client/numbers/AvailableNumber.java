@@ -15,36 +15,25 @@
  */
 package com.vonage.client.numbers;
 
-import com.vonage.client.JsonableBaseObject;
-
-public class AvailableNumber extends JsonableBaseObject {
-    private String country, msisdn, cost, type;
-    private String[] features;
+/**
+ * Represents a number that is available to buy.
+ */
+public class AvailableNumber extends JsonableNumber {
+    private String cost;
 
     /**
+     * Constructor.
+     *
      * @deprecated This will be made package-private in a future release.
      */
     @Deprecated
     public AvailableNumber() {}
 
-    public String getCountry() {
-        return country;
-    }
-
-    @Deprecated
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getMsisdn() {
-        return msisdn;
-    }
-
-    @Deprecated
-    public void setMsisdn(String msisdn) {
-        this.msisdn = msisdn;
-    }
-
+    /**
+     * The monthly rental cost for this number, in Euros.
+     *
+     * @return The rental cost as a string.
+     */
     public String getCost() {
         return cost;
     }
@@ -52,23 +41,5 @@ public class AvailableNumber extends JsonableBaseObject {
     @Deprecated
     public void setCost(String cost) {
         this.cost = cost;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    @Deprecated
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String[] getFeatures() {
-        return features;
-    }
-
-    @Deprecated
-    public void setFeatures(String[] features) {
-        this.features = features;
     }
 }

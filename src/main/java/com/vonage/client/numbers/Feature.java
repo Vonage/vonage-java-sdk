@@ -17,47 +17,41 @@ package com.vonage.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Arrays;
 
 /**
- * Enumeration representing the type of number.
+ * Represents the capabilities of a phone number.
+ *
+ * @since 8.10.0
  */
-public enum Type {
-    LANDLINE,
-    MOBILE_LVN,
-    LANDLINE_TOLL_FREE,
-    UNKNOWN;
-
-    /**
-     * Serialized name.
-     *
-     * @return The string value.
-     * @deprecated Use {@link #toString()}
-     */
-    @Deprecated
-    public String getType() {
-        return toString();
-    }
+public enum Feature {
+    SMS,
+    MMS,
+    VOICE;
 
     @JsonValue
     @Override
     public String toString() {
-        return name().toLowerCase().replace('_', '-');
+        return super.toString();
     }
 
     /**
-     * Creates an instance of this enum from its serialized string representation.
+     * Converts the string representation of the feature to its enum value.
      *
-     * @param type The number type as a string.
-     * @return An enum representation of the number type.
+     * @param feature The feature as a string.
+     * @return The enum value of the feature.
      */
     @JsonCreator
-    public static Type fromString(String type) {
-        if (type == null) return null;
-        try {
-            return Type.valueOf(type.toUpperCase().replace('-', '_'));
-        }
-        catch (IllegalArgumentException ex) {
-            return UNKNOWN;
-        }
+    public static Feature fromString(String feature) {
+        if (feature == null) return null;
+        return valueOf(feature);
+    }
+
+    static Feature[] setFromString(String[] features) {
+        return features == null ? null : Arrays.stream(features).map(Feature::fromString).toArray(Feature[]::new);
+    }
+
+    static String[] getToString(Feature[] features) {
+        return features == null ? null : Arrays.stream(features).map(Feature::toString).toArray(String[]::new);
     }
 }

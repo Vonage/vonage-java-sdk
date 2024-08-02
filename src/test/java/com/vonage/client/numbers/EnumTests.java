@@ -18,10 +18,10 @@ package com.vonage.client.numbers;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TypeTest {
+public class EnumTests {
 
     @Test
-    public void testFromString() {
+    public void testTypeFromString() {
         assertEquals(Type.LANDLINE, Type.fromString("landline"));
         assertEquals(Type.MOBILE_LVN, Type.fromString("mobile-lvn"));
         assertEquals(Type.LANDLINE_TOLL_FREE, Type.fromString("landline-toll-free"));
@@ -29,10 +29,17 @@ public class TypeTest {
     }
 
     @Test
-    public void testName() {
-        assertEquals("landline", Type.LANDLINE.getType());
-        assertEquals("mobile-lvn", Type.MOBILE_LVN.getType());
-        assertEquals("landline-toll-free", Type.LANDLINE_TOLL_FREE.getType());
+    public void testTypeName() {
+        assertEquals("landline", Type.LANDLINE.toString());
+        assertEquals("mobile-lvn", Type.MOBILE_LVN.toString());
+        assertEquals("landline-toll-free", Type.LANDLINE_TOLL_FREE.toString());
         assertEquals("unknown", Type.UNKNOWN.getType());
+    }
+
+    @Test
+    public void testSearchPatternValues() {
+        assertEquals(0, SearchPattern.STARTS_WITH.getValue());
+        assertEquals(1, SearchPattern.ANYWHERE.getValue());
+        assertEquals(2, SearchPattern.ENDS_WITH.getValue());
     }
 }

@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.10.0] - 2024-08-02
+- Added `targetApiKey` for buy & cancel number endpoints
+- Added Builder for `UpdateNumberRequest` and deprecated setters
+- Added `app_id` property to `UpdateNumberRequest` (replaces `messagesCallbackValue`)
+- Added `applicationId` and `hasApplication` to `ListNumbersFilter`
+- Builders for `ListNumbersFilter` and `SearchNumbersFilter`
+- Improved / added missing documentation in Numbers API
+- Deprecated setters in Numbers API
+- `state` not included in Number Verification auth URL if null
+- Deprecated Meetings API
+
 # [8.9.4] - 2024-07-25
 - Fixed UUID validation in `ConversationAction.Builder#canHear` and `canSpeak`
   - Changed signature of `canHear` and `canSpeak` methods to return Strings instead of UUIDs

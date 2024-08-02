@@ -16,21 +16,37 @@
 package com.vonage.client.numbers;
 
 import com.vonage.client.QueryParamsRequest;
+import com.vonage.client.common.E164;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-class BaseNumberRequest implements QueryParamsRequest {
+/**
+ * Base class for number management queries.
+ *
+ * @since 8.10.0
+ */
+abstract class BaseNumberRequest implements QueryParamsRequest {
     private final String country, msisdn;
 
-    public BaseNumberRequest(String country, String msisdn) {
-        this.country = country;
-        this.msisdn = msisdn;
+    protected BaseNumberRequest(String country, String msisdn) {
+        this.country = validateCountry(country);
+        this.msisdn = new E164(msisdn).toString();
     }
 
+    /**
+     * Two character country code in ISO 3166-1 alpha-2 format.
+     *
+     * @return The number's country code.
+     */
     public String getCountry() {
         return country;
     }
 
+    /**
+     * Phone number in E.164 format.
+     *
+     * @return The MSISDN as a string.
+     */
     public String getMsisdn() {
         return msisdn;
     }
@@ -41,5 +57,12 @@ class BaseNumberRequest implements QueryParamsRequest {
         params.put("country", country);
         params.put("msisdn", msisdn);
         return params;
+    }
+
+    static String validateCountry(String country) {
+        if (country == null || country.length() != 2) {
+            throw new IllegalArgumentException("Country code is required in ISO 3166-1 alpha-2 format.");
+        }
+        return country.toUpperCase();
     }
 }
