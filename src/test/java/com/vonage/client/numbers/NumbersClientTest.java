@@ -58,34 +58,37 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
     private void assertEqualsSampleListNumbers(Supplier<ListNumbersResponse> invocation) throws Exception {
         int count = 127;
-        String moHttpUrl = "https://example.com/mo", voiceCallbackValue = "sip:nexmo@example.com ";
+        String moHttpUrl = "https://example.com/mo", voiceCallbackValue = "sip:nexmo@example.com ",
+                json = "{\n" +
+                        "  \"count\": "+count+",\n" +
+                        "  \"numbers\": [{\"features\": null},\n" +
+                        "    {\n" +
+                        "      \"country\": \""+COUNTRY+"\",\n" +
+                        "      \"msisdn\": \""+MSISDN+"\",\n" +
+                        "      \"moHttpUrl\": \""+moHttpUrl+"\",\n" +
+                        "      \"type\": \"mobile-lvn\",\n" +
+                        "      \"features\": [\n" +
+                        "        \"VOICE\",\n" +
+                        "        \"SMS\"\n" +
+                        "      ],\n" +
+                        "      \"messagesCallbackType\": \"app\",\n" +
+                        "      \"messagesCallbackValue\": \""+ APPLICATION_ID_STR+"\",\n" +
+                        "      \"voiceCallbackType\": \"sip\",\n" +
+                        "      \"voiceCallbackValue\": \""+voiceCallbackValue+"\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "       \"type\": \"landline-toll-free\",\n" +
+                        "       \"features\": []\n" +
+                        "    }\n" +
+                        "  ]\n" +
+                        "}";
 
-        stubResponse(200, "{\n" +
-                "  \"count\": "+count+",\n" +
-                "  \"numbers\": [{\"features\": null},\n" +
-                "    {\n" +
-                "      \"country\": \""+COUNTRY+"\",\n" +
-                "      \"msisdn\": \""+MSISDN+"\",\n" +
-                "      \"moHttpUrl\": \""+moHttpUrl+"\",\n" +
-                "      \"type\": \"mobile-lvn\",\n" +
-                "      \"features\": [\n" +
-                "        \"VOICE\",\n" +
-                "        \"SMS\"\n" +
-                "      ],\n" +
-                "      \"messagesCallbackType\": \"app\",\n" +
-                "      \"messagesCallbackValue\": \""+ APPLICATION_ID_STR+"\",\n" +
-                "      \"voiceCallbackType\": \"sip\",\n" +
-                "      \"voiceCallbackValue\": \""+voiceCallbackValue+"\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "       \"type\": \"landline-toll-free\",\n" +
-                "       \"features\": []\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}");
+        stubResponse(200, json);
 
         var parsed = invocation.get();
         testJsonableBaseObject(parsed);
+        assertEquals(parsed, ListNumbersResponse.fromJson(json));
+
         assertEquals(count, parsed.getCount());
         var numbers = parsed.getNumbers();
         assertNotNull(numbers);
@@ -118,6 +121,46 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
         assertEquals(0, last.getFeatures().length);
     }
 
+    private void assertEqualsSampleSearchNumbers(Supplier<SearchNumbersResponse> invocation) throws Exception {
+        int count = 1234;
+        String json = "{\n" +
+                "  \"count\": "+count+",\n" +
+                "  \"numbers\": [{},{},\n" +
+                "    {\n" +
+                "      \"country\": \""+COUNTRY+"\",\n" +
+                "      \"msisdn\": \""+MSISDN+"\",\n" +
+                "      \"cost\": \"0.80\",\n" +
+                "      \"type\": \"landline\",\n" +
+                "      \"features\": [\n" +
+                "        \"VOICE\"\n" +
+                "      ]\n" +
+                "    },{},{}\n" +
+                "  ]\n" +
+                "}";
+        stubResponse(200, json);
+
+        var parsed = invocation.get();
+        testJsonableBaseObject(parsed);
+        assertEquals(parsed, SearchNumbersResponse.fromJson(json));
+
+        assertEquals(1234, parsed.getCount());
+        var numbers = parsed.getNumbers();
+        assertNotNull(numbers);
+        assertEquals(5, numbers.length);
+        var main = numbers[2];
+        testJsonableBaseObject(main);
+        assertEquals(COUNTRY, main.getCountry());
+        assertEquals(MSISDN, main.getMsisdn());
+        assertEquals("0.80", main.getCost());
+        // TODO use enum
+        assertEquals(Type.LANDLINE, Type.fromString(main.getType()));
+        var features = main.getFeatures();
+        assertNotNull(features);
+        assertEquals(1, features.length);
+        // TODO use enum
+        assertEquals(Feature.VOICE, Feature.fromString(features[0]));
+    }
+
     @Test
     public void testListNumbers() throws Exception {
         assertEqualsSampleListNumbers(client::listNumbers);
@@ -143,44 +186,38 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
     @Test
     public void testSearchNumbers() throws Exception {
-        stubResponse(200, "{\n" +
-                "  \"count\": 4,\n" +
-                "  \"numbers\": [\n" +
-                "    {\n" +
-                "      \"country\": \"GB\",\n" +
-                "      \"msisdn\": \"447700900000\",\n" +
-                "      \"cost\": \"0.50\",\n" +
-                "      \"type\": \"mobile\",\n" +
-                "      \"features\": [\n" +
-                "        \"VOICE\",\n" +
-                "        \"SMS\"\n" +
-                "      ]\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}");
-        SearchNumbersResponse response = client.searchNumbers("YY");
-        assertEquals(4, response.getCount());
-        assert401ResponseException(() -> client.searchNumbers(new SearchNumbersFilter("FR")));
+        var filter = SearchNumbersFilter.builder().build();
+        assertEqualsSampleSearchNumbers(() -> client.searchNumbers("in"));
+        assertEqualsSampleSearchNumbers(() -> client.searchNumbers(filter));
+        assert401ResponseException(() -> client.searchNumbers(filter));
     }
 
     @Test
     public void testCancelNumber() throws Exception {
         stubBaseSuccessResponse();
-        client.cancelNumber("AA", "447700900000");
-        assert401ResponseException(() -> client.cancelNumber("UK", "447700900000"));
+        client.cancelNumber(COUNTRY, MSISDN);
+        assert401ResponseException(() -> client.cancelNumber(COUNTRY, MSISDN));
     }
 
     @Test
     public void testBuyNumber() throws Exception {
         stubBaseSuccessResponse();
-        client.buyNumber("AU", "447700900000");
-        assert401ResponseException(() -> client.buyNumber("UK", "447700900000"));
+        client.buyNumber(COUNTRY, MSISDN);
+        assert401ResponseException(() -> client.buyNumber(COUNTRY, MSISDN));
     }
 
     @Test
     public void testUpdateNumber() throws Exception {
         stubBaseSuccessResponse();
-        UpdateNumberRequest request = new UpdateNumberRequest("447700900328", "UK");
+        UpdateNumberRequest request = UpdateNumberRequest.builder("447700900328", "us").build();
+        assertNotNull(request.getCountry());
+        assertNotNull(request.getMsisdn());
+        assertNull(request.getMoSmppSysType());
+        assertNull(request.getApplicationId());
+        assertNull(request.getMoHttpUrl());
+        assertNull(request.getVoiceCallbackType());
+        assertNull(request.getVoiceCallbackValue());
+        assertNull(request.getVoiceStatusCallback());
         client.updateNumber(request);
         assert401ResponseException(() -> client.updateNumber(request));
     }
@@ -188,7 +225,11 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
     @Test
     public void testLinkNumber() throws Exception {
         stubBaseSuccessResponse();
-        client.linkNumber("447700900328", "UK", "my-app-id");
+        client.linkNumber("447700900328", "UK", APPLICATION_ID_STR);
+        stubBaseSuccessResponse();
+        assertThrows(IllegalArgumentException.class, () ->
+                client.linkNumber(MSISDN, COUNTRY, "not-an-application_ID")
+        );
     }
 
     // ENDPOINTS

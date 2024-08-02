@@ -18,6 +18,7 @@ package com.vonage.client.numbers;
 import com.vonage.client.*;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import java.util.UUID;
 
 /**
  * A client for accessing the Vonage API calls that manage phone numbers. The standard way to obtain an instance of
@@ -173,12 +174,12 @@ public class NumbersClient {
      *
      * @param msisdn  The Vonage Virtual Number to be updated.
      * @param country The country for the given msisdn.
-     * @param appId   The ID for the Vonage Application to be associated with the number.
+     * @param appId   The UUID for the Vonage Application to be associated with the number.
      *
      * @throws NumbersResponseException If the API call returned an unsuccessful (4xx or 5xx) response.
      */
     public void linkNumber(String msisdn, String country, String appId) throws NumbersResponseException {
         updateNumber(UpdateNumberRequest.builder(msisdn, country)
-                .voiceCallback(UpdateNumberRequest.CallbackType.APP, appId).build());
+                .voiceCallback(UpdateNumberRequest.CallbackType.APP, UUID.fromString(appId).toString()).build());
     }
 }
