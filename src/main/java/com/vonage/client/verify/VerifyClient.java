@@ -185,7 +185,9 @@ public class VerifyClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @deprecated Use {@link #check(String, String)}.
      */
+    @Deprecated
     public CheckResponse check(CheckRequest request) throws VonageClientException, VonageResponseParseException {
         return check.execute(request);
     }

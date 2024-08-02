@@ -19,10 +19,18 @@ import com.vonage.client.QueryParamsRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Request used in {@link VerifyClient#check(CheckRequest)}.
+ *
+ * @deprecated This will be made package-private in the next major release.
+ */
+@Deprecated
 public class CheckRequest implements QueryParamsRequest {
     private final String requestId, code;
 
     /**
+     * Creates a new CheckRequest.
+     *
      * @param requestId The Verify request to check.
      * This is the request_id you received in the response to the Verify request.
      *
@@ -53,6 +61,8 @@ public class CheckRequest implements QueryParamsRequest {
     }
 
     /**
+     * PIN code entered by the user.
+     *
      * @return The verification code entered by your user.
      */
     public String getCode() {

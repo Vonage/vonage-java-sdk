@@ -135,7 +135,7 @@ public class Psd2Request extends BaseRequest {
     }
 
     public static class Builder {
-        private double amount;
+        private Double amount;
         private String payee, number, country;
         private Workflow workflow;
         private Locale locale;

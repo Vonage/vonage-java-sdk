@@ -68,8 +68,8 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                         "      \"moHttpUrl\": \""+moHttpUrl+"\",\n" +
                         "      \"type\": \"mobile-lvn\",\n" +
                         "      \"features\": [\n" +
-                        "        \"VOICE\",\n" +
-                        "        \"SMS\"\n" +
+                        "        \"SMS\",\n" +
+                        "        \"MMS\"\n" +
                         "      ],\n" +
                         "      \"messagesCallbackType\": \"app\",\n" +
                         "      \"messagesCallbackValue\": \""+ APPLICATION_ID_STR+"\",\n" +
@@ -107,8 +107,8 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
         assertNotNull(features);
         assertEquals(2, features.length);
         // TODO change to enum
-        assertEquals(Feature.VOICE, Feature.fromString(features[0]));
-        assertEquals(Feature.SMS, Feature.fromString(features[1]));
+        assertEquals(Feature.SMS, Feature.fromString(features[0]));
+        assertEquals(Feature.MMS, Feature.fromString(features[1]));
         // TODO change to enum
         assertEquals(CallbackType.SIP, CallbackType.fromString(main.getVoiceCallbackType()));
         assertEquals(voiceCallbackValue, main.getVoiceCallbackValue());
