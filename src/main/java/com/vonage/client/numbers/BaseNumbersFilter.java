@@ -26,9 +26,8 @@ import java.util.Objects;
  * @since 8.10.0
  */
 abstract class BaseNumbersFilter implements QueryParamsRequest {
-    private final String country;
     private Integer index, size;
-    private String pattern;
+    private String pattern, country;
     private SearchPattern searchPattern;
 
     BaseNumbersFilter(Builder<?, ?> builder) {
@@ -38,7 +37,9 @@ abstract class BaseNumbersFilter implements QueryParamsRequest {
         if ((size = builder.size) != null && (size < 1 || size > 100)) {
             throw new IllegalArgumentException("'size' must be between 1 and 100.");
         }
-        country = BaseNumberRequest.validateCountry(builder.country);
+        if (builder.country != null) {
+            country = BaseNumberRequest.validateCountry(builder.country);
+        }
         pattern = builder.pattern;
         searchPattern = builder.searchPattern;
     }

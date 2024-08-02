@@ -58,7 +58,7 @@ public class NumbersClient {
      * @throws NumbersResponseException If the API call returned an unsuccessful (4xx or 5xx) response.
      */
     public ListNumbersResponse listNumbers() throws NumbersResponseException {
-        return listNumbers(new ListNumbersFilter());
+        return listNumbers(ListNumbersFilter.builder().build());
     }
 
     /**
@@ -84,7 +84,7 @@ public class NumbersClient {
      * @throws NumbersResponseException If the API call returned an unsuccessful (4xx or 5xx) response.
      */
     public SearchNumbersResponse searchNumbers(String country) throws NumbersResponseException {
-        return searchNumbers(new SearchNumbersFilter(country));
+        return searchNumbers(SearchNumbersFilter.builder().country(country).build());
     }
 
     /**

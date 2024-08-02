@@ -17,8 +17,7 @@ package com.vonage.client.numbers;
 
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
-import com.vonage.client.TestUtils;
-import static com.vonage.client.TestUtils.testJsonableBaseObject;
+import static com.vonage.client.TestUtils.*;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.numbers.UpdateNumberRequest.CallbackType;
 import org.junit.jupiter.api.*;
@@ -30,6 +29,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
+    private static final String MSISDN = "447700900000", COUNTRY = "GB";
 
     public NumbersClientTest() {
         client = new NumbersClient(wrapper);
@@ -58,15 +58,14 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
     private void assertEqualsSampleListNumbers(Supplier<ListNumbersResponse> invocation) throws Exception {
         int count = 127;
-        String country = "GB", msisdn = "447700900000", moHttpUrl = "https://example.com/mo",
-                voiceCallbackValue = "sip:nexmo@example.com ";
+        String moHttpUrl = "https://example.com/mo", voiceCallbackValue = "sip:nexmo@example.com ";
 
         stubResponse(200, "{\n" +
-                "  \"count\": 1,\n" +
+                "  \"count\": "+count+",\n" +
                 "  \"numbers\": [{\"features\": null},\n" +
                 "    {\n" +
-                "      \"country\": \""+country+"\",\n" +
-                "      \"msisdn\": \""+msisdn+"\",\n" +
+                "      \"country\": \""+COUNTRY+"\",\n" +
+                "      \"msisdn\": \""+MSISDN+"\",\n" +
                 "      \"moHttpUrl\": \""+moHttpUrl+"\",\n" +
                 "      \"type\": \"mobile-lvn\",\n" +
                 "      \"features\": [\n" +
@@ -74,7 +73,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                 "        \"SMS\"\n" +
                 "      ],\n" +
                 "      \"messagesCallbackType\": \"app\",\n" +
-                "      \"messagesCallbackValue\": \""+TestUtils.APPLICATION_ID_STR+"\"\n" +
+                "      \"messagesCallbackValue\": \""+ APPLICATION_ID_STR+"\",\n" +
                 "      \"voiceCallbackType\": \"sip\",\n" +
                 "      \"voiceCallbackValue\": \""+voiceCallbackValue+"\"\n" +
                 "    },\n" +
@@ -95,12 +94,12 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
         assertNull(numbers[0].getFeatures());
         var main = numbers[1];
         testJsonableBaseObject(main);
-        assertEquals(country, main.getCountry());
-        assertEquals(msisdn, main.getMsisdn());
+        assertEquals(COUNTRY, main.getCountry());
+        assertEquals(MSISDN, main.getMsisdn());
         // TODO change to URI
         assertEquals(URI.create(moHttpUrl).toString(), main.getMoHttpUrl());
         // TODO change to enum
-        assertEquals(Type.MOBILE_LVN, Type.valueOf(main.getType()));
+        assertEquals(Type.MOBILE_LVN, Type.fromString(main.getType()));
         var features = main.getFeatures();
         assertNotNull(features);
         assertEquals(2, features.length);
@@ -108,10 +107,10 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
         assertEquals(Feature.VOICE, Feature.fromString(features[0]));
         assertEquals(Feature.SMS, Feature.fromString(features[1]));
         // TODO change to enum
-        assertEquals(CallbackType.SIP, CallbackType.valueOf(main.getVoiceCallbackType()));
+        assertEquals(CallbackType.SIP, CallbackType.fromString(main.getVoiceCallbackType()));
         assertEquals(voiceCallbackValue, main.getVoiceCallbackValue());
-        assertEquals(TestUtils.APPLICATION_ID, main.getMessagesCallbackValue());
-        var last = numbers[3];
+        assertEquals(APPLICATION_ID, main.getMessagesCallbackValue());
+        var last = numbers[2];
         testJsonableBaseObject(last);
         // TODO change to enum
         assertEquals(Type.LANDLINE_TOLL_FREE, Type.fromString(last.getType()));
@@ -121,55 +120,24 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
     @Test
     public void testListNumbers() throws Exception {
-        stubResponse(200, "{\n" +
-                "  \"count\": 1,\n" +
-                "  \"numbers\": [\n" +
-                "    {\n" +
-                "      \"country\": \"GB\",\n" +
-                "      \"msisdn\": \"447700900000\",\n" +
-                "      \"moHttpUrl\": \"https://example.com/mo\",\n" +
-                "      \"type\": \"mobile-lvn\",\n" +
-                "      \"features\": [\n" +
-                "        \"VOICE\",\n" +
-                "        \"SMS\"\n" +
-                "      ],\n" +
-                "      \"voiceCallbackType\": \"app\",\n" +
-                "      \"voiceCallbackValue\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}");
-        ListNumbersResponse response = client.listNumbers();
-        testJsonableBaseObject(response);
-        assertEquals(1, response.getCount());
+        assertEqualsSampleListNumbers(client::listNumbers);
         assert401ResponseException(client::listNumbers);
-    }
 
-    @Test
-    public void testListNumberWithParams() throws Exception {
-        stubResponse(200, "{\n" +
-                "  \"count\": 1,\n" +
-                "  \"numbers\": [\n" +
-                "    {\n" +
-                "      \"country\": \"GB\",\n" +
-                "      \"msisdn\": \"447700900000\",\n" +
-                "      \"moHttpUrl\": \"https://example.com/mo\",\n" +
-                "      \"type\": \"mobile-lvn\",\n" +
-                "      \"features\": [\n" +
-                "        \"MMS\"\n" +
-                "      ],\n" +
-                "      \"voiceCallbackType\": \"app\",\n" +
-                "      \"voiceCallbackValue\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}");
+        var filter = ListNumbersFilter.builder()
+                .pattern(SearchPattern.ENDS_WITH, "2345")
+                .applicationId(APPLICATION_ID_STR)
+                .hasApplication(false).country("us")
+                .index(9).size(24).build();
 
-        ListNumbersFilter filter = new ListNumbersFilter();
-        filter.setIndex(10);
-        filter.setSize(20);
-        filter.setPattern("234");
-        filter.setSearchPattern(SearchPattern.ENDS_WITH);
-        ListNumbersResponse response = client.listNumbers(filter);
-        assertEquals(1, response.getCount());
+        assertEquals("US", filter.getCountry());
+        assertEquals("ENDS_WITH", filter.getSearchPattern().toString());
+        assertEquals("2345", filter.getPattern());
+        assertEquals(APPLICATION_ID, filter.getApplicationId());
+        assertEquals(false, filter.getHasApplication());
+        assertEquals(9, filter.getIndex());
+        assertEquals(24, filter.getSize());
+
+        assertEqualsSampleListNumbers(() -> client.listNumbers(filter));
         assert401ResponseException(() -> client.listNumbers(filter));
     }
 
@@ -205,7 +173,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
     @Test
     public void testBuyNumber() throws Exception {
         stubBaseSuccessResponse();
-        client.buyNumber("AA", "447700900000");
+        client.buyNumber("AU", "447700900000");
         assert401ResponseException(() -> client.buyNumber("UK", "447700900000"));
     }
 
@@ -247,20 +215,63 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
             @Override
             protected ListNumbersFilter sampleRequest() {
                 return ListNumbersFilter.builder()
-                    .pattern(SearchPattern.STARTS_WITH, "*234")
-                    .index(10).size(20).country("DE").build();
+                        .applicationId(APPLICATION_ID).hasApplication(true)
+                        .pattern(SearchPattern.STARTS_WITH, "*1337*")
+                        .index(10).size(20).country("DE").build();
             }
 
             @Override
             protected Map<String, String> sampleQueryParams() {
                 ListNumbersFilter request = sampleRequest();
-                Map<String, String> params = new LinkedHashMap<>(8);
+                Map<String, String> params = new LinkedHashMap<>();
                 params.put("pattern", request.getPattern());
                 params.put("search_pattern", String.valueOf(request.getSearchPattern().getValue()));
                 params.put("index", String.valueOf(request.getIndex()));
                 params.put("size", String.valueOf(request.getSize()));
                 params.put("country", request.getCountry());
+                params.put("application_id", request.getApplicationId().toString());
+                params.put("has_application", request.getHasApplication().toString());
                 return params;
+            }
+
+            @Override
+            public void runTests() throws Exception {
+                super.runTests();
+                testValidation();
+                testBlank();
+                testDeprecated();
+            }
+
+            private void testValidation() {
+                assertThrows(IllegalArgumentException.class, () -> ListNumbersFilter.builder().country("ABC").build());
+                assertEquals(1, ListNumbersFilter.builder().index(1).build().getIndex());
+                assertThrows(IllegalArgumentException.class, () -> ListNumbersFilter.builder().index(0).build());
+                assertEquals(100, ListNumbersFilter.builder().size(100).build().getSize());
+                assertThrows(IllegalArgumentException.class, () -> ListNumbersFilter.builder().size(101).build());
+                assertThrows(IllegalArgumentException.class, () -> ListNumbersFilter.builder().size(0).build());
+            }
+
+            private void testBlank() throws Exception {
+                var blank = new ListNumbersFilter();
+                assertNull(blank.getHasApplication());
+                assertNull(blank.getApplicationId());
+                assertNull(blank.getSearchPattern());
+                assertNull(blank.getPattern());
+                assertNull(blank.getIndex());
+                assertNull(blank.getSize());
+                assertNull(blank.getCountry());
+                assertRequestUriAndBody(blank, Map.of());
+            }
+
+            private void testDeprecated() {
+                var old = new ListNumbersFilter(2, 99, "*", SearchPattern.ANYWHERE);
+                assertEquals(2, old.getIndex());
+                assertEquals(99, old.getSize());
+                assertEquals("*", old.getPattern());
+                assertEquals(SearchPattern.ANYWHERE, old.getSearchPattern());
+                assertNull(old.getHasApplication());
+                assertNull(old.getApplicationId());
+                assertNull(old.getCountry());
             }
         }
         .runTests();
@@ -297,7 +308,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
             @Override
             protected Map<String, String> sampleQueryParams() {
                 SearchNumbersFilter filter = sampleRequest();
-                Map<String, String> params = new LinkedHashMap<>(8);
+                Map<String, String> params = new LinkedHashMap<>();
                 params.put("country", filter.getCountry());
                 params.put("features", String.join(",", filter.getFeatures()));
                 params.put("pattern", filter.getPattern());
@@ -306,6 +317,28 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                 params.put("size", String.valueOf(filter.getSize()));
                 params.put("type", filter.getType().name().toLowerCase().replace('_', '-'));
                 return params;
+            }
+
+            @Override
+            public void runTests() throws Exception {
+                super.runTests();
+                testDeprecated();
+            }
+
+            private void testDeprecated() throws Exception {
+                var filter = new SearchNumbersFilter("io");
+                assertRequestUriAndBody(filter, Map.of("country", "IO"));
+
+                var sample = sampleRequest();
+                filter.setType(sample.getType());
+                filter.setIndex(sample.getIndex());
+                filter.setSize(sample.getSize());
+                filter.setFeatures(sample.getFeatures());
+                filter.setPattern(sample.getPattern());
+                filter.setSearchPattern(sample.getSearchPattern());
+                var params = sampleQueryParams();
+                params.put("country", filter.getCountry());
+                assertRequestUriAndBody(filter, params);
             }
         }
         .runTests();
@@ -362,7 +395,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
             @Override
             protected UpdateNumberRequest sampleRequest() {
                 return UpdateNumberRequest.builder("447700900013", "UK")
-                        .applicationId(TestUtils.APPLICATION_ID_STR)
+                        .applicationId(APPLICATION_ID_STR)
                         .voiceStatusCallback("https://api.example.com/callback")
                         .voiceCallback(CallbackType.TEL, "1234-5678-9123-4567")
                         .moHttpUrl("https://api.example.com/mo").moSmppSysType("inbound").build();

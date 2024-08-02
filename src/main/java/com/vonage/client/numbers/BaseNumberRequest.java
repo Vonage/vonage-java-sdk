@@ -63,6 +63,6 @@ abstract class BaseNumberRequest implements QueryParamsRequest {
         if (country == null || country.length() != 2) {
             throw new IllegalArgumentException("Country code is required in ISO 3166-1 alpha-2 format.");
         }
-        return country;
+        return country.toUpperCase();
     }
 }
