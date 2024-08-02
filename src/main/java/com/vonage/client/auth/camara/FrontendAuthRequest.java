@@ -40,7 +40,9 @@ public class FrontendAuthRequest extends AuthRequest {
         params.put("client_id", Objects.requireNonNull(applicationId, "Application ID is required.").toString());
         params.put("redirect_uri", Objects.requireNonNull(redirectUrl, "Redirect URL is required.").toString());
         params.put("response_type", "code");
-        params.put("state", state);
+        if (state != null) {
+            params.put("state", state);
+        }
     }
 
     public URI buildOidcUrl() {

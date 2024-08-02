@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Builders for `ListNumbersFilter` and `SearchNumbersFilter`
 - Improved / added missing documentation in Numbers API
 - Deprecated setters in Numbers API
+- `state` not included in Number Verification auth URL if null
 
 # [8.9.4] - 2024-07-25
 - Fixed UUID validation in `ConversationAction.Builder#canHear` and `canSpeak`
