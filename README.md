@@ -32,7 +32,6 @@ You'll need to have [created a Vonage account](https://dashboard.nexmo.com/sign-
 - [Number Insight](https://developer.vonage.com/en/number-insight/overview)
 - [Number Management](https://developer.vonage.com/en/numbers/overview)
 - [Number Verification](https://developer.vonage.com/en/number-verification/overview)
-- [Proactive Connect](https://developer.vonage.com/en/proactive-connect/overview)
 - [Redact](https://developer.vonage.com/en/redact/overview)
 - [SIM Swap](https://developer.vonage.com/en/sim-swap/overview)
 - [SMS](https://developer.vonage.com/en/messaging/sms/overview)
@@ -167,7 +166,7 @@ If you would like to use the SDK in a multithreaded environment, create a separa
 
 **Q: How do I migrate from TokBox to Vonage?**
 
-**A:** See [the OpenTok migration guide](src/main/java/com/vonage/client/video/OPENTOK_TO_VONAGE_MIGRATION.md).
+**A:** See [the OpenTok migration guide](https://developer.vonage.com/en/video/transition-guides/server-sdks/java).
 
 ## Contribute!
 
