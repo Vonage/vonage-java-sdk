@@ -32,6 +32,8 @@ import com.vonage.client.users.channels.Sms;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Map;
@@ -39,6 +41,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+@Execution(ExecutionMode.SAME_THREAD)
 public class ConversationsClientTest extends AbstractClientTest<ConversationsClient> {
 	static final Random RANDOM = new Random();
 	static final boolean IS_SYSTEM = false, EXCLUDE_DELETED_EVENTS = true,

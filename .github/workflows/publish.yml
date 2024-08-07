@@ -6,13 +6,13 @@ on:
 permissions:
   actions: write
   checks: write
-  contents: write
+  contents: read
   deployments: read
-  issues: write
+  issues: none
   discussions: none
   packages: write
-  pages: write
-  pull-requests: write
+  pages: read
+  pull-requests: none
   security-events: write
   statuses: write
 
@@ -40,4 +40,4 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSS_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSS_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.SIGNING_PASSWORD }}
-        run: mvn --no-transfer-progress --batch-mode deploy -P release-sign-artifacts
+        run: mvn -e --no-transfer-progress --batch-mode deploy -P release-sign-artifacts

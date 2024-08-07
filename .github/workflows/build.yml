@@ -36,7 +36,7 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: maven
       - name: Compile with Maven
-        run: mvn --batch-mode compile
+        run: mvn -e --batch-mode compile -T 1C
 
   test:
     runs-on: ${{ matrix.os }}
@@ -55,6 +55,6 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: maven
       - name: Test with Maven
-        run: mvn --batch-mode verify
+        run: mvn -e --batch-mode verify -T 1C
       - name: Run Codecov
         uses: codecov/codecov-action@v4
