@@ -5,8 +5,9 @@
 [![Build Status](https://github.com/Vonage/vonage-java-sdk/actions/workflows/build.yml/badge.svg)](https://github.com/Vonage/vonage-java-sdk/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/vonage/vonage-java-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/vonage/vonage-java-sdk)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
-[![Snyk](https://snyk.io/test/github/vonage/vonage-java-sdk/badge.svg)](https://snyk.io/test/github/vonage/vonage-java-sdk)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE.txt)
+[![Snyk](https://snyk.io/test/github/vonage/vonage-java-sdk/badge.svg)](https://snyk.io/test/github/vonage/vonage-java-sdk)
+[![Pulse](https://img.shields.io/github/commit-activity/m/vonage/vonage-java-sdk)](https://github.com/vonage/vonage-java-sdk/pulse)
 
 <img src="https://developer.nexmo.com/assets/images/Vonage_Nexmo.svg" height="48px" alt="Nexmo is now known as Vonage" />
 
@@ -172,8 +173,11 @@ If you would like to use the SDK in a multithreaded environment, create a separa
 
 _We :heart: contributions to this library!_
 
-It is a good idea to [talk to us](https://developer.vonage.com/community/slack)
-first if you plan to add any new functionality.
+It is a good idea to talk to us first if you plan to add any new functionality.
 Otherwise, [bug reports](https://github.com/Vonage/vonage-java-sdk/issues),
 [bug fixes](https://github.com/Vonage/vonage-java-sdk/pulls) and feedback on the
 library are always appreciated.
+
+### Contact
+[![Slack](https://img.shields.io/badge/Slack-4A154B?style=flat&logo=slack&logoColor=white)](https://developer.vonage.com/community/slack)
+[![Twitter](https://img.shields.io/badge/Twitter-000000?style=flat&logo=x&logoColor=white)](https://twitter.com/VonageDev)
