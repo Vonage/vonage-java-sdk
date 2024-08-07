@@ -86,7 +86,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.10.2</version>
+      <version>5.10.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -194,7 +194,6 @@
         <version>3.3.1</version>
         <configuration>
           <argLine>--enable-preview</argLine>
-          <parallel>classes</parallel>
         </configuration>
       </plugin>
 
