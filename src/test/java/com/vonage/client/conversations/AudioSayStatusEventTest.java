@@ -34,16 +34,14 @@ public class AudioSayStatusEventTest extends AbstractEventTest {
     <E extends AudioSayStatusEvent> void testStatusEvent(
             EventType eventType, String eventTypeStr, Class<E> eventClass) {
 
-        E event = parseEvent(eventType, eventClass, STR."""
-            {
-                "id": \{randomEventId},
-                "type": "audio:say:\{eventTypeStr}",
-                "body": {
-                   "say_id": "\{randomIdStr}"
-                },
-                "_links": {}
-            }
-            """
+        E event = parseEvent(eventType, eventClass, "{\n" +
+            "  \"id\": " + randomEventId + ",\n" +
+            "  \"type\": \"audio:say:" + eventTypeStr + "\",\n" +
+            "  \"body\": {\n" +
+            "    \"say_id\": \"" + randomIdStr + "\"\n" +
+            "  },\n" +
+            "  \"_links\": {}\n" +
+            "}"
         );
         assertEquals(randomId, event.getSayId());
         assertEquals(randomEventId, event.getId());

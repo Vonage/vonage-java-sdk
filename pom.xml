@@ -185,16 +185,12 @@
           <testSource>${java.testVersion}</testSource>
           <testTarget>${java.testVersion}</testTarget>
           <testRelease>${java.testVersion}</testRelease>
-          <testCompilerArgument>--enable-preview</testCompilerArgument>
         </configuration>
       </plugin>
 
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.3.1</version>
-        <configuration>
-          <argLine>--enable-preview</argLine>
-        </configuration>
       </plugin>
 
       <plugin>

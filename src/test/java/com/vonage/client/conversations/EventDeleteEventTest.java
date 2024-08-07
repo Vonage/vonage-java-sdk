@@ -25,34 +25,32 @@ public class EventDeleteEventTest extends AbstractEventTest {
     @Test
     public void testParseDeleteEvent() {
         int bodyId = new Random().nextInt();
-        var event = parseEvent(EventType.EVENT_DELETE, EventDeleteEvent.class, STR."""
-            {
-               "id": \{randomEventId},
-               "type": "event:delete",
-               "from": "\{from}",
-               "body": {
-                  "event_id": "\{bodyId}"
-               },
-               "timestamp": "2020-01-01T14:00:00.00Z",
-               "_embedded": {
-                  "from_user": {
-                     "id": "USR-82e028d9-5201-4f1e-8188-604b2d3471ec",
-                     "name": "my_user_name",
-                     "display_name": "My User Name",
-                     "image_url": "https://example.com/image.png",
-                     "custom_data": {}
-                  },
-                  "from_member": {
-                     "id": "string"
-                  }
-               },
-               "_links": {
-                  "self": {
-                     "href": "string"
-                  }
-               }
-            }
-            """
+        var event = parseEvent(EventType.EVENT_DELETE, EventDeleteEvent.class, "{\n" +
+            "  \"id\": " + randomEventId + ",\n" +
+            "  \"type\": \"event:delete\",\n" +
+            "  \"from\": \"" + from + "\",\n" +
+            "  \"body\": {\n" +
+            "    \"event_id\": \"" + bodyId + "\"\n" +
+            "  },\n" +
+            "  \"timestamp\": \"2020-01-01T14:00:00.00Z\",\n" +
+            "  \"_embedded\": {\n" +
+            "    \"from_user\": {\n" +
+            "      \"id\": \"USR-82e028d9-5201-4f1e-8188-604b2d3471ec\",\n" +
+            "      \"name\": \"my_user_name\",\n" +
+            "      \"display_name\": \"My User Name\",\n" +
+            "      \"image_url\": \"https://example.com/image.png\",\n" +
+            "      \"custom_data\": {}\n" +
+            "    },\n" +
+            "    \"from_member\": {\n" +
+            "      \"id\": \"string\"\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"_links\": {\n" +
+            "    \"self\": {\n" +
+            "      \"href\": \"string\"\n" +
+            "    }\n" +
+            "  }\n" +
+            "}"
         );
         assertEquals(randomEventId, event.getId());
         assertEquals(bodyId, event.getEventId());

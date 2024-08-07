@@ -23,23 +23,21 @@ public class ConversationUpdatedEventTest extends AbstractEventTest {
 
     @Test
     public void testParseConversationUpdatedEvent() {
-        var event = parseEvent(EventType.CONVERSATION_UPDATED, ConversationUpdatedEvent.class, STR."""
-            {
-               "type": "conversation:updated",
-               "body": {
-                    "id": "CON-\{randomId}",
-                    "name": "Test_conv",
-                    "timestamp": {
-                       "created": "2020-01-01T14:00:00.02Z",
-                       "updated": "2020-01-01T14:05:00.00Z",
-                       "destroyed": "2020-01-01T14:20:00.36Z"
-                    },
-                    "display_name": "Conversation DP",
-                    "image_url": "https://example.org/pic.png",
-                    "state": "ACTIVE"
-               }
-            }
-            """
+        var event = parseEvent(EventType.CONVERSATION_UPDATED, ConversationUpdatedEvent.class, "{\n" +
+            "  \"type\": \"conversation:updated\",\n" +
+            "  \"body\": {\n" +
+            "    \"id\": \"CON-" + randomId + "\",\n" +
+            "    \"name\": \"Test_conv\",\n" +
+            "    \"timestamp\": {\n" +
+            "      \"created\": \"2020-01-01T14:00:00.02Z\",\n" +
+            "      \"updated\": \"2020-01-01T14:05:00.00Z\",\n" +
+            "      \"destroyed\": \"2020-01-01T14:20:00.36Z\"\n" +
+            "    },\n" +
+            "    \"display_name\": \"Conversation DP\",\n" +
+            "    \"image_url\": \"https://example.org/pic.png\",\n" +
+            "    \"state\": \"ACTIVE\"\n" +
+            "  }\n" +
+            "}"
         );
         BaseConversation conversation = event.getConversation();
         TestUtils.testJsonableBaseObject(conversation);

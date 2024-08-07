@@ -106,236 +106,203 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 			CONVERSATION_CUSTOM_SORT_KEY = "CSK_1",
 			CONVERSATION_CUSTOM_DATA_STR = "{\"property1\":\"value1\",\"prop2\":\"Val 2\"}",
 			REQUEST_CURSOR = "7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg=",
-			SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL = STR."""
-				{
-				   "id": "\{CONVERSATION_ID}",
-				   "name": "\{CONVERSATION_NAME}",
-				   "display_name": "\{CONVERSATION_DISPLAY_NAME}",
-				   "image_url": "\{CONVERSATION_IMAGE_URL_STR}",
-				   "timestamp": {
-					  "created": "\{TIMESTAMP_CREATED_STR}",
-					  "updated": "\{TIMESTAMP_UPDATED_STR}",
-					  "destroyed": "\{TIMESTAMP_DESTROYED_STR}"
-				   },""",
-			SAMPLE_BASE_CONVERSATION_RESPONSE = SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL
-                    .substring(0, SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL.length() - 1)+"\n\t}",
-			SAMPLE_CONVERSATION_RESPONSE_PARTIAL = SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL + STR."""
-				   "state": "\{CONVERSATION_STATE_STR}",
-				   "sequence_number": \{CONVERSATION_SEQUENCE_NUMBER},
-				   "properties": {
-					  "ttl": \{CONVERSATION_TTL},
-					  "type": "\{CONVERSATION_TYPE}",
-					  "custom_sort_key": "\{CONVERSATION_CUSTOM_SORT_KEY}",
-					  "custom_data": \{CONVERSATION_CUSTOM_DATA_STR}
-				   },
-				   "_links": {
-					  "self": {
-						 "href": "https://api.nexmo.com/v1/conversations/\{CONVERSATION_ID}"
-					  }
-				   }""",
+			SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL = "{\n" +
+					"   \"id\": \"" + CONVERSATION_ID + "\",\n" +
+					"   \"name\": \"" + CONVERSATION_NAME + "\",\n" +
+					"   \"display_name\": \"" + CONVERSATION_DISPLAY_NAME + "\",\n" +
+					"   \"image_url\": \"" + CONVERSATION_IMAGE_URL_STR + "\",\n" +
+					"   \"timestamp\": {\n" +
+					"      \"created\": \"" + TIMESTAMP_CREATED_STR + "\",\n" +
+					"      \"updated\": \"" + TIMESTAMP_UPDATED_STR + "\",\n" +
+					"      \"destroyed\": \"" + TIMESTAMP_DESTROYED_STR + "\"\n" +
+					"   }",
+			SAMPLE_BASE_CONVERSATION_RESPONSE = SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL + "\n}",
+			SAMPLE_CONVERSATION_RESPONSE_PARTIAL = SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL + ",\n" +
+					"   \"state\": \"" + CONVERSATION_STATE_STR + "\",\n" +
+					"   \"sequence_number\": " + CONVERSATION_SEQUENCE_NUMBER + ",\n" +
+					"   \"properties\": {\n" +
+					"      \"ttl\": " + CONVERSATION_TTL + ",\n" +
+					"      \"type\": \"" + CONVERSATION_TYPE + "\",\n" +
+					"      \"custom_sort_key\": \"" + CONVERSATION_CUSTOM_SORT_KEY + "\",\n" +
+					"      \"custom_data\": " + CONVERSATION_CUSTOM_DATA_STR + "\n" +
+					"   },\n" +
+					"   \"_links\": {\n" +
+					"      \"self\": {\n" +
+					"         \"href\": \"https://api.nexmo.com/v1/conversations/" + CONVERSATION_ID + "\"\n" +
+					"      }\n" +
+					"   }",
 			SAMPLE_CONVERSATION_RESPONSE = SAMPLE_CONVERSATION_RESPONSE_PARTIAL + "\n}",
-			SAMPLE_LIST_CONVERSATIONS_RESPONSE = STR."""
-   				{
-				   "page_size": \{PAGE_SIZE},
-				   "_embedded": {
-					  "conversations": [
-						 {}, \{SAMPLE_BASE_CONVERSATION_RESPONSE}, {"id":null}
-					  ]
-				   },
-				   "_links": {
-					  "first": {
-						 "href": "https://api.nexmo.com/v1/conversations?order=desc&page_size=10"
-					  },
-					  "self": {
-						 "href": "https://api.nexmo.com/v1/conversations?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg="
-					  },
-					  "next": {
-						 "href": "https://api.nexmo.com/v1/conversations?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg="
-					  },
-					  "prev": {
-						 "href": "https://api.nexmo.com/v1/conversations?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg="
-					  }
-				   }
-				}
-			""",
-			SAMPLE_USER_CONVERSATION_RESPONSE = SAMPLE_CONVERSATION_RESPONSE_PARTIAL + STR."""
-   			,
-   			"_embedded": {
-				  "id": "\{MEMBER_ID}",
-				  "state": "\{MEMBER_STATE_STR}"
-			   }
-			}
-			""",
-			SAMPLE_LIST_USER_CONVERSATIONS_RESPONSE = STR."""
-   				{
-				   "page_size": \{PAGE_SIZE},
-				   "_embedded": {
-					  "conversations": [
-						 \{SAMPLE_USER_CONVERSATION_RESPONSE}, {"_embedded": {}}
-					  ]
-				   },
-				   "_links": {
-					  "first": {
-						 "href": "https://api.nexmo.com/v1/conversations?order=desc&page_size=10"
-					  },
-					  "self": {
-						 "href": "https://api.nexmo.com/v1/conversations?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg="
-					  },
-					  "next": {
-						 "href": "https://api.nexmo.com/v1/conversations?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg="
-					  },
-					  "prev": {
-						 "href": "https://api.nexmo.com/v1/conversations?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg="
-					  }
-				   }
-				}
-			""",
-			SAMPLE_USER_SESSION_RESPONSE = STR."""
-   				{
-					"id": "\{SESSION_ID}",
-					"_embedded": {
-					   "user": {
-						  "id": "\{USER_ID}",
-						  "name": "\{USER_NAME}"
-					   },
-					   "api_key": "\{TestUtils.API_KEY}"
-					},
-					"properties": {
-					   "ttl": \{USER_SESSION_TTL}
-					},
-					"_links": {
-					   "self": {
-						  "href": "https://api.nexmo.com/v1/users/\{USER_ID}/sessions"
-					   }
-					}
-			 	}
-			""",
-			SAMPLE_BASE_MEMBER_RESPONSE_PARTIAL = STR."""
-				{
-					"id": "\{MEMBER_ID}",
-					"conversation_id": "\{CONVERSATION_ID}",
-					"_embedded": {
-						 "user": {
-							"id": "\{USER_ID}",
-							"name": "\{USER_NAME}",
-							"display_name": "\{USER_DISPLAY_NAME}",
-							"_links": {
-							   "self": {
-								  "href": "https://api.nexmo.com/v1/users/\{USER_ID}"
-							   }
-							}
-						}
-					},
-					"state": "\{MEMBER_STATE_STR}",
-					"_links": {
-					 "href": "https://api.nexmo.com/v1/conversations/\{CONVERSATION_ID}/members/\{MEMBER_ID}"
-					}""",
-			SAMPLE_BASE_MEMBER_RESPONSE = STR."\{SAMPLE_BASE_MEMBER_RESPONSE_PARTIAL}\n\t}",
-			SAMPLE_MEMBER_RESPONSE = SAMPLE_BASE_MEMBER_RESPONSE_PARTIAL + STR."""
-				  ,
-				  "timestamp": {
-					 "invited": "\{TIMESTAMP_INVITED_STR}",
-					 "joined": "\{TIMESTAMP_JOINED_STR}",
-					 "left": "\{TIMESTAMP_LEFT_STR}"
-				  },
-				  "initiator": {
-					 "joined": {
-						"is_system": \{IS_SYSTEM},
-						"user_id": "\{INVITING_USER_ID}",
-						"member_id": "\{MEMBER_ID_INVITING}"
-					 }
-				  },
-				  "channel": {
-					 "type": "\{CHANNEL_TYPE_STR}",
-					 "from": {
-						"type": "\{CHANNEL_TYPE_FROM_STR}",
-						"number": "\{FROM_NUMBER}"
-					 },
-					 "to": {
-						"type": "\{CHANNEL_TYPE_TO_STR}",
-						"number": "\{TO_NUMBER}"
-					 }
-				  },
-				  "media": {
-					 "audio_settings": {
-						"enabled": \{AUDIO_ENABLED},
-						"earmuffed": \{AUDIO_EARMUFFED},
-						"muted": \{AUDIO_MUTED}
-					 },
-					 "audio": \{AUDIO}
-				  },
-				  "knocking_id": "\{KNOCKING_ID_STR}",
-				  "invited_by": "\{INVITED_BY}"
-			   }
-			""",
-			SAMPLE_LIST_MEMBERS_RESPONSE = STR."""
-               {
-                  "page_size": \{PAGE_SIZE},
-                  "_embedded": {
-                     "members": [
-                        {},
-                        \{SAMPLE_BASE_MEMBER_RESPONSE},
-                        {"state": "LEFT", "id": "\{MEMBER_ID_INVITING}"},
-                        {"_embedded": {"user": {}}},
-                        {"_embedded": {}, "_links": {}}
-                     ]
-                  },
-                  "_links": {
-                     "first": {
-                        "href": "https://api.nexmo.com/v1/conversations/CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a/members?order=desc&page_size=10"
-                     },
-                     "self": {
-                        "href": "https://api.nexmo.com/v1/conversations/CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a/members?order=desc&page_size=10&cursor=88b395c167da4d94e929705cbd63b82973771e7d390d274a58e301386d5762600a3ffd799bfb3fc5190c5a0d124cdd0fc72fe6e450506b18e4e2edf9fe84c7a0"
-                     },
-                     "next": {
-                        "href": "https://api.nexmo.com/v1/conversations/CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a/members?order=desc&page_size=10&cursor=88b395c167da4d94e929705cbd63b829a650e69a39197bfd4c949f4243f60dc4babb696afa404d2f44e7775e32b967f2a1a0bb8fb259c0999ba5a4e501eaab55"
-                     },
-                     "prev": {
-                        "href": "https://api.nexmo.com/v1/conversations/CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a/members?order=desc&page_size=10&cursor=069626a3de11d2ec900dff5042197bd75f1ce41dafc3f2b2481eb9151086e59aae9dba3e3a8858dc355232d499c310fbfbec43923ff657c0de8d49ffed9f7edb"
-                     }
-                  }
-               }
-            """,
-			SAMPLE_EVENT_RESPONSE = STR."""
-   				{
-   					"id": \{EVENT_ID},
-					"type": "\{CUSTOM_EVENT_TYPE_STR}",
-				    "from": "\{MEMBER_ID}",
-				    "body": \{CONVERSATION_CUSTOM_DATA_STR},
-				    "timestamp": "\{TIMESTAMP_CREATED_STR}",
-				    "_embedded": {
-				 	  "from_user": {
-				 		 "id": "\{USER_ID}",
-				 		 "name": "\{USER_NAME}",
-				 		 "display_name": "\{USER_DISPLAY_NAME}",
-				 		 "image_url": "\{USER_IMAGE_URL_STR}",
-				 		 "custom_data": {}
-				 	  },
-				 	  "from_member": {
-				 		 "id": "\{MEMBER_ID_INVITING}"
-				 	  }
-				    },
-				    "_links": {
-				 	  "self": {
-				 		 "href": "https://api.nexmo.com/v1/conversations/\{CONVERSATION_ID}/events/\{EVENT_ID}"
-				 	  }
-				    }
-				}
-			""",
-			SAMPLE_LIST_EVENTS_RESPONSE = STR."""
-   				{
-					"page_size": \{PAGE_SIZE},
-					"_links": {
-					  "first": {},"self": {},"next": {},"prev": {}
-					},
-					"_embedded": {
-						"events": [
-							\{SAMPLE_EVENT_RESPONSE},
-							{}, {"type": "\{KNOWN_EVENT_TYPE_STR}"}
-						]
-					}
-			   }
-			""";
+			SAMPLE_LIST_CONVERSATIONS_RESPONSE = "{\n" +
+					"   \"page_size\": " + PAGE_SIZE + ",\n" +
+					"   \"_embedded\": {\n" +
+					"      \"conversations\": [\n" +
+					"         {}, " + SAMPLE_BASE_CONVERSATION_RESPONSE + ", {\"id\":null}\n" +
+					"      ]\n" +
+					"   },\n" +
+					"   \"_links\": {\n" +
+					"      \"first\": {\n" +
+					"         \"href\": \"https://api.nexmo.com/v1/conversations?order=desc&page_size=10\"\n" +
+					"      },\n" +
+					"      \"self\": {\n" +
+					"         \"href\": \"https://api.nexmo.com/v1/conversations?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg=\"\n" +
+					"      },\n" +
+					"      \"next\": {\n" +
+					"         \"href\": \"https://api.nexmo.com/v1/conversations?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg=\"\n" +
+					"      },\n" +
+					"      \"prev\": {\n" +
+					"         \"href\": \"https://api.nexmo.com/v1/conversations?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg=\"\n" +
+					"      }\n" +
+					"   }\n" +
+					"}",
+			SAMPLE_USER_CONVERSATION_RESPONSE = SAMPLE_CONVERSATION_RESPONSE_PARTIAL + ",\n" +
+					"\"_embedded\": {\n" +
+					"   \"id\": \"" + MEMBER_ID + "\",\n" +
+					"   \"state\": \"" + MEMBER_STATE_STR + "\"\n" +
+					"}\n" +
+				"}",
+			SAMPLE_LIST_USER_CONVERSATIONS_RESPONSE = "{\n" +
+				"   \"page_size\": " + PAGE_SIZE + ",\n" +
+				"   \"_embedded\": {\n" +
+				"      \"conversations\": [\n" +
+				"         " + SAMPLE_USER_CONVERSATION_RESPONSE + ", {\"_embedded\": {}}\n" +
+				"      ]\n" +
+				"   },\n" +
+				"   \"_links\": {\n" +
+				"      \"first\": {\n" +
+				"         \"href\": \"https://api.nexmo.com/v1/conversations?order=desc&page_size=10\"\n" +
+				"      },\n" +
+				"      \"self\": {\n" +
+				"         \"href\": \"https://api.nexmo.com/v1/conversations?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg=\"\n" +
+				"      },\n" +
+				"      \"next\": {\n" +
+				"         \"href\": \"https://api.nexmo.com/v1/conversations?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg=\"\n" +
+				"      },\n" +
+				"      \"prev\": {\n" +
+				"         \"href\": \"https://api.nexmo.com/v1/conversations?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg=\"\n" +
+				"      }\n" +
+				"   }\n" +
+				"}",
+			SAMPLE_BASE_MEMBER_RESPONSE_PARTIAL = "{\n" +
+				"   \"id\": \"" + MEMBER_ID + "\",\n" +
+				"   \"conversation_id\": \"" + CONVERSATION_ID + "\",\n" +
+				"   \"_embedded\": {\n" +
+				"      \"user\": {\n" +
+				"         \"id\": \"" + USER_ID + "\",\n" +
+				"         \"name\": \"" + USER_NAME + "\",\n" +
+				"         \"display_name\": \"" + USER_DISPLAY_NAME + "\",\n" +
+				"         \"_links\": {\n" +
+				"            \"self\": {\n" +
+				"               \"href\": \"https://api.nexmo.com/v1/users/" + USER_ID + "\"\n" +
+				"            }\n" +
+				"         }\n" +
+				"      }\n" +
+				"   },\n" +
+				"   \"state\": \"" + MEMBER_STATE_STR + "\",\n" +
+				"   \"_links\": {\n" +
+				"      \"href\": \"https://api.nexmo.com/v1/conversations/" + CONVERSATION_ID + "/members/" + MEMBER_ID + "\"\n" +
+				"   }",
+			SAMPLE_BASE_MEMBER_RESPONSE = SAMPLE_BASE_MEMBER_RESPONSE_PARTIAL + "\n}",
+			SAMPLE_MEMBER_RESPONSE = SAMPLE_BASE_MEMBER_RESPONSE_PARTIAL + ",\n" +
+				"   \"timestamp\": {\n" +
+				"      \"invited\": \"" + TIMESTAMP_INVITED_STR + "\",\n" +
+				"      \"joined\": \"" + TIMESTAMP_JOINED_STR + "\",\n" +
+				"      \"left\": \"" + TIMESTAMP_LEFT_STR + "\"\n" +
+				"   },\n" +
+				"   \"initiator\": {\n" +
+				"      \"joined\": {\n" +
+				"         \"is_system\": \"" + IS_SYSTEM + "\",\n" +
+				"         \"user_id\": \"" + INVITING_USER_ID + "\",\n" +
+				"         \"member_id\": \"" + MEMBER_ID_INVITING + "\"\n" +
+				"      }\n" +
+				"   },\n" +
+				"   \"channel\": {\n" +
+				"      \"type\": \"" + CHANNEL_TYPE_STR + "\",\n" +
+				"      \"from\": {\n" +
+				"         \"type\": \"" + CHANNEL_TYPE_FROM_STR + "\",\n" +
+				"         \"number\": \"" + FROM_NUMBER + "\"\n" +
+				"      },\n" +
+				"      \"to\": {\n" +
+				"         \"type\": \"" + CHANNEL_TYPE_TO_STR + "\",\n" +
+				"         \"number\": \"" + TO_NUMBER + "\"\n" +
+				"      }\n" +
+				"   },\n" +
+				"   \"media\": {\n" +
+				"      \"audio_settings\": {\n" +
+				"         \"enabled\": " + AUDIO_ENABLED + ",\n" +
+				"         \"earmuffed\": " + AUDIO_EARMUFFED + ",\n" +
+				"         \"muted\": " + AUDIO_MUTED + "\n" +
+				"      },\n" +
+				"      \"audio\": " + AUDIO + "\n" +
+				"   },\n" +
+				"   \"knocking_id\": \"" + KNOCKING_ID_STR + "\",\n" +
+				"   \"invited_by\": \"" + INVITED_BY + "\"\n" +
+				"}",
+			SAMPLE_LIST_MEMBERS_RESPONSE = "{\n" +
+				"   \"page_size\": " + PAGE_SIZE + ",\n" +
+				"   \"_embedded\": {\n" +
+				"      \"members\": [\n" +
+				"         {},\n" +
+				"         " + SAMPLE_BASE_MEMBER_RESPONSE + ",\n" +
+				"         {\"state\": \"LEFT\", \"id\": \"" + MEMBER_ID_INVITING + "\"},\n" +
+				"         {\"_embedded\": {\"user\": {}}},\n" +
+				"         {\"_embedded\": {}, \"_links\": {}}\n" +
+				"      ]\n" +
+				"   },\n" +
+				"   \"_links\": {\n" +
+				"      \"first\": {\n" +
+				"         \"href\": \"https://api.nexmo.com/v1/conversations/CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a/members?order=desc&page_size=10\"\n" +
+				"      },\n" +
+				"      \"self\": {\n" +
+				"         \"href\": \"https://api.nexmo.com/v1/conversations/CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a/members?order=desc&page_size=10&cursor=88b395c167da4d94e929705cbd63b82973771e7d390d274a58e301386d5762600a3ffd799bfb3fc5190c5a0d124cdd0fc72fe6e450506b18e4e2edf9fe84c7a0\"\n" +
+				"      },\n" +
+				"      \"next\": {\n" +
+				"         \"href\": \"https://api.nexmo.com/v1/conversations/CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a/members?order=desc&page_size=10&cursor=88b395c167da4d94e929705cbd63b829a650e69a39197bfd4c949f4243f60dc4babb696afa404d2f44e7775e32b967f2a1a0bb8fb259c0999ba5a4e501eaab55\"\n" +
+				"      },\n" +
+				"      \"prev\": {\n" +
+				"         \"href\": \"https://api.nexmo.com/v1/conversations/CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a/members?order=desc&page_size=10&cursor=069626a3de11d2ec900dff5042197bd75f1ce41dafc3f2b2481eb9151086e59aae9dba3e3a8858dc355232d499c310fbfbec43923ff657c0de8d49ffed9f7edb\"\n" +
+				"      }\n" +
+				"   }\n" +
+				"}",
+			SAMPLE_EVENT_RESPONSE = "{\n" +
+				"   \"id\": " + EVENT_ID + ",\n" +
+				"   \"type\": \"" + CUSTOM_EVENT_TYPE_STR + "\",\n" +
+				"   \"from\": \"" + MEMBER_ID + "\",\n" +
+				"   \"body\": " + CONVERSATION_CUSTOM_DATA_STR + ",\n" +
+				"   \"timestamp\": \"" + TIMESTAMP_CREATED_STR + "\",\n" +
+				"   \"_embedded\": {\n" +
+				"      \"from_user\": {\n" +
+				"         \"id\": \"" + USER_ID + "\",\n" +
+				"         \"name\": \"" + USER_NAME + "\",\n" +
+				"         \"display_name\": \"" + USER_DISPLAY_NAME + "\",\n" +
+				"         \"image_url\": \"" + USER_IMAGE_URL_STR + "\",\n" +
+				"         \"custom_data\": {}\n" +
+				"      },\n" +
+				"      \"from_member\": {\n" +
+				"         \"id\": \"" + MEMBER_ID_INVITING + "\"\n" +
+				"      }\n" +
+				"   },\n" +
+				"   \"_links\": {\n" +
+				"      \"self\": {\n" +
+				"         \"href\": \"https://api.nexmo.com/v1/conversations/" + CONVERSATION_ID + "/events/" + EVENT_ID + "\"\n" +
+				"      }\n" +
+				"   }\n" +
+				"}",
+			SAMPLE_LIST_EVENTS_RESPONSE = "{\n" +
+				"   \"page_size\": " + PAGE_SIZE + ",\n" +
+				"   \"_links\": {\n" +
+				"      \"first\": {},\n" +
+				"      \"self\": {},\n" +
+				"      \"next\": {},\n" +
+				"      \"prev\": {}\n" +
+				"   },\n" +
+				"   \"_embedded\": {\n" +
+				"      \"events\": [\n" +
+				"         " + SAMPLE_EVENT_RESPONSE + ",\n" +
+				"         {},\n" +
+				"         {\"type\": \"" + KNOWN_EVENT_TYPE_STR + "\"}\n" +
+				"      ]\n" +
+				"   }\n" +
+				"}";
 
 	static final Channel CHANNEL_FROM = new Sms(FROM_NUMBER), CHANNEL_TO = new Mms(TO_NUMBER);
 	static final UUID KNOCKING_ID = UUID.fromString(KNOCKING_ID_STR), RANDOM_UUID = UUID.randomUUID();
@@ -798,19 +765,20 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 				var customData = request.getProperties().getCustomData();
 
 				try {
-					return STR."""
-					{"name":"\{request.getName()}","display_name":"\{request.getDisplayName()}",\
-					"image_url":"\{request.getImageUrl()}","properties":{\
-					"ttl":\{request.getProperties().getTtl()},\
-					"type":"\{request.getProperties().getType()}",\
-					"custom_sort_key":"\{request.getProperties().getCustomSortKey()}",\
-					"custom_data":\{new ObjectMapper().writeValueAsString(customData)}},\
-					"numbers":[{"type":"phone","number":"\{PHONE_NUMBER}"}],"callback":{\
-					"url":"\{request.getCallback().getUrl()}","event_mask":\
-					"\{request.getCallback().getEventMask()}","params":{\
-					"applicationId":"\{request.getCallback().getParams().getApplicationId()}",\
-					"ncco_url":"\{request.getCallback().getParams().getNccoUrl()}"},\
-					"method":"\{request.getCallback().getMethod()}"}}""";
+					return "{\"name\":\"" + request.getName() +
+							"\",\"display_name\":\"" + request.getDisplayName() +
+							"\",\"image_url\":\"" + request.getImageUrl() +
+							"\",\"properties\":{\"ttl\":" + request.getProperties().getTtl() +
+							",\"type\":\"" + request.getProperties().getType() +
+							"\",\"custom_sort_key\":\"" + request.getProperties().getCustomSortKey() +
+							"\",\"custom_data\":" + new ObjectMapper().writeValueAsString(customData) +
+							"},\"numbers\":[{\"type\":\"phone\",\"number\":\"" + PHONE_NUMBER +
+							"\"}],\"callback\":{\"url\":\"" + request.getCallback().getUrl() +
+							"\",\"event_mask\":\"" + request.getCallback().getEventMask() +
+							"\",\"params\":{\"applicationId\":\"" +
+							request.getCallback().getParams().getApplicationId() +
+							"\",\"ncco_url\":\"" + request.getCallback().getParams().getNccoUrl() +
+							"\"},\"method\":\"" + request.getCallback().getMethod() + "\"}}";
 				}
 				catch (JsonProcessingException impossible) {
 					throw new IllegalStateException(impossible);
@@ -997,11 +965,11 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 
 			@Override
 			protected String sampleRequestBodyString() {
-				return STR."""
-					{"id":"\{CONVERSATION_ID}","name":"\{CONVERSATION_NAME}",\
-					"display_name":"\{CONVERSATION_DISPLAY_NAME}",\
-					"image_url":"\{CONVERSATION_IMAGE_URL_STR}"}\
-					""";
+				return "{\"id\":\"" + CONVERSATION_ID +
+						"\",\"name\":\"" + CONVERSATION_NAME +
+						"\",\"display_name\":\"" + CONVERSATION_DISPLAY_NAME +
+						"\",\"image_url\":\"" + CONVERSATION_IMAGE_URL_STR +
+						"\"}";
 			}
 		}
 		.runTests();
@@ -1240,14 +1208,14 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 
 		stubResponse(200, "{\"channel\":{\"type\":\"app\",\"from\":{\"type\":\"pigeon\"}}}");
 		try {
-			fail(STR."Expected exception but got: \{client.getMember(CONVERSATION_ID, MEMBER_ID)}");
+			fail("Expected exception but got: " + client.getMember(CONVERSATION_ID, MEMBER_ID));
 		}
 		catch (VonageResponseParseException ex) {
 			assertEquals(IllegalStateException.class, ex.getCause().getCause().getClass());
 		}
 
 		for (var ct : ChannelType.values()) {
-			stubResponse(200, STR."{\"channel\":{\"type\":\"\{ct}\",\"from\":{}}}");
+			stubResponse(200, "{\"channel\":{\"type\":\"" + ct + "\",\"from\":{}}}");
 			try {
 				var member = client.getMember(CONVERSATION_ID, MEMBER_ID);
 				var fromChannel = member.getChannel().getFrom();
@@ -1357,14 +1325,20 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 
 			@Override
 			protected String sampleRequestBodyString() {
-				return STR."""
-    				{"state":"\{MEMBER_STATE}","user":{"name":"\{USER_NAME}"},\
-    				"member_id_inviting":"\{MEMBER_ID_INVITING}","from":"\{MEMBER_FROM}",\
-    				"knocking_id":"\{KNOCKING_ID_STR}","channel":{"type":"\{CHANNEL_TYPE_STR}",\
-    				"from":{"type":"\{CHANNEL_TYPE_FROM_STR}","number":"\{FROM_NUMBER}"},\
-    				"to":{"type":"\{CHANNEL_TYPE_TO_STR}","number":"\{TO_NUMBER}"}},\
-    				"media":{"audio":\{AUDIO},"audio_settings":{"enabled":\{AUDIO_ENABLED},\
-    				"earmuffed":\{AUDIO_EARMUFFED},"muted":\{AUDIO_MUTED}}}}""";
+				return "{\"state\":\"" + MEMBER_STATE +
+						"\",\"user\":{\"name\":\"" + USER_NAME +
+						"\"},\"member_id_inviting\":\"" + MEMBER_ID_INVITING +
+						"\",\"from\":\"" + MEMBER_FROM +
+						"\",\"knocking_id\":\"" + KNOCKING_ID_STR +
+						"\",\"channel\":{\"type\":\"" + CHANNEL_TYPE_STR +
+						"\",\"from\":{\"type\":\"" + CHANNEL_TYPE_FROM_STR +
+						"\",\"number\":\"" + FROM_NUMBER +
+						"\"},\"to\":{\"type\":\"" + CHANNEL_TYPE_TO_STR +
+						"\",\"number\":\"" + TO_NUMBER +
+						"\"}},\"media\":{\"audio\":" + AUDIO +
+						",\"audio_settings\":{\"enabled\":" + AUDIO_ENABLED +
+						",\"earmuffed\":" + AUDIO_EARMUFFED +
+						",\"muted\":" + AUDIO_MUTED + "}}}";
 			}
 
 			@Override
@@ -1377,10 +1351,13 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 			}
 
 			String getMinimalRequestBodyString() {
-				return STR."""
-					{"state":"\{MEMBER_STATE}","user":{"id":"\{USER_ID}"},"channel":{"type":\
-					"\{CHANNEL_TYPE}","from":{"type":"\{CHANNEL_TYPE_FROM}","number":"\{FROM_NUMBER}"},\
-					"to":{"type":"\{CHANNEL_TYPE_TO}","number":"\{TO_NUMBER}"}}}""";
+				return "{\"state\":\"" + MEMBER_STATE +
+						"\",\"user\":{\"id\":\"" + USER_ID +
+						"\"},\"channel\":{\"type\":\"" + CHANNEL_TYPE +
+						"\",\"from\":{\"type\":\"" + CHANNEL_TYPE_FROM +
+						"\",\"number\":\"" + FROM_NUMBER +
+						"\"},\"to\":{\"type\":\"" + CHANNEL_TYPE_TO +
+						"\",\"number\":\"" + TO_NUMBER + "\"}}}";
 			}
 
 			void testInvalidUser() {
@@ -1466,9 +1443,9 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 			@Override
 			protected String sampleRequestBodyString() {
 				var req = sampleRequest();
-				return STR."""
-					{"state":"LEFT","from":"\{req.getFrom()}",\
-					"reason":{"code":"\{req.getCode()}","text":"\{req.getText()}"}}""";
+				return "{\"state\":\"LEFT\",\"from\":\"" + req.getFrom() +
+						"\",\"reason\":{\"code\":\"" + req.getCode() +
+						"\",\"text\":\"" + req.getText() + "\"}}";
 			}
 
 			@Override
@@ -1729,10 +1706,8 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 			@Override
 			protected String sampleRequestBodyString() {
 				var request = sampleRequest();
-				return STR."""
-					{"type":"\{request.getType()}","from":"\{request.getFrom()}","body":\
-					{"play_id":"\{request.getPlayId()}"}}\
-					""";
+				return "{\"type\":\"" + request.getType() + "\",\"from\":\"" + request.getFrom() +
+						"\",\"body\":{\"play_id\":\"" + request.getPlayId() + "\"}}";
 			}
 		}
 		.runTests();

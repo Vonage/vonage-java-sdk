@@ -32,13 +32,11 @@ public class MessageStatusEventTest extends AbstractEventTest {
         );
         assertEquals(randomEventId, event.getEventId());
         var eventClass = (Class<E>) builder.getClass().getEnclosingClass();
-        E parsed = parseEvent(type, eventClass, STR."""
-            {
-                "id": 123,
-                "body": {},
-                "type": "\{type}"
-            }
-            """
+        E parsed = parseEvent(type, eventClass, "{\n" +
+            "  \"id\": 123,\n" +
+            "  \"body\": {},\n" +
+            "  \"type\": \"" + type + "\"\n" +
+            "}"
         );
         assertEquals(123, parsed.getId());
         assertNull(parsed.getEventId());

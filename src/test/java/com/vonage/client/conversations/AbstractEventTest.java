@@ -26,7 +26,7 @@ import java.util.UUID;
 abstract class AbstractEventTest {
     final int randomEventId = ConversationsClientTest.EVENT_ID;
     final UUID randomId = UUID.randomUUID();
-    final String randomIdStr = randomId.toString(), from = STR."MEM-\{UUID.randomUUID()}";
+    final String randomIdStr = randomId.toString(), from = "MEM-"+UUID.randomUUID();
 
     <E extends EventWithBody<?>, B extends EventWithBody.Builder<? extends E, B>> B applyBaseFields(B builder) {
         return builder.from(from);
