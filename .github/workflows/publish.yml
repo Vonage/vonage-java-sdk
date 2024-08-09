@@ -40,4 +40,4 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSS_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSS_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.SIGNING_PASSWORD }}
-        run: mvn -e --no-transfer-progress --batch-mode deploy -P release-sign-artifacts
+        run: mvn -e --no-transfer-progress --batch-mode deploy -P release-sign-artifacts,uberjar
