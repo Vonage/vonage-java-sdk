@@ -149,7 +149,9 @@ public class VonageClient {
      *
      * @return The Proactive Connect client.
      * @since 7.6.0
+     * @deprecated This API is sunset and will be removed in the next major release.
      */
+    @Deprecated
     public ProactiveConnectClient getProactiveConnectClient() {
         return proactiveConnect;
     }

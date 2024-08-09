@@ -31,7 +31,10 @@ import java.util.function.Function;
 /**
  * A client for talking to the Vonage Proactive Connect API. The standard way to obtain an instance
  * of this class is to use {@link VonageClient#getProactiveConnectClient()}.
+ *
+ * @deprecated This API is sunset and will be removed in the next major release.
  */
+@Deprecated
 public class ProactiveConnectClient {
 	final RestEndpoint<ContactsList, ContactsList> createList, updateList;
 	final RestEndpoint<UUID, ContactsList> getList;
