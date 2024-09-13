@@ -29,7 +29,7 @@ public final class ViberVideoRequest extends ViberRequest {
 		super(builder, MessageType.VIDEO);
 		Objects.requireNonNull(builder.duration, "Duration is required.");
 		Objects.requireNonNull(builder.fileSize, "File size is required.");
-		video = new Video(payload.getUrl().toString(), builder.thumbUrl, payload.getCaption());
+		video = new Video(media.getUrl().toString(), builder.thumbUrl, media.getCaption());
 	}
 
 	@JsonProperty("video")

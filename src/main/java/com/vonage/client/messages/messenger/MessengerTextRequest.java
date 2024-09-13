@@ -15,7 +15,6 @@
  */
 package com.vonage.client.messages.messenger;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
 
 public final class MessengerTextRequest extends MessengerRequest {
@@ -29,9 +28,9 @@ public final class MessengerTextRequest extends MessengerRequest {
 		return 640;
 	}
 
-	@JsonProperty("text")
+	@Override
 	public String getText() {
-		return text;
+		return super.getText();
 	}
 
 	public static Builder builder() {

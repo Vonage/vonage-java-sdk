@@ -15,50 +15,49 @@
  */
 package com.vonage.client.messages.rcs;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
-import com.vonage.client.messages.internal.MessagePayload;
+import java.util.Map;
 
 /**
- * {@link com.vonage.client.messages.Channel#RCS}, {@link MessageType#IMAGE} request.
+ * {@link com.vonage.client.messages.Channel#RCS}, {@link MessageType#CUSTOM} request.
  *
  * @since 8.11.0
  */
-public final class RcsImageRequest extends RcsRequest {
+public final class RcsCustomRequest extends RcsRequest {
 
-	RcsImageRequest(Builder builder) {
-		super(builder, MessageType.IMAGE);
-		media.validateUrlExtension("jpg", "jpeg", "png");
+	RcsCustomRequest(Builder builder) {
+		super(builder, MessageType.CUSTOM);
 	}
 
-	@JsonProperty("image")
-	public MessagePayload getImage() {
-		return media;
+	@Override
+	public Map<String, ?> getCustom() {
+		return super.getCustom();
 	}
 
 	public static Builder builder() {
 		return new Builder();
 	}
 
-	public static final class Builder extends RcsRequest.Builder<RcsImageRequest, Builder> {
+	public static final class Builder extends RcsRequest.Builder<RcsCustomRequest, Builder> {
+
 		Builder() {}
 
 		/**
-		 * (REQUIRED)
-		 * The publicly accessible URL of the image attachment. Supported types are
-		 * {@code .jpg}, {@code .jpeg}, and {@code .png}.
+		 * A custom payload. The schema of a custom object can vary widely.
+		 * <a href=https://developer.vonage.com/en/messages/guides/rcs/rcs-custom-messages>
+		 * Read more about RCS Custom Messages.</a>
 		 *
-		 * @param url The URL as a string.
+		 * @param payload The custom payload properties to send as a Map.
 		 * @return This builder.
 		 */
 		@Override
-		public Builder url(String url) {
-			return super.url(url);
+		public Builder custom(Map<String, ?> payload) {
+			return super.custom(payload);
 		}
 
 		@Override
-		public RcsImageRequest build() {
-			return new RcsImageRequest(this);
+		public RcsCustomRequest build() {
+			return new RcsCustomRequest(this);
 		}
 	}
 }

@@ -21,6 +21,8 @@ import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.E164;
 import com.vonage.client.messages.internal.MessagePayload;
 import java.net.URI;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -36,12 +38,14 @@ import java.util.Objects;
 public abstract class MessageRequest extends JsonableBaseObject {
 	final MessageType messageType;
 	final Channel channel;
+	protected String from, to;
 	final String clientRef;
 	final URI webhookUrl;
 	final MessagesVersion webhookVersion;
-	@JsonIgnore protected final MessagePayload payload;
 	protected final Integer ttl;
-	protected String from, to, text;
+	final String text;
+	protected final Map<String, Object> custom;
+	@JsonIgnore protected final MessagePayload media;
 
 	/**
 	 * Constructor where all of this class's fields should be set. This is protected
@@ -59,9 +63,18 @@ public abstract class MessageRequest extends JsonableBaseObject {
 		if (!this.channel.getSupportedOutboundMessageTypes().contains(this.messageType)) {
 			throw new IllegalArgumentException(this.messageType +" cannot be sent via "+ this.channel);
 		}
+		if ((ttl = builder.ttl) != null && ttl < 1) {
+			throw new IllegalArgumentException("TTL must be positive.");
+		}
+		validateSenderAndRecipient(from = builder.from, to = builder.to);
 		clientRef = validateClientReference(builder.clientRef);
 		webhookUrl = builder.webhookUrl;
 		webhookVersion = builder.webhookVersion;
+
+		MessagePayload media = null;
+		Map<String, Object> custom = null;
+		String text = null;
+
 		switch (messageType) {
 			case TEXT: {
 				text = Objects.requireNonNull(builder.text, "Text message cannot be null.");
@@ -73,20 +86,21 @@ public abstract class MessageRequest extends JsonableBaseObject {
 							"Text message cannot be longer than " + maxTextLength() + " characters."
 					);
 				}
-			}
-			case CUSTOM: case TEMPLATE: case STICKER: {
-				payload = null;
 				break;
 			}
-			default: {
-				payload = new MessagePayload(builder.url, builder.caption, builder.name);
+			case CUSTOM: {
+				custom = builder.custom != null ? builder.custom : new LinkedHashMap<>(8);
 				break;
 			}
+			case IMAGE: case AUDIO: case VIDEO: case FILE: case VCARD: {
+				media = new MessagePayload(builder.url, builder.caption, builder.name);
+				break;
+			}
+			default: break;
 		}
-		if ((ttl = builder.ttl) != null && ttl < 1) {
-			throw new IllegalArgumentException("TTL must be positive.");
-		}
-		validateSenderAndRecipient(from = builder.from, to = builder.to);
+		this.text = text;
+		this.media = media;
+		this.custom = custom;
 	}
 
 	/**
@@ -174,6 +188,11 @@ public abstract class MessageRequest extends JsonableBaseObject {
 		return text;
 	}
 
+	@JsonProperty("custom")
+	protected Map<String, ?> getCustom() {
+		return custom;
+	}
+
 	/**
 	 * Mutable Builder class, designed to simulate named parameters to allow for convenient
 	 * construction of MessageRequests. Subclasses should add their own mutable parameters
@@ -190,6 +209,7 @@ public abstract class MessageRequest extends JsonableBaseObject {
 		private URI webhookUrl;
 		private MessagesVersion webhookVersion;
 		private Integer ttl;
+		private Map<String, Object> custom;
 
 		/**
 		 * Protected constructor to prevent users from explicitly creating this object.
@@ -198,6 +218,7 @@ public abstract class MessageRequest extends JsonableBaseObject {
 		 */
 		protected Builder() {
 		}
+
 		/**
 		 * (REQUIRED)
 		 * Sets the sender number or ID.
@@ -207,6 +228,19 @@ public abstract class MessageRequest extends JsonableBaseObject {
 		 */
 		public B from(String from) {
 			this.from = from;
+			return (B) this;
+		}
+
+		/**
+		 * (REQUIRED)
+		 * Custom payload. The schema of a custom object can vary widely according to the channel.
+		 * Please consult the relevant documentation for details.
+		 *
+		 * @param payload The custom payload properties to send as a Map.
+		 * @return This builder.
+		 */
+		protected B custom(Map<String, ?> payload) {
+			this.custom = new LinkedHashMap<>(payload);
 			return (B) this;
 		}
 

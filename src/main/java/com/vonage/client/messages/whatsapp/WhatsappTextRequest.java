@@ -29,9 +29,9 @@ public final class WhatsappTextRequest extends WhatsappRequest {
 		return 4096;
 	}
 
-	@JsonProperty("text")
+	@Override
 	public String getText() {
-		return text;
+		return super.getText();
 	}
 
 	public static Builder builder() {

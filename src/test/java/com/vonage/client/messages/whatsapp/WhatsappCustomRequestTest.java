@@ -50,7 +50,7 @@ public class WhatsappCustomRequestTest {
 
 		assertTrue(json.contains("\"message_type\":\"custom\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
-		assertFalse(json.contains("\"custom\":"));
+		assertTrue(json.contains("\"custom\":{}"));
 	}
 
 	@Test

@@ -27,7 +27,7 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 
 	@JsonProperty("file")
 	public MessagePayload getFile() {
-		return payload;
+		return media;
 	}
 
 	public static Builder builder() {

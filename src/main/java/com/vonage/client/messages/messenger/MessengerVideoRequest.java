@@ -23,12 +23,12 @@ public final class MessengerVideoRequest extends MessengerRequest {
 
 	MessengerVideoRequest(Builder builder) {
 		super(builder, MessageType.VIDEO);
-		payload.validateUrlExtension("mp4");
+		media.validateUrlExtension("mp4");
 	}
 
 	@JsonProperty("video")
 	public MessagePayload getVideo() {
-		return payload;
+		return media;
 	}
 
 	public static Builder builder() {

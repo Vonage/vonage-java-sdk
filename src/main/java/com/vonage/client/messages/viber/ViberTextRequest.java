@@ -15,7 +15,6 @@
  */
 package com.vonage.client.messages.viber;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
 
 public final class ViberTextRequest extends ViberRequest {
@@ -24,9 +23,9 @@ public final class ViberTextRequest extends ViberRequest {
 		super(builder, MessageType.TEXT);
 	}
 
-	@JsonProperty("text")
+	@Override
 	public String getText() {
-		return text;
+		return super.getText();
 	}
 
 	public static Builder builder() {
@@ -34,7 +33,6 @@ public final class ViberTextRequest extends ViberRequest {
 	}
 
 	public static final class Builder extends ViberRequest.Builder<ViberTextRequest, Builder> {
-		String text;
 
 		Builder() {}
 

@@ -28,9 +28,9 @@ public final class SmsTextRequest extends MessageRequest {
 		sms = OutboundSettings.construct(builder.encodingType, builder.contentId, builder.entityId);
 	}
 
-	@JsonProperty("text")
+	@Override
 	public String getText() {
-		return text;
+		return super.getText();
 	}
 
 	@JsonProperty("sms")

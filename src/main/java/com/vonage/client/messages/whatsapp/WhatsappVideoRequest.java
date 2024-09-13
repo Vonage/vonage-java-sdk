@@ -23,12 +23,12 @@ public final class WhatsappVideoRequest extends WhatsappRequest {
 
 	WhatsappVideoRequest(Builder builder) {
 		super(builder, MessageType.VIDEO);
-		payload.validateUrlExtension("mp4", "3gpp");
+		media.validateUrlExtension("mp4", "3gpp");
 	}
 
 	@JsonProperty("video")
 	public MessagePayload getVideo() {
-		return payload;
+		return media;
 	}
 
 	public static Builder builder() {

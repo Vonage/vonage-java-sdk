@@ -23,13 +23,13 @@ public final class WhatsappAudioRequest extends WhatsappRequest {
 
 	WhatsappAudioRequest(Builder builder) {
 		super(builder, MessageType.AUDIO);
-		payload.validateUrlExtension("aac", "m4a", "amr", "mp3", "opus");
-		payload.validateUrlLength(10, 2000);
+		media.validateUrlExtension("aac", "m4a", "amr", "mp3", "opus");
+		media.validateUrlLength(10, 2000);
 	}
 
 	@JsonProperty("audio")
 	public MessagePayload getAudio() {
-		return payload;
+		return media;
 	}
 
 	public static Builder builder() {

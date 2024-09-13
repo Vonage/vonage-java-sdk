@@ -18,7 +18,6 @@ package com.vonage.client.messages.viber;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
 import com.vonage.client.messages.internal.MessagePayload;
-import java.io.File;
 
 /**
  * @since 7.2.0
@@ -27,7 +26,7 @@ public final class ViberFileRequest extends ViberRequest {
 
 	ViberFileRequest(Builder builder) {
 		super(builder, MessageType.FILE);
-		MessagePayload.validateExtension(payload.getName() != null ? payload.getName() : payload.getUrl().getPath(),
+		MessagePayload.validateExtension(media.getName() != null ? media.getName() : media.getUrl().getPath(),
 				"doc", "docx", "rtf", "dot", "dotx", "odt", "odf", "fodt", "txt", "info",
 				"pdf", "xps", "pdax", "eps", "xls", "xlsx", "ods", "fods", "csv", "xlsm", "xltx"
 		);
@@ -35,7 +34,7 @@ public final class ViberFileRequest extends ViberRequest {
 
 	@JsonProperty("file")
 	public MessagePayload getFile() {
-		return payload;
+		return media;
 	}
 
 	public static Builder builder() {

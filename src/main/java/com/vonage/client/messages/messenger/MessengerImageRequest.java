@@ -23,12 +23,12 @@ public final class MessengerImageRequest extends MessengerRequest {
 
 	MessengerImageRequest(Builder builder) {
 		super(builder, MessageType.IMAGE);
-		payload.validateUrlExtension("jpg", "jpeg", "png", "gif");
+		media.validateUrlExtension("jpg", "jpeg", "png", "gif");
 	}
 
 	@JsonProperty("image")
 	public MessagePayload getImage() {
-		return payload;
+		return media;
 	}
 
 	public static Builder builder() {

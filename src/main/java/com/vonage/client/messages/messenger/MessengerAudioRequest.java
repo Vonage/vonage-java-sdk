@@ -23,13 +23,13 @@ public final class MessengerAudioRequest extends MessengerRequest {
 
 	MessengerAudioRequest(Builder builder) {
 		super(builder, MessageType.AUDIO);
-		payload.validateUrlExtension("mp3");
-		payload.validateUrlLength(10, 2000);
+		media.validateUrlExtension("mp3");
+		media.validateUrlLength(10, 2000);
 	}
 
 	@JsonProperty("audio")
 	public MessagePayload getAudio() {
-		return payload;
+		return media;
 	}
 
 	public static Builder builder() {

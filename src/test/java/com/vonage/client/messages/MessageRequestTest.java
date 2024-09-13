@@ -221,7 +221,9 @@ public class MessageRequestTest {
 				.builder(MessageType.CUSTOM, Channel.WHATSAPP)
 				.from("447900000009").to("12002009000").build();
 
-		String expected = "ConcreteMessageRequest {\"message_type\":\"custom\",\"channel\":\"whatsapp\",\"from\":\"447900000009\",\"to\":\"12002009000\"}";
+		String expected = "ConcreteMessageRequest {\"message_type\":\"custom\"," +
+				"\"channel\":\"whatsapp\",\"from\":\"447900000009\"," +
+				"\"to\":\"12002009000\",\"custom\":{}}";
 		assertEquals(expected, request.toString());
 	}
 }

@@ -23,13 +23,13 @@ public final class WhatsappImageRequest extends WhatsappRequest {
 
 	WhatsappImageRequest(Builder builder) {
 		super(builder, MessageType.IMAGE);
-		payload.validateUrlExtension("jpg", "jpeg", "png");
-		payload.validateCaptionLength(3000);
+		media.validateUrlExtension("jpg", "jpeg", "png");
+		media.validateCaptionLength(3000);
 	}
 
 	@JsonProperty("image")
 	public MessagePayload getImage() {
-		return payload;
+		return media;
 	}
 
 	public static Builder builder() {

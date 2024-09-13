@@ -15,21 +15,18 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
 import java.util.Map;
 
 public final class WhatsappCustomRequest extends WhatsappRequest {
-	final Map<?, ?> custom;
 
 	WhatsappCustomRequest(Builder builder) {
 		super(builder, MessageType.CUSTOM);
-		custom = builder.custom;
 	}
 
-	@JsonProperty("custom")
-	public Map<?, ?> getCustom() {
-		return custom;
+	@Override
+	public Map<String, ?> getCustom() {
+		return super.getCustom();
 	}
 
 	public static Builder builder() {
@@ -37,7 +34,6 @@ public final class WhatsappCustomRequest extends WhatsappRequest {
 	}
 
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappCustomRequest, Builder> {
-		Map<?, ?> custom;
 
 		Builder() {}
 
@@ -47,12 +43,12 @@ public final class WhatsappCustomRequest extends WhatsappRequest {
 		 * interactive messages. The schema of a custom object can vary widely.
 		 * <a href=https://developer.vonage.com/messages/concepts/custom-objects>Read about Custom Objects here</a>.
 		 *
-		 * @param custom A serializable Map.
+		 * @param payload A serializable Map.
 		 * @return This builder.
 		 */
-		public Builder custom(Map<?, ?> custom) {
-			this.custom = custom;
-			return this;
+		@Override
+		public Builder custom(Map<String, ?> payload) {
+			return super.custom(payload);
 		}
 
 		@Override
