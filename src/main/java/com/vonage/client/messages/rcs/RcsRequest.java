@@ -20,6 +20,11 @@ import com.vonage.client.messages.Channel;
 import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.MessageType;
 
+/**
+ * Base class for RCS messages.
+ *
+ * @since 8.11.0
+ */
 public abstract class RcsRequest extends MessageRequest {
 
 	protected RcsRequest(Builder<?, ?> builder, MessageType messageType) {
