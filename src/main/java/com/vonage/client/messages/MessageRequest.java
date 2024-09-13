@@ -15,6 +15,7 @@
  */
 package com.vonage.client.messages;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.E164;
@@ -37,7 +38,8 @@ public abstract class MessageRequest extends JsonableBaseObject {
 	final String clientRef;
 	final URI webhookUrl;
 	final MessagesVersion webhookVersion;
-	protected String from, to;
+	protected final Integer ttl;
+	protected String from, to, text;
 
 	/**
 	 * Constructor where all of this class's fields should be set. This is protected
@@ -56,11 +58,23 @@ public abstract class MessageRequest extends JsonableBaseObject {
 			throw new IllegalArgumentException(this.messageType +" cannot be sent via "+ this.channel);
 		}
 		clientRef = validateClientReference(builder.clientRef);
-		from = builder.from;
-		to = builder.to;
 		webhookUrl = builder.webhookUrl;
 		webhookVersion = builder.webhookVersion;
-		validateSenderAndRecipient(from, to);
+		if (messageType == MessageType.TEXT) {
+			text = Objects.requireNonNull(builder.text, "Text message cannot be null");
+			if (text.isEmpty()) {
+				throw new IllegalArgumentException("Text message cannot be blank");
+			}
+			if (text.length() > maxTextLength()) {
+				throw new IllegalArgumentException(
+					"Text message cannot be longer than "+maxTextLength()+" characters"
+				);
+			}
+		}
+		if ((ttl = builder.ttl) != null && ttl < 1) {
+			throw new IllegalArgumentException("TTL must be positive.");
+		}
+		validateSenderAndRecipient(from = builder.from, to = builder.to);
 	}
 
 	/**
@@ -91,6 +105,16 @@ public abstract class MessageRequest extends JsonableBaseObject {
 			throw new IllegalArgumentException("Sender cannot be empty");
 		}
 		this.to = new E164(to).toString();
+	}
+
+	/**
+	 * Sets the maximum text length for text messages.
+	 *
+	 * @return The maximum text message string length.
+	 */
+	@JsonIgnore
+	protected int maxTextLength() {
+		return 1000;
 	}
 
 	@JsonProperty("message_type")
@@ -128,6 +152,16 @@ public abstract class MessageRequest extends JsonableBaseObject {
 		return webhookVersion;
 	}
 
+	@JsonProperty("ttl")
+	protected Integer getTtl() {
+		return ttl;
+	}
+
+	@JsonProperty("text")
+	protected String getText() {
+		return text;
+	}
+
 	/**
 	 * Mutable Builder class, designed to simulate named parameters to allow for convenient
 	 * construction of MessageRequests. Subclasses should add their own mutable parameters
@@ -140,9 +174,10 @@ public abstract class MessageRequest extends JsonableBaseObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public abstract static class Builder<M extends MessageRequest, B extends Builder<? extends M, ? extends B>> {
-		protected String from, to, clientRef;
-		protected URI webhookUrl;
-		protected MessagesVersion webhookVersion;
+		private String from, to, clientRef, text;
+		private URI webhookUrl;
+		private MessagesVersion webhookVersion;
+		private Integer ttl;
 
 		/**
 		 * Protected constructor to prevent users from explicitly creating this object.
@@ -233,6 +268,33 @@ public abstract class MessageRequest extends JsonableBaseObject {
 		 */
 		public B webhookVersion(MessagesVersion webhookVersion) {
 			this.webhookVersion = webhookVersion;
+			return (B) this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * The duration in milliseconds the delivery of a message will be attempted. By default, Vonage attempts
+		 * delivery for 72 hours, however the maximum effective value depends on the operator and is typically
+		 * 24 to 48 hours. We recommend this value should be kept at its default or at least 30 minutes.
+		 *
+		 * @param ttl The time-to-live for this message before abandoning delivery attempts, in milliseconds.
+		 *
+		 * @return This builder.
+		 */
+		protected B ttl(int ttl) {
+			this.ttl = ttl;
+			return (B) this;
+		}
+
+		/**
+		 * (REQUIRED)
+		 * Sets the text field.
+		 *
+		 * @param text The text string.
+		 * @return This builder.
+		 */
+		protected B text(String text) {
+			this.text = text;
 			return (B) this;
 		}
 

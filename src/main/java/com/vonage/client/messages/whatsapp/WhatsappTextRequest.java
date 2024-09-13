@@ -17,14 +17,16 @@ package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
-import com.vonage.client.messages.internal.Text;
 
 public final class WhatsappTextRequest extends WhatsappRequest {
-	final String text;
 
 	WhatsappTextRequest(Builder builder) {
 		super(builder, MessageType.TEXT);
-		text = new Text(builder.text, 4096).toString();
+	}
+
+	@Override
+	protected int maxTextLength() {
+		return 4096;
 	}
 
 	@JsonProperty("text")
@@ -37,7 +39,6 @@ public final class WhatsappTextRequest extends WhatsappRequest {
 	}
 
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappTextRequest, Builder> {
-		String text;
 
 		Builder() {}
 
@@ -48,9 +49,9 @@ public final class WhatsappTextRequest extends WhatsappRequest {
 		 * @param text The text string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder text(String text) {
-			this.text = text;
-			return this;
+			return super.text(text);
 		}
 
 		public WhatsappTextRequest build() {

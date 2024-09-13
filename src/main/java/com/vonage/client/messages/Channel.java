@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 public enum Channel {
 	SMS (TEXT),
 	MMS (TEXT, IMAGE, VCARD, AUDIO, VIDEO),
+	RCS (TEXT, IMAGE, VIDEO, FILE, CUSTOM, AUDIO, LOCATION, VCARD, REPLY, BUTTON),
 	WHATSAPP (TEXT, IMAGE, AUDIO, VIDEO, FILE, TEMPLATE, CUSTOM, LOCATION, STICKER, ORDER, REPLY, UNSUPPORTED),
 	MESSENGER (TEXT, IMAGE, AUDIO, VIDEO, FILE, UNSUPPORTED),
 	VIBER (TEXT, IMAGE, VIDEO, FILE);
@@ -56,7 +57,10 @@ public enum Channel {
 	public Set<MessageType> getSupportedOutboundMessageTypes() {
 		return getSupportedMessageTypes().stream().filter(mt -> mt != MessageType.UNSUPPORTED &&
 				mt != MessageType.REPLY && mt != MessageType.ORDER &&
-				(this != Channel.MMS || mt != MessageType.TEXT)
+				(this != Channel.MMS || mt != MessageType.TEXT) &&
+				(this != Channel.RCS || (
+					mt != AUDIO && mt != LOCATION && mt != BUTTON && mt != VCARD
+				))
 		).collect(Collectors.toSet());
 	}
 

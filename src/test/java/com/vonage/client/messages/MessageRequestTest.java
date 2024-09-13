@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageUnexpectedException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.internal.matchers.Null;
 
 public class MessageRequestTest {
 
@@ -75,6 +76,8 @@ public class MessageRequestTest {
 		assertFalse(generatedJson.contains("client_ref"));
 		assertFalse(generatedJson.contains("webhook_url"));
 		assertFalse(generatedJson.contains("webhook_version"));
+		assertFalse(generatedJson.contains("text"));
+		assertFalse(generatedJson.contains("ttl"));
 		assertTrue(generatedJson.contains("\"from\":\"447900000009\""));
 		assertTrue(generatedJson.contains("\"to\":\"12002009000\""));
 		assertTrue(generatedJson.contains("\"channel\":\"viber_service\""));
@@ -83,17 +86,17 @@ public class MessageRequestTest {
 
 	@Test
 	public void testSerializeNoNumbers() {
-		MessageRequest smr = ConcreteMessageRequest.builder(MessageType.TEXT, Channel.SMS)
+		MessageRequest smr = ConcreteMessageRequest.builder(MessageType.CUSTOM, Channel.RCS)
 				.from("447900000009").to("447900000001").build();
 
 		smr.from = null;
 		smr.to = null;
 
 		String generatedJson = smr.toJson();
+		assertFalse(generatedJson.contains("to\""));
 		assertFalse(generatedJson.contains("from"));
-		assertFalse(generatedJson.contains("to"));
-		assertTrue(generatedJson.contains("text"));
-		assertTrue(generatedJson.contains("sms"));
+		assertTrue(generatedJson.contains("\"channel\":\"rcs\""));
+		assertTrue(generatedJson.contains("\"message_type\":\"custom\""));
 	}
 
 	@Test
@@ -101,6 +104,22 @@ public class MessageRequestTest {
 		assertThrows(IllegalArgumentException.class, () ->
 				ConcreteMessageRequest.builder(MessageType.IMAGE, Channel.SMS)
 						.from("447900000001").to("447900000009").build()
+		);
+	}
+
+	@Test
+	public void testConstructNoTextIfTextMessage() {
+		assertThrows(NullPointerException.class, () ->
+				ConcreteMessageRequest.builder(MessageType.TEXT, Channel.SMS)
+					.to("447900000009").from("447900000001").build()
+		);
+	}
+
+	@Test
+	public void testConstructNegativeTtl() {
+		assertThrows(IllegalArgumentException.class, () ->
+				ConcreteMessageRequest.builder(MessageType.VIDEO, Channel.WHATSAPP)
+					.from("447900000001").to("447900000009").ttl(-1).build()
 		);
 	}
 
@@ -149,7 +168,7 @@ public class MessageRequestTest {
 	@Test
 	public void testConstructTooLongNumber() {
 		assertThrows(IllegalArgumentException.class, () ->
-				ConcreteMessageRequest.builder(MessageType.TEXT, Channel.MESSENGER)
+				ConcreteMessageRequest.builder(MessageType.IMAGE, Channel.MESSENGER)
 					.from("+447900090000").to("19009000000447900090000").build()
 		);
 	}
@@ -178,7 +197,7 @@ public class MessageRequestTest {
 		}
 
 		ConcreteMessageRequest.Builder builder = ConcreteMessageRequest
-				.builder(MessageType.TEXT, Channel.SMS)
+				.builder(MessageType.FILE, Channel.RCS)
 				.from("447900000009").to("12002009000");
 
 		assertEquals(99, builder.clientRef(clientRef.toString()).build().getClientRef().length());
@@ -209,7 +228,7 @@ public class MessageRequestTest {
 			@JsonProperty("self") final SelfRefrencing self = this;
 
 			SelfRefrencing() {
-				super(builder(MessageType.TEXT, Channel.SMS).from("447900000009").to("12002009000"));
+				super(builder(MessageType.VCARD, Channel.MMS).from("447900000009").to("12002009000"));
 			}
 		}
 		assertThrows(VonageUnexpectedException.class, () -> new SelfRefrencing().toJson());
