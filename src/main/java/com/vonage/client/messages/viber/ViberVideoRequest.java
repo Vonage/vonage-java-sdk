@@ -29,7 +29,7 @@ public final class ViberVideoRequest extends ViberRequest {
 		super(builder, MessageType.VIDEO);
 		Objects.requireNonNull(builder.duration, "Duration is required.");
 		Objects.requireNonNull(builder.fileSize, "File size is required.");
-		video = new Video(builder.url, builder.thumbUrl, builder.caption);
+		video = new Video(payload.getUrl().toString(), builder.thumbUrl, payload.getCaption());
 	}
 
 	@JsonProperty("video")
@@ -42,7 +42,7 @@ public final class ViberVideoRequest extends ViberRequest {
 	}
 
 	public static final class Builder extends ViberRequest.Builder<ViberVideoRequest, Builder> {
-		String url, thumbUrl, caption;
+		String thumbUrl;
 
 		Builder() {}
 
@@ -54,9 +54,9 @@ public final class ViberVideoRequest extends ViberRequest {
 		 * @param url The video URL as a string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder url(String url) {
-			this.url = url;
-			return this;
+			return super.url(url);
 		}
 
 		/**
@@ -102,9 +102,9 @@ public final class ViberVideoRequest extends ViberRequest {
 		 * @param caption The caption string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder caption(String caption) {
-			this.caption = caption;
-			return this;
+			return super.caption(caption);
 		}
 
 		@Override

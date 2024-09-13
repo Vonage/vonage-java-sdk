@@ -15,6 +15,7 @@
  */
 package com.vonage.client.messages.viber;
 
+import com.vonage.client.messages.internal.MessagePayload;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
@@ -63,16 +64,16 @@ public class ViberFileRequestTest {
 		String[] validExtensions = {"doc", "docx", "rtf", "dot", "dotx", "odt", "odf", "fodt", "txt", "info",
 				"pdf", "xps", "pdax", "eps", "xls", "xlsx", "ods", "fods", "csv", "xlsm", "xltx"};
 
+		var builder = ViberFileRequest.builder().from("447900000001").to("447900000009");
 		for (String extension : validExtensions) {
-			File urlOnly = new File(baseUrlWithFile + extension, null);
-			File nameOnly = new File(baseUrl, fileName + extension);
-			File urlAndFile = new File(baseUrlWithFile + extension, fileName + extension);
-			assertEquals(urlOnly.getUrl(), urlAndFile.getUrl());
-			assertEquals(nameOnly.getName(), urlAndFile.getName());
-			assertNull(urlOnly.getName());
+			var urlOnly = builder.url(baseUrlWithFile + extension).build();
+			var nameOnly = builder.url(baseUrl).name(fileName + extension).build();
+			var urlAndFile = builder.url(baseUrlWithFile + extension).name(fileName + extension).build();
+			assertEquals(urlOnly.getFile().getUrl(), urlAndFile.getFile().getUrl());
+			assertEquals(nameOnly.getFile().getName(), urlAndFile.getFile().getName());
 		}
 
-		assertThrows(IllegalArgumentException.class, () -> new File(baseUrlWithFile + invalidExt, null));
-		assertThrows(IllegalArgumentException.class, () -> new File(baseUrl, fileName + invalidExt));
+		assertThrows(IllegalArgumentException.class, () -> builder.url(baseUrlWithFile + invalidExt).name(null).build());
+		assertThrows(IllegalArgumentException.class, () -> builder.url(baseUrl).name(fileName + invalidExt).build());
 	}
 }

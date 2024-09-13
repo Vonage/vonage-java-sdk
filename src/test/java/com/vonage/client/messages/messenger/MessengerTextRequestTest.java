@@ -87,7 +87,9 @@ public class MessengerTextRequestTest {
 
 	@Test
 	public void testConstructNullSender() {
-		assertThrows(IllegalArgumentException.class, () -> MessengerImageRequest.builder().to("Alex").build());
+		assertThrows(IllegalArgumentException.class, () ->
+				MessengerTextRequest.builder().to("Alex").text("Hi").build()
+		);
 	}
 
 	@Test

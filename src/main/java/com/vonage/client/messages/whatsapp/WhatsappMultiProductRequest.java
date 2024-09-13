@@ -62,7 +62,7 @@ public final class WhatsappMultiProductRequest extends WhatsappRequest {
 	}
 
 	@JsonProperty("custom")
-	public Map<?, ?> getCustom() {
+	public Map<String, ?> getCustom() {
 		return custom;
 	}
 

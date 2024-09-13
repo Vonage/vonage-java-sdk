@@ -20,18 +20,16 @@ import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
 public final class MessengerAudioRequest extends MessengerRequest {
-	final MessagePayload audio;
 
 	MessengerAudioRequest(Builder builder) {
 		super(builder, MessageType.AUDIO);
-		audio = new MessagePayload(builder.url);
-		audio.validateUrlExtension("mp3");
-		audio.validateUrlLength(10, 2000);
+		payload.validateUrlExtension("mp3");
+		payload.validateUrlLength(10, 2000);
 	}
 
 	@JsonProperty("audio")
 	public MessagePayload getAudio() {
-		return audio;
+		return payload;
 	}
 
 	public static Builder builder() {
@@ -39,7 +37,6 @@ public final class MessengerAudioRequest extends MessengerRequest {
 	}
 
 	public static final class Builder extends MessengerRequest.Builder<MessengerAudioRequest, Builder> {
-		String url;
 
 		Builder() {}
 
@@ -51,9 +48,9 @@ public final class MessengerAudioRequest extends MessengerRequest {
 		 * @param url The URL as a string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder url(String url) {
-			this.url = url;
-			return this;
+			return super.url(url);
 		}
 
 		@Override

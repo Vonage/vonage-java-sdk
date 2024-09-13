@@ -13,20 +13,22 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.whatsapp;
+package com.vonage.client.messages.rcs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
+import com.vonage.client.messages.internal.MessagePayload;
+import com.vonage.client.messages.mms.MmsRequest;
 
-public final class WhatsappFileRequest extends WhatsappRequest {
+public final class RcsImageRequest extends RcsRequest {
 
-	WhatsappFileRequest(Builder builder) {
-		super(builder, MessageType.FILE);
+	RcsImageRequest(Builder builder) {
+		super(builder, MessageType.IMAGE);
+		payload.validateUrlExtension("jpg", "jpeg", "png", "gif");
 	}
 
-	@JsonProperty("file")
-	public MessagePayload getFile() {
+	@JsonProperty("image")
+	public MessagePayload getImage() {
 		return payload;
 	}
 
@@ -34,14 +36,13 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends WhatsappRequest.Builder<WhatsappFileRequest, Builder> {
-
+	public static final class Builder extends RcsRequest.Builder<RcsImageRequest, Builder> {
 		Builder() {}
 
 		/**
 		 * (REQUIRED)
-		 * Sets the URL of the file attachment. Supports a wide range of attachments including
-		 * {@code .zip}, {@code .csv} and {@code .pdf.}.
+		 * Sets the URL of the image attachment. Supports only {@code .jpg},
+		 * {@code .jpeg}, {@code .png} and {@code .gif} file extensions.
 		 *
 		 * @param url The URL as a string.
 		 * @return This builder.
@@ -53,33 +54,19 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 
 		/**
 		 * (OPTIONAL)
-		 * Additional text to accompany the file.
+		 * Additional text to accompany the image. Must be between 1 and 2000 characters.
 		 *
 		 * @param caption The caption string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder caption(String caption) {
 			return super.caption(caption);
 		}
 
-		/**
-		 * (OPTIONAL)
-		 * Specifies the name of the file being sent. If not included, the value for caption will be used as
-		 * the file name. If neither name nor caption are included, the file name will be parsed from the url.
-		 *
-		 * @param name The file name.
-		 * @return This builder.
-		 *
-		 * @since 8.1.0
-		 */
 		@Override
-		public Builder name(String name) {
-			return super.name(name);
-		}
-
-		@Override
-		public WhatsappFileRequest build() {
-			return new WhatsappFileRequest(this);
+		public RcsImageRequest build() {
+			return new RcsImageRequest(this);
 		}
 	}
 }

@@ -20,17 +20,15 @@ import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
 public final class WhatsappVideoRequest extends WhatsappRequest {
-	final MessagePayload video;
 
 	WhatsappVideoRequest(Builder builder) {
 		super(builder, MessageType.VIDEO);
-		video = new MessagePayload(builder.url, builder.caption);
-		video.validateUrlExtension("mp4", "3gpp");
+		payload.validateUrlExtension("mp4", "3gpp");
 	}
 
 	@JsonProperty("video")
 	public MessagePayload getVideo() {
-		return video;
+		return payload;
 	}
 
 	public static Builder builder() {
@@ -38,8 +36,6 @@ public final class WhatsappVideoRequest extends WhatsappRequest {
 	}
 
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappVideoRequest, Builder> {
-		String url, caption;
-
 		Builder() {}
 
 		/**
@@ -50,9 +46,9 @@ public final class WhatsappVideoRequest extends WhatsappRequest {
 		 * @param url The URL as a string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder url(String url) {
-			this.url = url;
-			return this;
+			return super.url(url);
 		}
 
 		/**
@@ -62,9 +58,9 @@ public final class WhatsappVideoRequest extends WhatsappRequest {
 		 * @param caption The caption string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder caption(String caption) {
-			this.caption = caption;
-			return this;
+			return super.caption(caption);
 		}
 
 		@Override
@@ -72,5 +68,4 @@ public final class WhatsappVideoRequest extends WhatsappRequest {
 			return new WhatsappVideoRequest(this);
 		}
 	}
-
 }

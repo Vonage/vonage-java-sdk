@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.E164;
+import com.vonage.client.messages.internal.MessagePayload;
 import java.net.URI;
 import java.util.Objects;
 
@@ -38,6 +39,7 @@ public abstract class MessageRequest extends JsonableBaseObject {
 	final String clientRef;
 	final URI webhookUrl;
 	final MessagesVersion webhookVersion;
+	@JsonIgnore protected final MessagePayload payload;
 	protected final Integer ttl;
 	protected String from, to, text;
 
@@ -60,15 +62,25 @@ public abstract class MessageRequest extends JsonableBaseObject {
 		clientRef = validateClientReference(builder.clientRef);
 		webhookUrl = builder.webhookUrl;
 		webhookVersion = builder.webhookVersion;
-		if (messageType == MessageType.TEXT) {
-			text = Objects.requireNonNull(builder.text, "Text message cannot be null");
-			if (text.isEmpty()) {
-				throw new IllegalArgumentException("Text message cannot be blank");
+		switch (messageType) {
+			case TEXT: {
+				text = Objects.requireNonNull(builder.text, "Text message cannot be null.");
+				if (text.isEmpty()) {
+					throw new IllegalArgumentException("Text message cannot be blank.");
+				}
+				if (text.length() > maxTextLength()) {
+					throw new IllegalArgumentException(
+							"Text message cannot be longer than " + maxTextLength() + " characters."
+					);
+				}
 			}
-			if (text.length() > maxTextLength()) {
-				throw new IllegalArgumentException(
-					"Text message cannot be longer than "+maxTextLength()+" characters"
-				);
+			case CUSTOM: case TEMPLATE: case STICKER: {
+				payload = null;
+				break;
+			}
+			default: {
+				payload = new MessagePayload(builder.url, builder.caption, builder.name);
+				break;
 			}
 		}
 		if ((ttl = builder.ttl) != null && ttl < 1) {
@@ -86,7 +98,7 @@ public abstract class MessageRequest extends JsonableBaseObject {
 	protected String validateClientReference(String clientRef) {
 		int limit = 100;
 		if (clientRef != null && clientRef.length() > limit) {
-			throw new IllegalArgumentException("Client reference cannot be longer than "+limit+" characters");
+			throw new IllegalArgumentException("Client reference cannot be longer than "+limit+" characters.");
 		}
 		return clientRef;
 	}
@@ -102,7 +114,7 @@ public abstract class MessageRequest extends JsonableBaseObject {
 	 */
 	protected void validateSenderAndRecipient(String from, String to) throws IllegalArgumentException {
 		if (from == null || from.isEmpty()) {
-			throw new IllegalArgumentException("Sender cannot be empty");
+			throw new IllegalArgumentException("Sender cannot be empty.");
 		}
 		this.to = new E164(to).toString();
 	}
@@ -174,7 +186,7 @@ public abstract class MessageRequest extends JsonableBaseObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public abstract static class Builder<M extends MessageRequest, B extends Builder<? extends M, ? extends B>> {
-		private String from, to, clientRef, text;
+		private String from, to, clientRef, text, url, caption, name;
 		private URI webhookUrl;
 		private MessagesVersion webhookVersion;
 		private Integer ttl;
@@ -186,7 +198,6 @@ public abstract class MessageRequest extends JsonableBaseObject {
 		 */
 		protected Builder() {
 		}
-
 		/**
 		 * (REQUIRED)
 		 * Sets the sender number or ID.
@@ -295,6 +306,42 @@ public abstract class MessageRequest extends JsonableBaseObject {
 		 */
 		protected B text(String text) {
 			this.text = text;
+			return (B) this;
+		}
+
+		/**
+		 * (REQUIRED)
+		 * Sets the media URL.
+		 *
+		 * @param url The URL as a string.
+		 * @return This builder.
+		 */
+		protected B url(String url) {
+			this.url = url;
+			return (B) this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Additional text to accompany the media. Must be between 1 and 2000 characters.
+		 *
+		 * @param caption The caption string.
+		 * @return This builder.
+		 */
+		protected B caption(String caption) {
+			this.caption = caption;
+			return (B) this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * The media name.
+		 *
+		 * @param name The name string.
+		 * @return This builder.
+		 */
+		protected B name(String name) {
+			this.name = name;
 			return (B) this;
 		}
 

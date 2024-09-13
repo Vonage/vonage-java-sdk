@@ -20,17 +20,15 @@ import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
 public final class ViberImageRequest extends ViberRequest {
-	final MessagePayload image;
 
 	ViberImageRequest(Builder builder) {
 		super(builder, MessageType.IMAGE);
-		image = new MessagePayload(builder.url);
-		image.validateUrlExtension("jpg", "jpeg", "png");
+		payload.validateUrlExtension("jpg", "jpeg", "png");
 	}
 
 	@JsonProperty("image")
 	public MessagePayload getImage() {
-		return image;
+		return payload;
 	}
 
 	public static Builder builder() {
@@ -38,22 +36,20 @@ public final class ViberImageRequest extends ViberRequest {
 	}
 
 	public static final class Builder extends ViberRequest.Builder<ViberImageRequest, Builder> {
-		String url;
 
 		Builder() {}
 
 		/**
 		 * (REQUIRED)
-		 * Sets the URL of the image attachment. Supports only
-		 * {@code .jpg}, {@code .jpeg} and {@code .png}
+		 * Sets the URL of the image attachment. Supports only {@code .jpg}, {@code .jpeg} and {@code .png}
 		 * file extensions.
 		 *
 		 * @param url The URL as a string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder url(String url) {
-			this.url = url;
-			return this;
+			return super.url(url);
 		}
 
 		@Override

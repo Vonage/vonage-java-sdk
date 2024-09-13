@@ -35,7 +35,7 @@ public final class WhatsappLocationRequest extends WhatsappRequest {
 	}
 
 	@JsonProperty("custom")
-	public Map<?, ?> getCustom() {
+	public Map<String, ?> getCustom() {
 		return custom;
 	}
 
@@ -44,7 +44,7 @@ public final class WhatsappLocationRequest extends WhatsappRequest {
 	}
 
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappLocationRequest, Builder> {
-		String name, address, text;
+		String name, address;
 		Double latitude, longitude;
 
 		Builder() {}

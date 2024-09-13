@@ -17,21 +17,25 @@ package com.vonage.client.messages.viber;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
+import com.vonage.client.messages.internal.MessagePayload;
+import java.io.File;
 
 /**
  * @since 7.2.0
  */
 public final class ViberFileRequest extends ViberRequest {
-	final File file;
 
 	ViberFileRequest(Builder builder) {
 		super(builder, MessageType.FILE);
-		file = new File(builder.url, builder.name);
+		MessagePayload.validateExtension(payload.getName() != null ? payload.getName() : payload.getUrl().getPath(),
+				"doc", "docx", "rtf", "dot", "dotx", "odt", "odf", "fodt", "txt", "info",
+				"pdf", "xps", "pdax", "eps", "xls", "xlsx", "ods", "fods", "csv", "xlsm", "xltx"
+		);
 	}
 
 	@JsonProperty("file")
-	public File getFile() {
-		return file;
+	public MessagePayload getFile() {
+		return payload;
 	}
 
 	public static Builder builder() {
@@ -39,8 +43,6 @@ public final class ViberFileRequest extends ViberRequest {
 	}
 
 	public static final class Builder extends ViberRequest.Builder<ViberFileRequest, Builder> {
-		String url, name;
-
 		Builder() {}
 
 		/**
@@ -55,9 +57,9 @@ public final class ViberFileRequest extends ViberRequest {
 		 * @param url The file URL as a string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder url(String url) {
-			this.url = url;
-			return this;
+			return super.url(url);
 		}
 
 		/**
@@ -67,9 +69,9 @@ public final class ViberFileRequest extends ViberRequest {
 		 * @param name The filename and extension as a string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder name(String name) {
-			this.name = name;
-			return this;
+			return super.name(name);
 		}
 
 		public ViberFileRequest build() {

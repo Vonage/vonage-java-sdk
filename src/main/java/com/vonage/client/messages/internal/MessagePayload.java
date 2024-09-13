@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,13 +32,13 @@ public class MessagePayload extends JsonableBaseObject {
 	protected String caption, name;
 
 	public MessagePayload(String url) {
-		this.url = URI.create(url);
+		this.url = URI.create(Objects.requireNonNull(url, "URL is required."));
 	}
 
 	public MessagePayload(String url, String caption) {
 		this(url);
 		if ((this.caption = caption) != null && caption.isEmpty()) {
-			throw new IllegalArgumentException("Caption cannot be blank");
+			throw new IllegalArgumentException("Caption cannot be blank.");
 		}
 	}
 
@@ -69,7 +70,7 @@ public class MessagePayload extends JsonableBaseObject {
 				.map(s -> s.startsWith(".") ? s.substring(1) : s)
 				.collect(Collectors.toSet());
 		if (!extensions.contains(ext)) {
-			throw new IllegalArgumentException("Invalid extension: '"+ext+"'. Should be one of "+extensions);
+			throw new IllegalArgumentException("Invalid extension: '"+ext+"'. Should be one of "+extensions+'.');
 		}
 	}
 
@@ -80,7 +81,7 @@ public class MessagePayload extends JsonableBaseObject {
 	public void validateCaptionLength(int max) {
 		if (caption == null) return;
 		if (caption.length() > max) {
-			throw new IllegalArgumentException("Caption must be less than "+max+" characters");
+			throw new IllegalArgumentException("Caption must be less than "+max+" characters.");
 		}
 	}
 
@@ -88,10 +89,10 @@ public class MessagePayload extends JsonableBaseObject {
 		if (url == null) return;
 		int length = getUrl().toString().length();
 		if (length < min) {
-			throw new IllegalArgumentException("URL must be longer than "+min+" characters");
+			throw new IllegalArgumentException("URL must be longer than "+min+" characters.");
 		}
 		if (length > max) {
-			throw new IllegalArgumentException("URL must be less than "+max+" characters");
+			throw new IllegalArgumentException("URL must be less than "+max+" characters.");
 		}
 	}
 }

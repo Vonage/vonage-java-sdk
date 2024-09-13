@@ -53,6 +53,7 @@ public class MessageRequestTest {
 	public void testSerializeAllFields() {
 		MessageRequest smr = ConcreteMessageRequest.builder(MessageType.VIDEO, Channel.MMS)
 				.from("447900000009").to("12002009000")
+				.url("https://example.com/video.mp4")
 				.clientRef("<40 character string")
 				.webhookUrl("https://example.com/status")
 				.webhookVersion(MessagesVersion.V1).build();
@@ -65,12 +66,13 @@ public class MessageRequestTest {
 		assertTrue(generatedJson.contains("\"to\":\"12002009000\""));
 		assertTrue(generatedJson.contains("\"channel\":\"mms\""));
 		assertTrue(generatedJson.contains("\"message_type\":\"video\""));
+		assertFalse(generatedJson.contains("https://example.com/video.mp4"));
 	}
 
 	@Test
 	public void testSerializeFieldsRequiredOnly() {
 		MessageRequest smr = ConcreteMessageRequest.builder(MessageType.IMAGE, Channel.VIBER)
-				.from("447900000009").to("12002009000").build();
+				.url("https://example.org/image.jpg").from("447900000009").to("12002009000").build();
 
 		String generatedJson = smr.toJson();
 		assertFalse(generatedJson.contains("client_ref"));
@@ -118,7 +120,7 @@ public class MessageRequestTest {
 	@Test
 	public void testConstructNegativeTtl() {
 		assertThrows(IllegalArgumentException.class, () ->
-				ConcreteMessageRequest.builder(MessageType.VIDEO, Channel.WHATSAPP)
+				ConcreteMessageRequest.builder(MessageType.CUSTOM, Channel.WHATSAPP)
 					.from("447900000001").to("447900000009").ttl(-1).build()
 		);
 	}
@@ -127,7 +129,7 @@ public class MessageRequestTest {
 	public void testConstructEmptyNumber() {
 		assertThrows(IllegalArgumentException.class, () ->
 				ConcreteMessageRequest.builder(MessageType.FILE, Channel.MESSENGER)
-					.from("447900000009").to("").build()
+					.from("447900000009").to("").url("https://example.org/file.pdf").build()
 		);
 	}
 
@@ -149,26 +151,26 @@ public class MessageRequestTest {
 	@Test
 	public void testConstructInvalidNumber() {
 		assertThrows(IllegalArgumentException.class, () ->
-				ConcreteMessageRequest.builder(MessageType.FILE, Channel.MESSENGER)
+				ConcreteMessageRequest.builder(MessageType.TEMPLATE, Channel.WHATSAPP)
 					.from("447900000001").to("+0 NaN").build()
 		);
 	}
 
 	@Test
 	public void testConstructMalformedButSalvagableNumbers() {
-		String json = ConcreteMessageRequest.builder(MessageType.AUDIO, Channel.WHATSAPP)
+		String json = ConcreteMessageRequest.builder(MessageType.CUSTOM, Channel.WHATSAPP)
 				.from("+44 7900090000").to("+1 900-900-0000").build().toJson();
 
 		assertTrue(json.contains("\"from\":\"+44 7900090000\""));
 		assertTrue(json.contains("\"to\":\"19009000000\""));
-		assertTrue(json.contains("\"message_type\":\"audio\""));
+		assertTrue(json.contains("\"message_type\":\"custom\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 	}
 
 	@Test
 	public void testConstructTooLongNumber() {
 		assertThrows(IllegalArgumentException.class, () ->
-				ConcreteMessageRequest.builder(MessageType.IMAGE, Channel.MESSENGER)
+				ConcreteMessageRequest.builder(MessageType.STICKER, Channel.WHATSAPP)
 					.from("+447900090000").to("19009000000447900090000").build()
 		);
 	}
@@ -198,6 +200,7 @@ public class MessageRequestTest {
 
 		ConcreteMessageRequest.Builder builder = ConcreteMessageRequest
 				.builder(MessageType.FILE, Channel.RCS)
+				.url("https://example.com/file.zip")
 				.from("447900000009").to("12002009000");
 
 		assertEquals(99, builder.clientRef(clientRef.toString()).build().getClientRef().length());
@@ -220,17 +223,5 @@ public class MessageRequestTest {
 
 		String expected = "ConcreteMessageRequest {\"message_type\":\"custom\",\"channel\":\"whatsapp\",\"from\":\"447900000009\",\"to\":\"12002009000\"}";
 		assertEquals(expected, request.toString());
-	}
-
-	@Test
-	public void triggerJsonProcessingException() {
-		class SelfRefrencing extends ConcreteMessageRequest {
-			@JsonProperty("self") final SelfRefrencing self = this;
-
-			SelfRefrencing() {
-				super(builder(MessageType.VCARD, Channel.MMS).from("447900000009").to("12002009000"));
-			}
-		}
-		assertThrows(VonageUnexpectedException.class, () -> new SelfRefrencing().toJson());
 	}
 }

@@ -20,16 +20,14 @@ import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
 public final class MessengerFileRequest extends MessengerRequest {
-	final MessagePayload file;
 
 	MessengerFileRequest(Builder builder) {
 		super(builder, MessageType.FILE);
-		file = new MessagePayload(builder.url);
 	}
 
 	@JsonProperty("file")
 	public MessagePayload getFile() {
-		return file;
+		return payload;
 	}
 
 	public static Builder builder() {
@@ -37,7 +35,6 @@ public final class MessengerFileRequest extends MessengerRequest {
 	}
 
 	public static final class Builder extends MessengerRequest.Builder<MessengerFileRequest, Builder> {
-		String url;
 
 		Builder() {}
 
@@ -49,9 +46,9 @@ public final class MessengerFileRequest extends MessengerRequest {
 		 * @param url The URL as a string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder url(String url) {
-			this.url = url;
-			return this;
+			return super.url(url);
 		}
 
 		@Override

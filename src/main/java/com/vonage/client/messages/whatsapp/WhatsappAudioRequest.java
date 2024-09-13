@@ -20,18 +20,16 @@ import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
 public final class WhatsappAudioRequest extends WhatsappRequest {
-	final MessagePayload audio;
 
 	WhatsappAudioRequest(Builder builder) {
 		super(builder, MessageType.AUDIO);
-		audio = new MessagePayload(builder.url);
-		audio.validateUrlExtension("aac", "m4a", "amr", "mp3", "opus");
-		audio.validateUrlLength(10, 2000);
+		payload.validateUrlExtension("aac", "m4a", "amr", "mp3", "opus");
+		payload.validateUrlLength(10, 2000);
 	}
 
 	@JsonProperty("audio")
 	public MessagePayload getAudio() {
-		return audio;
+		return payload;
 	}
 
 	public static Builder builder() {
@@ -39,7 +37,6 @@ public final class WhatsappAudioRequest extends WhatsappRequest {
 	}
 
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappAudioRequest, Builder> {
-		String url;
 
 		Builder() {}
 
@@ -51,9 +48,9 @@ public final class WhatsappAudioRequest extends WhatsappRequest {
 		 * @param url The URL as a string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder url(String url) {
-			this.url = url;
-			return this;
+			return super.url(url);
 		}
 
 		@Override

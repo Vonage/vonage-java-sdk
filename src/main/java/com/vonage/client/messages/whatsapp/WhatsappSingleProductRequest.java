@@ -52,7 +52,7 @@ public final class WhatsappSingleProductRequest extends WhatsappRequest {
 	}
 
 	@JsonProperty("custom")
-	public Map<?, ?> getCustom() {
+	public Map<String, ?> getCustom() {
 		return custom;
 	}
 
