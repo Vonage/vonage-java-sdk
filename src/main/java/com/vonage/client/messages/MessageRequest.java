@@ -137,6 +137,7 @@ public abstract class MessageRequest extends JsonableBaseObject {
 	 * Sets the maximum text length for text messages.
 	 *
 	 * @return The maximum text message string length.
+	 * @since 8.11.0
 	 */
 	@JsonIgnore
 	protected int maxTextLength() {

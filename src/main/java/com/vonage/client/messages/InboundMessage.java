@@ -18,10 +18,13 @@ package com.vonage.client.messages;
 import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.common.UrlContainer;
+import com.vonage.client.messages.mms.Content;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.*;
 import java.net.URI;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -67,6 +70,7 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonProperty("from") protected String from;
 	@JsonProperty("client_ref") protected String clientRef;
 	@JsonProperty("provider_message") String providerMessage;
+	@JsonProperty("_self") UrlContainer self;
 
 	@JsonProperty("text") protected String text;
 	@JsonProperty("image") protected UrlWrapperWithCaption image;
@@ -85,6 +89,7 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonProperty("usage") protected MessageStatus.Usage usage;
 	@JsonProperty("sms") protected SmsInboundMetadata smsMetadata;
 	@JsonProperty("origin") protected Origin origin;
+	@JsonProperty("content") protected List<Content> content;
 
 	/**
 	 * This is a catch-all method which encapsulates all fields in the response JSON
@@ -158,6 +163,17 @@ public class InboundMessage extends JsonableBaseObject {
 	 */
 	public String getClientRef() {
 		return clientRef;
+	}
+
+	/**
+	 * The URL for the message resource, including the geo-specific base URI.
+	 *
+	 * @return The {@code _self.href} property as a URI, or {@code null} if absent.
+	 * @since 8.11.0
+	 */
+	@JsonIgnore
+	public URI getSelfUrl() {
+		return self != null ? self.getHref() : null;
 	}
 
 	/**

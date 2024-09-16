@@ -16,6 +16,7 @@
 package com.vonage.client.messages;
 
 import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.Order;
@@ -105,7 +106,7 @@ public class InboundMessageTest {
 				",\n\"someRandomProp\": {\"int_field\": 19, \"str_field\": \"A value\", \"col\":[]}}";
 
 		InboundMessage im = InboundMessage.fromJson(fullJson);
-		TestUtils.testJsonableBaseObject(im);
+		testJsonableBaseObject(im);
 		assertEqualsSmsWithUsageAndMetadata(im);
 
 		Map<String, Object> randomProp = (Map<String, Object>) im.getUnmappedProperties().get("someRandomProp");
@@ -131,7 +132,7 @@ public class InboundMessageTest {
 	public void testMessengerUnsupportedType() {
 		String fullJson = getCommonPartialJsonStub(Channel.MESSENGER, MessageType.UNSUPPORTED) + "\n}";
 		InboundMessage im = InboundMessage.fromJson(fullJson);
-		TestUtils.testJsonableBaseObject(im);
+		testJsonableBaseObject(im);
 		assertEqualsCommon(im);
 		assertEquals(Channel.MESSENGER, im.getChannel());
 		assertEquals(MessageType.UNSUPPORTED, im.getMessageType());
@@ -160,7 +161,7 @@ public class InboundMessageTest {
 			  "}\n}";
 
 		InboundMessage im = InboundMessage.fromJson(fullJson);
-		TestUtils.testJsonableBaseObject(im);
+		testJsonableBaseObject(im);
 		assertEqualsCommon(im);
 		assertEquals(Channel.MMS, im.getChannel());
 		assertEquals(MessageType.VCARD, im.getMessageType());
@@ -296,7 +297,7 @@ public class InboundMessageTest {
 				"   }" +
 				"}";
 		InboundMessage im = InboundMessage.fromJson(json);
-		TestUtils.testJsonableBaseObject(im);
+		testJsonableBaseObject(im);
 		assertEquals(ContextStatus.AVAILABLE, im.getWhatsappContextStatus());
 		Context context = im.getWhatsappContext();
 		assertNotNull(context);
@@ -320,7 +321,7 @@ public class InboundMessageTest {
 				"   }" +
 				"}";
 		InboundMessage im = InboundMessage.fromJson(json);
-		TestUtils.testJsonableBaseObject(im);
+		testJsonableBaseObject(im);
 		Profile profile = im.getWhatsappProfile();
 		assertNotNull(profile);
 		assertEquals(name, profile.getName());
@@ -336,6 +337,9 @@ public class InboundMessageTest {
 		String body = "Check out our new product offering",
 				headline = "New Products!", sourceId = "212731241638144",
 				sourceType = "post", sourceUrl = "https://fb.me/2ZulEu42P",
+				imageUrl = "https://example.com/image.jpg",
+				videoUrl = "https://example.com/video.mp4", ctwaClid = "1234567890",
+				thumbnailUrl = "https://example.com/thumbnail.jpg",
 				json = "{\n" +
 				"  \"whatsapp\": {\n" +
 				"      \"referral\": {\n" +
@@ -343,13 +347,18 @@ public class InboundMessageTest {
 				"         \"headline\": \""+headline+"\",\n" +
 				"         \"source_id\": \""+sourceId+"\",\n" +
 				"         \"source_type\": \""+sourceType+"\",\n" +
-				"         \"source_url\": \""+sourceUrl+"\"\n" +
+				"         \"source_url\": \""+sourceUrl+"\",\n" +
+				"         \"media_type\": \"image\",\n" +
+				"		  \"image_url\": \""+imageUrl+"\",\n" +
+				"         \"video_url\": \""+videoUrl+"\",\n" +
+				"         \"thumbnail_url\": \""+thumbnailUrl+"\",\n" +
+				"         \"ctwa_clid\": \""+ctwaClid+"\"\n" +
 				"      }\n" +
 				"   }\n" +
 				"}";
 
 		InboundMessage im = InboundMessage.fromJson(json);
-		TestUtils.testJsonableBaseObject(im);
+		testJsonableBaseObject(im);
 		Referral referral = im.getWhatsappReferral();
 		assertNotNull(referral);
 		assertEquals(body, referral.getBody());
@@ -357,6 +366,11 @@ public class InboundMessageTest {
 		assertEquals(sourceId, referral.getSourceId());
 		assertEquals(sourceType, referral.getSourceType());
 		assertEquals(URI.create(sourceUrl), referral.getSourceUrl());
+		assertEquals(MessageType.IMAGE, referral.getMediaType());
+		assertEquals(URI.create(imageUrl), referral.getImageUrl());
+		assertEquals(URI.create(videoUrl), referral.getVideoUrl());
+		assertEquals(URI.create(thumbnailUrl), referral.getThumbnailUrl());
+		assertEquals(ctwaClid, referral.getClickId());
 	}
 
 	@Test
@@ -368,5 +382,18 @@ public class InboundMessageTest {
 				"}";
 		var im = InboundMessage.fromJson(json);
 		assertEquals(networkCode, im.getNetworkCode());
+	}
+
+	@Test
+	public void testSelfOnly() {
+		String selfUrl = "https://api-eu.vonage.com/v1/messages/aaaaaaa-bbbb-4ccc-8ddd-0123456789ab",
+				json = "{\n" +
+				"  \"_self\": {\n" +
+				"    \"href\": \""+selfUrl+"\"\n" +
+				"   }\n" +
+				"}";
+		var im = InboundMessage.fromJson(json);
+		testJsonableBaseObject(im);
+		assertEquals(URI.create(selfUrl), im.getSelfUrl());
 	}
 }

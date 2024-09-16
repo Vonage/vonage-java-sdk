@@ -17,6 +17,11 @@ package com.vonage.client.messages.rcs;
 
 import com.vonage.client.messages.MessageType;
 
+/**
+ * {@link com.vonage.client.messages.Channel#RCS}, {@link MessageType#TEXT} request.
+ *
+ * @since 8.11.0
+ */
 public final class RcsTextRequest extends RcsRequest {
 
 	RcsTextRequest(Builder builder) {

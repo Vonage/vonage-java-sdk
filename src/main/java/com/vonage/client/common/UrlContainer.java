@@ -21,10 +21,7 @@ import java.net.URI;
 
 /**
  * Represents a link under the {@code _links} section of a HAL response.
- *
- * @deprecated This class will be made package-private in the next major release.
  */
-@Deprecated
 public class UrlContainer extends JsonableBaseObject {
 	protected URI href;
 
