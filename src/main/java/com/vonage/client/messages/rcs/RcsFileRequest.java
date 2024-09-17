@@ -27,7 +27,7 @@ import com.vonage.client.messages.internal.MessagePayload;
 public final class RcsFileRequest extends RcsRequest {
 
 	RcsFileRequest(Builder builder) {
-		super(builder, MessageType.VIDEO);
+		super(builder, MessageType.FILE);
 		media.validateUrlExtension("pdf");
 	}
 

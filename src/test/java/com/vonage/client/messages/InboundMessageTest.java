@@ -126,6 +126,7 @@ public class InboundMessageTest {
 		assertNull(im.getWhatsappLocation());
 		assertNull(im.getWhatsappOrder());
 		assertNull(im.getProviderMessage());
+		assertNull(im.getContent());
 	}
 
 	@Test
@@ -150,6 +151,7 @@ public class InboundMessageTest {
 		assertNull(im.getProviderMessage());
 		assertNull(im.getUsage());
 		assertNull(im.getSmsMetadata());
+		assertNull(im.getContent());
 	}
 
 	@Test

@@ -10,8 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added `contact`, `reaction` and `button` types to WhatsApp messages
 - Added `content` property to `InboundMessage` for MMS messages
 - Removed `com.vonage.client.messages.internal.Text`
-- Factored out common properties for text, media and custom messages into `MessageRequest`
-- Custom messages must now have a body
+- Factored out common properties & validation for text, media and custom messages into `MessageRequest`
 
 # [8.10.0] - 2024-08-02
 - Added `targetApiKey` for buy & cancel number endpoints

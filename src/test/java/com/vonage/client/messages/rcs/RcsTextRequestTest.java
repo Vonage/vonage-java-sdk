@@ -15,8 +15,6 @@
  */
 package com.vonage.client.messages.rcs;
 
-import com.vonage.client.messages.sms.EncodingType;
-import com.vonage.client.messages.sms.OutboundSettings;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
@@ -78,9 +76,7 @@ public class RcsTextRequestTest {
 	@Test
 	public void testLongText() {
 		StringBuilder text = new StringBuilder(3073);
-		for (int i = 0; i < 3071; i++) {
-			text.append('*');
-		}
+        text.append("*".repeat(3071));
 		assertEquals(3071, text.length());
 
 		RcsTextRequest rcsText = RcsTextRequest.builder().text(text.toString()).from(from).to(to).build();
