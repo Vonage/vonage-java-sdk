@@ -153,6 +153,14 @@ public class InboundMessageTest {
 	}
 
 	@Test
+	public void testChannelOnly() {
+		for (var channel : Channel.values()) {
+			var channelStr = channel == Channel.VIBER ? "viber_service" : channel.name().toLowerCase();
+			assertEquals(channel, InboundMessage.fromJson("{\"channel\":\""+channelStr+"\"}").getChannel());
+		}
+	}
+
+	@Test
 	public void testMmsVcard() {
 		String vcard = "ftp://example.com/contact.vcf";
 		String fullJson = getCommonPartialJsonStub(Channel.MMS, MessageType.VCARD) +
@@ -398,10 +406,26 @@ public class InboundMessageTest {
 	}
 
 	@Test
-	public void testChannelOnly() {
-		for (var channel : Channel.values()) {
-			var channelStr = channel == Channel.VIBER ? "viber_service" : channel.name().toLowerCase();
-			assertEquals(channel, InboundMessage.fromJson("{\"channel\":\""+channelStr+"\"}").getChannel());
-		}
+	public void testContentOnly() {
+		String url = "https://example.com/image.jpg",
+				json = "{\n" +
+				"  \"content\": [{},{\n" +
+				"    \"type\": \"image\",\n" +
+				"    \"url\": \""+url+"\"\n" +
+				"   }]\n" +
+				"}";
+		var im = InboundMessage.fromJson(json);
+		testJsonableBaseObject(im);
+		var content = im.getContent();
+		assertNotNull(content);
+		assertEquals(2, content.size());
+		var empty = content.getFirst();
+		assertNotNull(empty);
+		assertNull(empty.getType());
+		assertNull(empty.getUrl());
+		var image = content.getLast();
+		assertNotNull(image);
+		assertEquals(MessageType.IMAGE, image.getType());
+		assertEquals(URI.create(url), image.getUrl());
 	}
 }

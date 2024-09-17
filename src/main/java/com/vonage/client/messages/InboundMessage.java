@@ -60,8 +60,6 @@ public class InboundMessage extends JsonableBaseObject {
 
 	@JsonAnySetter protected Map<String, Object> unknownProperties;
 
-	@JsonProperty("whatsapp") private Whatsapp whatsapp;
-
 	@JsonProperty("timestamp") protected Instant timestamp;
 	@JsonProperty("channel") protected Channel channel;
 	@JsonProperty("message_type") protected MessageType messageType;
@@ -89,6 +87,7 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonProperty("usage") protected MessageStatus.Usage usage;
 	@JsonProperty("sms") protected SmsInboundMetadata smsMetadata;
 	@JsonProperty("origin") protected Origin origin;
+	@JsonProperty("whatsapp") private Whatsapp whatsapp;
 	@JsonProperty("content") protected List<Content> content;
 
 	/**
@@ -376,6 +375,19 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonIgnore
 	public Referral getWhatsappReferral() {
 		return whatsapp != null ? whatsapp.referral : null;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#MMS}, returns a list of one or more objects
+	 * representing image, audio, video, vCard, or file attachments. Only present for messages that have
+	 * more than one attachment.
+	 *
+	 * @return The list of MMS attachments, or {@code null} if not applicable.
+	 * @since 8.11.0
+	 */
+	@JsonProperty("content")
+	public List<Content> getContent() {
+		return content;
 	}
 
 	/**
