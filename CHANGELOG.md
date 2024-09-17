@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.11.0] - 2024-09-??
+- Added RCS channel to Messages API
+- Fixed `viber_service` deserialisation in `com.vonage.client.messages.Channel`
+- Added `thumbnail_url`, `video_url`, `image_url`, `ctwa_clid` and `media_type` to WhatsApp `Referral`
+- Added `_self.href` property to `com.vonage.client.messages.InboundMessage`
+- Added `contact`, `reaction` and `button` types to WhatsApp messages
+- Added `content` property to `InboundMessage` for MMS messages
+
 # [8.10.0] - 2024-08-02
 - Added `targetApiKey` for buy & cancel number endpoints
 - Added Builder for `UpdateNumberRequest` and deprecated setters

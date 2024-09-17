@@ -396,4 +396,12 @@ public class InboundMessageTest {
 		testJsonableBaseObject(im);
 		assertEquals(URI.create(selfUrl), im.getSelfUrl());
 	}
+
+	@Test
+	public void testChannelOnly() {
+		for (var channel : Channel.values()) {
+			var channelStr = channel == Channel.VIBER ? "viber_service" : channel.name().toLowerCase();
+			assertEquals(channel, InboundMessage.fromJson("{\"channel\":\""+channelStr+"\"}").getChannel());
+		}
+	}
 }

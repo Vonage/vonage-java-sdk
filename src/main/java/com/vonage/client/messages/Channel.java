@@ -67,7 +67,8 @@ public enum Channel {
 	@JsonCreator
 	public static Channel fromString(String value) {
 		if (value == null) return null;
-		return Channel.valueOf(value.toUpperCase());
+		String upper = value.toUpperCase();
+		return upper.equals("VIBER_SERVICE") ? VIBER : Channel.valueOf(upper);
 	}
 
 	@JsonValue
