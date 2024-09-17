@@ -78,7 +78,7 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonProperty("vcard") protected UrlWrapper vcard;
 	@JsonProperty("sticker") protected UrlWrapper sticker;
 	@JsonProperty("reaction") protected Reaction reaction;
-
+	@JsonProperty("button") protected Button button;
 	@JsonProperty("profile") protected Profile whatsappProfile;
 	@JsonProperty("context_status") protected ContextStatus whatsappContextStatus;
 	@JsonProperty("context") protected Context whatsappContext;
@@ -261,11 +261,20 @@ public class InboundMessage extends JsonableBaseObject {
 	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#REACTION}, returns the reaction.
 	 *
 	 * @return The reaction details, or {@code null} if not applicable.
-	 *
 	 * @since 8.11.0
 	 */
 	public Reaction getReaction() {
 		return reaction;
+	}
+
+	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#BUTTON}, returns the button.
+	 *
+	 * @return The button details, or {@code null} if not applicable.
+	 * @since 8.11.0
+	 */
+	public Button getButton() {
+		return button;
 	}
 
 	/**
@@ -307,6 +316,8 @@ public class InboundMessage extends JsonableBaseObject {
 	public Order getWhatsappOrder() {
 		return whatsappOrder;
 	}
+
+
 
 	/**
 	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns information

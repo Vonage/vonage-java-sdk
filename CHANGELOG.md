@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed `viber_service` deserialization in `com.vonage.client.messages.Channel`
 - Added `thumbnail_url`, `video_url`, `image_url`, `ctwa_clid` and `media_type` to WhatsApp `Referral`
 - Added `_self.href` property to `com.vonage.client.messages.InboundMessage`
-- Added `contact`, `reaction` and `button` types to WhatsApp messages
+- Added `reaction` and `button` types to WhatsApp messages
 - Added `content` property to `InboundMessage` for MMS messages
 - Removed `com.vonage.client.messages.internal.Text`
 - Factored out common properties & validation for text, media and custom messages into `MessageRequest`

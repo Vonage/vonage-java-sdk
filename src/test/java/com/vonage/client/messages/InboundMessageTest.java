@@ -15,6 +15,7 @@
  */
 package com.vonage.client.messages;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
@@ -121,6 +122,7 @@ public class InboundMessageTest {
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
 		assertNull(im.getReaction());
+		assertNull(im.getButton());
 		assertNull(im.getWhatsappContext());
 		assertNull(im.getWhatsappReply());
 		assertNull(im.getWhatsappLocation());
@@ -145,6 +147,7 @@ public class InboundMessageTest {
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
 		assertNull(im.getReaction());
+		assertNull(im.getButton());
 		assertNull(im.getWhatsappContext());
 		assertNull(im.getWhatsappReply());
 		assertNull(im.getWhatsappLocation());
@@ -191,6 +194,9 @@ public class InboundMessageTest {
 		assertNull(im.getProviderMessage());
 		assertNull(im.getUsage());
 		assertNull(im.getSmsMetadata());
+		assertNull(im.getReaction());
+		assertNull(im.getContent());
+		assertNull(im.getButton());
 	}
 
 	@Test
@@ -244,6 +250,25 @@ public class InboundMessageTest {
 		assertNotNull(reaction);
 		assertEquals(Reaction.Action.REACT, reaction.getAction());
 		assertNull(reaction.getEmoji());
+	}
+
+	@Test
+	public void testButtonOnly() throws Exception {
+		var payload = Map.of("foo", "Bar", "baz", 42, "qux", List.of(Map.of(-1, false)));
+		String subtype = "flow", text = "sent", json = "{\n" +
+				"  \"button\": {\n" +
+				"    \"payload\": "+new ObjectMapper().writeValueAsString(payload) +",\n" +
+				"    \"subtype\": \""+subtype+"\",\n" +
+				"    \"text\": \""+text+"\"\n" +
+				"  }\n" +
+				"}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		testJsonableBaseObject(im);
+		Button button = im.getButton();
+		assertNotNull(button);
+		assertEquals(payload.toString(), button.getPayload().toString());
+		assertEquals(subtype, button.getSubtype());
+		assertEquals(text, button.getText());
 	}
 
 	@Test
