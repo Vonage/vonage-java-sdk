@@ -77,6 +77,7 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonProperty("file") protected UrlWrapper file;
 	@JsonProperty("vcard") protected UrlWrapper vcard;
 	@JsonProperty("sticker") protected UrlWrapper sticker;
+	@JsonProperty("reaction") protected Reaction reaction;
 
 	@JsonProperty("profile") protected Profile whatsappProfile;
 	@JsonProperty("context_status") protected ContextStatus whatsappContextStatus;
@@ -254,6 +255,17 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonIgnore
 	public URI getStickerUrl() {
 		return sticker != null ? sticker.url : null;
+	}
+
+	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#REACTION}, returns the reaction.
+	 *
+	 * @return The reaction details, or {@code null} if not applicable.
+	 *
+	 * @since 8.11.0
+	 */
+	public Reaction getReaction() {
+		return reaction;
 	}
 
 	/**

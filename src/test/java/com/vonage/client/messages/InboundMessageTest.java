@@ -15,7 +15,6 @@
  */
 package com.vonage.client.messages;
 
-import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
@@ -121,6 +120,7 @@ public class InboundMessageTest {
 		assertNull(im.getVideoUrl());
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
+		assertNull(im.getReaction());
 		assertNull(im.getWhatsappContext());
 		assertNull(im.getWhatsappReply());
 		assertNull(im.getWhatsappLocation());
@@ -144,6 +144,7 @@ public class InboundMessageTest {
 		assertNull(im.getVideoUrl());
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
+		assertNull(im.getReaction());
 		assertNull(im.getWhatsappContext());
 		assertNull(im.getWhatsappReply());
 		assertNull(im.getWhatsappLocation());
@@ -232,6 +233,17 @@ public class InboundMessageTest {
 		String json = "{\"sticker\": {\"url\":\""+sticker+"\"}}";
 		InboundMessage im = InboundMessage.fromJson(json);
 		assertEquals(sticker, im.getStickerUrl());
+	}
+
+	@Test
+	public void testReactionOnly() {
+		String json = "{\"reaction\": {\"action\":\"react\"}}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		testJsonableBaseObject(im);
+		var reaction = im.getReaction();
+		assertNotNull(reaction);
+		assertEquals(Reaction.Action.REACT, reaction.getAction());
+		assertNull(reaction.getEmoji());
 	}
 
 	@Test
