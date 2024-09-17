@@ -13,11 +13,10 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.whatsapp;
+package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,18 +25,19 @@ import java.util.Map;
  * @since 8.11.0
  */
 public final class Button extends JsonableBaseObject {
-	private Map<String, ?> payload;
+	private Object payload;
 	private String text, subtype;
 
 	Button() {}
 
 	/**
 	 * Payload for the button. Contents can be varied depending on the type of button.
+	 * For WhatsApp messages, this will be a Map. For RCS, this will be a String.
 	 *
 	 * @return The button payload, or {@code null} if absent.
 	 */
 	@JsonProperty("payload")
-	public Map<String, ?> getPayload() {
+	public Object getPayload() {
 		return payload;
 	}
 
@@ -52,8 +52,9 @@ public final class Button extends JsonableBaseObject {
 	}
 
 	/**
-	 * Subtype of button being received.
-	 * @return The button subtype, or {@code null} if absent.
+	 * Subtype of button being received. This only applies to WhatsApp messages.
+	 *
+	 * @return The button subtype, or {@code null} if absent / not applicable.
 	 */
 	@JsonProperty("subtype")
 	public String getSubtype() {
