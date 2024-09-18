@@ -200,6 +200,24 @@ public class InboundMessageTest {
 	}
 
 	@Test
+	public void testRcsVcard() {
+		String name = "contact.vcf", url = "https://api-eu.nexmo.com/v3/media/6882bbe2-fe14-4e2f-910f-652beee058d4";
+		String fullJson = getCommonPartialJsonStub(Channel.RCS, MessageType.VCARD) +
+				",\n  \"vcard\": {\n" +
+				"    \"url\": \"" + url + "\",\n" +
+				"    \"name\": \""+name+"\"\n" +
+				"}\n}";
+
+		InboundMessage im = InboundMessage.fromJson(fullJson);
+		testJsonableBaseObject(im);
+		assertEqualsCommon(im);
+		assertEquals(Channel.RCS, im.getChannel());
+		assertEquals(MessageType.VCARD, im.getMessageType());
+		assertEquals(URI.create(url), im.getVcardUrl());
+		assertEquals(name, im.getVcardName());
+	}
+
+	@Test
 	public void testImageOnly() {
 		URI image = URI.create("https://www.example.org/path/to/image.png");
 		String caption = "Alt text accompanying the image";

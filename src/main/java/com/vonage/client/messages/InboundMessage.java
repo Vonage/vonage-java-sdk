@@ -248,6 +248,18 @@ public class InboundMessage extends JsonableBaseObject {
 	}
 
 	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#VCARD} and {@linkplain #getChannel()} is
+	 * {@linkplain Channel#RCS}, returns the name of the vCard.
+	 *
+	 * @return The vCard attachment file name, or {@code null} if absent / not applicable.
+	 * @since 8.11.0
+	 */
+	@JsonIgnore
+	public String getVcardName() {
+		return vcard != null ? vcard.name : null;
+	}
+
+	/**
 	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#STICKER}, returns the URL of the sticker.
 	 *
 	 * @return The sticker URL, or {@code null} if not applicable.
