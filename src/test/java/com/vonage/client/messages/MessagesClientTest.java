@@ -15,10 +15,7 @@
  */
 package com.vonage.client.messages;
 
-import com.vonage.client.AbstractClientTest;
-import com.vonage.client.DynamicEndpointTestSpec;
-import com.vonage.client.RestEndpoint;
-import com.vonage.client.VonageApiResponseException;
+import com.vonage.client.*;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
@@ -27,6 +24,7 @@ import com.vonage.client.messages.messenger.*;
 import com.vonage.client.messages.mms.MmsAudioRequest;
 import com.vonage.client.messages.mms.MmsImageRequest;
 import com.vonage.client.messages.mms.MmsVcardRequest;
+import com.vonage.client.messages.rcs.*;
 import com.vonage.client.messages.sms.SmsTextRequest;
 import com.vonage.client.messages.viber.ViberFileRequest;
 import com.vonage.client.messages.viber.ViberImageRequest;
@@ -35,14 +33,11 @@ import com.vonage.client.messages.viber.ViberVideoRequest;
 import com.vonage.client.messages.whatsapp.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
 
 public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
-
 	private static final String
+			MESSAGE_ID = UUID.randomUUID().toString(),
 			TEXT = "Nexmo Verification code: 12345. Valid for 10 minutes.",
 			IMAGE = "https://www.example.com/picture.jpeg",
 			VIDEO = "https://www.example.com/trailer.mp4",
@@ -50,6 +45,7 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 			FILE = "https://www.example.com/document.pdf",
 			VCARD = "https://example.com/contact.vcf",
 			STICKER = "https://example.com/sticker.webp";
+	private static final Map<String, ?> CUSTOM = Map.of("One", 1);
 
 	public MessagesClientTest() {
 		client = new MessagesClient(wrapper);
@@ -60,11 +56,10 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 	}
 
 	void assertResponse(MessageRequest request) throws Exception {
-		UUID uuid = UUID.randomUUID();
-		String responseJson = "{\"message_uuid\":\""+uuid+"\"}";
+		String responseJson = "{\"message_uuid\":\""+MESSAGE_ID+"\"}";
 		stubResponse(202, responseJson);
 		MessageResponse responseObject = client.sendMessage(request);
-		assertEquals(uuid, responseObject.getMessageUuid());
+		assertEquals(UUID.fromString(MESSAGE_ID), responseObject.getMessageUuid());
 	}
 
 	void assertException(int statusCode, String json) throws Exception {
@@ -91,24 +86,26 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 	}
 
 	@Test
-	public void test429Response() throws Exception {
-		assertException(429, "{\n" +
-				"  \"type\": \"https://developer.nexmo.com/api-errors/messages-olympus#1010\",\n" +
-				"  \"title\": \"Rate Limit Hit\",\n" +
-				"  \"detail\": \"Please wait, then retry your request\",\n" +
-				"  \"instance\": \"bf0ca0bf927b3b52e3cb03217e1a1ddf\"\n" +
-				"}"
+	public void testSendMessage429Response() throws Exception {
+		assertException(429, """
+                {
+                  "type": "https://developer.nexmo.com/api-errors/messages-olympus#1010",
+                  "title": "Rate Limit Hit",
+                  "detail": "Please wait, then retry your request",
+                  "instance": "bf0ca0bf927b3b52e3cb03217e1a1ddf"
+                }"""
 		);
 	}
 
 	@Test
-	public void test401Response() throws Exception {
-		assertException(401, "{\n" +
-				"  \"type\": \"https://developer.nexmo.com/api-errors/#unathorized\",\n" +
-				"  \"title\": \"You did not provide correct credentials.\",\n" +
-				"  \"detail\": \"Check that you're using the correct credentials, and that your account has this feature enabled\",\n" +
-				"  \"instance\": \"bf0ca0bf927b3b52e3cb03217e1a1ddf\"\n" +
-				"}"
+	public void testSendMessage401Response() throws Exception {
+		assertException(401, """
+                {
+                  "type": "https://developer.nexmo.com/api-errors/#unathorized",
+                  "title": "You did not provide correct credentials.",
+                  "detail": "Check that you're using the correct credentials, and that your account has this feature enabled",
+                  "instance": "bf0ca0bf927b3b52e3cb03217e1a1ddf"
+                }"""
 		);
 	}
 
@@ -123,6 +120,15 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 		assertResponse(MmsImageRequest.builder().url(IMAGE));
 		assertResponse(MmsAudioRequest.builder().url(AUDIO));
 		assertResponse(MmsAudioRequest.builder().url(VIDEO));
+	}
+
+	@Test
+	public void testSendRcsSuccess() throws Exception {
+		assertResponse(RcsTextRequest.builder().text(TEXT));
+		assertResponse(RcsImageRequest.builder().url(IMAGE));
+		assertResponse(RcsVideoRequest.builder().url(VIDEO));
+		assertResponse(RcsFileRequest.builder().url(FILE));
+		assertResponse(RcsCustomRequest.builder().custom(CUSTOM));
 	}
 
 	@Test
@@ -141,13 +147,14 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 		assertResponse(WhatsappVideoRequest.builder().url(VIDEO));
 		assertResponse(WhatsappFileRequest.builder().url(FILE));
 		assertResponse(WhatsappStickerRequest.builder().url(STICKER));
+		assertResponse(WhatsappReactionRequest.builder().unreact());
 		assertResponse(WhatsappLocationRequest.builder().latitude(40.34772).longitude(-74.18847));
 		assertResponse(WhatsappSingleProductRequest.builder().catalogId("c1d").productRetailerId("p1d"));
 		assertResponse(WhatsappMultiProductRequest.builder()
 				.catalogId("ca7").bodyText("b0d").headerText("Check it out")
 				.addProductsSection("test", Arrays.asList("5ku1", "p2"))
 		);
-		assertResponse(WhatsappCustomRequest.builder().custom(Collections.emptyMap()));
+		assertResponse(WhatsappCustomRequest.builder().custom(CUSTOM));
 		assertResponse(WhatsappTemplateRequest.builder().name("fb"));
 	}
 
@@ -158,6 +165,40 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 		assertResponse(MessengerAudioRequest.builder().url(AUDIO));
 		assertResponse(MessengerVideoRequest.builder().url(VIDEO));
 		assertResponse(MessengerFileRequest.builder().url(FILE));
+	}
+
+	@Test
+	public void testAckInboundMessage() throws Exception {
+		stubResponseAndRun(200, () -> client.ackInboundMessage(MESSAGE_ID, null));
+		stubResponseAndAssertThrows(() -> client.ackInboundMessage(null, ApiRegion.API_US), NullPointerException.class);
+		stubResponseAndAssertThrows(() -> client.ackInboundMessage("not-an-id", null), IllegalArgumentException.class);
+		stubResponseAndRun(200, () -> client.ackInboundMessage(MESSAGE_ID, ApiRegion.API_EU));
+		assertApiResponseException(404, """
+                {
+                   "type": "https://developer.vonage.com/api-errors#not-found",
+                   "title": "Not Found",
+                   "detail": "External Id not found for message unknown_id.",
+                   "instance": "bf0ca0bf927b3b52e3cb03217e1a1ddf"
+                }""", MessageResponseException.class,
+				() -> client.ackInboundMessage(MESSAGE_ID, ApiRegion.API_US)
+		);
+	}
+
+	@Test
+	public void testRevokeOutboundMessage() throws Exception {
+		stubResponseAndRun(200, () -> client.ackInboundMessage(MESSAGE_ID, null));
+		stubResponseAndAssertThrows(() -> client.revokeOutboundMessage(null, ApiRegion.API_EU), NullPointerException.class);
+		stubResponseAndAssertThrows(() -> client.revokeOutboundMessage("not-an-id", null), IllegalArgumentException.class);
+		stubResponseAndRun(200, () -> client.revokeOutboundMessage(MESSAGE_ID, ApiRegion.API_US));
+		assertApiResponseException(422, """
+                {
+                   "type": "https://developer.vonage.com/api-errors#unprocessable-entity",
+                   "title": "Unprocessable Entity",
+                   "detail": "Operation not supported for this channel.",
+                   "instance": "bf0ca0bf927b3b52e3cb03217e1a1ddf"
+                }""", MessageResponseException.class,
+				() -> client.revokeOutboundMessage(MESSAGE_ID, ApiRegion.API_EU)
+		);
 	}
 
 	@Test
@@ -239,12 +280,13 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 
 			void testParseResponseFailureAllParams() throws Exception {
 				final int statusCode = 422;
-				final String json = "{\n" +
-						"  \"type\": \"https://developer.nexmo.com/api-errors/messages-olympus#1120\",\n" +
-						"  \"title\": \"Invalid sender\",\n" +
-						"  \"detail\": \"The `from` parameter is invalid for the given channel.\",\n" +
-						"  \"instance\": \"bf0ca0bf927b3b52e3cb03217e1a1ddf\"\n" +
-						"}";
+				final String json = """
+                        {
+                          "type": "https://developer.nexmo.com/api-errors/messages-olympus#1120",
+                          "title": "Invalid sender",
+                          "detail": "The `from` parameter is invalid for the given channel.",
+                          "instance": "bf0ca0bf927b3b52e3cb03217e1a1ddf"
+                        }""";
 
 				try {
 					parseResponse(json, statusCode);
@@ -260,6 +302,65 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 					assertNotNull(mrx.getDetail());
 					assertNotNull(mrx.getInstance());
 				}
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testUpdateMessageEndpoint() throws Exception {
+		new DynamicEndpointTestSpec<UpdateStatusRequest, Void>() {
+
+			@Override
+			protected RestEndpoint<UpdateStatusRequest, Void> endpoint() {
+				return client.updateMessage;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.PATCH;
+			}
+
+			@Override
+			protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
+				return List.of(JWTAuthMethod.class);
+			}
+
+			@Override
+			protected Class<? extends Exception> expectedResponseExceptionType() {
+				return MessageResponseException.class;
+			}
+
+			@Override
+			protected String expectedDefaultBaseUri() {
+				return wrapper.getHttpConfig().getRegionalBaseUri(sampleRequest().region).toString();
+			}
+
+			@Override
+			protected String expectedCustomBaseUri() {
+				return expectedDefaultBaseUri().replace("vonage", "example");
+			}
+
+			@Override
+			protected String expectedEndpointUri(UpdateStatusRequest request) {
+				return "/v1/messages/" + request.messageId;
+			}
+
+			@Override
+			protected UpdateStatusRequest sampleRequest() {
+				return new UpdateStatusRequest("Updated", MESSAGE_ID, null);
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"status\":\"Updated\"}";
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				assertEquals("https://api-eu.vonage.com", expectedDefaultBaseUri());
+
 			}
 		}
 		.runTests();

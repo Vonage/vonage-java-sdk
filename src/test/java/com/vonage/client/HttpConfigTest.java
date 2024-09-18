@@ -94,5 +94,19 @@ public class HttpConfigTest {
         assertEquals(EXAMPLE_BASE_URI, config.getRestBaseUri());
         assertEquals(EXAMPLE_BASE_URI, config.getApiEuBaseUri());
         assertEquals(EXAMPLE_BASE_URI, config.getVideoBaseUri());
+        assertEquals(
+                URI.create(EXAMPLE_BASE_URI.replace("://", "://api-eu.")),
+                config.getRegionalBaseUri(ApiRegion.API_EU)
+        );
+        assertEquals("https://api-ap.example.com", config.getRegionalBaseUri(ApiRegion.API_AP).toString());
+    }
+
+    @Test
+    public void testApiRegionEnum() {
+        for (var region : ApiRegion.values()) {
+            var toString = region.toString();
+            assertEquals(toString, region.name().toLowerCase().replace('_', '-'));
+            assertEquals(region, ApiRegion.fromString(toString));
+        }
     }
 }

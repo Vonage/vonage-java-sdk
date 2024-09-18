@@ -20,32 +20,43 @@ import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.jwt.Jwt;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class MessagesClient {
 	private boolean sandbox = false;
 	final RestEndpoint<MessageRequest, MessageResponse> sendMessage, sendMessageSandbox;
+	final RestEndpoint<UpdateStatusRequest, Void> updateMessage;
 
 	/**
 	 * Create a new MessagesClient.
 	 *
 	 * @param wrapper Http Wrapper used to create message requests.
 	 */
+	@SuppressWarnings("unchecked")
 	public MessagesClient(HttpWrapper wrapper) {
-		@SuppressWarnings("unchecked")
+		final String messagesPath = "/v1/messages";
 		final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
-			Endpoint(Function<HttpWrapper, String> basePathGetter, R... type) {
+			Endpoint(Function<HttpConfig, String> basePathGetter, R... type) {
 				super(DynamicEndpoint.<T, R> builder(type)
 						.responseExceptionType(MessageResponseException.class)
 						.wrapper(wrapper).requestMethod(HttpMethod.POST)
 						.authMethod(JWTAuthMethod.class, ApiKeyHeaderAuthMethod.class)
-						.pathGetter((de, req) -> basePathGetter.apply(de.getHttpWrapper()) + "/v1/messages")
+						.pathGetter((de, req) ->
+								basePathGetter.apply(de.getHttpWrapper().getHttpConfig()) + messagesPath
+						)
 				);
 			}
 		}
 
-		sendMessage = new Endpoint<>(hw -> hw.getHttpConfig().getApiBaseUri());
-		sendMessageSandbox = new Endpoint<>(hw -> "https://messages-sandbox.nexmo.com");
+		sendMessage = new Endpoint<>(HttpConfig::getApiBaseUri);
+		sendMessageSandbox = new Endpoint<>(hc -> "https://messages-sandbox.nexmo.com");
+		updateMessage = DynamicEndpoint.<UpdateStatusRequest, Void> builder(Void.class)
+				.responseExceptionType(MessageResponseException.class)
+				.wrapper(wrapper).requestMethod(HttpMethod.PATCH)
+				.authMethod(JWTAuthMethod.class).pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig()
+						.getRegionalBaseUri(req.region) + messagesPath + "/" + req.messageId
+				).build();
 	}
 
 	/**
@@ -67,11 +78,16 @@ public class MessagesClient {
 	 * @param request The message request object, as described above.
 	 * @return The response, if the request was successful (i.e.a 202 was received from the server).
 	 *
-	 * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-	 * @throws VonageResponseParseException if the response from the API could not be parsed.
-	 * @throws MessageResponseException     if the request was unsuccessful (a 4xx or 500 status code was returned).
+	 * @throws MessageResponseException If the message could not be sent. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401:</b> Missing or invalid credentials.</li>
+	 *     <li><b>402:</b> Low balance.</li>
+	 *     <li><b>422:</b> Invalid request parameters.</li>
+	 *     <li><b>429:</b> Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500:</b> Internal server error.</li>
+	 * </ul>
 	 */
-	public MessageResponse sendMessage(MessageRequest request) throws VonageClientException, VonageResponseParseException {
+	public MessageResponse sendMessage(MessageRequest request) throws MessageResponseException {
 		return (sandbox ? sendMessageSandbox : sendMessage).execute(request);
 	}
 
@@ -99,6 +115,48 @@ public class MessagesClient {
 	public MessagesClient useRegularEndpoint() {
 		sandbox = false;
 		return this;
+	}
+
+	/**
+	 * Marks an inbound message as "read". Currently, this only applies to WhatsApp messages.
+	 *
+	 * @param messageId UUID of the message to acknowledge.
+	 * @param region (OPTIONAL) The regional server to use for this request.
+	 *
+	 * @throws MessageResponseException If the acknowledgement fails. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401:</b> Missing or invalid credentials.</li>
+	 *     <li><b>404:</b> Message not found.</li>
+	 *     <li><b>422:</b> Operation not supported for this channel.</li>
+	 *     <li><b>429:</b> Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500:</b> Internal server error.</li>
+	 * </ul>
+	 *
+	 * @since 8.11.0
+	 */
+	public void ackInboundMessage(String messageId, ApiRegion region) throws MessageResponseException {
+		updateMessage.execute(new UpdateStatusRequest("read", messageId, region));
+	}
+
+	/**
+	 * Revokes an outbound message. Currently, this only applies to RCS messages.
+	 *
+	 * @param messageId UUID of the message to revoke.
+	 * @param region (OPTIONAL) The regional server to use for this request.
+	 *
+	 * @throws MessageResponseException If the acknowledgement fails. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401:</b>Missing or invalid credentials.</li>
+	 *     <li><b>404:</b>Message not found.</li>
+	 *     <li><b>422:</b>Operation not supported for this channel.</li>
+	 *     <li><b>429:</b>Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500:</b>Internal server error.</li>
+	 * </ul>
+	 *
+	 * @since 8.11.0
+	 */
+	public void revokeOutboundMessage(String messageId, ApiRegion region) throws MessageResponseException {
+		updateMessage.execute(new UpdateStatusRequest("revoke", messageId, region));
 	}
 
 	/**
