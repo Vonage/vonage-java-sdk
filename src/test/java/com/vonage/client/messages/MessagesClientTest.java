@@ -147,7 +147,7 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 		assertResponse(WhatsappVideoRequest.builder().url(VIDEO));
 		assertResponse(WhatsappFileRequest.builder().url(FILE));
 		assertResponse(WhatsappStickerRequest.builder().url(STICKER));
-		assertResponse(WhatsappReactionRequest.builder().unreact());
+		assertResponse(WhatsappReactionRequest.builder().unreact().contextMessageId(MESSAGE_ID));
 		assertResponse(WhatsappLocationRequest.builder().latitude(40.34772).longitude(-74.18847));
 		assertResponse(WhatsappSingleProductRequest.builder().catalogId("c1d").productRetailerId("p1d"));
 		assertResponse(WhatsappMultiProductRequest.builder()

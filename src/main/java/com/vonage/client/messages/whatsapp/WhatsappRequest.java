@@ -46,6 +46,7 @@ public abstract class WhatsappRequest extends MessageRequest {
 		UUID messageUuid;
 
 		/**
+		 * (REQUIRED for replies and reaction messages)
 		 * An optional context used for quoting/replying to a specific message in a conversation. When used,
 		 * the WhatsApp UI will display the new message along with a contextual bubble that displays the
 		 * quoted/replied to message's content.<br>

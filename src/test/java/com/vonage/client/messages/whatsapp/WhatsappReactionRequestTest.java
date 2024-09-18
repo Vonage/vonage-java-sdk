@@ -21,36 +21,46 @@ import org.junit.jupiter.api.*;
 import java.util.UUID;
 
 public class WhatsappReactionRequestTest {
+	private final String messageId = UUID.randomUUID().toString();
 
 	@Test
 	public void testSerializeReact() {
 		String emoji = "😀";
 		String from = "317900000002", to = "447900000001";
 		String json = WhatsappReactionRequest.builder()
-				.from(from).to(to).reaction(emoji).build().toJson();
+				.from(from).to(to).reaction(emoji).contextMessageId(messageId).build().toJson();
 		assertTrue(json.contains("\"reaction\":{\"action\":\"react\",\"emoji\":\""+emoji+"\"}"));
 		assertTrue(json.contains("\"message_type\":\"reaction\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 		assertTrue(json.contains("\"from\":\""+from+"\""));
 		assertTrue(json.contains("\"to\":\""+to+"\""));
+		assertTrue(json.contains("\"context\":{\"message_uuid\":\""+messageId+"\"}"));
 	}
 
 	@Test
 	public void testSerializeUnreact() {
 		String from = "317900000002", to = "447900000001";
 		String json = WhatsappReactionRequest.builder()
-				.from(from).to(to).unreact().build().toJson();
+				.from(from).to(to).unreact().contextMessageId(messageId).build().toJson();
 		assertTrue(json.contains("\"reaction\":{\"action\":\"unreact\"}"));
 		assertTrue(json.contains("\"message_type\":\"reaction\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 		assertTrue(json.contains("\"from\":\""+from+"\""));
 		assertTrue(json.contains("\"to\":\""+to+"\""));
+		assertTrue(json.contains("\"context\":{\"message_uuid\":\""+messageId+"\"}"));
 	}
 
 	@Test
 	public void testConstructNoAction() {
 		assertThrows(NullPointerException.class, () -> WhatsappReactionRequest.builder()
-				.from("447900000001").to("317900000002").build()
+				.contextMessageId(messageId).from("447900000001").to("317900000002").build()
+		);
+	}
+
+	@Test
+	public void testConstructNoContext() {
+		assertThrows(IllegalStateException.class, () -> WhatsappReactionRequest.builder()
+				.unreact().from("447900000001").to("317900000002").build()
 		);
 	}
 }

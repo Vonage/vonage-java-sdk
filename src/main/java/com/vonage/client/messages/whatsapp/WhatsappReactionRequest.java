@@ -18,6 +18,7 @@ package com.vonage.client.messages.whatsapp;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * {@link com.vonage.client.messages.Channel#WHATSAPP}, {@link MessageType#REACTION} request.
@@ -30,6 +31,9 @@ public final class WhatsappReactionRequest extends WhatsappRequest {
 	WhatsappReactionRequest(Builder builder) {
 		super(builder, MessageType.REACTION);
 		reaction = Objects.requireNonNull(builder.reaction, "Reaction is required.");
+		if (getContext() == null) {
+			throw new IllegalStateException("Context message ID is required.");
+		}
 	}
 
 	@JsonProperty("reaction")
