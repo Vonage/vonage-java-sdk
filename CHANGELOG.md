@@ -2,8 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.11.0] - 2024-09-??
+# [8.11.0] - 2024-09-2?
 - Added RCS channel to Messages API
+- Added `ackInboundMessage` and `revokeOutboundMessage` methods to `MessagesClient`
 - Fixed `viber_service` deserialization in `com.vonage.client.messages.Channel`
 - Added `thumbnail_url`, `video_url`, `image_url`, `ctwa_clid` and `media_type` to WhatsApp `Referral`
 - Added `_self.href` property to `com.vonage.client.messages.InboundMessage`

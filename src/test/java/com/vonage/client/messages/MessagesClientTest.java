@@ -24,6 +24,7 @@ import com.vonage.client.messages.messenger.*;
 import com.vonage.client.messages.mms.MmsAudioRequest;
 import com.vonage.client.messages.mms.MmsImageRequest;
 import com.vonage.client.messages.mms.MmsVcardRequest;
+import com.vonage.client.messages.mms.MmsVideoRequest;
 import com.vonage.client.messages.rcs.*;
 import com.vonage.client.messages.sms.SmsTextRequest;
 import com.vonage.client.messages.viber.ViberFileRequest;
@@ -119,7 +120,7 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 		assertResponse(MmsVcardRequest.builder().url(VCARD));
 		assertResponse(MmsImageRequest.builder().url(IMAGE));
 		assertResponse(MmsAudioRequest.builder().url(AUDIO));
-		assertResponse(MmsAudioRequest.builder().url(VIDEO));
+		assertResponse(MmsVideoRequest.builder().url(VIDEO));
 	}
 
 	@Test

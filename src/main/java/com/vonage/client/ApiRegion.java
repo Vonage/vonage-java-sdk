@@ -45,6 +45,12 @@ public enum ApiRegion {
         return name().toLowerCase().replace("_", "-");
     }
 
+    /**
+     * Converts a string representation of a region to the corresponding enum value.
+     *
+     * @param region The region as a string.
+     * @return The region enum, or {@code null} if the input is {@code null}.
+     */
     @JsonCreator
     public static ApiRegion fromString(String region) {
         if (region == null) return null;

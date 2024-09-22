@@ -39,6 +39,7 @@ public class HttpConfigTest {
         assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
         assertEquals(EXPECTED_DEFAULT_API_EU_BASE_URI, config.getApiEuBaseUri());
         assertEquals(EXPECTED_DEFAULT_VIDEO_BASE_URI, config.getVideoBaseUri());
+        assertEquals(URI.create(EXPECTED_DEFAULT_API_EU_BASE_URI), config.getRegionalBaseUri(ApiRegion.API_EU));
     }
 
     @Test
