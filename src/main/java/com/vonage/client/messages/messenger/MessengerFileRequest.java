@@ -16,10 +16,11 @@
 package com.vonage.client.messages.messenger;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.MediaMessageRequest;
 import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
-public final class MessengerFileRequest extends MessengerRequest {
+public final class MessengerFileRequest extends MessengerRequest implements MediaMessageRequest {
 
 	MessengerFileRequest(Builder builder) {
 		super(builder, MessageType.FILE);
@@ -34,7 +35,7 @@ public final class MessengerFileRequest extends MessengerRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends MessengerRequest.Builder<MessengerFileRequest, Builder> {
+	public static final class Builder extends MessengerRequest.Builder<MessengerFileRequest, Builder> implements MediaMessageRequest.Builder<Builder> {
 
 		Builder() {}
 

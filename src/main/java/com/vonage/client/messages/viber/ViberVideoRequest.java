@@ -16,13 +16,14 @@
 package com.vonage.client.messages.viber;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.CaptionMediaMessageRequest;
 import com.vonage.client.messages.MessageType;
 import java.util.Objects;
 
 /**
  * @since 7.2.0
  */
-public final class ViberVideoRequest extends ViberRequest {
+public final class ViberVideoRequest extends ViberRequest implements CaptionMediaMessageRequest {
 	final Video video;
 
 	ViberVideoRequest(Builder builder) {
@@ -41,7 +42,7 @@ public final class ViberVideoRequest extends ViberRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends ViberRequest.Builder<ViberVideoRequest, Builder> {
+	public static final class Builder extends ViberRequest.Builder<ViberVideoRequest, Builder> implements CaptionMediaMessageRequest.Builder<Builder> {
 		String thumbUrl;
 
 		Builder() {}

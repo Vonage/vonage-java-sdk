@@ -16,8 +16,9 @@
 package com.vonage.client.messages.messenger;
 
 import com.vonage.client.messages.MessageType;
+import com.vonage.client.messages.TextMessageRequest;
 
-public final class MessengerTextRequest extends MessengerRequest {
+public final class MessengerTextRequest extends MessengerRequest implements TextMessageRequest {
 
 	MessengerTextRequest(Builder builder) {
 		super(builder, MessageType.TEXT);
@@ -37,7 +38,7 @@ public final class MessengerTextRequest extends MessengerRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends MessengerRequest.Builder<MessengerTextRequest, Builder> {
+	public static final class Builder extends MessengerRequest.Builder<MessengerTextRequest, Builder> implements TextMessageRequest.Builder<Builder> {
 
 		Builder() {}
 

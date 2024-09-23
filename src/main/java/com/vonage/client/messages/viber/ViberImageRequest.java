@@ -16,10 +16,11 @@
 package com.vonage.client.messages.viber;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.MediaMessageRequest;
 import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
-public final class ViberImageRequest extends ViberRequest {
+public final class ViberImageRequest extends ViberRequest implements MediaMessageRequest {
 
 	ViberImageRequest(Builder builder) {
 		super(builder, MessageType.IMAGE);
@@ -35,7 +36,7 @@ public final class ViberImageRequest extends ViberRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends ViberRequest.Builder<ViberImageRequest, Builder> {
+	public static final class Builder extends ViberRequest.Builder<ViberImageRequest, Builder> implements MediaMessageRequest.Builder<Builder> {
 
 		Builder() {}
 

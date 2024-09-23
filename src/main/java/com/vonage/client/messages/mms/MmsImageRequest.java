@@ -16,10 +16,11 @@
 package com.vonage.client.messages.mms;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.CaptionMediaMessageRequest;
 import com.vonage.client.messages.MessageType;
 import com.vonage.client.messages.internal.MessagePayload;
 
-public final class MmsImageRequest extends MmsRequest {
+public final class MmsImageRequest extends MmsRequest implements CaptionMediaMessageRequest {
 
 	MmsImageRequest(Builder builder) {
 		super(builder, MessageType.IMAGE);
@@ -35,7 +36,7 @@ public final class MmsImageRequest extends MmsRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends MmsRequest.Builder<MmsImageRequest, Builder> {
+	public static final class Builder extends MmsRequest.Builder<MmsImageRequest, Builder> implements CaptionMediaMessageRequest.Builder<Builder> {
 		Builder() {}
 
 		/**

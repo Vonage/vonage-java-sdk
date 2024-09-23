@@ -16,10 +16,12 @@
 package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.CaptionMediaMessageRequest;
+import com.vonage.client.messages.MediaMessageRequest;
 import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
-public final class WhatsappFileRequest extends WhatsappRequest {
+public final class WhatsappFileRequest extends WhatsappRequest implements CaptionMediaMessageRequest {
 
 	WhatsappFileRequest(Builder builder) {
 		super(builder, MessageType.FILE);
@@ -34,7 +36,7 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends WhatsappRequest.Builder<WhatsappFileRequest, Builder> {
+	public static final class Builder extends WhatsappRequest.Builder<WhatsappFileRequest, Builder> implements CaptionMediaMessageRequest.Builder<Builder> {
 
 		Builder() {}
 
@@ -58,6 +60,7 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 		 * @param caption The caption string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder caption(String caption) {
 			return super.caption(caption);
 		}
