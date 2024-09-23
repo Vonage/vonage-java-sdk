@@ -27,7 +27,7 @@ public final class MmsVideoRequest extends MmsRequest {
 
 	@JsonProperty("video")
 	public MessagePayload getVideo() {
-		return payload;
+		return media;
 	}
 
 	public static Builder builder() {

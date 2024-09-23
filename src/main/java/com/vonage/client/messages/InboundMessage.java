@@ -18,10 +18,13 @@ package com.vonage.client.messages;
 import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.common.UrlContainer;
+import com.vonage.client.messages.mms.Content;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.*;
 import java.net.URI;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -57,8 +60,6 @@ public class InboundMessage extends JsonableBaseObject {
 
 	@JsonAnySetter protected Map<String, Object> unknownProperties;
 
-	@JsonProperty("whatsapp") private Whatsapp whatsapp;
-
 	@JsonProperty("timestamp") protected Instant timestamp;
 	@JsonProperty("channel") protected Channel channel;
 	@JsonProperty("message_type") protected MessageType messageType;
@@ -67,6 +68,7 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonProperty("from") protected String from;
 	@JsonProperty("client_ref") protected String clientRef;
 	@JsonProperty("provider_message") String providerMessage;
+	@JsonProperty("_self") UrlContainer self;
 
 	@JsonProperty("text") protected String text;
 	@JsonProperty("image") protected UrlWrapperWithCaption image;
@@ -75,7 +77,8 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonProperty("file") protected UrlWrapper file;
 	@JsonProperty("vcard") protected UrlWrapper vcard;
 	@JsonProperty("sticker") protected UrlWrapper sticker;
-
+	@JsonProperty("reaction") protected Reaction reaction;
+	@JsonProperty("button") protected Button button;
 	@JsonProperty("profile") protected Profile whatsappProfile;
 	@JsonProperty("context_status") protected ContextStatus whatsappContextStatus;
 	@JsonProperty("context") protected Context whatsappContext;
@@ -85,6 +88,8 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonProperty("usage") protected MessageStatus.Usage usage;
 	@JsonProperty("sms") protected SmsInboundMetadata smsMetadata;
 	@JsonProperty("origin") protected Origin origin;
+	@JsonProperty("whatsapp") private Whatsapp whatsapp;
+	@JsonProperty("content") protected List<Content> content;
 
 	/**
 	 * This is a catch-all method which encapsulates all fields in the response JSON
@@ -161,6 +166,17 @@ public class InboundMessage extends JsonableBaseObject {
 	}
 
 	/**
+	 * The URL for the message resource, including the geo-specific base URI.
+	 *
+	 * @return The {@code _self.href} property as a URI, or {@code null} if absent.
+	 * @since 8.11.0
+	 */
+	@JsonIgnore
+	public URI getSelfUrl() {
+		return self != null ? self.getHref() : null;
+	}
+
+	/**
 	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#TEXT}, returns the message text.
 	 *
 	 * @return The message text, or {@code null} if not applicable.
@@ -232,6 +248,18 @@ public class InboundMessage extends JsonableBaseObject {
 	}
 
 	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#VCARD} and {@linkplain #getChannel()} is
+	 * {@linkplain Channel#RCS}, returns the name of the vCard.
+	 *
+	 * @return The vCard attachment file name, or {@code null} if absent / not applicable.
+	 * @since 8.11.0
+	 */
+	@JsonIgnore
+	public String getVcardName() {
+		return vcard != null ? vcard.name : null;
+	}
+
+	/**
 	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#STICKER}, returns the URL of the sticker.
 	 *
 	 * @return The sticker URL, or {@code null} if not applicable.
@@ -239,6 +267,26 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonIgnore
 	public URI getStickerUrl() {
 		return sticker != null ? sticker.url : null;
+	}
+
+	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#REACTION}, returns the reaction.
+	 *
+	 * @return The reaction details, or {@code null} if not applicable.
+	 * @since 8.11.0
+	 */
+	public Reaction getReaction() {
+		return reaction;
+	}
+
+	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#BUTTON}, returns the button.
+	 *
+	 * @return The button details, or {@code null} if not applicable.
+	 * @since 8.11.0
+	 */
+	public Button getButton() {
+		return button;
 	}
 
 	/**
@@ -280,6 +328,8 @@ public class InboundMessage extends JsonableBaseObject {
 	public Order getWhatsappOrder() {
 		return whatsappOrder;
 	}
+
+
 
 	/**
 	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns information
@@ -360,6 +410,19 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonIgnore
 	public Referral getWhatsappReferral() {
 		return whatsapp != null ? whatsapp.referral : null;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#MMS}, returns a list of one or more objects
+	 * representing image, audio, video, vCard, or file attachments. Only present for messages that have
+	 * more than one attachment.
+	 *
+	 * @return The list of MMS attachments, or {@code null} if not applicable.
+	 * @since 8.11.0
+	 */
+	@JsonProperty("content")
+	public List<Content> getContent() {
+		return content;
 	}
 
 	/**

@@ -15,21 +15,22 @@
  */
 package com.vonage.client.messages.messenger;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
-import com.vonage.client.messages.internal.Text;
 
 public final class MessengerTextRequest extends MessengerRequest {
-	final String text;
 
 	MessengerTextRequest(Builder builder) {
 		super(builder, MessageType.TEXT);
-		text = new Text(builder.text, 640).toString();
 	}
 
-	@JsonProperty("text")
+	@Override
+	protected int maxTextLength() {
+		return 640;
+	}
+
+	@Override
 	public String getText() {
-		return text;
+		return super.getText();
 	}
 
 	public static Builder builder() {
@@ -37,7 +38,6 @@ public final class MessengerTextRequest extends MessengerRequest {
 	}
 
 	public static final class Builder extends MessengerRequest.Builder<MessengerTextRequest, Builder> {
-		String text;
 
 		Builder() {}
 
@@ -48,9 +48,9 @@ public final class MessengerTextRequest extends MessengerRequest {
 		 * @param text The text string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder text(String text) {
-			this.text = text;
-			return this;
+			return super.text(text);
 		}
 
 		public MessengerTextRequest build() {

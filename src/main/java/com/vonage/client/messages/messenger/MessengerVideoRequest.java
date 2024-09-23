@@ -20,17 +20,15 @@ import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
 public final class MessengerVideoRequest extends MessengerRequest {
-	final MessagePayload video;
 
 	MessengerVideoRequest(Builder builder) {
 		super(builder, MessageType.VIDEO);
-		video = new MessagePayload(builder.url);
-		video.validateUrlExtension("mp4");
+		media.validateUrlExtension("mp4");
 	}
 
 	@JsonProperty("video")
 	public MessagePayload getVideo() {
-		return video;
+		return media;
 	}
 
 	public static Builder builder() {
@@ -38,7 +36,6 @@ public final class MessengerVideoRequest extends MessengerRequest {
 	}
 
 	public static final class Builder extends MessengerRequest.Builder<MessengerVideoRequest, Builder> {
-		String url;
 
 		Builder() {}
 
@@ -50,9 +47,9 @@ public final class MessengerVideoRequest extends MessengerRequest {
 		 * @param url The URL as a string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder url(String url) {
-			this.url = url;
-			return this;
+			return super.url(url);
 		}
 
 		@Override

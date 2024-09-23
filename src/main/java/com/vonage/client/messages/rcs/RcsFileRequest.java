@@ -13,21 +13,26 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.viber;
+package com.vonage.client.messages.rcs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
+import com.vonage.client.messages.internal.MessagePayload;
 
-public final class ViberImageRequest extends ViberRequest {
+/**
+ * {@link com.vonage.client.messages.Channel#RCS}, {@link MessageType#FILE} request.
+ *
+ * @since 8.11.0
+ */
+public final class RcsFileRequest extends RcsRequest {
 
-	ViberImageRequest(Builder builder) {
-		super(builder, MessageType.IMAGE);
-		media.validateUrlExtension("jpg", "jpeg", "png");
+	RcsFileRequest(Builder builder) {
+		super(builder, MessageType.FILE);
+		media.validateUrlExtension("pdf");
 	}
 
-	@JsonProperty("image")
-	public MessagePayload getImage() {
+	@JsonProperty("file")
+	public MessagePayload getFile() {
 		return media;
 	}
 
@@ -35,14 +40,12 @@ public final class ViberImageRequest extends ViberRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends ViberRequest.Builder<ViberImageRequest, Builder> {
-
+	public static final class Builder extends RcsRequest.Builder<RcsFileRequest, Builder> {
 		Builder() {}
 
 		/**
 		 * (REQUIRED)
-		 * Sets the URL of the image attachment. Supports only {@code .jpg}, {@code .jpeg} and {@code .png}
-		 * file extensions.
+		 * The publicly accessible URL of the file attachment. Currently only supports {@code .pdf} files.
 		 *
 		 * @param url The URL as a string.
 		 * @return This builder.
@@ -53,18 +56,8 @@ public final class ViberImageRequest extends ViberRequest {
 		}
 
 		@Override
-		public Builder actionUrl(String actionUrl) {
-			return super.actionUrl(actionUrl);
-		}
-
-		@Override
-		public Builder actionText(String actionText) {
-			return super.actionText(actionText);
-		}
-
-		@Override
-		public ViberImageRequest build() {
-			return new ViberImageRequest(this);
+		public RcsFileRequest build() {
+			return new RcsFileRequest(this);
 		}
 	}
 }

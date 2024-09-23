@@ -19,30 +19,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.Channel;
 import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.MessageType;
-import com.vonage.client.messages.internal.Text;
 
 public final class SmsTextRequest extends MessageRequest {
-	final String text;
-	final Integer ttl;
 	final OutboundSettings sms;
 
 	SmsTextRequest(Builder builder) {
 		super(builder, Channel.SMS, MessageType.TEXT);
-		text = new Text(builder.text, 1000).toString();
-		if ((ttl = builder.ttl) != null && ttl < 1) {
-			throw new IllegalArgumentException("TTL must be positive.");
-		}
 		sms = OutboundSettings.construct(builder.encodingType, builder.contentId, builder.entityId);
 	}
 
-	@JsonProperty("text")
+	@Override
 	public String getText() {
-		return text;
-	}
-
-	@JsonProperty("ttl")
-	public Integer getTtl() {
-		return ttl;
+		return super.getText();
 	}
 
 	@JsonProperty("sms")
@@ -50,13 +38,17 @@ public final class SmsTextRequest extends MessageRequest {
 		return sms;
 	}
 
+	@JsonProperty("ttl")
+	public Integer getTtl() {
+		return ttl;
+	}
+
 	public static Builder builder() {
 		return new Builder();
 	}
 
 	public final static class Builder extends MessageRequest.Builder<SmsTextRequest, Builder> {
-		String text, contentId, entityId;
-		Integer ttl;
+		String contentId, entityId;
 		EncodingType encodingType;
 
 		Builder() {}
@@ -71,25 +63,9 @@ public final class SmsTextRequest extends MessageRequest {
 		 * @param text The text string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder text(String text) {
-			this.text = text;
-			return this;
-		}
-
-		/**
-		 * (OPTIONAL)
-		 * The duration in milliseconds the delivery of an SMS will be attempted. By default, Vonage attempts
-		 * delivery for 72 hours, however the maximum effective value depends on the operator and is typically
-		 * 24 to 48 hours. We recommend this value should be kept at its default or at least 30 minutes.
-		 *
-		 * @param ttl The time-to-live for this message before abandoning delivery attempts, in milliseconds.
-		 * @return This builder.
-		 *
-		 * @since 8.1.0
-		 */
-		public Builder ttl(int ttl) {
-			this.ttl = ttl;
-			return this;
+			return super.text(text);
 		}
 
 		/**
@@ -136,6 +112,11 @@ public final class SmsTextRequest extends MessageRequest {
 		public Builder entityId(String entityId) {
 			this.entityId = entityId;
 			return this;
+		}
+
+		@Override
+		public Builder ttl(int ttl) {
+			return super.ttl(ttl);
 		}
 
 		@Override

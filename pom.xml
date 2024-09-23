@@ -5,7 +5,7 @@
 
   <groupId>com.vonage</groupId>
   <artifactId>server-sdk</artifactId>
-  <version>8.10.0</version>
+  <version>8.11.0</version>
 
   <name>Vonage Java Server SDK</name>
   <description>Java client for Vonage APIs</description>
@@ -74,7 +74,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.16.0</version>
+      <version>3.17.0</version>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
@@ -86,13 +86,13 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.10.3</version>
+      <version>5.11.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>5.12.0</version>
+      <version>5.13.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -190,7 +190,7 @@
 
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.3.1</version>
+        <version>3.5.0</version>
       </plugin>
 
       <plugin>
@@ -228,7 +228,7 @@
 
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.8.0</version>
+        <version>3.10.0</version>
         <configuration>
           <linksource>true</linksource>
         </configuration>
@@ -291,7 +291,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.2.4</version>
+            <version>3.2.6</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>

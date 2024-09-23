@@ -19,18 +19,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.Channel;
 import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.MessageType;
-import com.vonage.client.messages.internal.MessagePayload;
 
 public abstract class MmsRequest extends MessageRequest {
-	MessagePayload payload;
-	final Integer ttl;
 
 	protected MmsRequest(Builder<?, ?> builder, MessageType messageType) {
 		super(builder, Channel.MMS, messageType);
-		payload = new MessagePayload(builder.url, builder.caption);
-		payload.validateCaptionLength(2000);
+		media.validateCaptionLength(2000);
 		int min = 300, max = 259200;
-		if ((this.ttl = builder.ttl) != null && (ttl < min || ttl > max)) {
+		if (ttl != null && (ttl < min || ttl > max)) {
 			throw new IllegalArgumentException("TTL must be between "+min+" and "+max+" seconds.");
 		}
 	}
@@ -40,34 +36,7 @@ public abstract class MmsRequest extends MessageRequest {
 		return ttl;
 	}
 
-	@SuppressWarnings("unchecked")
 	protected abstract static class Builder<M extends MmsRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
-		String url, caption;
-		Integer ttl;
-
-		/**
-		 * (REQUIRED)
-		 * Sets the media URL.
-		 *
-		 * @param url The URL as a string.
-		 * @return This builder.
-		 */
-		public B url(String url) {
-			this.url = url;
-			return (B) this;
-		}
-
-		/**
-		 * (OPTIONAL)
-		 * Additional text to accompany the media. Must be between 1 and 2000 characters.
-		 *
-		 * @param caption The caption string.
-		 * @return This builder.
-		 */
-		protected B caption(String caption) {
-			this.caption = caption;
-			return (B) this;
-		}
 
 		/**
 		 * (OPTIONAL)
@@ -80,9 +49,9 @@ public abstract class MmsRequest extends MessageRequest {
 		 * @return This builder.
 		 * @since 8.7.0
 		 */
+		@Override
 		public B ttl(int ttl) {
-			this.ttl = ttl;
-			return (B) this;
+			return super.ttl(ttl);
 		}
 	}
 }

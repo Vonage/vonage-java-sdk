@@ -27,7 +27,7 @@ public final class MmsAudioRequest extends MmsRequest {
 
 	@JsonProperty("audio")
 	public MessagePayload getAudio() {
-		return payload;
+		return media;
 	}
 
 	public static Builder builder() {

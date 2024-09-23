@@ -20,17 +20,15 @@ import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
 public final class MessengerImageRequest extends MessengerRequest {
-	final MessagePayload image;
 
 	MessengerImageRequest(Builder builder) {
 		super(builder, MessageType.IMAGE);
-		image = new MessagePayload(builder.url);
-		image.validateUrlExtension("jpg", "jpeg", "png", "gif");
+		media.validateUrlExtension("jpg", "jpeg", "png", "gif");
 	}
 
 	@JsonProperty("image")
 	public MessagePayload getImage() {
-		return image;
+		return media;
 	}
 
 	public static Builder builder() {
@@ -38,7 +36,6 @@ public final class MessengerImageRequest extends MessengerRequest {
 	}
 
 	public static final class Builder extends MessengerRequest.Builder<MessengerImageRequest, Builder> {
-		String url;
 
 		Builder() {}
 
@@ -50,9 +47,9 @@ public final class MessengerImageRequest extends MessengerRequest {
 		 * @param url The URL as a string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder url(String url) {
-			this.url = url;
-			return this;
+			return super.url(url);
 		}
 
 		@Override

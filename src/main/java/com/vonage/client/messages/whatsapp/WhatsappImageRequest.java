@@ -20,18 +20,16 @@ import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
 public final class WhatsappImageRequest extends WhatsappRequest {
-	final MessagePayload image;
 
 	WhatsappImageRequest(Builder builder) {
 		super(builder, MessageType.IMAGE);
-		image = new MessagePayload(builder.url, builder.caption);
-		image.validateUrlExtension("jpg", "jpeg", "png");
-		image.validateCaptionLength(3000);
+		media.validateUrlExtension("jpg", "jpeg", "png");
+		media.validateCaptionLength(3000);
 	}
 
 	@JsonProperty("image")
 	public MessagePayload getImage() {
-		return image;
+		return media;
 	}
 
 	public static Builder builder() {
@@ -39,7 +37,6 @@ public final class WhatsappImageRequest extends WhatsappRequest {
 	}
 
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappImageRequest, Builder> {
-		String url, caption;
 
 		Builder() {}
 
@@ -51,9 +48,9 @@ public final class WhatsappImageRequest extends WhatsappRequest {
 		 * @param url The URL as a string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder url(String url) {
-			this.url = url;
-			return this;
+			return super.url(url);
 		}
 
 		/**
@@ -63,9 +60,9 @@ public final class WhatsappImageRequest extends WhatsappRequest {
 		 * @param caption The caption string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder caption(String caption) {
-			this.caption = caption;
-			return this;
+			return super.caption(caption);
 		}
 
 		@Override

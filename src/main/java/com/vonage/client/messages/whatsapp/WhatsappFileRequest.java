@@ -20,16 +20,14 @@ import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
 public final class WhatsappFileRequest extends WhatsappRequest {
-	final MessagePayload file;
 
 	WhatsappFileRequest(Builder builder) {
 		super(builder, MessageType.FILE);
-		file = new MessagePayload(builder.url, builder.caption, builder.name);
 	}
 
 	@JsonProperty("file")
 	public MessagePayload getFile() {
-		return file;
+		return media;
 	}
 
 	public static Builder builder() {
@@ -37,7 +35,6 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 	}
 
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappFileRequest, Builder> {
-		String url, caption, name;
 
 		Builder() {}
 
@@ -49,9 +46,9 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 		 * @param url The URL as a string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder url(String url) {
-			this.url = url;
-			return this;
+			return super.url(url);
 		}
 
 		/**
@@ -62,8 +59,7 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 		 * @return This builder.
 		 */
 		public Builder caption(String caption) {
-			this.caption = caption;
-			return this;
+			return super.caption(caption);
 		}
 
 		/**
@@ -76,9 +72,9 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 		 *
 		 * @since 8.1.0
 		 */
+		@Override
 		public Builder name(String name) {
-			this.name = name;
-			return this;
+			return super.name(name);
 		}
 
 		@Override

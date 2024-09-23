@@ -15,7 +15,6 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
 import java.util.*;
 
@@ -26,7 +25,6 @@ import java.util.*;
  * @since 7.2.0
  */
 public final class WhatsappSingleProductRequest extends WhatsappRequest {
-	final Map<String, Object> custom;
 
 	WhatsappSingleProductRequest(Builder builder) {
 		super(builder, MessageType.CUSTOM);
@@ -46,14 +44,13 @@ public final class WhatsappSingleProductRequest extends WhatsappRequest {
 			interactive.put("footer", Collections.singletonMap("text", builder.footerText));
 		}
 		interactive.put("action", action);
-		custom = new LinkedHashMap<>(4);
 		custom.put("type", "interactive");
 		custom.put("interactive", interactive);
 	}
 
-	@JsonProperty("custom")
-	public Map<?, ?> getCustom() {
-		return custom;
+	@Override
+	public Map<String, ?> getCustom() {
+		return super.getCustom();
 	}
 
 	public static Builder builder() {

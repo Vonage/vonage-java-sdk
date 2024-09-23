@@ -56,6 +56,10 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 		return "http://example.com";
 	}
 
+	protected String expectedCustomBaseUri() {
+		return customBaseUri();
+	}
+
 	protected Map<String, ?> sampleQueryParams() {
 		return null;
 	}
@@ -195,7 +199,7 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 			String baseUri = customBaseUri();
 			endpoint.httpWrapper.setHttpConfig(HttpConfig.builder().baseUri(baseUri).build());
 			builder = makeTestRequest(request);
-			expectedUri = baseUri + expectedEndpointUri(request);
+			expectedUri = expectedCustomBaseUri() + expectedEndpointUri(request);
 			assertEquals(expectedUri, builder.build().getURI().toString().split("\\?")[0]);
 		}
 		finally {

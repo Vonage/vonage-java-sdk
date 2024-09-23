@@ -13,14 +13,19 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.whatsapp;
+package com.vonage.client.messages.rcs;
 
 import com.vonage.client.messages.MessageType;
 import java.util.Map;
 
-public final class WhatsappCustomRequest extends WhatsappRequest {
+/**
+ * {@link com.vonage.client.messages.Channel#RCS}, {@link MessageType#CUSTOM} request.
+ *
+ * @since 8.11.0
+ */
+public final class RcsCustomRequest extends RcsRequest {
 
-	WhatsappCustomRequest(Builder builder) {
+	RcsCustomRequest(Builder builder) {
 		super(builder, MessageType.CUSTOM);
 	}
 
@@ -33,17 +38,16 @@ public final class WhatsappCustomRequest extends WhatsappRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends WhatsappRequest.Builder<WhatsappCustomRequest, Builder> {
+	public static final class Builder extends RcsRequest.Builder<RcsCustomRequest, Builder> {
 
 		Builder() {}
 
 		/**
-		 * (OPTIONAL)
-		 * A custom payload, which is passed directly to WhatsApp for certain features such as templates and
-		 * interactive messages. The schema of a custom object can vary widely.
-		 * <a href=https://developer.vonage.com/messages/concepts/custom-objects>Read about Custom Objects here</a>.
+		 * A custom payload. The schema of a custom object can vary widely.
+		 * <a href=https://developer.vonage.com/en/messages/guides/rcs/rcs-custom-messages>
+		 * Read more about RCS Custom Messages.</a>
 		 *
-		 * @param payload A serializable Map.
+		 * @param payload The custom payload properties to send as a Map.
 		 * @return This builder.
 		 */
 		@Override
@@ -52,8 +56,8 @@ public final class WhatsappCustomRequest extends WhatsappRequest {
 		}
 
 		@Override
-		public WhatsappCustomRequest build() {
-			return new WhatsappCustomRequest(this);
+		public RcsCustomRequest build() {
+			return new RcsCustomRequest(this);
 		}
 	}
 }

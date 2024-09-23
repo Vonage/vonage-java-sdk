@@ -15,7 +15,8 @@
  */
 package com.vonage.client.messages;
 
-import com.vonage.client.TestUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.Order;
@@ -105,7 +106,7 @@ public class InboundMessageTest {
 				",\n\"someRandomProp\": {\"int_field\": 19, \"str_field\": \"A value\", \"col\":[]}}";
 
 		InboundMessage im = InboundMessage.fromJson(fullJson);
-		TestUtils.testJsonableBaseObject(im);
+		testJsonableBaseObject(im);
 		assertEqualsSmsWithUsageAndMetadata(im);
 
 		Map<String, Object> randomProp = (Map<String, Object>) im.getUnmappedProperties().get("someRandomProp");
@@ -120,18 +121,21 @@ public class InboundMessageTest {
 		assertNull(im.getVideoUrl());
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
+		assertNull(im.getReaction());
+		assertNull(im.getButton());
 		assertNull(im.getWhatsappContext());
 		assertNull(im.getWhatsappReply());
 		assertNull(im.getWhatsappLocation());
 		assertNull(im.getWhatsappOrder());
 		assertNull(im.getProviderMessage());
+		assertNull(im.getContent());
 	}
 
 	@Test
 	public void testMessengerUnsupportedType() {
 		String fullJson = getCommonPartialJsonStub(Channel.MESSENGER, MessageType.UNSUPPORTED) + "\n}";
 		InboundMessage im = InboundMessage.fromJson(fullJson);
-		TestUtils.testJsonableBaseObject(im);
+		testJsonableBaseObject(im);
 		assertEqualsCommon(im);
 		assertEquals(Channel.MESSENGER, im.getChannel());
 		assertEquals(MessageType.UNSUPPORTED, im.getMessageType());
@@ -142,6 +146,8 @@ public class InboundMessageTest {
 		assertNull(im.getVideoUrl());
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
+		assertNull(im.getReaction());
+		assertNull(im.getButton());
 		assertNull(im.getWhatsappContext());
 		assertNull(im.getWhatsappReply());
 		assertNull(im.getWhatsappLocation());
@@ -149,6 +155,15 @@ public class InboundMessageTest {
 		assertNull(im.getProviderMessage());
 		assertNull(im.getUsage());
 		assertNull(im.getSmsMetadata());
+		assertNull(im.getContent());
+	}
+
+	@Test
+	public void testChannelOnly() {
+		for (var channel : Channel.values()) {
+			var channelStr = channel == Channel.VIBER ? "viber_service" : channel.name().toLowerCase();
+			assertEquals(channel, InboundMessage.fromJson("{\"channel\":\""+channelStr+"\"}").getChannel());
+		}
 	}
 
 	@Test
@@ -160,7 +175,7 @@ public class InboundMessageTest {
 			  "}\n}";
 
 		InboundMessage im = InboundMessage.fromJson(fullJson);
-		TestUtils.testJsonableBaseObject(im);
+		testJsonableBaseObject(im);
 		assertEqualsCommon(im);
 		assertEquals(Channel.MMS, im.getChannel());
 		assertEquals(MessageType.VCARD, im.getMessageType());
@@ -179,6 +194,27 @@ public class InboundMessageTest {
 		assertNull(im.getProviderMessage());
 		assertNull(im.getUsage());
 		assertNull(im.getSmsMetadata());
+		assertNull(im.getReaction());
+		assertNull(im.getContent());
+		assertNull(im.getButton());
+	}
+
+	@Test
+	public void testRcsVcard() {
+		String name = "contact.vcf", url = "https://api-eu.nexmo.com/v3/media/6882bbe2-fe14-4e2f-910f-652beee058d4";
+		String fullJson = getCommonPartialJsonStub(Channel.RCS, MessageType.VCARD) +
+				",\n  \"vcard\": {\n" +
+				"    \"url\": \"" + url + "\",\n" +
+				"    \"name\": \""+name+"\"\n" +
+				"}\n}";
+
+		InboundMessage im = InboundMessage.fromJson(fullJson);
+		testJsonableBaseObject(im);
+		assertEqualsCommon(im);
+		assertEquals(Channel.RCS, im.getChannel());
+		assertEquals(MessageType.VCARD, im.getMessageType());
+		assertEquals(URI.create(url), im.getVcardUrl());
+		assertEquals(name, im.getVcardName());
 	}
 
 	@Test
@@ -221,6 +257,36 @@ public class InboundMessageTest {
 		String json = "{\"sticker\": {\"url\":\""+sticker+"\"}}";
 		InboundMessage im = InboundMessage.fromJson(json);
 		assertEquals(sticker, im.getStickerUrl());
+	}
+
+	@Test
+	public void testReactionOnly() {
+		String json = "{\"reaction\": {\"action\":\"react\"}}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		testJsonableBaseObject(im);
+		var reaction = im.getReaction();
+		assertNotNull(reaction);
+		assertEquals(Reaction.Action.REACT, reaction.getAction());
+		assertNull(reaction.getEmoji());
+	}
+
+	@Test
+	public void testButtonOnly() throws Exception {
+		var payload = Map.of("foo", "Bar", "baz", 42, "qux", List.of(Map.of(-1, false)));
+		String subtype = "flow", text = "sent", json = "{\n" +
+				"  \"button\": {\n" +
+				"    \"payload\": "+new ObjectMapper().writeValueAsString(payload) +",\n" +
+				"    \"subtype\": \""+subtype+"\",\n" +
+				"    \"text\": \""+text+"\"\n" +
+				"  }\n" +
+				"}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		testJsonableBaseObject(im);
+		Button button = im.getButton();
+		assertNotNull(button);
+		assertEquals(payload.toString(), button.getPayload().toString());
+		assertEquals(subtype, button.getSubtype());
+		assertEquals(text, button.getText());
 	}
 
 	@Test
@@ -296,7 +362,7 @@ public class InboundMessageTest {
 				"   }" +
 				"}";
 		InboundMessage im = InboundMessage.fromJson(json);
-		TestUtils.testJsonableBaseObject(im);
+		testJsonableBaseObject(im);
 		assertEquals(ContextStatus.AVAILABLE, im.getWhatsappContextStatus());
 		Context context = im.getWhatsappContext();
 		assertNotNull(context);
@@ -320,7 +386,7 @@ public class InboundMessageTest {
 				"   }" +
 				"}";
 		InboundMessage im = InboundMessage.fromJson(json);
-		TestUtils.testJsonableBaseObject(im);
+		testJsonableBaseObject(im);
 		Profile profile = im.getWhatsappProfile();
 		assertNotNull(profile);
 		assertEquals(name, profile.getName());
@@ -336,6 +402,9 @@ public class InboundMessageTest {
 		String body = "Check out our new product offering",
 				headline = "New Products!", sourceId = "212731241638144",
 				sourceType = "post", sourceUrl = "https://fb.me/2ZulEu42P",
+				imageUrl = "https://example.com/image.jpg",
+				videoUrl = "https://example.com/video.mp4", ctwaClid = "1234567890",
+				thumbnailUrl = "https://example.com/thumbnail.jpg",
 				json = "{\n" +
 				"  \"whatsapp\": {\n" +
 				"      \"referral\": {\n" +
@@ -343,13 +412,18 @@ public class InboundMessageTest {
 				"         \"headline\": \""+headline+"\",\n" +
 				"         \"source_id\": \""+sourceId+"\",\n" +
 				"         \"source_type\": \""+sourceType+"\",\n" +
-				"         \"source_url\": \""+sourceUrl+"\"\n" +
+				"         \"source_url\": \""+sourceUrl+"\",\n" +
+				"         \"media_type\": \"image\",\n" +
+				"		  \"image_url\": \""+imageUrl+"\",\n" +
+				"         \"video_url\": \""+videoUrl+"\",\n" +
+				"         \"thumbnail_url\": \""+thumbnailUrl+"\",\n" +
+				"         \"ctwa_clid\": \""+ctwaClid+"\"\n" +
 				"      }\n" +
 				"   }\n" +
 				"}";
 
 		InboundMessage im = InboundMessage.fromJson(json);
-		TestUtils.testJsonableBaseObject(im);
+		testJsonableBaseObject(im);
 		Referral referral = im.getWhatsappReferral();
 		assertNotNull(referral);
 		assertEquals(body, referral.getBody());
@@ -357,6 +431,11 @@ public class InboundMessageTest {
 		assertEquals(sourceId, referral.getSourceId());
 		assertEquals(sourceType, referral.getSourceType());
 		assertEquals(URI.create(sourceUrl), referral.getSourceUrl());
+		assertEquals(MessageType.IMAGE, referral.getMediaType());
+		assertEquals(URI.create(imageUrl), referral.getImageUrl());
+		assertEquals(URI.create(videoUrl), referral.getVideoUrl());
+		assertEquals(URI.create(thumbnailUrl), referral.getThumbnailUrl());
+		assertEquals(ctwaClid, referral.getClickId());
 	}
 
 	@Test
@@ -368,5 +447,42 @@ public class InboundMessageTest {
 				"}";
 		var im = InboundMessage.fromJson(json);
 		assertEquals(networkCode, im.getNetworkCode());
+	}
+
+	@Test
+	public void testSelfOnly() {
+		String selfUrl = "https://api-eu.vonage.com/v1/messages/aaaaaaa-bbbb-4ccc-8ddd-0123456789ab",
+				json = "{\n" +
+				"  \"_self\": {\n" +
+				"    \"href\": \""+selfUrl+"\"\n" +
+				"   }\n" +
+				"}";
+		var im = InboundMessage.fromJson(json);
+		testJsonableBaseObject(im);
+		assertEquals(URI.create(selfUrl), im.getSelfUrl());
+	}
+
+	@Test
+	public void testContentOnly() {
+		String url = "https://example.com/image.jpg",
+				json = "{\n" +
+				"  \"content\": [{},{\n" +
+				"    \"type\": \"image\",\n" +
+				"    \"url\": \""+url+"\"\n" +
+				"   }]\n" +
+				"}";
+		var im = InboundMessage.fromJson(json);
+		testJsonableBaseObject(im);
+		var content = im.getContent();
+		assertNotNull(content);
+		assertEquals(2, content.size());
+		var empty = content.getFirst();
+		assertNotNull(empty);
+		assertNull(empty.getType());
+		assertNull(empty.getUrl());
+		var image = content.getLast();
+		assertNotNull(image);
+		assertEquals(MessageType.IMAGE, image.getType());
+		assertEquals(URI.create(url), image.getUrl());
 	}
 }

@@ -20,12 +20,12 @@ import com.vonage.client.messages.internal.MessagePayload;
 import java.net.URI;
 import java.util.Objects;
 
-public class Video extends MessagePayload {
-	protected URI thumbUrl;
+public final class Video extends MessagePayload {
+	URI thumbUrl;
 
-	protected Video(String url, String thumbUrl, String caption) {
+	Video(String url, String thumbUrl, String caption) {
 		super(url, caption);
-		this.thumbUrl = URI.create(Objects.requireNonNull(thumbUrl, "Thumbnail URL is required"));
+		this.thumbUrl = URI.create(Objects.requireNonNull(thumbUrl, "Thumbnail URL is required."));
 		validateFileExtensions();
 	}
 
@@ -34,7 +34,7 @@ public class Video extends MessagePayload {
 		return thumbUrl;
 	}
 
-	protected void validateFileExtensions() {
+	void validateFileExtensions() {
 		validateUrlExtension("mp4", "3gpp");
 		validateExtension(thumbUrl.getPath(), "jpg", "jpeg", "png", "bmp", "gif");
 	}

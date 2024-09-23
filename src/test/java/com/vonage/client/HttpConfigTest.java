@@ -39,6 +39,7 @@ public class HttpConfigTest {
         assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
         assertEquals(EXPECTED_DEFAULT_API_EU_BASE_URI, config.getApiEuBaseUri());
         assertEquals(EXPECTED_DEFAULT_VIDEO_BASE_URI, config.getVideoBaseUri());
+        assertEquals(URI.create(EXPECTED_DEFAULT_API_EU_BASE_URI), config.getRegionalBaseUri(ApiRegion.API_EU));
     }
 
     @Test
@@ -94,5 +95,19 @@ public class HttpConfigTest {
         assertEquals(EXAMPLE_BASE_URI, config.getRestBaseUri());
         assertEquals(EXAMPLE_BASE_URI, config.getApiEuBaseUri());
         assertEquals(EXAMPLE_BASE_URI, config.getVideoBaseUri());
+        assertEquals(
+                URI.create(EXAMPLE_BASE_URI.replace("://", "://api-eu.")),
+                config.getRegionalBaseUri(ApiRegion.API_EU)
+        );
+        assertEquals("https://api-ap.example.com", config.getRegionalBaseUri(ApiRegion.API_AP).toString());
+    }
+
+    @Test
+    public void testApiRegionEnum() {
+        for (var region : ApiRegion.values()) {
+            var toString = region.toString();
+            assertEquals(toString, region.name().toLowerCase().replace('_', '-'));
+            assertEquals(region, ApiRegion.fromString(toString));
+        }
     }
 }

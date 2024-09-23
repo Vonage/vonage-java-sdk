@@ -18,6 +18,7 @@ package com.vonage.client.messages.whatsapp;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.messages.InboundMessage;
+import com.vonage.client.messages.MessageType;
 import java.net.URI;
 
 /**
@@ -29,8 +30,9 @@ import java.net.URI;
  * @since 8.1.0
  */
 public final class Referral extends JsonableBaseObject {
-	private String body, headline, sourceId, sourceType;
-	private URI sourceUrl;
+	private String body, headline, sourceId, sourceType, clickId;
+	private URI sourceUrl, imageUrl, videoUrl, thumbnailUrl;
+	private MessageType mediaType;
 
 	Referral() {}
 
@@ -55,6 +57,17 @@ public final class Referral extends JsonableBaseObject {
 	}
 
 	/**
+	 * The click ID of the advertisement or post.
+	 *
+	 * @return The {@code ctwa_clid}, or {@code null} if absent / unknown / not applicable.
+	 * @since 8.11.0
+	 */
+	@JsonProperty("ctwa_clid")
+	public String getClickId() {
+		return clickId;
+	}
+
+	/**
 	 * Meta/WhatsApp ID of the referring advertisement or post.
 	 *
 	 * @return The source referral ID as a String.
@@ -75,6 +88,18 @@ public final class Referral extends JsonableBaseObject {
 	}
 
 	/**
+	 * The type of media shown in the advertisement or post. Either {@linkplain MessageType#IMAGE}
+	 * or {@linkplain MessageType#VIDEO}.
+	 *
+	 * @return The media type as an enum, or {@code null} if absent / not applicable.
+	 * @since 8.11.0
+	 */
+	@JsonProperty("media_type")
+	public MessageType getMediaType() {
+		return mediaType;
+	}
+
+	/**
 	 * A URL referencing the content of the media shown in the advertisement when the user clicked to send a message.
 	 *
 	 * @return Link to the advertised content.
@@ -82,5 +107,39 @@ public final class Referral extends JsonableBaseObject {
 	@JsonProperty("source_url")
 	public URI getSourceUrl() {
 		return sourceUrl;
+	}
+
+	/**
+	 * URL of the image shown in the advertisement or post.
+	 *
+	 * @return The image URL, or {@code null} if absent / not applicable.
+	 * @since 8.11.0
+	 */
+	@JsonProperty("image_url")
+	public URI getImageUrl() {
+		return imageUrl;
+	}
+
+	/**
+	 * URL of the video shown in the advertisement or post.
+	 *
+	 * @return The video URL, or {@code null} if absent / not applicable.
+	 * @since 8.11.0
+	 */
+	@JsonProperty("video_url")
+	public URI getVideoUrl() {
+		return videoUrl;
+	}
+
+
+	/**
+	 * URL of the thumbnail image shown in the advertisement or post.
+	 *
+	 * @return The thumbnail URL, or {@code null} if absent / not applicable.
+	 * @since 8.11.0
+	 */
+	@JsonProperty("thumbnail_url")
+	public URI getThumbnailUrl() {
+		return thumbnailUrl;
 	}
 }

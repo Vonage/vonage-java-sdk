@@ -13,28 +13,28 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.common;
+package com.vonage.client.messages;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.ApiRegion;
 import com.vonage.client.JsonableBaseObject;
-import java.net.URI;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
- * Represents a link under the {@code _links} section of a HAL response.
+ * Wrapper for the status update endpoint.
+ *
+ * @since 8.11.0
  */
-public class UrlContainer extends JsonableBaseObject {
-	protected URI href;
+class UpdateStatusRequest extends JsonableBaseObject {
+    @JsonProperty("status") final String status;
+    @JsonIgnore final UUID messageId;
+    @JsonIgnore final ApiRegion region;
 
-	protected UrlContainer() {
-	}
-
-	/**
-	 * {@code href} property of the link.
-	 *
-	 * @return The URL.
-	 */
-	@JsonProperty("href")
-	public URI getHref() {
-		return href;
-	}
+    UpdateStatusRequest(String status, String messageId, ApiRegion region) {
+        this.status = status;
+        this.messageId = UUID.fromString(Objects.requireNonNull(messageId, "Message ID is required."));
+        this.region = region != null ? region : ApiRegion.API_EU;
+    }
 }

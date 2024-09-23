@@ -23,12 +23,12 @@ public final class MmsVcardRequest extends MmsRequest {
 
 	MmsVcardRequest(Builder builder) {
 		super(builder, MessageType.VCARD);
-		payload.validateUrlExtension("vcf");
+		media.validateUrlExtension("vcf");
 	}
 
 	@JsonProperty("vcard")
 	public MessagePayload getVcard() {
-		return payload;
+		return media;
 	}
 
 	public static Builder builder() {

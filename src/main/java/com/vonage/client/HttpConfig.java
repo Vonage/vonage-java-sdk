@@ -16,6 +16,8 @@
 package com.vonage.client;
 
 import java.net.URI;
+import java.util.Objects;
+import java.util.function.Function;
 
 public class HttpConfig {
     private static final String
@@ -26,6 +28,7 @@ public class HttpConfig {
 
     private final int timeoutMillis;
     private final String apiBaseUri, restBaseUri, apiEuBaseUri, videoBaseUri;
+    private final Function<ApiRegion, String> regionalUriGetter;
 
     private HttpConfig(Builder builder) {
         if ((timeoutMillis = builder.timeoutMillis) < 10) {
@@ -35,6 +38,7 @@ public class HttpConfig {
         restBaseUri = builder.restBaseUri;
         videoBaseUri = builder.videoBaseUri;
         apiEuBaseUri = builder.apiEuBaseUri;
+        regionalUriGetter = builder.regionalUriGetter;
     }
 
     /**
@@ -63,18 +67,33 @@ public class HttpConfig {
         return apiEuBaseUri;
     }
 
+    /**
+     * Returns the base URI for the specified region.
+     *
+     * @param region The region as an enum.
+     * @return The base URI for the given region.
+     * @since 8.11.0
+     */
+    public URI getRegionalBaseUri(ApiRegion region) {
+        return URI.create(regionalUriGetter.apply(region));
+    }
+
+    @Deprecated
     public boolean isDefaultApiBaseUri() {
         return DEFAULT_API_BASE_URI.equals(apiBaseUri);
     }
 
+    @Deprecated
     public boolean isDefaultRestBaseUri() {
         return DEFAULT_REST_BASE_URI.equals(restBaseUri);
     }
 
+    @Deprecated
     public boolean isDefaultApiEuBaseUri() {
         return DEFAULT_API_EU_BASE_URI.equals(apiEuBaseUri);
     }
 
+    @Deprecated
     public boolean isDefaultVideoBaseUri() {
         return DEFAULT_VIDEO_BASE_URI.equals(videoBaseUri);
     }
@@ -121,6 +140,7 @@ public class HttpConfig {
      */
     public static class Builder {
         private int timeoutMillis = 60_000;
+        private Function<ApiRegion, String> regionalUriGetter = region -> "https://"+region+".vonage.com";
         private String
                 apiBaseUri = DEFAULT_API_BASE_URI,
                 restBaseUri = DEFAULT_REST_BASE_URI,
@@ -198,6 +218,7 @@ public class HttpConfig {
          */
         public Builder baseUri(String baseUri) {
             String sanitizedUri = sanitizeUri(baseUri);
+            regionalUriGetter(region -> sanitizedUri.replace("://", "://" + region + '.'));
             apiBaseUri = sanitizedUri;
             restBaseUri = sanitizedUri;
             apiEuBaseUri = sanitizedUri;
@@ -214,6 +235,18 @@ public class HttpConfig {
          */
         public Builder baseUri(URI baseUri) {
             return baseUri(baseUri.toString());
+        }
+
+        /**
+         * Sets a function to get the base URI for a given region.
+         *
+         * @param uriGetter The function which takes as input a region and returns a base URI as a string.
+         * @return This builder.
+         * @since 8.11.0
+         */
+        public Builder regionalUriGetter(Function<ApiRegion, String> uriGetter) {
+            this.regionalUriGetter = Objects.requireNonNull(uriGetter);
+            return this;
         }
 
         /**

@@ -87,13 +87,15 @@ public class MessengerTextRequestTest {
 
 	@Test
 	public void testConstructNullSender() {
-		assertThrows(IllegalArgumentException.class, () -> MessengerTextRequest.builder().to("Alex").build());
+		assertThrows(IllegalArgumentException.class, () ->
+				MessengerTextRequest.builder().to("Alex").text("Hi").build()
+		);
 	}
 
 	@Test
 	public void testConstructEmptySender() {
 		assertThrows(IllegalArgumentException.class, () ->
-				MessengerTextRequest.builder().from("").to("Alex").build()
+				MessengerTextRequest.builder().text("Hi").from("").to("Alex").build()
 		);
 	}
 

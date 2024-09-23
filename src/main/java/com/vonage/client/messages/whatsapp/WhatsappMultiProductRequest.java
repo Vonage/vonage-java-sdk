@@ -26,7 +26,6 @@ import java.util.*;
  * @since 7.2.0
  */
 public final class WhatsappMultiProductRequest extends WhatsappRequest {
-	final Map<String, Object> custom;
 
 	WhatsappMultiProductRequest(Builder builder) {
 		super(builder, MessageType.CUSTOM);
@@ -56,13 +55,12 @@ public final class WhatsappMultiProductRequest extends WhatsappRequest {
 		}
 		action.put("sections", builder.sections);
 		interactive.put("action", action);
-		custom = new LinkedHashMap<>(4);
 		custom.put("type", "interactive");
 		custom.put("interactive", interactive);
 	}
 
 	@JsonProperty("custom")
-	public Map<?, ?> getCustom() {
+	public Map<String, ?> getCustom() {
 		return custom;
 	}
 

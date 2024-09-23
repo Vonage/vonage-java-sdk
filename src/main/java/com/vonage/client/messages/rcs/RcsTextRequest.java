@@ -13,14 +13,24 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.viber;
+package com.vonage.client.messages.rcs;
 
 import com.vonage.client.messages.MessageType;
 
-public final class ViberTextRequest extends ViberRequest {
+/**
+ * {@link com.vonage.client.messages.Channel#RCS}, {@link MessageType#TEXT} request.
+ *
+ * @since 8.11.0
+ */
+public final class RcsTextRequest extends RcsRequest {
 
-	ViberTextRequest(Builder builder) {
+	RcsTextRequest(Builder builder) {
 		super(builder, MessageType.TEXT);
+	}
+
+	@Override
+	protected int maxTextLength() {
+		return 3072;
 	}
 
 	@Override
@@ -32,13 +42,11 @@ public final class ViberTextRequest extends ViberRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends ViberRequest.Builder<ViberTextRequest, Builder> {
-
+	public static final class Builder extends RcsRequest.Builder<RcsTextRequest, Builder> {
 		Builder() {}
 
 		/**
-		 * (REQUIRED)
-		 * Sets the text field. Must be between 1 and 1000 characters, including unicode.
+		 * The text of the message to send. Limited to 3072 characters, including unicode.
 		 *
 		 * @param text The text string.
 		 * @return This builder.
@@ -49,18 +57,8 @@ public final class ViberTextRequest extends ViberRequest {
 		}
 
 		@Override
-		public Builder actionUrl(String actionUrl) {
-			return super.actionUrl(actionUrl);
-		}
-
-		@Override
-		public Builder actionText(String actionText) {
-			return super.actionText(actionText);
-		}
-
-		@Override
-		public ViberTextRequest build() {
-			return new ViberTextRequest(this);
+		public RcsTextRequest build() {
+			return new RcsTextRequest(this);
 		}
 	}
 }

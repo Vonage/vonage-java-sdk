@@ -23,12 +23,12 @@ public final class MmsImageRequest extends MmsRequest {
 
 	MmsImageRequest(Builder builder) {
 		super(builder, MessageType.IMAGE);
-		payload.validateUrlExtension("jpg", "jpeg", "png", "gif");
+		media.validateUrlExtension("jpg", "jpeg", "png", "gif");
 	}
 
 	@JsonProperty("image")
 	public MessagePayload getImage() {
-		return payload;
+		return media;
 	}
 
 	public static Builder builder() {
