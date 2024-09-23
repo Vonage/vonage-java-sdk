@@ -16,13 +16,14 @@
 package com.vonage.client.messages.viber;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.MediaMessageRequest;
 import com.vonage.client.messages.MessageType;
 import com.vonage.client.messages.internal.MessagePayload;
 
 /**
  * @since 7.2.0
  */
-public final class ViberFileRequest extends ViberRequest {
+public final class ViberFileRequest extends ViberRequest implements MediaMessageRequest {
 
 	ViberFileRequest(Builder builder) {
 		super(builder, MessageType.FILE);
@@ -41,7 +42,7 @@ public final class ViberFileRequest extends ViberRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends ViberRequest.Builder<ViberFileRequest, Builder> {
+	public static final class Builder extends ViberRequest.Builder<ViberFileRequest, Builder> implements MediaMessageRequest.Builder<Builder> {
 		Builder() {}
 
 		/**

@@ -61,6 +61,32 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 		stubResponse(202, responseJson);
 		MessageResponse responseObject = client.sendMessage(request);
 		assertEquals(UUID.fromString(MESSAGE_ID), responseObject.getMessageUuid());
+		var messageType = request.getMessageType();
+		var channel = request.getChannel();
+        if (messageType == MessageType.TEXT) {
+            assertInstanceOf(TextMessageRequest.class, request);
+        }
+		else if (channel == Channel.MMS || channel == Channel.RCS || channel == Channel.MESSENGER) {
+			if (messageType != MessageType.CUSTOM) {
+            	assertInstanceOf(MediaMessageRequest.class, request);
+			}
+        }
+		else if (messageType == MessageType.VCARD ||
+				messageType == MessageType.FILE ||
+				messageType == MessageType.VIDEO ||
+				messageType == MessageType.AUDIO ||
+				messageType == MessageType.IMAGE
+		) {
+			if (
+				(channel == Channel.WHATSAPP && messageType == MessageType.AUDIO) ||
+				(channel == Channel.VIBER && (messageType == MessageType.IMAGE || messageType == MessageType.FILE))
+			) {
+				assertInstanceOf(MediaMessageRequest.class, request);
+			}
+			else {
+				assertInstanceOf(CaptionMediaMessageRequest.class, request);
+			}
+		}
 	}
 
 	void assertException(int statusCode, String json) throws Exception {

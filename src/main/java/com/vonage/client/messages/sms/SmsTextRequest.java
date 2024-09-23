@@ -19,8 +19,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.Channel;
 import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.MessageType;
+import com.vonage.client.messages.TextMessageRequest;
 
-public final class SmsTextRequest extends MessageRequest {
+public final class SmsTextRequest extends MessageRequest implements TextMessageRequest {
 	final OutboundSettings sms;
 
 	SmsTextRequest(Builder builder) {
@@ -47,7 +48,7 @@ public final class SmsTextRequest extends MessageRequest {
 		return new Builder();
 	}
 
-	public final static class Builder extends MessageRequest.Builder<SmsTextRequest, Builder> {
+	public final static class Builder extends MessageRequest.Builder<SmsTextRequest, Builder> implements TextMessageRequest.Builder<Builder> {
 		String contentId, entityId;
 		EncodingType encodingType;
 

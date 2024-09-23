@@ -16,6 +16,7 @@
 package com.vonage.client.messages.rcs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.MediaMessageRequest;
 import com.vonage.client.messages.MessageType;
 import com.vonage.client.messages.internal.MessagePayload;
 
@@ -24,7 +25,7 @@ import com.vonage.client.messages.internal.MessagePayload;
  *
  * @since 8.11.0
  */
-public final class RcsFileRequest extends RcsRequest {
+public final class RcsFileRequest extends RcsRequest implements MediaMessageRequest {
 
 	RcsFileRequest(Builder builder) {
 		super(builder, MessageType.FILE);
@@ -40,7 +41,7 @@ public final class RcsFileRequest extends RcsRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends RcsRequest.Builder<RcsFileRequest, Builder> {
+	public static final class Builder extends RcsRequest.Builder<RcsFileRequest, Builder> implements MediaMessageRequest.Builder<Builder> {
 		Builder() {}
 
 		/**

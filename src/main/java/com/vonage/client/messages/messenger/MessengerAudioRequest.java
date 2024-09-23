@@ -16,10 +16,11 @@
 package com.vonage.client.messages.messenger;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.MediaMessageRequest;
 import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
-public final class MessengerAudioRequest extends MessengerRequest {
+public final class MessengerAudioRequest extends MessengerRequest implements MediaMessageRequest {
 
 	MessengerAudioRequest(Builder builder) {
 		super(builder, MessageType.AUDIO);
@@ -36,7 +37,7 @@ public final class MessengerAudioRequest extends MessengerRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends MessengerRequest.Builder<MessengerAudioRequest, Builder> {
+	public static final class Builder extends MessengerRequest.Builder<MessengerAudioRequest, Builder> implements MediaMessageRequest.Builder<Builder> {
 
 		Builder() {}
 

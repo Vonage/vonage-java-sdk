@@ -16,8 +16,9 @@
 package com.vonage.client.messages.viber;
 
 import com.vonage.client.messages.MessageType;
+import com.vonage.client.messages.TextMessageRequest;
 
-public final class ViberTextRequest extends ViberRequest {
+public final class ViberTextRequest extends ViberRequest implements TextMessageRequest {
 
 	ViberTextRequest(Builder builder) {
 		super(builder, MessageType.TEXT);
@@ -32,7 +33,7 @@ public final class ViberTextRequest extends ViberRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends ViberRequest.Builder<ViberTextRequest, Builder> {
+	public static final class Builder extends ViberRequest.Builder<ViberTextRequest, Builder> implements TextMessageRequest.Builder<Builder> {
 
 		Builder() {}
 

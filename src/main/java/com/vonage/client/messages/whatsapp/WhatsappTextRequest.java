@@ -15,10 +15,10 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
+import com.vonage.client.messages.TextMessageRequest;
 
-public final class WhatsappTextRequest extends WhatsappRequest {
+public final class WhatsappTextRequest extends WhatsappRequest implements TextMessageRequest {
 
 	WhatsappTextRequest(Builder builder) {
 		super(builder, MessageType.TEXT);
@@ -38,7 +38,7 @@ public final class WhatsappTextRequest extends WhatsappRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends WhatsappRequest.Builder<WhatsappTextRequest, Builder> {
+	public static final class Builder extends WhatsappRequest.Builder<WhatsappTextRequest, Builder> implements TextMessageRequest.Builder<Builder> {
 
 		Builder() {}
 

@@ -16,10 +16,11 @@
 package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.MediaMessageRequest;
 import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
-public final class WhatsappAudioRequest extends WhatsappRequest {
+public final class WhatsappAudioRequest extends WhatsappRequest implements MediaMessageRequest {
 
 	WhatsappAudioRequest(Builder builder) {
 		super(builder, MessageType.AUDIO);
@@ -36,7 +37,7 @@ public final class WhatsappAudioRequest extends WhatsappRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends WhatsappRequest.Builder<WhatsappAudioRequest, Builder> {
+	public static final class Builder extends WhatsappRequest.Builder<WhatsappAudioRequest, Builder> implements MediaMessageRequest.Builder<Builder> {
 
 		Builder() {}
 

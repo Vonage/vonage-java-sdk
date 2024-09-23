@@ -16,10 +16,11 @@
 package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.CaptionMediaMessageRequest;
 import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
-public final class WhatsappImageRequest extends WhatsappRequest {
+public final class WhatsappImageRequest extends WhatsappRequest implements CaptionMediaMessageRequest {
 
 	WhatsappImageRequest(Builder builder) {
 		super(builder, MessageType.IMAGE);
@@ -36,7 +37,7 @@ public final class WhatsappImageRequest extends WhatsappRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends WhatsappRequest.Builder<WhatsappImageRequest, Builder> {
+	public static final class Builder extends WhatsappRequest.Builder<WhatsappImageRequest, Builder> implements CaptionMediaMessageRequest.Builder<Builder> {
 
 		Builder() {}
 

@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.11.0] - 2024-09-2?
+# [8.11.0] - 2024-09-24
 - Added RCS channel to Messages API
 - Added `ackInboundMessage` and `revokeOutboundMessage` methods to `MessagesClient`
 - Fixed `viber_service` deserialization in `com.vonage.client.messages.Channel`
@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added `content` property to `InboundMessage` for MMS messages
 - Removed `com.vonage.client.messages.internal.Text`
 - Factored out common properties & validation for text, media and custom messages into `MessageRequest`
+- Added interfaces for text and media `MessageRequest` builders
 
 # [8.10.0] - 2024-08-02
 - Added `targetApiKey` for buy & cancel number endpoints

@@ -16,13 +16,14 @@
 package com.vonage.client.messages.rcs;
 
 import com.vonage.client.messages.MessageType;
+import com.vonage.client.messages.TextMessageRequest;
 
 /**
  * {@link com.vonage.client.messages.Channel#RCS}, {@link MessageType#TEXT} request.
  *
  * @since 8.11.0
  */
-public final class RcsTextRequest extends RcsRequest {
+public final class RcsTextRequest extends RcsRequest implements TextMessageRequest {
 
 	RcsTextRequest(Builder builder) {
 		super(builder, MessageType.TEXT);
@@ -42,7 +43,7 @@ public final class RcsTextRequest extends RcsRequest {
 		return new Builder();
 	}
 
-	public static final class Builder extends RcsRequest.Builder<RcsTextRequest, Builder> {
+	public static final class Builder extends RcsRequest.Builder<RcsTextRequest, Builder> implements TextMessageRequest.Builder<Builder> {
 		Builder() {}
 
 		/**
