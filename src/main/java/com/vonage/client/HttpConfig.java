@@ -27,7 +27,7 @@ public class HttpConfig {
             DEFAULT_VIDEO_BASE_URI = "https://video.api.vonage.com";
 
     private final int timeoutMillis;
-    private final String apiBaseUri, restBaseUri, apiEuBaseUri, videoBaseUri;
+    private final String customUserAgent, apiBaseUri, restBaseUri, apiEuBaseUri, videoBaseUri;
     private final Function<ApiRegion, String> regionalUriGetter;
 
     private HttpConfig(Builder builder) {
@@ -39,6 +39,7 @@ public class HttpConfig {
         videoBaseUri = builder.videoBaseUri;
         apiEuBaseUri = builder.apiEuBaseUri;
         regionalUriGetter = builder.regionalUriGetter;
+        customUserAgent = builder.customUserAgent;
     }
 
     /**
@@ -76,6 +77,16 @@ public class HttpConfig {
      */
     public URI getRegionalBaseUri(ApiRegion region) {
         return URI.create(regionalUriGetter.apply(region));
+    }
+
+    /**
+     * Returns the custom user agent string that will be appended to the default one, if set.
+     *
+     * @return The custom user agent string to append, or {@code null} if not set.
+     * @since 8.11.0
+     */
+    public String getCustomUserAgent() {
+        return customUserAgent;
     }
 
     @Deprecated
@@ -131,6 +142,11 @@ public class HttpConfig {
         return builder().build();
     }
 
+    /**
+     * Entrypoint for creating a custom HttpConfig.
+     *
+     * @return A new Builder.
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -141,11 +157,26 @@ public class HttpConfig {
     public static class Builder {
         private int timeoutMillis = 60_000;
         private Function<ApiRegion, String> regionalUriGetter = region -> "https://"+region+".vonage.com";
-        private String
+        private String customUserAgent,
                 apiBaseUri = DEFAULT_API_BASE_URI,
                 restBaseUri = DEFAULT_REST_BASE_URI,
                 apiEuBaseUri = DEFAULT_API_EU_BASE_URI,
                 videoBaseUri = DEFAULT_VIDEO_BASE_URI;
+
+        /**
+         * Constructor.
+         *
+         * @deprecated Will be made private in the next major version.
+         */
+        @Deprecated
+        public Builder() {}
+
+        private String sanitizeUri(String uri) {
+            if (uri != null && uri.endsWith("/")) {
+                return uri.substring(0, uri.length() - 1);
+            }
+            return uri;
+        }
 
         /**
          * Sets the socket timeout for requests. By default, this is one minute (60000 ms).
@@ -250,19 +281,30 @@ public class HttpConfig {
         }
 
         /**
+         * Appends a custom string to the default {@code User-Agent} header. This is mainly used for
+         * derivatives of the SDK, or to distinguish particular users / use cases.
+         *
+         * @param userAgent The user agent string to append to the existing one. Must be less than 128 characters.
+         * @return This builder.
+         * @since 8.11.0
+         */
+        public Builder appendUserAgent(String userAgent) {
+            if ((this.customUserAgent = Objects.requireNonNull(userAgent).trim()).length() > 127) {
+                throw new IllegalArgumentException("User agent string must be less than 128 characters in length.");
+            }
+            if (customUserAgent.isEmpty()) {
+                throw new IllegalArgumentException("Custom user agent string cannot be blank.");
+            }
+            return this;
+        }
+
+        /**
          * Builds the HttpConfig.
          *
          * @return A new HttpConfig object from the stored builder options.
          */
         public HttpConfig build() {
             return new HttpConfig(this);
-        }
-
-        private String sanitizeUri(String uri) {
-            if (uri != null && uri.endsWith("/")) {
-                return uri.substring(0, uri.length() - 1);
-            }
-            return uri;
         }
     }
 }

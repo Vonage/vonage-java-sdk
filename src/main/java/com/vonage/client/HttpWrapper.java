@@ -59,6 +59,11 @@ public class HttpWrapper {
         this(httpConfig, new AuthCollection(authMethods));
     }
 
+    /**
+     * Gets the underlying {@link HttpClient} instance used by the SDK.
+     *
+     * @return The Apache HTTP client instance.
+     */
     public HttpClient getHttpClient() {
         if (httpClient == null) {
             httpClient = createHttpClient();
@@ -106,6 +111,11 @@ public class HttpWrapper {
         this.httpConfig = httpConfig;
     }
 
+    /**
+     * Gets the authentication settings used by the client.
+     *
+     * @return The available authentication methods object.
+     */
     public AuthCollection getAuthCollection() {
         return authCollection;
     }
@@ -137,18 +147,43 @@ public class HttpWrapper {
 
         return HttpClientBuilder.create()
                 .setConnectionManager(connectionManager)
-                .setUserAgent(USER_AGENT)
+                .setUserAgent(getUserAgent())
                 .setDefaultRequestConfig(requestConfig)
                 .useSystemProperties()
                 .disableRedirectHandling()
                 .build();
     }
 
+    /**
+     * Gets the HTTP configuration settings for the client.
+     *
+     * @return The request configuration settings object.
+     */
     public HttpConfig getHttpConfig() {
         return httpConfig;
     }
 
+    /**
+     * Gets the {@code User-Agent} header to be used in HTTP requests.
+     * This includes the Java runtime and SDK version, as well as the custom user agent string, if present.
+     *
+     * @return The user agent string.
+     */
     public String getUserAgent() {
-        return USER_AGENT;
+        String ua = USER_AGENT, custom = httpConfig.getCustomUserAgent();
+        if (custom != null) {
+            ua += " " + httpConfig.getCustomUserAgent();
+        }
+        return ua;
+    }
+
+    /**
+     * Gets the SDK version.
+     *
+     * @return The SDK version as a string.
+     * @since 8.11.0
+     */
+    public String getClientVersion() {
+        return CLIENT_VERSION;
     }
 }

@@ -50,4 +50,21 @@ public class HttpWrapperTest {
         assertNotNull(config);
         HttpConfigTest.assertDefaults(config);
     }
+
+    @Test
+    public void testDefaultUserAgent() {
+        assertNull(wrapper.getHttpConfig().getCustomUserAgent());
+        assertEquals(
+                "vonage-java-sdk/"+wrapper.getClientVersion()+" java/" + System.getProperty("java.version"),
+                wrapper.getUserAgent()
+        );
+    }
+
+    @Test
+    public void testValidCustomUserAgent() {
+        String customUa = "my-custom-agent", defaultUa = wrapper.getUserAgent();
+        wrapper = new HttpWrapper(HttpConfig.builder().appendUserAgent(customUa).build());
+        assertEquals(customUa, wrapper.getHttpConfig().getCustomUserAgent());
+        assertEquals(defaultUa + " " + customUa, wrapper.getUserAgent());
+    }
 }

@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 # [8.11.0] - 2024-09-24
+- Added custom user agent property setting to `HttpConfig`
 - Added RCS channel to Messages API
 - Added `ackInboundMessage` and `revokeOutboundMessage` methods to `MessagesClient`
 - Fixed `viber_service` deserialization in `com.vonage.client.messages.Channel`

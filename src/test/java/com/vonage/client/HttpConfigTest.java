@@ -110,4 +110,18 @@ public class HttpConfigTest {
             assertEquals(region, ApiRegion.fromString(toString));
         }
     }
+
+    @Test
+    public void testCustomUserAgentValidation() {
+        assertEquals("Abc123", HttpConfig.builder().appendUserAgent(" Abc123\t\n").build().getCustomUserAgent());
+        assertThrows(NullPointerException.class, () ->
+                HttpConfig.builder().appendUserAgent(null).build()
+        );
+        assertThrows(IllegalArgumentException.class, () ->
+                HttpConfig.builder().appendUserAgent("   \t\n").build()
+        );
+        assertThrows(IllegalArgumentException.class, () ->
+                HttpConfig.builder().appendUserAgent("d".repeat(128)).build()
+        );
+    }
 }
