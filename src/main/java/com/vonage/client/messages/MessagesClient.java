@@ -121,7 +121,7 @@ public class MessagesClient {
 	 * Marks an inbound message as "read". Currently, this only applies to WhatsApp messages.
 	 *
 	 * @param messageId UUID of the message to acknowledge.
-	 * @param region (OPTIONAL) The regional server to use for this request.
+	 * @param region The regional server to use for this request. This must match the region of the message.
 	 *
 	 * @throws MessageResponseException If the acknowledgement fails. This could be for the following reasons:
 	 * <ul>
@@ -142,7 +142,7 @@ public class MessagesClient {
 	 * Revokes an outbound message. Currently, this only applies to RCS messages.
 	 *
 	 * @param messageId UUID of the message to revoke.
-	 * @param region (OPTIONAL) The regional server to use for this request.
+	 * @param region The regional server to use for this request. This must match the region of the message.
 	 *
 	 * @throws MessageResponseException If the acknowledgement fails. This could be for the following reasons:
 	 * <ul>
@@ -156,7 +156,7 @@ public class MessagesClient {
 	 * @since 8.11.0
 	 */
 	public void revokeOutboundMessage(String messageId, ApiRegion region) throws MessageResponseException {
-		updateMessage.execute(new UpdateStatusRequest("revoke", messageId, region));
+		updateMessage.execute(new UpdateStatusRequest("revoked", messageId, region));
 	}
 
 	/**
