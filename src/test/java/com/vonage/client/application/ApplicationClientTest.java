@@ -24,6 +24,7 @@ import com.vonage.client.common.Webhook;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,10 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
             "          \"http_method\": \"POST\"\n" +
             "        }\n" +
             "      }\n" +
+            "    },\n" +
+            "    \"network_apis\": {\n" +
+            "      \"network_application_id\": \"2bzfIFqRG128IcjSj1YhZNtw6LADG\",\n" +
+            "      \"redirect_uri\": \"https://my-redirect-uri.example.com\"\n" +
             "    },\n" +
             "    \"rtc\": {\n" +
             "      \"webhooks\": {\n" +
@@ -132,6 +137,11 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
         assertEquals(HttpMethod.POST, message.getWebhooks().get(Webhook.Type.INBOUND).getMethod());
         assertEquals("https://example.com/webhooks/status", message.getWebhooks().get(Webhook.Type.STATUS).getAddress());
         assertEquals(HttpMethod.POST, message.getWebhooks().get(Webhook.Type.STATUS).getMethod());
+
+        NetworkApis networkApis = capabilities.getNetworkApis();
+        assertEquals(Capability.Type.NETWORK, networkApis.getType());
+        assertEquals("2bzfIFqRG128IcjSj1YhZNtw6LADG", networkApis.getNetworkApplicationId());
+        assertEquals(URI.create("https://my-redirect-uri.example.com"), networkApis.getRedirectUri());
 
         Rtc rtc = capabilities.getRtc();
         assertEquals(Capability.Type.RTC, rtc.getType());

@@ -21,7 +21,7 @@ import java.net.URI;
 /**
  * Network APIs capability configuration settings.
  *
- * @since 8.9.0
+ * @since 8.12.0
  */
 public final class NetworkApis extends Capability {
     private URI redirectUri;

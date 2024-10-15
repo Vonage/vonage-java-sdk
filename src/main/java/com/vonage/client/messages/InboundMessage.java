@@ -434,6 +434,7 @@ public class InboundMessage extends JsonableBaseObject {
 	 * @return The deserialized webhook response object.
 	 * @throws com.vonage.client.VonageResponseParseException If the response could not be deserialized.
 	 */
+	@JsonCreator
 	public static InboundMessage fromJson(String json) {
 		return Jsonable.fromJson(json);
 	}

@@ -91,7 +91,7 @@ public abstract class Capability extends JsonableBaseObject {
         /**
          * Network APIs
          *
-         * @since 8.9.0
+         * @since 8.12.0
          */
         NETWORK
     }

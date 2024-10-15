@@ -16,6 +16,7 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
@@ -292,6 +293,7 @@ public class EventWebhook extends JsonableBaseObject {
      *
      * @return A new instance of this class.
      */
+    @JsonCreator
     public static EventWebhook fromJson(String json) {
         return Jsonable.fromJson(json);
     }

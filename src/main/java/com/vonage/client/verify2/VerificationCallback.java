@@ -15,6 +15,7 @@
  */
 package com.vonage.client.verify2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
@@ -176,6 +177,7 @@ public class VerificationCallback extends JsonableBaseObject {
 	 * @return The deserialized webhook response object.
 	 * @throws VonageResponseParseException If the response could not be deserialized.
 	 */
+	@JsonCreator
 	public static VerificationCallback fromJson(String json) {
 		return Jsonable.fromJson(json);
 	}

@@ -15,6 +15,7 @@
  */
 package com.vonage.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
@@ -107,6 +108,7 @@ public class AnswerWebhook extends JsonableBaseObject {
      *
      * @return A new instance of this class.
      */
+    @JsonCreator
     public static AnswerWebhook fromJson(String json) {
         return Jsonable.fromJson(json);
     }

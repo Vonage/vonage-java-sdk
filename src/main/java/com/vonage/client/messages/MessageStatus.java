@@ -330,6 +330,7 @@ public class MessageStatus extends JsonableBaseObject {
 	 *
 	 * @return An instance of this class with the fields populated, if present.
 	 */
+	@JsonCreator
 	public static MessageStatus fromJson(String json) {
 		return Jsonable.fromJson(json);
 	}

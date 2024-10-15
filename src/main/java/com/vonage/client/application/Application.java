@@ -336,10 +336,10 @@ public class Application extends JsonableBaseObject {
          * Network APIs capability.
          *
          * @return The Network APIs capability, or {@code null} if absent.
-         * @since 8.9.0
+         * @since 8.12.0
          */
         @JsonProperty("network_apis")
-        public NetworkApis networkApis() {
+        public NetworkApis getNetworkApis() {
             return networkApis;
         }
 

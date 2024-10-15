@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.12.0] - 2024-10-??
+- Added `network_apis` capability to Application API
+- Added `@JsonCreator` annotation to webhook classes' `fromJson(String)` method
+
 # [8.11.0] - 2024-09-25
 - Added custom user agent property setting to `HttpConfig`
 - Added RCS channel to Messages API
