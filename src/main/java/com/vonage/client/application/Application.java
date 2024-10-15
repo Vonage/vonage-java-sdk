@@ -206,7 +206,8 @@ public class Application extends JsonableBaseObject {
                     capabilities.rtc == null &&
                     capabilities.messages == null &&
                     capabilities.vbc == null &&
-                    capabilities.verify == null
+                    capabilities.verify == null &&
+                    capabilities.networkApis == null
                 ) {
                     capabilities = null;
                 }
@@ -278,6 +279,7 @@ public class Application extends JsonableBaseObject {
         private Rtc rtc;
         private Vbc vbc;
         private Verify verify;
+        private NetworkApis networkApis;
 
         /**
          * Voice capability.
@@ -323,12 +325,22 @@ public class Application extends JsonableBaseObject {
          * Verify capability.
          *
          * @return The Verify capability, or {@code null} if absent.
-         *
          * @since 8.6.0
          */
         @JsonProperty("verify")
         public Verify getVerify() {
             return verify;
+        }
+
+        /**
+         * Network APIs capability.
+         *
+         * @return The Network APIs capability, or {@code null} if absent.
+         * @since 8.12.0
+         */
+        @JsonProperty("network_apis")
+        public NetworkApis getNetworkApis() {
+            return networkApis;
         }
 
         private void setCapability(Capability.Type type, Capability capability) {
@@ -347,6 +359,9 @@ public class Application extends JsonableBaseObject {
                     break;
                 case VERIFY:
                     verify = (Verify) capability;
+                    break;
+                case NETWORK:
+                    networkApis = (NetworkApis) capability;
                     break;
             }
         }

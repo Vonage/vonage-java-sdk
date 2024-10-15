@@ -15,6 +15,7 @@
  */
 package com.vonage.client.sms;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
@@ -198,6 +199,7 @@ public final class MessageEvent extends JsonableBaseObject {
      *
      * @return An instance of this class with the fields populated, if present.
      */
+    @JsonCreator
     public static MessageEvent fromJson(String json) {
         return Jsonable.fromJson(json);
     }

@@ -167,15 +167,34 @@ public class ApplicationTest {
     @Test
     public void testAddMessagesCapabilityWithInboundWebhook() {
         String json = "{\"capabilities\":{\"messages\":{\"webhooks\":{\"inbound_url\":{\"address\":\"https://example.com/inbound\",\"http_method\":\"POST\"}}}}}";
-        Application application = Application.builder()
-                .addCapability(
-                        Messages.builder()
-                                .addWebhook(Webhook.Type.INBOUND, new Webhook("https://example.com/inbound", HttpMethod.POST))
-                                .build())
-                .build();
+        Application application = Application.builder().addCapability(
+                Messages.builder()
+                        .addWebhook(Webhook.Type.INBOUND, new Webhook("https://example.com/inbound", HttpMethod.POST))
+                        .build()
+                )
+            .build();
 
         assertEquals(json, application.toJson());
         testJsonableBaseObject(application);
+    }
+
+    @Test
+    public void testAddNetworkApisCapabilityWithRedirectUriAndId() {
+        String redirectUri = "http://localhost:8080/camara/redirect",
+                networkApplicationId = "my-network-application-id",
+                expectedJson = "{\"capabilities\":{\"network_apis\":{\"redirect_uri\":\"" +
+                        redirectUri + "\",\"network_application_id\":\""+networkApplicationId+"\"}}}";
+
+        Application application = Application.builder().addCapability(
+                NetworkApis.builder()
+                    .redirectUri(redirectUri)
+                    .networkApplicationId(networkApplicationId)
+                    .build()
+                )
+                .build();
+
+        testJsonableBaseObject(application);
+        assertEquals(expectedJson, application.toJson());
     }
 
     @Test
