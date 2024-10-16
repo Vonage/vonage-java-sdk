@@ -270,11 +270,11 @@ public class CallTest {
         Call call = new Call("15551234567", "25551234567", Arrays.asList(
                 TalkAction.builder("Hello World").build(),
                 RecordAction.builder().build(),
-                InputAction.builder().build(),
+                InputAction.builder().dtmf().build(),
                 TalkAction.builder("Goodbye").build()
         ));
         assertEquals(
-                "{\"to\":[{\"number\":\"15551234567\",\"type\":\"phone\"}],\"from\":{\"number\":\"25551234567\",\"type\":\"phone\"},\"ncco\":[{\"text\":\"Hello World\",\"action\":\"talk\"},{\"action\":\"record\"},{\"action\":\"input\"},{\"text\":\"Goodbye\",\"action\":\"talk\"}]}",
+                "{\"to\":[{\"number\":\"15551234567\",\"type\":\"phone\"}],\"from\":{\"number\":\"25551234567\",\"type\":\"phone\"},\"ncco\":[{\"text\":\"Hello World\",\"action\":\"talk\"},{\"action\":\"record\"},{\"type\":[\"dtmf\"],\"action\":\"input\"},{\"text\":\"Goodbye\",\"action\":\"talk\"}]}",
                 call.toJson()
         );
     }

@@ -17,8 +17,7 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 
 /**
  * An NCCO input action which allows for the collection of digits and automatic speech recognition from a person.
@@ -32,15 +31,21 @@ public class InputAction extends JsonableBaseObject implements Action {
     private Collection<String> eventUrl;
     private SpeechSettings speech;
     private EventMethod eventMethod;
+    private InputMode mode;
 
     InputAction() {}
 
     private InputAction(Builder builder) {
-        type = builder.type;
-        dtmf = builder.dtmf;
         eventUrl = builder.eventUrl;
         eventMethod = builder.eventMethod;
         speech = builder.speech;
+        mode = builder.mode;
+        if ((type = builder.type).isEmpty()) {
+            throw new IllegalStateException("At least one input type must be specified.");
+        }
+        if ((dtmf = builder.dtmf) != null && mode == InputMode.ASYNCHRONOUS) {
+            throw new IllegalStateException("DTMF settings cannot be used with asynchronous mode.");
+        }
     }
 
     @Override
@@ -73,52 +78,134 @@ public class InputAction extends JsonableBaseObject implements Action {
         return speech;
     }
 
+    /**
+     * How the input should be processed. If not set, the default is {@linkplain InputMode#SYNCHRONOUS}.
+     *
+     * @return The mode as an enum, or {@code null} if unspecified.
+     * @since 8.12.0
+     */
+    @JsonProperty("mode")
+    public InputMode getMode() {
+        return mode;
+    }
+
+    /**
+     * Entrypoint for constructing an instance of this class.
+     *
+     * @return A new Builder.
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder for specifying the properties of an InputAction.
+     */
     public static class Builder {
+        private final Collection<String> type = new LinkedHashSet<>(2, 1f);
         private DtmfSettings dtmf;
         private Collection<String> eventUrl;
         private EventMethod eventMethod;
         private SpeechSettings speech;
-        private Collection<String> type;
+        private InputMode mode;
 
         private Builder() {}
 
         /**
-         * @param dtmf DTMF settings object to enable DTMF input.
+         * Enables DTMF with the default settings.
+         *
          * @return This builder to keep building the input action.
-         * @since 6.0.0
+         * @since 8.12.0
          */
-        public Builder dtmf(DtmfSettings dtmf) {
-            this.dtmf = dtmf;
+        public Builder dtmf() {
+            dtmf(null);
+            type.add("dtmf");
             return this;
         }
 
         /**
-         * @param eventUrl Vonage sends the digits pressed by the callee to this URL after timeOut pause in activity or
-         *                 when # is pressed.
+         * Enable DTMF input with the provided settings. Note that if you override any of
+         * the defaults, you cannot set {@linkplain #mode(InputMode)} to {@linkplain InputMode#ASYNCHRONOUS}.
+         *
+         * @param dtmf The DTMF settings object.
+         * @return This builder to keep building the input action.
+         * @since 6.0.0
+         */
+        public Builder dtmf(DtmfSettings dtmf) {
+            if ((this.dtmf = dtmf) != null) {
+                type.add("dtmf");
+            }
+            else {
+                type.remove("dtmf");
+            }
+            return this;
+        }
+
+        /**
+         * Automatic Speech Recognition (ASR) settings to enable speech input.
+         * Required if {@linkplain #dtmf(DtmfSettings)} is not provided.
+         *
+         * @param speech The speech settings object.
+         * @return This builder to keep building the input action.
+         * @since 6.0.0
+         */
+        public Builder speech(SpeechSettings speech) {
+            if ((this.speech = speech) != null) {
+                type.add("speech");
+            }
+            else {
+                type.remove("speech");
+            }
+            return this;
+        }
+
+        /**
+         * Vonage sends the digits pressed by the callee to this URL after timeOut pause inactivity or when
+         * {@code #} is pressed.
+         *
+         * @param eventUrl The URL wrapped in a singleton collection to send the event metadata to.
          *
          * @return This builder to keep building the input action.
+         * @deprecated This will be removed in a future release. Use {@link #eventUrl(String)} instead.
          */
+        @Deprecated
         public Builder eventUrl(Collection<String> eventUrl) {
             this.eventUrl = eventUrl;
             return this;
         }
 
         /**
-         * @param eventUrl Vonage sends the digits pressed by the callee to this URL after timeOut pause in activity or
-         *                 when # is pressed.
+         * Vonage sends the digits pressed by the callee to this URL after timeOut pause inactivity or when
+         * {@code #} is pressed.
+         *
+         * @param eventUrl The URL to send the event metadata to.
          *
          * @return This builder to keep building the input action.
+         * @deprecated This will be removed in a future release. Use {@link #eventUrl(String)} instead.
          */
+        @Deprecated
         public Builder eventUrl(String... eventUrl) {
             return eventUrl(Arrays.asList(eventUrl));
         }
 
         /**
-         * @param eventMethod The HTTP method used to send event information to event_url The default value is POST.
+         * Vonage sends the digits pressed by the callee to this URL after timeOut pause inactivity or when
+         * {@code #} is pressed.
+         *
+         * @param eventUrl The URL to send the event metadata to.
+         *
+         * @return This builder to keep building the input action.
+         *
+         * @since 8.12.0
+         */
+        public Builder eventUrl(String eventUrl) {
+            return eventUrl(Collections.singletonList(eventUrl));
+        }
+
+        /**
+         * The HTTP method used to send event information to event_url The default value is POST.
+         *
+         * @param eventMethod The HTTP method to use for the event as an enum.
          *
          * @return This builder to keep building the input action.
          */
@@ -128,22 +215,37 @@ public class InputAction extends JsonableBaseObject implements Action {
         }
 
         /**
-         * @param speech Automatic speech recognition settings object to enable speech input. Required if dtmf is not provided.
+         * How the input should be processed. If not set, the default is {@linkplain InputMode#SYNCHRONOUS}.
+         * If set to {@linkplain InputMode#ASYNCHRONOUS}, use {@link #dtmf()} instead of {@link #dtmf(DtmfSettings)}.
+         *
+         * @param mode The DTMF processing mode as an enum.
          * @return This builder to keep building the input action.
-         * @since 6.0.0
+         * @since 8.12.0
          */
-        public Builder speech(SpeechSettings speech) {
-            this.speech = speech;
+        public Builder mode(InputMode mode) {
+            this.mode = mode;
             return this;
         }
 
         /**
-         * @param type Acceptable input type, can be set as [ "dtmf" ] for DTMF input only, [ "speech" ] for ASR only,
-         *            or [ "dtmf", "speech" ] for both.
+         * Sets the acceptable input types. From v8.12.0 onwards, you should not call this method manually;
+         * instead, use {@link #dtmf()} and / or {@link #speech(SpeechSettings)}. This method will be removed
+         * in a future release.
+         *
+         * @param type Acceptable input types as a collection. Valid values are ["dtmf"] for DTMF input only,
+         *             ["speech"] for ASR only, or ["dtmf", "speech"] for both.
+         *
          * @return This builder to keep building the input action.
+         *
+         * @deprecated Use {@link #dtmf(DtmfSettings)} and {@link #speech(SpeechSettings)} instead.
+         * The type will be set automatically based on the provided settings.
          */
+        @Deprecated
         public Builder type(Collection<String> type) {
-            this.type = type;
+            this.type.clear();
+            if (type != null) {
+                this.type.addAll(type);
+            }
             return this;
         }
 

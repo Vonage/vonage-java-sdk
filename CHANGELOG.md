@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 # [8.12.0] - 2024-10-??
 - Added `network_apis` capability to Application API
+- Added `mode` property to `InputAction` NCCO
+- Refactored `InputAction.Builder` and added constructor validation
 - Added `@JsonCreator` annotation to webhook classes' `fromJson(String)` method
 
 # [8.11.0] - 2024-09-25

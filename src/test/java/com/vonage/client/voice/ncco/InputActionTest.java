@@ -15,7 +15,6 @@
  */
 package com.vonage.client.voice.ncco;
 
-import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +26,7 @@ public class InputActionTest {
 
     @Test
     public void testBuilderMultipleInstances() {
-        InputAction.Builder builder = InputAction.builder();
+        var builder = InputAction.builder().dtmf().mode(InputMode.SYNCHRONOUS);
         assertNotSame(builder.build(), builder.build());
     }
 
@@ -42,11 +41,12 @@ public class InputActionTest {
         var dtmfSettings = DtmfSettings.builder().maxDigits(4).submitOnHash(true).timeOut(10).build();
 
         InputAction input = InputAction.builder()
-                .type(Arrays.asList("speech", "dtmf"))
+                .speech(speechSettings)
                 .dtmf(dtmfSettings)
+                .mode(InputMode.SYNCHRONOUS)
                 .eventUrl("http://example.com")
                 .eventMethod(EventMethod.POST)
-                .speech(speechSettings).build();
+                .build();
 
         String expectedJson = "[" +
                 "{\"type\":[\"speech\",\"dtmf\"]," +
@@ -65,6 +65,7 @@ public class InputActionTest {
                 "\"language\":\"en-NG\"" +
                 "}," +
                 "\"eventMethod\":\"POST\"," +
+                "\"mode\":\"synchronous\"," +
                 "\"action\":\"input\"" +
                 "}]";
 
@@ -72,17 +73,28 @@ public class InputActionTest {
     }
 
     @Test
-    public void testGetAction() {
-        InputAction input = InputAction.builder().build();
+    public void testGetActionOnly() {
+        InputAction input = InputAction.builder().dtmf().build();
         assertEquals("input", input.getAction());
+        var type = input.getType();
+        assertNotNull(type);
+        assertEquals(1, type.size());
+        assertEquals("dtmf", type.iterator().next());
+        assertNull(input.getDtmf());
+        assertNull(input.getSpeech());
+        assertNull(input.getEventUrl());
+        assertNull(input.getMode());
     }
 
     @Test
-    public void testDefault() {
-        InputAction input = InputAction.builder().build();
-
-        String expectedJson = "[{\"action\":\"input\"}]";
-        assertEquals(expectedJson, new Ncco(input).toJson());
+    public void testAtLeastOneTypeIsSpecified() {
+        assertThrows(IllegalStateException.class, () -> InputAction.builder().build());
+        assertThrows(IllegalStateException.class, () -> InputAction.builder().dtmf().type(null).build());
+        for (String type : new String[] {"dtmf", "speech"}) {
+            var input = InputAction.builder().type(Collections.singletonList(type)).build();
+            String expectedJson = "[{\"type\":[\""+type+"\"],\"action\":\"input\"}]";
+            assertEquals(expectedJson, new Ncco(input).toJson());
+        }
     }
 
     @Test
@@ -112,6 +124,26 @@ public class InputActionTest {
         assertThrows(IllegalArgumentException.class, () -> DtmfSettings.builder().maxDigits(maxDigitsMin - 1).build());
         assertEquals(maxDigitsMax, DtmfSettings.builder().maxDigits(maxDigitsMax).build().getMaxDigits());
         assertThrows(IllegalArgumentException.class, () -> DtmfSettings.builder().maxDigits(maxDigitsMax + 1).build());
+    }
+
+    @Test
+    public void testDtmfAsynchronousMode() {
+        var input = InputAction.builder().dtmf().mode(InputMode.ASYNCHRONOUS).build();
+        String expectedJson = "[{\"type\":[\"dtmf\"],\"mode\":\"asynchronous\",\"action\":\"input\"}]";
+        assertEquals(expectedJson, new Ncco(input).toJson());
+        assertThrows(IllegalStateException.class, () -> InputAction.builder()
+                    .dtmf(DtmfSettings.builder().build())
+                    .mode(InputMode.ASYNCHRONOUS).build()
+        );
+    }
+
+    @Test
+    public void testSpeechAndAynschrounousMode() {
+        var input = InputAction.builder()
+                .speech(SpeechSettings.builder().build())
+                .mode(InputMode.ASYNCHRONOUS).build();
+        String expectedJson = "[{\"type\":[\"speech\"],\"speech\":{},\"mode\":\"asynchronous\",\"action\":\"input\"}]";
+        assertEquals(expectedJson, new Ncco(input).toJson());
     }
 
     @Test
@@ -174,18 +206,27 @@ public class InputActionTest {
     }
 
     @Test
-    public void testEventUrlField() {
-        InputAction input = InputAction.builder().eventUrl("http://example.com").build();
+    public void testSpeechNullRemovesSettingsAndType() {
+        var builder = InputAction.builder().speech(SpeechSettings.builder().build());
+        String expectedJson = "[{\"type\":[\"speech\"],\"speech\":{},\"action\":\"input\"}]";
+        assertEquals(expectedJson, new Ncco(builder.build()).toJson());
+        assertThrows(IllegalStateException.class, () -> builder.speech(null).build());
+    }
 
-        String expectedJson = "[{\"eventUrl\":[\"http://example.com\"],\"action\":\"input\"}]";
+    @Test
+    public void testEventUrlField() {
+        InputAction input = InputAction.builder().dtmf()
+                .eventUrl("https://nexmo.com", "https://developer.vonage.com")
+                .eventUrl("http://example.com").build();
+        String expectedJson = "[{\"type\":[\"dtmf\"],\"eventUrl\":[\"http://example.com\"],\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());
     }
 
     @Test
     public void testEventMethodField() {
-        InputAction input = InputAction.builder().eventMethod(EventMethod.POST).build();
+        InputAction input = InputAction.builder().dtmf().eventMethod(EventMethod.POST).build();
 
-        String expectedJson = "[{\"eventMethod\":\"POST\",\"action\":\"input\"}]";
+        String expectedJson = "[{\"type\":[\"dtmf\"],\"eventMethod\":\"POST\",\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());
     }
 }
