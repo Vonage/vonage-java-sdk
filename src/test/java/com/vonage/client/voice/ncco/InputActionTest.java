@@ -229,4 +229,11 @@ public class InputActionTest {
         String expectedJson = "[{\"type\":[\"dtmf\"],\"eventMethod\":\"POST\",\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());
     }
+
+    @Test
+    public void testInputModeDeserialization() {
+        assertEquals(InputMode.SYNCHRONOUS, InputMode.fromString("synchronous"));
+        assertEquals(InputMode.ASYNCHRONOUS, InputMode.fromString("asynchronous"));
+        assertNull(InputMode.fromString("invalid"));
+    }
 }

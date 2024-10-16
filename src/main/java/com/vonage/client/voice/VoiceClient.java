@@ -18,6 +18,7 @@ package com.vonage.client.voice;
 import com.vonage.client.*;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import com.vonage.client.voice.ncco.InputMode;
 import com.vonage.client.voice.ncco.Ncco;
 import com.vonage.jwt.Jwt;
 import java.io.IOException;
@@ -41,6 +42,8 @@ public class VoiceClient {
     final RestEndpoint<TalkPayload, TalkResponse> startTalk;
     final RestEndpoint<String, TalkResponse> stopTalk;
     final RestEndpoint<DtmfPayload, DtmfResponse> sendDtmf;
+    final RestEndpoint<AddDtmfListenerRequest, Void> addDtmfListener;
+    final RestEndpoint<String, Void> removeDtmfListener;
     final RestEndpoint<String, byte[]> downloadRecording;
 
     /**
@@ -58,15 +61,10 @@ public class VoiceClient {
                         .requestMethod(method).wrapper(wrapper).pathGetter((de, req) -> {
                             String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v1");
                             String path = pathGetter.apply(req);
-                            if (path.isEmpty()) {
-                                return base + "/calls";
-                            }
-                            else if (path.startsWith("http") && method == HttpMethod.GET) {
+                            if (path.startsWith("http") && method == HttpMethod.GET) {
                                 return path;
                             }
-                            else {
-                                return base + "/calls/" + pathGetter.apply(req);
-                            }
+                            return base + "/calls" + (path.isEmpty() ? "" : "/" + path);
                         })
                 );
             }
@@ -81,6 +79,8 @@ public class VoiceClient {
         startTalk = new Endpoint<>(req -> req.uuid + "/talk", HttpMethod.PUT);
         stopTalk = new Endpoint<>(uuid -> uuid + "/talk", HttpMethod.DELETE);
         sendDtmf = new Endpoint<>(req -> req.uuid + "/dtmf", HttpMethod.PUT);
+        addDtmfListener = new Endpoint<>(req -> req.uuid + "/input/dtmf", HttpMethod.PUT);
+        removeDtmfListener = new Endpoint<>(uuid -> uuid + "/input/dtmf", HttpMethod.DELETE);
         downloadRecording = new Endpoint<>(Function.identity(), HttpMethod.GET);
     }
 
@@ -425,8 +425,8 @@ public class VoiceClient {
     /**
      * Send a synthesized speech message to an ongoing call.
      *
-     * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
-     *                  can be obtained with {@link CallEvent#getUuid()}.
+     * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}.
+     *                  This value can be obtained with {@link CallEvent#getUuid()}.
      * @param text      The message to be spoken to the call participants.
      * @param language  The language to use for the text-to-speech.
      * @param style     The language style to use for the text-to-speech.
@@ -479,6 +479,44 @@ public class VoiceClient {
      */
     public TalkResponse stopTalk(String uuid) throws VonageResponseParseException, VonageClientException {
         return stopTalk.execute(validateUuid(uuid));
+    }
+
+    /**
+     * Add a listener for asynchronous DTMF events sent by a caller to an
+     * {@linkplain com.vonage.client.voice.ncco.InputAction} NCCO action, when the
+     * {@linkplain com.vonage.client.voice.ncco.InputAction.Builder#mode(InputMode)} is
+     * {@link com.vonage.client.voice.ncco.InputMode#ASYNCHRONOUS}.
+     *
+     * @param uuid The UUID of the call, obtained from the object returned by {@link #createCall(Call)}.
+     * This value can be obtained with {@link CallEvent#getUuid()}.
+     *
+     * @param eventUrl The URL to send asynchronous DTMF user input events to.
+     *
+     * @throws VoiceResponseException If the call does not exist or the listener could not be added,
+     * for example if the call's state or input mode are incompatible.
+     *
+     * @since 8.12.0
+     */
+    public void addDtmfListener(String uuid, String eventUrl) throws VoiceResponseException {
+        addDtmfListener.execute(new AddDtmfListenerRequest(validateUuid(uuid), URI.create(validateUrl(eventUrl))));
+    }
+
+    /**
+     * Remove the listener for asynchronous DTMF events sent by a caller to an
+     * {@linkplain com.vonage.client.voice.ncco.InputAction} NCCO, when the
+     * {@linkplain com.vonage.client.voice.ncco.InputAction.Builder#mode(InputMode)} is
+     * {@link com.vonage.client.voice.ncco.InputMode#ASYNCHRONOUS}. Calling this method
+     * stops sending DTMF events to the event URL set in {@link #addDtmfListener(String, String)}.
+     *
+     * @param uuid The UUID of the call, obtained from the object returned by {@link #createCall(Call)}.
+     * This value can be obtained with {@link CallEvent#getUuid()}.
+     *
+     * @throws VoiceResponseException If the call does not exist or have a listener attached.
+     *
+     * @since 8.12.0
+     */
+    public void removeDtmfListener(String uuid) throws VoiceResponseException {
+        removeDtmfListener.execute(validateUuid(uuid));
     }
 
     /**

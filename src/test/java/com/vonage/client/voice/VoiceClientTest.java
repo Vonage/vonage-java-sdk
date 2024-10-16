@@ -18,12 +18,14 @@ package com.vonage.client.voice;
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.voice.ncco.Ncco;
 import com.vonage.client.voice.ncco.TalkAction;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
@@ -58,13 +60,12 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
 
     @Test
     public void testCreateCall() throws Exception {
-        stubResponse(200,
-                "{\n" + "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n"
-                        + "  \"uuid\": \"" + SAMPLE_CALL_ID + "\",\n"
-                        + "  \"status\": \"started\",\n" + "  \"direction\": \"outbound\"\n" + "}"
-        );
+        String expectedJson = "{\n" + "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n"
+                + "  \"uuid\": \"" + SAMPLE_CALL_ID + "\",\n"
+                + "  \"status\": \"started\",\n" + "  \"direction\": \"outbound\"\n" + "}";
+        stubResponse(200, expectedJson);
         CallEvent evt = client.createCall(new Call("447700900903", "447700900904", "http://api.example.com/answer"));
-        TestUtils.testJsonableBaseObject(evt);
+        assertEquals(CallEvent.fromJson(expectedJson), evt);
         assertEquals("63f61863-4a51-4f6b-86e1-46edebio0391", evt.getConversationUuid());
         assertEquals(SAMPLE_CALL_ID, evt.getUuid());
         assertEquals(CallDirection.OUTBOUND, evt.getDirection());
@@ -82,7 +83,7 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
                         + "  }\n" + "}\n"
         );
         CallInfoPage page = client.listCalls();
-        TestUtils.testJsonableBaseObject(page);
+        testJsonableBaseObject(page);
         assertEquals(0, page.getCount());
         assert401Response(client::listCalls);
     }
@@ -119,7 +120,7 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
                         + "        }\n" + "      }\n"
         );
         CallInfo call = client.getCallDetails("93137ee3-580e-45f7-a61a-e0b5716000ef");
-        TestUtils.testJsonableBaseObject(call, true);
+        testJsonableBaseObject(call, true);
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", call.getUuid());
         assert401Response(() -> client.getCallDetails(SAMPLE_CALL_ID));
     }
@@ -132,7 +133,7 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
         );
 
         DtmfResponse response = client.sendDtmf("944dd293-ca13-4a58-bc37-6252e11474be", "332393");
-        TestUtils.testJsonableBaseObject(response);
+        testJsonableBaseObject(response);
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
         assertEquals("DTMF sent", response.getMessage());
         assertThrows(IllegalArgumentException.class, () ->
@@ -244,7 +245,7 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
         );
 
         StreamResponse response = client.stopStream("944dd293-ca13-4a58-bc37-6252e11474be");
-        TestUtils.testJsonableBaseObject(response);
+        testJsonableBaseObject(response);
         assertEquals("Stream stopped", response.getMessage());
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
         assert401Response(() -> client.stopStream(SAMPLE_CALL_ID));
@@ -262,7 +263,7 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
                         .style(1).level(-0.5).loop(3).premium(false)
                         .language(TextToSpeechLanguage.FRENCH).build()
         );
-        TestUtils.testJsonableBaseObject(response);
+        testJsonableBaseObject(response);
         assertEquals("Talk started", response.getMessage());
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
         assertThrows(NullPointerException.class, () ->
@@ -385,6 +386,24 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
     }
 
     @Test
+    public void testAddDtmfListener() throws Exception {
+        stubResponse(200);
+        var url = "https://example.app/webhooks/answer";
+        client.addDtmfListener(SAMPLE_CALL_ID, url);
+        assertThrows(NullPointerException.class, () -> client.addDtmfListener(null, url));
+        assertThrows(IllegalArgumentException.class, () -> client.addDtmfListener(SAMPLE_CALL_ID, null));
+        assert401Response(() -> client.addDtmfListener(SAMPLE_CALL_ID, url));
+    }
+
+    @Test
+    public void removeDtmfListener() throws Exception {
+        stubResponse(204);
+        client.removeDtmfListener(SAMPLE_CALL_ID);
+        assertThrows(NullPointerException.class, () -> client.removeDtmfListener(null));
+        assert401Response(() -> client.removeDtmfListener(SAMPLE_CALL_ID));
+    }
+
+    @Test
     public void testDownloadRecording() throws Exception {
         String recordingId = UUID.randomUUID().toString();
         String content = "<BINARY>";
@@ -425,6 +444,68 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
     }
 
     // ENDPOINT TESTS
+
+    @Test
+    public void testAddDtmfListenerEndpoint() throws Exception {
+        new VoiceEndpointTestSpec<AddDtmfListenerRequest, Void>() {
+            private final String uuid = SAMPLE_CALL_ID;
+            private final String url = "https://example.org/webhooks/answer";
+
+            @Override
+            protected RestEndpoint<AddDtmfListenerRequest, Void> endpoint() {
+                return client.addDtmfListener;
+            }
+
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.PUT;
+            }
+
+            @Override
+            protected String expectedEndpointUri(AddDtmfListenerRequest request) {
+                return "/v1/calls/" + request.uuid + "/input/dtmf";
+            }
+
+            @Override
+            protected AddDtmfListenerRequest sampleRequest() {
+                return new AddDtmfListenerRequest(uuid, URI.create(url));
+            }
+
+            @Override
+            protected String sampleRequestBodyString() {
+                return "{\"eventUrl\":[\""+url+"\"]}";
+            }
+        }
+        .runTests();
+    }
+
+    @Test
+    public void testRemoveDtmfListenerEndpoint() throws Exception {
+        new VoiceEndpointTestSpec<String, Void>() {
+            private final String uuid = SAMPLE_CALL_ID;
+
+            @Override
+            protected RestEndpoint<String, Void> endpoint() {
+                return client.removeDtmfListener;
+            }
+
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.DELETE;
+            }
+
+            @Override
+            protected String expectedEndpointUri(String request) {
+                return "/v1/calls/" + request + "/input/dtmf";
+            }
+
+            @Override
+            protected String sampleRequest() {
+                return uuid;
+            }
+        }
+        .runTests();
+    }
 
     @Test
     public void testDownloadRecordingEndpoint() throws Exception {
