@@ -17,6 +17,7 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.voice.EndpointType;
 import java.net.URI;
 import java.util.Map;
 
@@ -26,8 +27,6 @@ import java.util.Map;
  * for an example.
  */
 public class WebSocketEndpoint extends JsonableBaseObject implements Endpoint {
-    private static final String TYPE = "websocket";
-
     private final URI uri;
     private final String contentType;
     private final Map<String, ?> headers;
@@ -43,10 +42,9 @@ public class WebSocketEndpoint extends JsonableBaseObject implements Endpoint {
         return uri;
     }
 
-    @JsonProperty("type")
     @Override
     public String getType() {
-        return TYPE;
+        return EndpointType.WEBSOCKET.toString();
     }
 
     @JsonProperty("content-type")

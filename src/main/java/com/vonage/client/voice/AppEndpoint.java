@@ -24,7 +24,6 @@ import com.vonage.client.JsonableBaseObject;
  * @since 7.3.0
  */
 public class AppEndpoint extends JsonableBaseObject implements Endpoint {
-    private static final String TYPE = "app";
     private String user;
 
     protected AppEndpoint() {
@@ -49,9 +48,8 @@ public class AppEndpoint extends JsonableBaseObject implements Endpoint {
         return user;
     }
 
-    @JsonProperty("type")
     @Override
     public String getType() {
-        return TYPE;
+        return EndpointType.APP.toString();
     }
 }
