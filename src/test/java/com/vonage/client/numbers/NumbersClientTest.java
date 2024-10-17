@@ -26,6 +26,7 @@ import org.junit.jupiter.api.function.Executable;
 import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
@@ -57,7 +58,8 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
     }
 
     private void assertEqualsSampleListNumbers(Supplier<ListNumbersResponse> invocation) throws Exception {
-        int count = 127;
+        final int count = 127;
+        final UUID appId = UUID.randomUUID();
         String moHttpUrl = "https://example.com/mo", voiceCallbackValue = "sip:nexmo@example.com ",
                 json = "{\n" +
                         "  \"count\": "+count+",\n" +
@@ -73,6 +75,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                         "      ],\n" +
                         "      \"messagesCallbackType\": \"app\",\n" +
                         "      \"messagesCallbackValue\": \""+ APPLICATION_ID_STR+"\",\n" +
+                        "      \"app_id\": \""+appId+"\",\n" +
                         "      \"voiceCallbackType\": \"sip\",\n" +
                         "      \"voiceCallbackValue\": \""+voiceCallbackValue+"\"\n" +
                         "    },\n" +
@@ -113,6 +116,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
         assertEquals(CallbackType.SIP, CallbackType.fromString(main.getVoiceCallbackType()));
         assertEquals(voiceCallbackValue, main.getVoiceCallbackValue());
         assertEquals(APPLICATION_ID, main.getMessagesCallbackValue());
+        assertEquals(appId, main.getAppId());
         var last = numbers[2];
         testJsonableBaseObject(last);
         // TODO change to enum

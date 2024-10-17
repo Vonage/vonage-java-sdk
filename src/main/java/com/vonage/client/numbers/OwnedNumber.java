@@ -26,7 +26,7 @@ public class OwnedNumber extends JsonableNumber {
     private URI moHttpUrl;
     private UpdateNumberRequest.CallbackType voiceCallbackType;
     private String voiceCallbackValue;
-    private UUID messagesCallbackValue;
+    private UUID appId, messagesCallbackValue;
 
     /**
      * Constructor, not for public use.
@@ -77,6 +77,17 @@ public class OwnedNumber extends JsonableNumber {
     @JsonProperty("messagesCallbackValue")
     public UUID getMessagesCallbackValue() {
         return messagesCallbackValue;
+    }
+
+    /**
+     * ID of the application linked to this number, if applicable.
+     *
+     * @return The application UUID that this number is linked to, or {@code null} if not linked to any application.
+     * @since 8.12.0
+     */
+    @JsonProperty("app_id")
+    public UUID getAppId() {
+        return appId;
     }
 
     @Deprecated
