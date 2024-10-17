@@ -28,11 +28,13 @@ public class CreateSessionRequest implements QueryParamsRequest {
 	private final InetAddress location;
 	private final MediaMode mediaMode;
 	private final ArchiveMode archiveMode;
+	private final Boolean e2ee;
 
 	private CreateSessionRequest(Builder builder) {
 		location = builder.location;
 		archiveMode = builder.archiveMode;
 		mediaMode = builder.mediaMode;
+		e2ee = builder.e2ee;
 		if (archiveMode == ArchiveMode.ALWAYS && mediaMode != MediaMode.ROUTED) {
 		    throw new IllegalStateException("A session with automatic archiving must also have the ROUTED media mode.");
 		}
@@ -40,7 +42,7 @@ public class CreateSessionRequest implements QueryParamsRequest {
 
 	@Override
 	public Map<String, String> makeParams() {
-		Map<String, String> params = new LinkedHashMap<>(4);
+		Map<String, String> params = new LinkedHashMap<>(4, 1f);
 		if (location != null) {
 			params.put("location", location.getHostAddress());
 		}
@@ -50,13 +52,16 @@ public class CreateSessionRequest implements QueryParamsRequest {
 		if (archiveMode != null) {
 			params.put("archiveMode", getArchiveMode().toString());
 		}
+		if (e2ee != null) {
+			params.put("e2ee", e2ee.toString());
+		}
 		return params;
 	}
 
 	/**
 	 * The location hint IP address.
 	 *
-	 * @return The IP address.
+	 * @return The IP address, or {@code null} if unspecified.
 	 */
 	public InetAddress getLocation() {
 		return location;
@@ -66,7 +71,7 @@ public class CreateSessionRequest implements QueryParamsRequest {
 	 * Defines whether the session will transmit streams using the Vonage Media Server or attempt
 	 * to transmit streams directly between clients.
 	 *
-	 * @return The MediaMode.
+	 * @return The MediaMode as an enum, or {@code null} if unspecified.
 	 */
 	public MediaMode getMediaMode() {
 		return mediaMode;
@@ -76,10 +81,20 @@ public class CreateSessionRequest implements QueryParamsRequest {
 	 * Defines whether the session will be automatically archived ({@code ArchiveMode.ALWAYS})
 	 * or not ({@code ArchiveMode.MANUAL}).
 	 *
-	 * @return The ArchiveMode.
+	 * @return The ArchiveMode as an enum, or {@code null} if unspecified.
 	 */
 	public ArchiveMode getArchiveMode() {
 		return archiveMode;
+	}
+
+	/**
+	 * Defines whether the session will be end-to-end encrypted.
+	 *
+	 * @return {@code true} if end-to-end encryption is enabled, {@code null} if unspecified.
+	 * @since 8.12.0
+	 */
+	public Boolean getE2ee() {
+		return e2ee;
 	}
 
 	/**
@@ -98,6 +113,7 @@ public class CreateSessionRequest implements QueryParamsRequest {
 		private InetAddress location;
 		private MediaMode mediaMode;
 		private ArchiveMode archiveMode;
+		private Boolean e2ee;
 
 		Builder() {}
 
@@ -185,6 +201,19 @@ public class CreateSessionRequest implements QueryParamsRequest {
 		 */
 		public Builder archiveMode(ArchiveMode archiveMode) {
 			this.archiveMode = archiveMode;
+			return this;
+		}
+
+		/**
+		 * Call this method to enable end-to-end encryption for the session.
+		 *
+		 * @param e2ee Set to {@code true} to enable end-to-end encryption.
+		 *
+		 * @return This builder.
+		 * @since 8.12.0
+		 */
+		public Builder e2ee(boolean e2ee) {
+			this.e2ee = e2ee;
 			return this;
 		}
 

@@ -316,6 +316,11 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 	@Test
 	public void testCreateSession() throws Exception {
 		CreateSessionRequest request = CreateSessionRequest.builder().build();
+		assertNull(request.getLocation());
+		assertNull(request.getMediaMode());
+		assertNull(request.getArchiveMode());
+		assertNull(request.getE2ee());
+
 		String msUrl = "http://example.com/resource",
 			createDt = "abc123",
 			responseJson = "[{\n" +
@@ -990,8 +995,10 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 			@Override
 			protected CreateSessionRequest sampleRequest() {
 				return CreateSessionRequest.builder()
-						.mediaMode(MediaMode.ROUTED).location("192.168.1.2")
-						.archiveMode(ArchiveMode.ALWAYS).build();
+						.mediaMode(MediaMode.ROUTED)
+						.location("192.168.1.2")
+						.archiveMode(ArchiveMode.ALWAYS)
+						.e2ee(true).build();
 			}
 
 			@Override
@@ -1001,11 +1008,14 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 				assertEquals("disabled", mediaMode);
 				String archiveMode = request.getArchiveMode().toString();
 				assertEquals("always", archiveMode);
+				Boolean e2ee = request.getE2ee();
+				assertEquals(true, e2ee);
 
-				Map<String, String> params = new LinkedHashMap<>(4);
+				Map<String, String> params = new LinkedHashMap<>(8);
 				params.put("location", request.getLocation().getHostAddress());
 				params.put("p2p.preference", mediaMode);
 				params.put("archiveMode", archiveMode);
+				params.put("e2ee", e2ee.toString());
 				return params;
 			}
 		}
