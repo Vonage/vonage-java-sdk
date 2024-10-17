@@ -27,7 +27,7 @@ public abstract class ViberRequest extends MessageRequest {
 	protected ViberRequest(Builder<?, ?> builder, MessageType messageType) {
 		super(builder, Channel.VIBER, messageType);
 		viberService = ViberService.construct(
-				builder.category, ttl, builder.viberType,
+				builder.category, builder.ttl, builder.viberType,
 				Action.construct(builder.actionUrl, builder.actionText),
 				builder.duration, builder.fileSize
 		);
@@ -52,7 +52,7 @@ public abstract class ViberRequest extends MessageRequest {
 	@SuppressWarnings("unchecked")
 	protected abstract static class Builder<M extends ViberRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
 		protected Category category;
-		protected Integer duration, fileSize;
+		protected Integer duration, fileSize, ttl;
 		protected String viberType, actionUrl, actionText;
 
 		/**
@@ -78,7 +78,8 @@ public abstract class ViberRequest extends MessageRequest {
 		 */
 		@Override
 		public B ttl(int ttl) {
-			return super.ttl(ttl);
+			this.ttl = ttl;
+			return (B) this;
 		}
 
 		/**
