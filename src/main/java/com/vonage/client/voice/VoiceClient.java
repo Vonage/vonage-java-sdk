@@ -482,7 +482,7 @@ public class VoiceClient {
     }
 
     /**
-     * Add a listener for asynchronous DTMF events sent by a caller to an
+     * Register a listener for asynchronous DTMF events sent by a caller to an
      * {@linkplain com.vonage.client.voice.ncco.InputAction} NCCO action, when the
      * {@linkplain com.vonage.client.voice.ncco.InputAction.Builder#mode(InputMode)} is
      * {@link com.vonage.client.voice.ncco.InputMode#ASYNCHRONOUS}.
@@ -502,7 +502,7 @@ public class VoiceClient {
     }
 
     /**
-     * Remove the listener for asynchronous DTMF events sent by a caller to an
+     * Stop receiving updates for asynchronous DTMF events sent by a caller to an
      * {@linkplain com.vonage.client.voice.ncco.InputAction} NCCO, when the
      * {@linkplain com.vonage.client.voice.ncco.InputAction.Builder#mode(InputMode)} is
      * {@link com.vonage.client.voice.ncco.InputMode#ASYNCHRONOUS}. Calling this method

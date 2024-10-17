@@ -473,7 +473,7 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
 
             @Override
             protected String sampleRequestBodyString() {
-                return "{\"eventUrl\":[\""+url+"\"]}";
+                return "{\"event_url\":[\""+url+"\"]}";
             }
         }
         .runTests();

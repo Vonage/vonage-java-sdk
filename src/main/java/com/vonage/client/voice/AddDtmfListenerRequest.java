@@ -24,7 +24,7 @@ import java.util.Collections;
 
 class AddDtmfListenerRequest extends JsonableBaseObject {
     @JsonIgnore final String uuid;
-    @JsonProperty("eventUrl") final Collection<URI> eventUrl;
+    @JsonProperty("event_url") final Collection<URI> eventUrl;
 
     public AddDtmfListenerRequest(String uuid, URI eventUrl) {
         this.uuid = uuid;
