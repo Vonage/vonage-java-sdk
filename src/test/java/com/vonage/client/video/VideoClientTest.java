@@ -276,6 +276,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 		assertEquals(UUID.fromString(renderId), response.getId());
 		assertEquals(UUID.fromString(streamId), response.getStreamId());
 		assertEquals(UUID.fromString(applicationId), response.getApplicationId());
+		assertEquals(renderName, response.getName());
 		assertEquals(RenderStatus.STARTING, response.getStatus());
 		assertEquals(Resolution.SD_LANDSCAPE, response.getResolution());
 		assertEquals(1437676551000L, response.getCreatedAt());

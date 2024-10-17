@@ -28,7 +28,7 @@ import java.util.UUID;
  */
 public class RenderResponse extends JsonableBaseObject {
 	private UUID id, applicationId, streamId;
-	private String sessionId, reason;
+	private String sessionId, name, reason;
 	private Long createdAt, updatedAt;
 	private URI url, callbackUrl;
 	private Resolution resolution;
@@ -138,6 +138,17 @@ public class RenderResponse extends JsonableBaseObject {
 	@JsonProperty("streamId")
 	public UUID getStreamId() {
 		return streamId;
+	}
+
+	/**
+	 * Name of the composed output stream which is published to the session.
+	 *
+	 * @return The render name.
+	 * @since 8.12.0
+	 */
+	@JsonProperty("name")
+	public String getName() {
+		return name;
 	}
 
 	/**
