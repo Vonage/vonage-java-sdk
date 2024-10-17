@@ -2,12 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.12.0] - 2024-10-17
+# [8.12.0] - 2024-10-21
 - Added `network_apis` capability to Application API
 - Added `mode` property to `InputAction` NCCO
 - Refactored `InputAction.Builder` and added constructor validation
 - Added `endpoint_type` to `AnswerWebhook`
 - Added `@JsonCreator` annotation to webhook classes' `fromJson(String)` method
+- Added `app_id` to `com.vonage.client.numbers.OwnedNumber`
+- Fixed Viber Video message TTL field being set incorrectly
+- Added end-to-end encryption support for Video sessions
+- Added `leg_persistence_time` to Application Voice capability
+- Added `signed_callbacks` to Application RTC capability
+- Added `name` field to `com.vonage.client.video.RenderResponse`
 
 # [8.11.0] - 2024-09-25
 - Added custom user agent property setting to `HttpConfig`
