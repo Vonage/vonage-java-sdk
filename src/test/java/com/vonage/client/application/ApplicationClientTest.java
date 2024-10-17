@@ -57,6 +57,7 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
             "      \"payment_enabled\": false,\n" +
             "      \"signed_callbacks\": true,\n" +
             "      \"conversations_ttl\": 24,\n" +
+            "      \"leg_persistence_time\": 7,\n" +
             "      \"region\": \"eu-west\",\n" +
             "      \"payments\": {\n" +
             "        \"gateways\": []\n" +
@@ -130,6 +131,7 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
         assertEquals(3000, fallback.getSocketTimeout().intValue());
         assertEquals(Region.EU_WEST, voice.getRegion());
         assertEquals(24, voice.getConversationsTtl().intValue());
+        assertEquals(7, voice.getLegPersistenceTime().intValue());
         assertTrue(voice.getSignedCallbacks());
 
         Messages message = capabilities.getMessages();

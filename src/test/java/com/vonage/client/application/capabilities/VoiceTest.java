@@ -30,6 +30,10 @@ public class VoiceTest {
 
         assertEquals(Capability.Type.VOICE, voice.getType());
         assertNull(voice.getWebhooks());
+        assertNull(voice.getRegion());
+        assertNull(voice.getSignedCallbacks());
+        assertNull(voice.getConversationsTtl());
+        assertNull(voice.getLegPersistenceTime());
     }
 
     @Test
@@ -70,11 +74,15 @@ public class VoiceTest {
                 .addWebhook(Webhook.Type.ANSWER, new Webhook("https://example.com/answer", HttpMethod.POST))
                 .addWebhook(Webhook.Type.EVENT, new Webhook("https://example.com/event", HttpMethod.GET))
                 .removeWebhook(Webhook.Type.ANSWER)
+                .legPersistenceTime(3).signedCallbacks(false)
                 .build();
 
         assertEquals(Capability.Type.VOICE, voice.getType());
         assertEquals("https://example.com/event", voice.getWebhooks().get(Webhook.Type.EVENT).getAddress());
         assertEquals(HttpMethod.GET, voice.getWebhooks().get(Webhook.Type.EVENT).getMethod());
+        assertNull(voice.getWebhooks().get(Webhook.Type.ANSWER));
+        assertEquals(3, voice.getLegPersistenceTime());
+        assertFalse(voice.getSignedCallbacks());
     }
 
     @Test
@@ -119,13 +127,18 @@ public class VoiceTest {
     @Test
     public void testSerializeAdditionalFields() {
         Voice request = Voice.builder()
-                .conversationsTtl(51).signedCallbacks(false).region(Region.APAC_SNG).build();
+                .conversationsTtl(51)
+                .signedCallbacks(false)
+                .region(Region.APAC_SNG)
+                .legPersistenceTime(14)
+                .build();
 
         class Internal implements Jsonable {
             @JsonProperty final Voice voice = request;
         }
         String expectedJson = "{\"voice\":{" +
-                "\"region\":\"apac-sng\",\"signed_callbacks\":false,\"conversations_ttl\":51}}";
+                "\"region\":\"apac-sng\",\"signed_callbacks\":false,\"conversations_ttl\":51" +
+                ",\"leg_persistence_time\":14}}";
         assertEquals(expectedJson, new Internal().toJson());
     }
 
@@ -136,5 +149,14 @@ public class VoiceTest {
         assertEquals(max, Voice.builder().conversationsTtl(max).build().getConversationsTtl());
         assertThrows(IllegalArgumentException.class, () -> Voice.builder().conversationsTtl(min-1).build());
         assertThrows(IllegalArgumentException.class, () -> Voice.builder().conversationsTtl(max+1).build());
+    }
+
+    @Test
+    public void testLegPersistenceTimeBounds() {
+        Integer min = 0, max = 31;
+        assertEquals(min, Voice.builder().legPersistenceTime(min).build().getLegPersistenceTime());
+        assertEquals(max, Voice.builder().legPersistenceTime(max).build().getLegPersistenceTime());
+        assertThrows(IllegalArgumentException.class, () -> Voice.builder().legPersistenceTime(min-1).build());
+        assertThrows(IllegalArgumentException.class, () -> Voice.builder().legPersistenceTime(max+1).build());
     }
 }

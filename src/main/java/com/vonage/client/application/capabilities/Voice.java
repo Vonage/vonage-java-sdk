@@ -24,7 +24,7 @@ import com.vonage.client.common.Webhook;
 public final class Voice extends Capability {
     private Region region;
     private Boolean signedCallbacks;
-    private Integer conversationsTtl;
+    private Integer conversationsTtl, legPersistenceTime;
 
     private Voice() {
     }
@@ -35,6 +35,9 @@ public final class Voice extends Capability {
         signedCallbacks = builder.signedCallbacks;
         if ((conversationsTtl = builder.conversationsTtl) != null && (conversationsTtl < 0 || conversationsTtl > 744)) {
             throw new IllegalArgumentException("Conversations TTL cannot be negative.");
+        }
+        if ((legPersistenceTime = builder.legPersistenceTime) != null && (legPersistenceTime < 0 || legPersistenceTime > 31)) {
+            throw new IllegalArgumentException("Leg persistence time must be positive and less than 31 days.");
         }
     }
 
@@ -77,6 +80,18 @@ public final class Voice extends Capability {
         return conversationsTtl;
     }
 
+    /**
+     * Persistence duration for conversation legs, in days. Maximum value is 31, default is 7.
+     *
+     * @return The leg persistence time in dats as an integer, or {@code null} if unknown.
+     *
+     * @since 8.12.0
+     */
+    @JsonProperty("leg_persistence_time")
+    public Integer getLegPersistenceTime() {
+        return legPersistenceTime;
+    }
+
     @Override
     public Type getType() {
         return Type.VOICE;
@@ -94,7 +109,7 @@ public final class Voice extends Capability {
     public static class Builder extends Capability.Builder<Voice, Builder> {
         private Region region;
         private Boolean signedCallbacks;
-        private Integer conversationsTtl;
+        private Integer conversationsTtl, legPersistenceTime;
 
         /**
          * Selecting a region means all inbound, programmable SIP and SIP connect calls will be sent to the selected
@@ -137,6 +152,19 @@ public final class Voice extends Capability {
          */
         public Builder conversationsTtl(int ttl) {
             this.conversationsTtl = ttl;
+            return this;
+        }
+
+        /**
+         * Persistence duration for conversation legs, in days. Maximum value is 31, default is 7.
+         *
+         * @param legPersistenceTime The leg persistence time in days.
+         *
+         * @return This builder.
+         * @since 8.12.0
+         */
+        public Builder legPersistenceTime(int legPersistenceTime) {
+            this.legPersistenceTime = legPersistenceTime;
             return this;
         }
 
