@@ -27,14 +27,18 @@ public class RtcTest {
 
         assertEquals(Capability.Type.RTC, rtc.getType());
         assertNull(rtc.getWebhooks());
+        assertNull(rtc.getSignedCallbacks());
     }
 
     @Test
     public void testEventWebhook() {
-        Rtc rtc = Rtc.builder().addWebhook(Webhook.Type.EVENT, new Webhook("https://example.com/event", HttpMethod.GET)).build();
+        Rtc rtc = Rtc.builder()
+                .addWebhook(Webhook.Type.EVENT, new Webhook("https://example.com/event", HttpMethod.GET))
+                .signedCallbacks(true).build();
 
         assertEquals(Capability.Type.RTC, rtc.getType());
         assertEquals("https://example.com/event", rtc.getWebhooks().get(Webhook.Type.EVENT).getAddress());
+        assertTrue(rtc.getSignedCallbacks());
         assertEquals(HttpMethod.GET, rtc.getWebhooks().get(Webhook.Type.EVENT).getMethod());
     }
 
@@ -43,9 +47,10 @@ public class RtcTest {
         Rtc rtc = Rtc.builder()
                 .addWebhook(Webhook.Type.EVENT, new Webhook("https://example.com/event", HttpMethod.POST))
                 .removeWebhook(Webhook.Type.EVENT)
-                .build();
+                .signedCallbacks(false).build();
 
         assertEquals(Capability.Type.RTC, rtc.getType());
+        assertFalse(rtc.getSignedCallbacks());
         assertNull(rtc.getWebhooks());
     }
 }

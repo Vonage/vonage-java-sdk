@@ -84,7 +84,8 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
             "          \"address\": \"https://example.com/webhooks/event\",\n" +
             "          \"http_method\": \"POST\"\n" +
             "        }\n" +
-            "      }\n" +
+            "      },\n" +
+            "      \"signed_callbacks\": true\n" +
             "    },\n" +
             "    \"vbc\": {},\n" +
             "    \"verify\": {\n" +
@@ -147,6 +148,7 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
         assertEquals(Capability.Type.RTC, rtc.getType());
         assertEquals("https://example.com/webhooks/event", rtc.getWebhooks().get(Webhook.Type.EVENT).getAddress());
         assertEquals(HttpMethod.POST, rtc.getWebhooks().get(Webhook.Type.EVENT).getMethod());
+        assertTrue(rtc.getSignedCallbacks());
 
         Vbc vbc = capabilities.getVbc();
         assertEquals(Capability.Type.VBC, vbc.getType());

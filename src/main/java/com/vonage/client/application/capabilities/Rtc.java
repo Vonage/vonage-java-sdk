@@ -15,23 +15,38 @@
  */
 package com.vonage.client.application.capabilities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.common.Webhook;
 
 /**
  * Rtc capability configuration settings.
  */
 public final class Rtc extends Capability {
+    private Boolean signedCallbacks;
 
     private Rtc() {
     }
 
     private Rtc(Builder builder) {
         super(builder);
+        this.signedCallbacks = builder.signedCallbacks;
     }
 
     @Override
     public Type getType() {
         return Type.RTC;
+    }
+
+    /**
+     * Whether to use signed webhooks. This is a way of verifying that the request is coming from Vonage.
+     *
+     * @return {@code true} if signed webhooks are used, {@code false} if not and {@code null} if unknown.
+     *
+     * @since 8.12.0
+     */
+    @JsonProperty("signed_callbacks")
+    public Boolean getSignedCallbacks() {
+        return signedCallbacks;
     }
 
     /**
@@ -44,6 +59,28 @@ public final class Rtc extends Capability {
     }
 
     public static class Builder extends Capability.Builder<Rtc, Builder> {
+        private Boolean signedCallbacks;
+
+        /**
+         * Constructs a new Builder.
+         *
+         * @deprecated Use {@link #builder()} instead. This constructor will be made private in a future release.
+         */
+        @Deprecated
+        public Builder() {
+        }
+
+        /**
+         * Set whether to use signed webhooks. This is a way of verifying that the request is coming from Vonage.
+         *
+         * @param signedCallbacks {@code true} if signed webhooks should be used.
+         * @return This builder.
+         * @since 8.12.0
+         */
+        public Builder signedCallbacks(boolean signedCallbacks) {
+            this.signedCallbacks = signedCallbacks;
+            return this;
+        }
 
         @Override
         public Builder addWebhook(Webhook.Type type, Webhook webhook) {
