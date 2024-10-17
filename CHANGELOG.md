@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.12.0] - 2024-10-??
+# [8.12.0] - 2024-10-17
 - Added `network_apis` capability to Application API
 - Added `mode` property to `InputAction` NCCO
 - Refactored `InputAction.Builder` and added constructor validation
