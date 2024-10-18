@@ -24,7 +24,6 @@ import com.vonage.client.JsonableBaseObject;
  * @since 7.3.0
  */
 public class VbcEndpoint extends JsonableBaseObject implements Endpoint {
-    private static final String TYPE = "vbc";
     private String extension;
 
     protected VbcEndpoint() {
@@ -52,6 +51,6 @@ public class VbcEndpoint extends JsonableBaseObject implements Endpoint {
     @JsonProperty("type")
     @Override
     public String getType() {
-        return TYPE;
+        return EndpointType.VBC.toString();
     }
 }

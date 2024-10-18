@@ -27,7 +27,6 @@ import java.util.Map;
  * Endpoint for connecting to a SIP URI.
  */
 public class SipEndpoint extends JsonableBaseObject implements Endpoint {
-    private static final String TYPE = "sip";
     private String uri;
     private Map<String, ?> headers;
     private Map<SipHeader, String> standardHeaders;
@@ -92,10 +91,9 @@ public class SipEndpoint extends JsonableBaseObject implements Endpoint {
         return uri;
     }
 
-    @JsonProperty("type")
     @Override
     public String getType() {
-        return TYPE;
+        return EndpointType.SIP.toString();
     }
 
     /**

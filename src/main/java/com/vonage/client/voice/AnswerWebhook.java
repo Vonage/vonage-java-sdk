@@ -32,6 +32,7 @@ import java.util.UUID;
  * @since 8.2.0
  */
 public class AnswerWebhook extends JsonableBaseObject {
+    @JsonProperty("endpoint_type") private EndpointType endpointType;
     @JsonProperty("from") private String from;
     @JsonProperty("from_user") private String fromUser;
     @JsonProperty("to") private String to;
@@ -41,6 +42,16 @@ public class AnswerWebhook extends JsonableBaseObject {
     @JsonProperty("custom_data") private Map<String, ?> customData;
 
     protected AnswerWebhook() {}
+
+    /**
+     * The type of endpoint that answered the call.
+     *
+     * @return The endpoint type as an enum, or {@code null} if unknown.
+     * @since 8.12.0
+     */
+    public EndpointType getEndpointType() {
+        return endpointType;
+    }
 
     /**
      * The user or number that answered the call. This is the virtual number linked to in your application.

@@ -17,6 +17,7 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.voice.EndpointType;
 
 /**
  * Represents an app endpoint used in a {@link ConnectAction}. See
@@ -26,18 +27,15 @@ import com.vonage.client.JsonableBaseObject;
  * @since 5.4.0
  */
 public class AppEndpoint extends JsonableBaseObject implements Endpoint {
-    private static final String TYPE = "app";
-
     private final String user;
 
     private AppEndpoint(Builder builder) {
         this.user = builder.user;
     }
 
-    @JsonProperty("type")
     @Override
     public String getType() {
-        return TYPE;
+        return EndpointType.APP.toString();
     }
 
     /**

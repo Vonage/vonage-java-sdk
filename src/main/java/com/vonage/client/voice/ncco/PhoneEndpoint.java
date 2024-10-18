@@ -17,6 +17,7 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.voice.EndpointType;
 
 /**
  * Represents a phone endpoint used in a {@link ConnectAction}. See
@@ -24,8 +25,6 @@ import com.vonage.client.JsonableBaseObject;
  * for an example.
  */
 public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
-    private static final String TYPE = "phone";
-
     private final String number, dtmfAnswer;
     private final OnAnswer onAnswer;
 
@@ -35,10 +34,9 @@ public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
         this.onAnswer = (builder.onAnswerUrl != null) ? new OnAnswer(builder.onAnswerUrl, builder.onAnswerRingback) : null;
     }
 
-    @JsonProperty("type")
     @Override
     public String getType() {
-        return TYPE;
+        return EndpointType.PHONE.toString();
     }
 
     /**

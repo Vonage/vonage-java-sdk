@@ -13,15 +13,32 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.voice.ncco;
+package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * An endpoint for a {@link ConnectAction} to connect to.
+ * Represents the various types of call endpoints supported by the Voice API.
+ *
+ * @since 8.12.0
  */
-public interface Endpoint {
+public enum EndpointType {
+    PHONE,
+    SIP,
+    WEBSOCKET,
+    APP,
+    VBC;
 
-    @JsonProperty("type")
-    String getType();
+    @JsonValue
+    @Override
+    public String toString() {
+        return name().toLowerCase();
+    }
+
+    @JsonCreator
+    public static EndpointType fromString(String name) {
+        if (name == null) return null;
+        return EndpointType.valueOf(name.toUpperCase());
+    }
 }

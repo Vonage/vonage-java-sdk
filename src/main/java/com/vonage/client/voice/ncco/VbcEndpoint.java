@@ -17,6 +17,7 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.voice.EndpointType;
 
 /**
  * Represents a VBC endpoint used in a {@link ConnectAction}. See
@@ -26,8 +27,6 @@ import com.vonage.client.JsonableBaseObject;
  * @since 7.3.0
  */
 public class VbcEndpoint extends JsonableBaseObject implements Endpoint {
-    private static final String TYPE = "vbc";
-
     private final String extension;
 
     private VbcEndpoint(Builder builder) {
@@ -44,10 +43,9 @@ public class VbcEndpoint extends JsonableBaseObject implements Endpoint {
         return extension;
     }
 
-    @JsonProperty("type")
     @Override
     public String getType() {
-        return TYPE;
+        return EndpointType.VBC.toString();
     }
 
     /**

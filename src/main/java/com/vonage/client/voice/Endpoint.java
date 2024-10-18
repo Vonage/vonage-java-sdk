@@ -15,6 +15,8 @@
  */
 package com.vonage.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -37,6 +39,7 @@ public interface Endpoint {
      *
      * @return The type of endpoint as a string.
      */
+    @JsonProperty("type")
     String getType();
 
     /**
@@ -45,6 +48,7 @@ public interface Endpoint {
      * @return String representation of the object.
      * @deprecated This method will be removed in the next major release.
      */
+    @JsonIgnore
     @Deprecated
     String toLog();
 }
