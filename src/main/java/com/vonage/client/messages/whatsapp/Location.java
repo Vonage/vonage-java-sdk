@@ -39,12 +39,12 @@ public final class Location extends JsonableBaseObject {
 		address = builder.address;
 	}
 
-	@JsonProperty("lat")
+	@JsonProperty("latitude")
 	public double getLatitude() {
 		return latitude;
 	}
 
-	@JsonProperty("long")
+	@JsonProperty("longitude")
 	public double getLongitude() {
 		return longitude;
 	}
