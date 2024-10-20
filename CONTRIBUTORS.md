@@ -37,3 +37,4 @@ documentation, or tests are eligible to be added to this list.
 - Joakim Waltersson ([@jwalter](https://github.com/jwalter))
 - Mofi Rahman ([@moficodes](https://github.com/moficodes))
 - Sina Madani ([@SMadani](https://github.com/SMadani))
+- Jeremy Chan ([@jeremychan](https://github.com/jeremychan))
