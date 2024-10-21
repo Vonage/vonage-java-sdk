@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
 public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
-    private static final String TYPE = "phone";
     private String number, dtmfAnswer;
 
     PhoneEndpoint() {}
@@ -46,10 +45,9 @@ public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
         this.dtmfAnswer = dtmfAnswer;
     }
 
-    @JsonProperty("type")
     @Override
     public String getType() {
-        return TYPE;
+        return EndpointType.PHONE.toString();
     }
 
     @Override

@@ -15,7 +15,7 @@
  */
 package com.vonage.client.voice;
 
-import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.net.URI;
@@ -26,19 +26,20 @@ public class AnswerWebhookTest {
     @Test
     public void testSerdesAllParams() {
         String regionUrl = "https://api-us-3.vonage.com",
-                to = "442079460000", fromUser = "client",
+                endpointType = "phone", to = "442079460000",
                 conversationId = "CON-55d50a94-7c84-484a-b1b7-f27633133cb4",
                 uuid = "f7aebf19-bd37-4d63-8f35-32352f48901b",
                 from = "447700900000", json = "{\n" +
                     "  \"to\": \""+to+"\",\n" +
                     "  \"from\": \""+from+"\",\n" +
-                    "  \"from_user\": \""+fromUser+"\",\n" +
+                    "  \"endpoint_type\": \""+endpointType+"\",\n" +
                     "  \"conversation_uuid\": \""+conversationId+"\",\n" +
                     "  \"region_url\": \""+regionUrl+"\",\n" +
                     "  \"uuid\": \""+uuid+"\"\n}";
 
         AnswerWebhook parsed = AnswerWebhook.fromJson(json);
-        TestUtils.testJsonableBaseObject(parsed);
+        testJsonableBaseObject(parsed);
+        assertEquals(EndpointType.PHONE, parsed.getEndpointType());
         assertEquals(to, parsed.getTo());
         assertEquals(from, parsed.getFrom());
         assertEquals(conversationId, parsed.getConversationUuid());
@@ -50,8 +51,9 @@ public class AnswerWebhookTest {
     public void testFromUserOnly() {
         String fromUser = "client", json = "{\"from_user\":\""+fromUser+"\"}";
         AnswerWebhook parsed = AnswerWebhook.fromJson(json);
-        TestUtils.testJsonableBaseObject(parsed);
+        testJsonableBaseObject(parsed);
         assertEquals(fromUser, parsed.getFrom());
+        assertNull(parsed.getEndpointType());
         assertNull(parsed.getTo());
         assertNull(parsed.getUuid());
         assertNull(parsed.getConversationUuid());

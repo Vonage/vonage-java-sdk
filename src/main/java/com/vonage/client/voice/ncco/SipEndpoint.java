@@ -17,6 +17,7 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.voice.EndpointType;
 import com.vonage.client.voice.SipHeader;
 import java.net.URI;
 import java.util.LinkedHashMap;
@@ -28,8 +29,6 @@ import java.util.Map;
  * for an example.
  */
 public class SipEndpoint extends JsonableBaseObject implements Endpoint {
-    private static final String TYPE = "sip";
-
     private final URI uri;
     private final Map<String, ?> headers;
     private final Map<SipHeader, String> standardHeaders;
@@ -40,10 +39,9 @@ public class SipEndpoint extends JsonableBaseObject implements Endpoint {
         standardHeaders = builder.standardHeaders;
     }
 
-    @JsonProperty("type")
     @Override
     public String getType() {
-        return TYPE;
+        return EndpointType.SIP.toString();
     }
 
     /**

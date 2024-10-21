@@ -13,15 +13,21 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.voice.ncco;
+package com.vonage.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
+import java.net.URI;
+import java.util.Collection;
+import java.util.Collections;
 
-/**
- * An endpoint for a {@link ConnectAction} to connect to.
- */
-public interface Endpoint {
+class AddDtmfListenerRequest extends JsonableBaseObject {
+    @JsonIgnore final String uuid;
+    @JsonProperty("event_url") final Collection<URI> eventUrl;
 
-    @JsonProperty("type")
-    String getType();
+    public AddDtmfListenerRequest(String uuid, URI eventUrl) {
+        this.uuid = uuid;
+        this.eventUrl = Collections.singletonList(eventUrl);
+    }
 }

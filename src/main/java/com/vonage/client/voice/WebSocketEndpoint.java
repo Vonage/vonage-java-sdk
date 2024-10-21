@@ -20,7 +20,6 @@ import com.vonage.client.JsonableBaseObject;
 import java.util.Map;
 
 public class WebSocketEndpoint extends JsonableBaseObject implements Endpoint {
-    private static final String TYPE = "websocket";
     private String uri, contentType;
     @JsonProperty("headers") private Map<String, Object> headers;
 
@@ -33,10 +32,9 @@ public class WebSocketEndpoint extends JsonableBaseObject implements Endpoint {
         this.headers = headers;
     }
 
-    @JsonProperty("type")
     @Override
     public String getType() {
-        return TYPE;
+        return EndpointType.WEBSOCKET.toString();
     }
 
     @Override
