@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added `@JsonCreator` annotation to webhook classes' `fromJson(String)` method
 - Added `app_id` to `com.vonage.client.numbers.OwnedNumber`
 - Fixed Viber Video message TTL field being set incorrectly
+- Fixed incorrect serialisation of outbound WhatsApp Location message
 - Added end-to-end encryption support for Video sessions
 - Added `leg_persistence_time` to Application Voice capability
 - Added `signed_callbacks` to Application RTC capability

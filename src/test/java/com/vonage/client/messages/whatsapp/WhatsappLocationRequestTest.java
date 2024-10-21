@@ -30,7 +30,8 @@ public class WhatsappLocationRequestTest {
 				.longitude(longitude).latitude(latitude)
 				.build().toJson();
 		assertTrue(json.contains("\"custom\":{\"type\":\"location\",\"location\":{" +
-				"\"lat\":"+latitude+",\"long\":"+longitude+",\"name\":\""+name+"\",\"address\":\""+address+"\"}}"
+				"\"latitude\":"+latitude+",\"longitude\":"+longitude+
+				",\"name\":\""+name+"\",\"address\":\""+address+"\"}}"
 		));
 		assertTrue(json.contains("\"message_type\":\"custom\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
@@ -42,7 +43,7 @@ public class WhatsappLocationRequestTest {
 				.longitude(51.5216317).latitude(-0.0890882)
 				.from("317900000002").to("447900000001")
 				.build().toJson();
-		assertTrue(json.contains("\"location\":{\"lat\":-0.0890882,\"long\":51.5216317}"));
+		assertTrue(json.contains("\"location\":{\"latitude\":-0.0890882,\"longitude\":51.5216317}"));
 		assertTrue(json.contains("\"message_type\":\"custom\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 	}

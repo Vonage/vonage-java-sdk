@@ -15,6 +15,7 @@
  */
 package com.vonage.client.messages.whatsapp;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
@@ -39,12 +40,14 @@ public final class Location extends JsonableBaseObject {
 		address = builder.address;
 	}
 
-	@JsonProperty("lat")
+	@JsonAlias("lat")
+	@JsonProperty("latitude")
 	public double getLatitude() {
 		return latitude;
 	}
 
-	@JsonProperty("long")
+	@JsonAlias("long")
+	@JsonProperty("longitude")
 	public double getLongitude() {
 		return longitude;
 	}
