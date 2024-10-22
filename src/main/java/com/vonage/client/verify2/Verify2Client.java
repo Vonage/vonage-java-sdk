@@ -29,7 +29,13 @@ public class Verify2Client {
 	final boolean hasJwtAuthMethod;
 	final RestEndpoint<VerificationRequest, VerificationResponse> verifyUser;
 	final RestEndpoint<VerifyCodeRequestWrapper, VerifyCodeResponse> verifyRequest;
-	final RestEndpoint<UUID, Void> cancel, nextWorkflow;
+	final RestEndpoint<UUID, Void> cancel, nextWorkflow, deleteTemplate;
+	final RestEndpoint<ListTemplatesRequest, ListTemplatesResponse> listTemplates;
+	final RestEndpoint<UUID, Template> getTemplate;
+	final RestEndpoint<Template, Template> createTemplate, updateTemplate;
+	final RestEndpoint<ListTemplatesRequest, ListTemplateFragmentsResponse> listFragments;
+	final RestEndpoint<TemplateFragment, TemplateFragment> getFragment, createFragment, updateFragment;
+	final RestEndpoint<TemplateFragment, Void> deleteFragment;
 
 	/**
 	 * Create a new Verify2Client.
@@ -57,11 +63,43 @@ public class Verify2Client {
 		verifyUser = new Endpoint<>(null, HttpMethod.POST);
 		verifyRequest = new Endpoint<>(req -> req.requestId, HttpMethod.POST);
 		cancel = new Endpoint<>(UUID::toString, HttpMethod.DELETE);
-		nextWorkflow = new Endpoint<>(req -> req + "/next-workflow", HttpMethod.POST);
+		nextWorkflow = new Endpoint<>(id -> id + "/next-workflow", HttpMethod.POST);
+
+		final String templatesBase = "templates";
+		listTemplates = new Endpoint<>(__ -> templatesBase, HttpMethod.GET);
+		getTemplate = new Endpoint<>(id -> templatesBase+'/'+id, HttpMethod.GET);
+		createTemplate = new Endpoint<>(__ -> templatesBase, HttpMethod.POST);
+		updateTemplate = new Endpoint<>(req -> templatesBase+'/'+req.getId(), HttpMethod.PATCH);
+		deleteTemplate = new Endpoint<>(id -> templatesBase+'/'+id, HttpMethod.DELETE);
+
+		final String fragmentsBase = "/template_fragments";
+		listFragments = new Endpoint<>(req -> templatesBase+'/'+req.templateId+'/'+fragmentsBase, HttpMethod.GET);
+		getFragment = new Endpoint<>(req ->
+				templatesBase+'/'+req.templateId+'/'+fragmentsBase+'/'+req.fragmentId, HttpMethod.GET
+		);
+		createFragment = new Endpoint<>(req -> templatesBase+'/'+req.templateId+'/'+fragmentsBase, HttpMethod.POST);
+		updateFragment = new Endpoint<>(req ->
+				templatesBase+'/'+req.templateId+'/'+fragmentsBase+'/'+req.fragmentId, HttpMethod.PATCH
+		);
+		deleteFragment = new Endpoint<>(req ->
+				templatesBase+'/'+req.templateId+'/'+fragmentsBase+'/'+req.fragmentId, HttpMethod.DELETE
+		);
+	}
+
+	private UUID validateId(String name, UUID id) {
+		return Objects.requireNonNull(id, name + " ID is required.");
 	}
 
 	private UUID validateRequestId(UUID requestId) {
-		return Objects.requireNonNull(requestId, "Request ID is required.");
+		return validateId("Request", requestId);
+	}
+
+	private UUID validateTemplateId(UUID templateId) {
+		return validateId("Template", templateId);
+	}
+
+	private UUID validateFragmentId(UUID fragmentId) {
+		return validateId("Fragment", fragmentId);
 	}
 
 	/**
@@ -154,5 +192,57 @@ public class Verify2Client {
 	 */
 	public void nextWorkflow(UUID requestId) {
 		nextWorkflow.execute(validateRequestId(requestId));
+	}
+
+	public Template createTemplate(String name) {
+		return createTemplate.execute(new Template(Objects.requireNonNull(name, "Name is required."), null));
+	}
+
+	public ListTemplatesResponse listTemplates(Integer page, Integer pageSize) {
+		return listTemplates.execute(new ListTemplatesRequest(page, pageSize, null));
+	}
+
+	public Template getTemplate(UUID templateId) {
+		return getTemplate.execute(validateTemplateId(templateId));
+	}
+
+	public Template updateTemplate(UUID templateId, String name, Boolean isDefault) {
+		Template template = new Template(name, isDefault);
+		template.id = validateTemplateId(templateId);
+		return updateTemplate.execute(template);
+	}
+
+	public void deleteTemplate(UUID templateId) {
+		deleteTemplate.execute(validateTemplateId(templateId));
+	}
+
+	public TemplateFragment createFragment(UUID templateId, TemplateFragment fragment) {
+		Objects.requireNonNull(fragment, "Template fragment is required.").templateId = validateTemplateId(templateId);
+		return createFragment.execute(fragment);
+	}
+
+	public ListTemplateFragmentsResponse listFragments(UUID templateId, Integer page, Integer pageSize) {
+		return listFragments.execute(new ListTemplatesRequest(page, pageSize, validateTemplateId(templateId)));
+	}
+
+	public TemplateFragment getFragment(UUID templateId, UUID fragmentId) {
+		TemplateFragment fragment = new TemplateFragment();
+		fragment.templateId = validateTemplateId(templateId);
+		fragment.fragmentId = validateFragmentId(fragmentId);
+		return getFragment.execute(fragment);
+	}
+
+	public TemplateFragment updateFragment(UUID templateId, UUID fragmentId, String text) {
+		TemplateFragment fragment = new TemplateFragment(text);
+		fragment.templateId = validateTemplateId(templateId);
+		fragment.fragmentId = validateFragmentId(fragmentId);
+		return updateFragment.execute(fragment);
+	}
+
+	public void deleteFragment(UUID templateId, UUID fragmentId) {
+		TemplateFragment fragment = new TemplateFragment();
+		fragment.templateId = validateTemplateId(templateId);
+		fragment.fragmentId = validateFragmentId(fragmentId);
+		deleteFragment.execute(fragment);
 	}
 }

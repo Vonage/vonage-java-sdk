@@ -28,8 +28,8 @@ import java.util.regex.Pattern;
 public final class Template extends JsonableBaseObject {
 	private static final Pattern NAME_REGEX = Pattern.compile("^[a-zA-Z0-9_\\-]+$");
 	private String name;
-	private UUID id;
 	private Boolean isDefault;
+	UUID id;
 
 	private Template() {}
 
@@ -55,7 +55,7 @@ public final class Template extends JsonableBaseObject {
 	 *
 	 * @return The template ID, or {@code null} if this is a request object.
 	 */
-	@JsonProperty("template_id")
+	@JsonProperty(value = "template_id", access = JsonProperty.Access.WRITE_ONLY)
 	public UUID getId() {
 		return id;
 	}

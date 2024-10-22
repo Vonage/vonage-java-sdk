@@ -15,6 +15,7 @@
  */
 package com.vonage.client.verify2;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.time.Instant;
@@ -31,10 +32,11 @@ public final class TemplateFragment extends JsonableBaseObject {
 	private String text;
 	private Locale locale;
 	private FragmentChannel channel;
-	private UUID id;
 	private Instant dateCreated, dateUpdated;
+	UUID fragmentId;
+	@JsonIgnore UUID templateId;
 
-	private TemplateFragment() {}
+	TemplateFragment() {}
 
 	TemplateFragment(String text) {
 		this.text = Objects.requireNonNull(text, "Fragment text is required.");
@@ -88,9 +90,9 @@ public final class TemplateFragment extends JsonableBaseObject {
 	 *
 	 * @return The template fragment ID, or {@code null} if this is a request object.
 	 */
-	@JsonProperty("template_fragment_id")
-	public UUID getId() {
-		return id;
+	@JsonProperty(value = "template_fragment_id", access = JsonProperty.Access.WRITE_ONLY)
+	public UUID getFragmentId() {
+		return fragmentId;
 	}
 
 	/**
