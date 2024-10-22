@@ -37,7 +37,6 @@ public class Verify2Client {
 	 * @param wrapper Http Wrapper used to create verification requests.
 	 */
 	public Verify2Client(HttpWrapper wrapper) {
-		super();
 		hasJwtAuthMethod = wrapper.getAuthCollection().hasAuthMethod(JWTAuthMethod.class);
 
 		@SuppressWarnings("unchecked")
