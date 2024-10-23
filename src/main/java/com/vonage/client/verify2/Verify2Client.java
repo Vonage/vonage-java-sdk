@@ -53,7 +53,7 @@ public class Verify2Client {
 						.wrapper(wrapper).requestMethod(method)
 						.authMethod(JWTAuthMethod.class, ApiKeyHeaderAuthMethod.class)
 						.pathGetter((de, req) -> {
-							String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v2") + "/verify";
+							String base = de.getHttpWrapper().getHttpConfig().getApiBaseUri() + "/v2/verify";
 							return pathGetter != null ? base + "/" + pathGetter.apply(req) : base;
 						})
 				);
@@ -73,16 +73,16 @@ public class Verify2Client {
 		deleteTemplate = new Endpoint<>(id -> templatesBase+'/'+id, HttpMethod.DELETE);
 
 		final String fragmentsBase = "/template_fragments";
-		listFragments = new Endpoint<>(req -> templatesBase+'/'+req.templateId+'/'+fragmentsBase, HttpMethod.GET);
+		listFragments = new Endpoint<>(req -> templatesBase+'/'+req.templateId + fragmentsBase, HttpMethod.GET);
 		getFragment = new Endpoint<>(req ->
-				templatesBase+'/'+req.templateId+'/'+fragmentsBase+'/'+req.fragmentId, HttpMethod.GET
+				templatesBase+'/'+req.templateId + fragmentsBase+'/'+req.fragmentId, HttpMethod.GET
 		);
-		createFragment = new Endpoint<>(req -> templatesBase+'/'+req.templateId+'/'+fragmentsBase, HttpMethod.POST);
+		createFragment = new Endpoint<>(req -> templatesBase+'/'+req.templateId + fragmentsBase, HttpMethod.POST);
 		updateFragment = new Endpoint<>(req ->
-				templatesBase+'/'+req.templateId+'/'+fragmentsBase+'/'+req.fragmentId, HttpMethod.PATCH
+				templatesBase+'/'+req.templateId + fragmentsBase+'/'+req.fragmentId, HttpMethod.PATCH
 		);
 		deleteFragment = new Endpoint<>(req ->
-				templatesBase+'/'+req.templateId+'/'+fragmentsBase+'/'+req.fragmentId, HttpMethod.DELETE
+				templatesBase+'/'+req.templateId + fragmentsBase+'/'+req.fragmentId, HttpMethod.DELETE
 		);
 	}
 
@@ -198,6 +198,10 @@ public class Verify2Client {
 		return createTemplate.execute(new Template(Objects.requireNonNull(name, "Name is required."), null));
 	}
 
+	public ListTemplatesResponse listTemplates() {
+		return listTemplates(null, null);
+	}
+
 	public ListTemplatesResponse listTemplates(Integer page, Integer pageSize) {
 		return listTemplates.execute(new ListTemplatesRequest(page, pageSize, null));
 	}
@@ -219,6 +223,10 @@ public class Verify2Client {
 	public TemplateFragment createFragment(UUID templateId, TemplateFragment fragment) {
 		Objects.requireNonNull(fragment, "Template fragment is required.").templateId = validateTemplateId(templateId);
 		return createFragment.execute(fragment);
+	}
+
+	public ListTemplateFragmentsResponse listFragments(UUID templateId) {
+		return listFragments(templateId, null, null);
 	}
 
 	public ListTemplateFragmentsResponse listFragments(UUID templateId, Integer page, Integer pageSize) {

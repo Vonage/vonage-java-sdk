@@ -17,6 +17,9 @@ package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.util.StdConverter;
 import com.vonage.client.JsonableBaseObject;
 import java.time.Instant;
 import java.util.Locale;
@@ -33,7 +36,7 @@ public final class TemplateFragment extends JsonableBaseObject {
 	private Locale locale;
 	private FragmentChannel channel;
 	private Instant dateCreated, dateUpdated;
-	UUID fragmentId;
+	@JsonProperty(value = "template_fragment_id", access = JsonProperty.Access.WRITE_ONLY) UUID fragmentId;
 	@JsonIgnore UUID templateId;
 
 	TemplateFragment() {}
@@ -70,6 +73,7 @@ public final class TemplateFragment extends JsonableBaseObject {
 	 *
 	 * @return The locale as an object, or {@code null} if this is an update request.
 	 */
+	@JsonSerialize(converter = LocaleSerializer.class)
 	@JsonProperty("locale")
 	public Locale getLocale() {
 		return locale;
@@ -90,7 +94,6 @@ public final class TemplateFragment extends JsonableBaseObject {
 	 *
 	 * @return The template fragment ID, or {@code null} if this is a request object.
 	 */
-	@JsonProperty(value = "template_fragment_id", access = JsonProperty.Access.WRITE_ONLY)
 	public UUID getFragmentId() {
 		return fragmentId;
 	}
@@ -113,5 +116,13 @@ public final class TemplateFragment extends JsonableBaseObject {
 	@JsonProperty("date_updated")
 	public Instant getDateUpdated() {
 		return dateUpdated;
+	}
+
+	private static final class LocaleSerializer extends StdConverter<Locale, String> {
+
+		@Override
+		public String convert(Locale value) {
+			return value == null ? null : value.toString().toLowerCase().replace('_', '-');
+		}
 	}
 }
