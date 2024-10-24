@@ -696,7 +696,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 		stubResponse(201, FRAGMENT_RESPONSE);
 		assertEqualsSampleFragment(client.createFragment(
 				TEMPLATE_ID,
-				new TemplateFragment(FragmentChannel.SMS, Locale.US, FRAGMENT_TEXT)
+				new TemplateFragment(FragmentChannel.SMS, "en_US", FRAGMENT_TEXT)
 		));
 	}
 
@@ -707,7 +707,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 		assertThrows(NullPointerException.class, () -> client.createFragment(TEMPLATE_ID, new TemplateFragment(null)));
 		stubResponseAndAssertThrows(409, () ->
 				client.createFragment(TEMPLATE_ID,
-						new TemplateFragment(FragmentChannel.SMS, Locale.US, FRAGMENT_TEXT)
+						new TemplateFragment(FragmentChannel.SMS, LOCALE, FRAGMENT_TEXT)
 				),
 				VerifyResponseException.class
 		);
@@ -734,7 +734,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 
 			@Override
 			protected TemplateFragment sampleRequest() {
-				var fragment = new TemplateFragment(FragmentChannel.SMS, Locale.of(LOCALE), FRAGMENT_TEXT);
+				var fragment = new TemplateFragment(FragmentChannel.SMS, LOCALE, FRAGMENT_TEXT);
 				fragment.templateId = TEMPLATE_ID;
 				return fragment;
 			}

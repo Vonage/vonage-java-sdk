@@ -17,7 +17,6 @@ package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.util.StdConverter;
 import com.vonage.client.JsonableBaseObject;
@@ -49,13 +48,13 @@ public final class TemplateFragment extends JsonableBaseObject {
 	 * Create a new template fragment. All parameters are required.
 	 *
 	 * @param channel The channel type for the template.
-	 * @param locale The locale for the template.
+	 * @param locale The BCP-47 locale for the template.
 	 * @param text The text content of the template.
 	 */
-	public TemplateFragment(FragmentChannel channel, Locale locale, String text) {
+	public TemplateFragment(FragmentChannel channel, String locale, String text) {
 		this(text);
 		this.channel = Objects.requireNonNull(channel, "Channel is required.");
-		this.locale = Objects.requireNonNull(locale, "Locale is required.");
+		this.locale = Locale.forLanguageTag(Objects.requireNonNull(locale, "Locale is required."));
 	}
 
 	/**
