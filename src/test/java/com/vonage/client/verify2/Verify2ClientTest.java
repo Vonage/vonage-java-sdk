@@ -82,6 +82,13 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 		assertEquals(true, parsed.isDefault());
 	}
 
+	void assertEqualsEmptyTemplate(Template parsed) {
+		assertNotNull(parsed);
+		assertNull(parsed.getId());
+		assertNull(parsed.getName());
+		assertNull(parsed.isDefault());
+	}
+
 	void assertEqualsSampleFragment(TemplateFragment parsed) {
 		assertNotNull(parsed);
 		assertEquals(FRAGMENT_ID, parsed.getFragmentId());
@@ -90,6 +97,16 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 		assertEquals(FragmentChannel.SMS, parsed.getChannel());
 		assertEquals(DATE_CREATED, parsed.getDateCreated());
 		assertEquals(DATE_UPDATED, parsed.getDateUpdated());
+	}
+
+	void assertEqualsEmptyFragment(TemplateFragment parsed) {
+		assertNotNull(parsed);
+		assertNull(parsed.getFragmentId());
+		assertNull(parsed.getText());
+		assertNull(parsed.getLocale());
+		assertNull(parsed.getChannel());
+		assertNull(parsed.getDateCreated());
+		assertNull(parsed.getDateUpdated());
 	}
 
 	void assert429ResponseException(Executable invocation) throws Exception {
@@ -516,13 +533,13 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 
 	@Test
 	public void testDeleteTemplateFragmentSuccess() throws Exception {
-		stubResponseAndRun(204, () -> client.deleteFragment(TEMPLATE_ID, FRAGMENT_ID));
+		stubResponseAndRun(204, () -> client.deleteTemplateFragment(TEMPLATE_ID, FRAGMENT_ID));
 	}
 
 	@Test
 	public void testDeleteTemplateFragmentFailure() throws Exception {
 		stubResponseAndAssertThrows(404,
-				() -> client.deleteFragment(TEMPLATE_ID, FRAGMENT_ID),
+				() -> client.deleteTemplateFragment(TEMPLATE_ID, FRAGMENT_ID),
 				VerifyResponseException.class
 		);
 	}
@@ -602,13 +619,13 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 	@Test
 	public void testGetTemplateFragmentSuccess() throws Exception {
 		stubResponse(200, FRAGMENT_RESPONSE);
-		assertEqualsSampleFragment(client.getFragment(TEMPLATE_ID, FRAGMENT_ID));
+		assertEqualsSampleFragment(client.getTemplateFragment(TEMPLATE_ID, FRAGMENT_ID));
 	}
 
 	@Test
 	public void testGetTemplateFragmentFailure() throws Exception {
 		stubResponseAndAssertThrows(404,
-				() -> client.getFragment(TEMPLATE_ID, FRAGMENT_ID),
+				() -> client.getTemplateFragment(TEMPLATE_ID, FRAGMENT_ID),
 				VerifyResponseException.class
 		);
 	}
@@ -694,7 +711,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 	@Test
 	public void testCreateTemplateFragmentSuccess() throws Exception {
 		stubResponse(201, FRAGMENT_RESPONSE);
-		assertEqualsSampleFragment(client.createFragment(
+		assertEqualsSampleFragment(client.createTemplateFragment(
 				TEMPLATE_ID,
 				new TemplateFragment(FragmentChannel.SMS, "en_US", FRAGMENT_TEXT)
 		));
@@ -702,11 +719,11 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 
 	@Test
 	public void testCreateTemplateFragmentFailure() throws Exception {
-		assertThrows(NullPointerException.class, () -> client.createFragment(TEMPLATE_ID, null));
-		assertThrows(NullPointerException.class, () -> client.createFragment(null, new TemplateFragment(FRAGMENT_TEXT)));
-		assertThrows(NullPointerException.class, () -> client.createFragment(TEMPLATE_ID, new TemplateFragment(null)));
+		assertThrows(NullPointerException.class, () -> client.createTemplateFragment(TEMPLATE_ID, null));
+		assertThrows(NullPointerException.class, () -> client.createTemplateFragment(null, new TemplateFragment(FRAGMENT_TEXT)));
+		assertThrows(NullPointerException.class, () -> client.createTemplateFragment(TEMPLATE_ID, new TemplateFragment(null)));
 		stubResponseAndAssertThrows(409, () ->
-				client.createFragment(TEMPLATE_ID,
+				client.createTemplateFragment(TEMPLATE_ID,
 						new TemplateFragment(FragmentChannel.SMS, LOCALE, FRAGMENT_TEXT)
 				),
 				VerifyResponseException.class
@@ -804,16 +821,16 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 	@Test
 	public void testUpdateTemplateFragmentSuccess() throws Exception {
 		stubResponse(200, FRAGMENT_RESPONSE);
-		assertEqualsSampleFragment(client.updateFragment(TEMPLATE_ID, FRAGMENT_ID, "Your code is: {code}"));
+		assertEqualsSampleFragment(client.updateTemplateFragment(TEMPLATE_ID, FRAGMENT_ID, "Your code is: {code}"));
 	}
 
 	@Test
 	public void testUpdateTemplateFragmentFailure() throws Exception {
-		assertThrows(NullPointerException.class, () -> client.updateFragment(TEMPLATE_ID, null, FRAGMENT_TEXT));
-		assertThrows(NullPointerException.class, () -> client.updateFragment(null, FRAGMENT_ID, FRAGMENT_TEXT));
-		assertThrows(NullPointerException.class, () -> client.updateFragment(TEMPLATE_ID, FRAGMENT_ID, null));
+		assertThrows(NullPointerException.class, () -> client.updateTemplateFragment(TEMPLATE_ID, null, FRAGMENT_TEXT));
+		assertThrows(NullPointerException.class, () -> client.updateTemplateFragment(null, FRAGMENT_ID, FRAGMENT_TEXT));
+		assertThrows(NullPointerException.class, () -> client.updateTemplateFragment(TEMPLATE_ID, FRAGMENT_ID, null));
 		stubResponseAndAssertThrows(409, () ->
-				client.updateFragment(TEMPLATE_ID, FRAGMENT_ID, FRAGMENT_TEXT),
+				client.updateTemplateFragment(TEMPLATE_ID, FRAGMENT_ID, FRAGMENT_TEXT),
 				VerifyResponseException.class
 		);
 	}
@@ -882,7 +899,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 				"    }\n" +
 				"}"
 		);
-		var response = client.listTemplates();
+		var response = client.listTemplates(7, 42);
 		assertNotNull(response);
 		assertEquals(5, response.getPageSize());
 		assertEquals(1, response.getPage());
@@ -896,11 +913,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 		assertEquals(FRAGMENT_ID, first.getId());
 		assertEquals("0_1", first.getName());
 		assertFalse(first.isDefault());
-		var empty = templates.get(1);
-		assertNotNull(empty);
-		assertNull(empty.getId());
-		assertNull(empty.getName());
-		assertNull(empty.isDefault());
+		assertEqualsEmptyTemplate(templates.get(1));
 		assertEqualsSampleTemplate(response.getTemplates().getLast());
 		var links = response.getLinks();
 		assertNotNull(links);
@@ -917,6 +930,13 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 		assertNull(response.getTotalItems());
 		assertNull(response.getTemplates());
 		assertNull(response.getLinks());
+
+		stubResponse(200, "{\"_embedded\":{\"templates\":[{},"+TEMPLATE_RESPONSE+"]}}");
+		templates = client.listTemplates();
+		assertNotNull(templates);
+		assertEquals(2, templates.size());
+		assertEqualsEmptyTemplate(templates.getFirst());
+		assertEqualsSampleTemplate(templates.getLast());
 	}
 
 	@Test
@@ -995,7 +1015,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 				"    }\n" +
 				"}"
 		);
-		var response = client.listFragments(TEMPLATE_ID);
+		var response = client.listTemplateFragments(TEMPLATE_ID, 9, 70);
 		assertNotNull(response);
 		assertEquals(5, response.getPageSize());
 		assertEquals(1, response.getPage());
@@ -1009,11 +1029,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 		assertEquals(TEMPLATE_ID, first.getFragmentId());
 		assertEquals(FragmentChannel.VOICE, first.getChannel());
 		assertEquals(Locale.JAPAN, first.getLocale());
-		var empty = fragments.get(1);
-		assertNotNull(empty);
-		assertNull(empty.getFragmentId());
-		assertNull(empty.getChannel());
-		assertNull(empty.getLocale());
+		assertEqualsEmptyFragment(fragments.get(1));
 		assertEqualsSampleFragment(response.getTemplateFragments().getLast());
 		var links = response.getLinks();
 		assertNotNull(links);
@@ -1022,7 +1038,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 		assertEquals(lastUrl, links.getLastUrl());
 
 		stubResponse(200, EMPTY_HAL_RESPONSE);
-		response = client.listFragments(TEMPLATE_ID, 1, 1);
+		response = client.listTemplateFragments(TEMPLATE_ID, 1, 1);
 		assertNotNull(response);
 		assertNull(response.getPageSize());
 		assertNull(response.getPage());
@@ -1030,5 +1046,61 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 		assertNull(response.getTotalItems());
 		assertNull(response.getTemplateFragments());
 		assertNull(response.getLinks());
+
+		stubResponse(200, "{\"_embedded\":{\"template_fragments\":[{},"+FRAGMENT_RESPONSE+"]}}");
+		fragments = client.listTemplateFragments(TEMPLATE_ID);
+		assertNotNull(fragments);
+		assertEquals(2, fragments.size());
+		assertEqualsEmptyFragment(fragments.getFirst());
+		assertEqualsSampleFragment(fragments.getLast());
+	}
+
+	@Test
+	public void testListTemplateFragmentsFailure() throws Exception {
+		stubResponseAndAssertThrows(200, EMPTY_HAL_RESPONSE,
+				() -> client.listTemplateFragments(null, 10, 100),
+				NullPointerException.class
+		);
+		stubResponseAndAssertThrows(200, EMPTY_HAL_RESPONSE,
+				() -> client.listTemplateFragments(TEMPLATE_ID, -1, 10),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200, EMPTY_HAL_RESPONSE,
+				() -> client.listTemplateFragments(TEMPLATE_ID, 10, 0),
+				IllegalArgumentException.class
+		);
+		assert429ResponseException(() -> client.listTemplateFragments(TEMPLATE_ID));
+	}
+
+	@Test
+	public void testListTemplateFragmentsEndpoint() throws Exception {
+		new Verify2EndpointTestSpec<ListTemplatesRequest, ListTemplateFragmentsResponse>() {
+
+			@Override
+			protected RestEndpoint<ListTemplatesRequest, ListTemplateFragmentsResponse> endpoint() {
+				return client.listFragments;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(ListTemplatesRequest request) {
+				return "/v2/verify/templates/"+request.templateId+"/template_fragments";
+			}
+
+			@Override
+			protected ListTemplatesRequest sampleRequest() {
+				return new ListTemplatesRequest(null, 1000, null);
+			}
+
+			@Override
+			protected Map<String, String> sampleQueryParams() {
+				return Map.of("page_size", "1000");
+			}
+		}
+		.runTests();
 	}
 }

@@ -21,6 +21,7 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
@@ -198,8 +199,8 @@ public class Verify2Client {
 		return createTemplate.execute(new Template(Objects.requireNonNull(name, "Name is required."), null));
 	}
 
-	public ListTemplatesResponse listTemplates() {
-		return listTemplates(null, null);
+	public List<Template> listTemplates() {
+		return listTemplates(1, 1000).getTemplates();
 	}
 
 	public ListTemplatesResponse listTemplates(Integer page, Integer pageSize) {
@@ -220,34 +221,34 @@ public class Verify2Client {
 		deleteTemplate.execute(validateTemplateId(templateId));
 	}
 
-	public TemplateFragment createFragment(UUID templateId, TemplateFragment fragment) {
+	public TemplateFragment createTemplateFragment(UUID templateId, TemplateFragment fragment) {
 		Objects.requireNonNull(fragment, "Template fragment is required.").templateId = validateTemplateId(templateId);
 		return createFragment.execute(fragment);
 	}
 
-	public ListTemplateFragmentsResponse listFragments(UUID templateId) {
-		return listFragments(templateId, null, null);
+	public List<TemplateFragment> listTemplateFragments(UUID templateId) {
+		return listTemplateFragments(templateId, 1, 1000).getTemplateFragments();
 	}
 
-	public ListTemplateFragmentsResponse listFragments(UUID templateId, Integer page, Integer pageSize) {
+	public ListTemplateFragmentsResponse listTemplateFragments(UUID templateId, Integer page, Integer pageSize) {
 		return listFragments.execute(new ListTemplatesRequest(page, pageSize, validateTemplateId(templateId)));
 	}
 
-	public TemplateFragment getFragment(UUID templateId, UUID fragmentId) {
+	public TemplateFragment getTemplateFragment(UUID templateId, UUID fragmentId) {
 		TemplateFragment fragment = new TemplateFragment();
 		fragment.templateId = validateTemplateId(templateId);
 		fragment.fragmentId = validateFragmentId(fragmentId);
 		return getFragment.execute(fragment);
 	}
 
-	public TemplateFragment updateFragment(UUID templateId, UUID fragmentId, String text) {
+	public TemplateFragment updateTemplateFragment(UUID templateId, UUID fragmentId, String text) {
 		TemplateFragment fragment = new TemplateFragment(text);
 		fragment.templateId = validateTemplateId(templateId);
 		fragment.fragmentId = validateFragmentId(fragmentId);
 		return updateFragment.execute(fragment);
 	}
 
-	public void deleteFragment(UUID templateId, UUID fragmentId) {
+	public void deleteTemplateFragment(UUID templateId, UUID fragmentId) {
 		TemplateFragment fragment = new TemplateFragment();
 		fragment.templateId = validateTemplateId(templateId);
 		fragment.fragmentId = validateFragmentId(fragmentId);
