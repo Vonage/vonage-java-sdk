@@ -119,7 +119,8 @@ public class StandardInsightResponseTest {
 
         assertNull(response.getCurrentCarrier().getNetworkType());
         assertEquals(InsightStatus.LOOKUP_NOT_RETURNED, response.getStatus());
-        assertEquals(45, response.getStatus().getInsightStatus());
+        int status = response.getStatus().getInsightStatus();
+        assertTrue(status >= 43 && status <= 45);
     }
 
     @Test

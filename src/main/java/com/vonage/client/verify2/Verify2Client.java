@@ -21,6 +21,7 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
@@ -29,7 +30,13 @@ public class Verify2Client {
 	final boolean hasJwtAuthMethod;
 	final RestEndpoint<VerificationRequest, VerificationResponse> verifyUser;
 	final RestEndpoint<VerifyCodeRequestWrapper, VerifyCodeResponse> verifyRequest;
-	final RestEndpoint<UUID, Void> cancel, nextWorkflow;
+	final RestEndpoint<UUID, Void> cancel, nextWorkflow, deleteTemplate;
+	final RestEndpoint<ListTemplatesRequest, ListTemplatesResponse> listTemplates;
+	final RestEndpoint<UUID, Template> getTemplate;
+	final RestEndpoint<Template, Template> createTemplate, updateTemplate;
+	final RestEndpoint<ListTemplatesRequest, ListTemplateFragmentsResponse> listFragments;
+	final RestEndpoint<TemplateFragment, TemplateFragment> getFragment, createFragment, updateFragment;
+	final RestEndpoint<TemplateFragment, Void> deleteFragment;
 
 	/**
 	 * Create a new Verify2Client.
@@ -37,7 +44,6 @@ public class Verify2Client {
 	 * @param wrapper Http Wrapper used to create verification requests.
 	 */
 	public Verify2Client(HttpWrapper wrapper) {
-		super();
 		hasJwtAuthMethod = wrapper.getAuthCollection().hasAuthMethod(JWTAuthMethod.class);
 
 		@SuppressWarnings("unchecked")
@@ -48,7 +54,7 @@ public class Verify2Client {
 						.wrapper(wrapper).requestMethod(method)
 						.authMethod(JWTAuthMethod.class, ApiKeyHeaderAuthMethod.class)
 						.pathGetter((de, req) -> {
-							String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v2") + "/verify";
+							String base = de.getHttpWrapper().getHttpConfig().getApiBaseUri() + "/v2/verify";
 							return pathGetter != null ? base + "/" + pathGetter.apply(req) : base;
 						})
 				);
@@ -58,11 +64,43 @@ public class Verify2Client {
 		verifyUser = new Endpoint<>(null, HttpMethod.POST);
 		verifyRequest = new Endpoint<>(req -> req.requestId, HttpMethod.POST);
 		cancel = new Endpoint<>(UUID::toString, HttpMethod.DELETE);
-		nextWorkflow = new Endpoint<>(req -> req + "/next-workflow", HttpMethod.POST);
+		nextWorkflow = new Endpoint<>(id -> id + "/next-workflow", HttpMethod.POST);
+
+		final String templatesBase = "templates";
+		listTemplates = new Endpoint<>(__ -> templatesBase, HttpMethod.GET);
+		getTemplate = new Endpoint<>(id -> templatesBase+'/'+id, HttpMethod.GET);
+		createTemplate = new Endpoint<>(__ -> templatesBase, HttpMethod.POST);
+		updateTemplate = new Endpoint<>(req -> templatesBase+'/'+req.getId(), HttpMethod.PATCH);
+		deleteTemplate = new Endpoint<>(id -> templatesBase+'/'+id, HttpMethod.DELETE);
+
+		final String fragmentsBase = "/template_fragments";
+		listFragments = new Endpoint<>(req -> templatesBase+'/'+req.templateId + fragmentsBase, HttpMethod.GET);
+		getFragment = new Endpoint<>(req ->
+				templatesBase+'/'+req.templateId + fragmentsBase+'/'+req.fragmentId, HttpMethod.GET
+		);
+		createFragment = new Endpoint<>(req -> templatesBase+'/'+req.templateId + fragmentsBase, HttpMethod.POST);
+		updateFragment = new Endpoint<>(req ->
+				templatesBase+'/'+req.templateId + fragmentsBase+'/'+req.fragmentId, HttpMethod.PATCH
+		);
+		deleteFragment = new Endpoint<>(req ->
+				templatesBase+'/'+req.templateId + fragmentsBase+'/'+req.fragmentId, HttpMethod.DELETE
+		);
+	}
+
+	private UUID validateId(String name, UUID id) {
+		return Objects.requireNonNull(id, name + " ID is required.");
 	}
 
 	private UUID validateRequestId(UUID requestId) {
-		return Objects.requireNonNull(requestId, "Request ID is required.");
+		return validateId("Request", requestId);
+	}
+
+	private UUID validateTemplateId(UUID templateId) {
+		return validateId("Template", templateId);
+	}
+
+	private UUID validateFragmentId(UUID fragmentId) {
+		return validateId("Fragment", fragmentId);
 	}
 
 	/**
@@ -88,6 +126,7 @@ public class Verify2Client {
 	 *     <li><b>409</b>: Concurrent verifications to the same number are not allowed.</li>
 	 *     <li><b>422</b>: The value of one or more parameters is invalid.</li>
 	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
 	 * </ul>
 	 */
 	public VerificationResponse sendVerification(VerificationRequest request) {
@@ -101,23 +140,24 @@ public class Verify2Client {
 
 	/**
 	 * Check a supplied code against an existing verification request. If the code is valid,
-	 * this method will return normally. Otherwise, a {@link VerifyResponseException} will be
-	 * thrown with the following status and reasons:
-	 *
-	 * <ul>
-	 *      <li><b>400</b>: The provided code does not match the expected value.</li>
-	 *      <li><b>404</b>: Request ID was not found or it has been verified already.</li>
-	 *      <li><b>409</b>: The current workflow step does not support a code.</li>
-	 *      <li><b>410</b>: An incorrect code has been provided too many times.</li>
-	 *      <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
-	 * </ul>
+	 * this method will return normally. Otherwise, a {@link VerifyResponseException} will be thrown.
 	 *
 	 * @param requestId ID of the verify request, obtained from {@link VerificationResponse#getRequestId()}.
 	 * @param code The code supplied by the user.
 	 *
 	 * @return Details of the verification request (if the code matched).
 	 *
-	 * @throws VerifyResponseException If the code was invalid, or any other error.
+	 * @throws VerifyResponseException If the code could not be verified. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>400</b>: The provided code does not match the expected value.</li>
+	 *     <li><b>401</b>: Invalid credentials.</li>
+	 *     <li><b>402</b>: Low balance.</li>
+	 *     <li><b>404</b>: Request ID was not found or it has been verified already.</li>
+	 *     <li><b>409</b>: The current workflow step does not support a code.</li>
+	 *     <li><b>410</b>: An incorrect code has been provided too many times.</li>
+	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
+	 * </ul>
 	 */
 	public VerifyCodeResponse checkVerificationCode(UUID requestId, String code) {
 		return verifyRequest.execute(new VerifyCodeRequestWrapper(
@@ -133,7 +173,13 @@ public class Verify2Client {
 	 *
 	 * @param requestId ID of the verify request, obtained from {@link VerificationResponse#getRequestId()}.
 	 *
-	 * @throws VerifyResponseException If the request ID was not found, or it has been verified already.
+	 * @throws VerifyResponseException If the request could not be cancelled. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401</b>: Invalid credentials.</li>
+	 *     <li><b>402</b>: Low balance.</li>
+	 *     <li><b>404</b>: Request ID was not found or it has been verified / cancelled already.</li>
+	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
+	 * </ul>
 	 */
 	public void cancelVerification(UUID requestId) {
 		cancel.execute(validateRequestId(requestId));
@@ -141,19 +187,283 @@ public class Verify2Client {
 
 	/**
 	 * Move the request onto the next workflow, if available. If successful, this method will return normally.
-	 * Otherwise, a {@link VerifyResponseException} will be thrown with the following status and reasons:
-	 *
-	 * <ul>
-	 *      <li><b>404</b>: Request ID was not found or it has been verified already.</li>
-	 *      <li><b>409</b>: There are no more events left to trigger.</li>
-	 * </ul>
+	 * Otherwise, a {@link VerifyResponseException} will be thrown.
 	 *
 	 * @param requestId ID of the verify request, obtained from {@link VerificationResponse#getRequestId()}.
 	 *
-	 * @throws VerifyResponseException If the request ID was not found.
+	 * @throws VerifyResponseException If the workflow could not be advanced. This could be for the following reasons:
+	 * <ul>
+	 *      <li><b>401</b>: Invalid credentials.</li>
+	 *      <li><b>404</b>: Request ID was not found or it has been verified already.</li>
+	 *      <li><b>409</b>: There are no more events left to trigger.</li>
+	 *      <li><b>500</b>: An error occurred on the Vonage platform.</li>
+	 * </ul>
+	 *
 	 * @since 8.5.0
 	 */
 	public void nextWorkflow(UUID requestId) {
 		nextWorkflow.execute(validateRequestId(requestId));
+	}
+
+	/**
+	 * Create a new custom template.
+	 *
+	 * @param name Reference name for the template. Must not contain spaces or special characters other than _ and -.
+	 *
+	 * @return The created template metadata.
+	 *
+	 * @throws VerifyResponseException If the template could not be created. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401</b>: Invalid credentials.</li>
+	 *     <li><b>402</b>: Low balance.</li>
+	 *     <li><b>403</b>: Template management is not enabled for your account.</li>
+	 *     <li><b>409</b>: A template with the same name already exists, or you have more than 9 templates.</li>
+	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
+	 * </ul>
+	 *
+	 * @since 8.13.0
+	 */
+	public Template createTemplate(String name) {
+		return createTemplate.execute(new Template(Objects.requireNonNull(name, "Name is required."), null));
+	}
+
+	/**
+	 * List all custom templates associated with the account.
+	 *
+	 * @return The list of templates.
+	 *
+	 * @throws VerifyResponseException If the templates could not be retrieved. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401</b>: Invalid credentials.</li>
+	 *     <li><b>402</b>: Low balance.</li>
+	 *     <li><b>403</b>: Template management is not enabled for your account.</li>
+	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
+	 * </ul>
+	 *
+	 * @since 8.13.0
+	 */
+	public List<Template> listTemplates() {
+		return listTemplates(1, 100).getTemplates();
+	}
+
+	// Not useful since there can only be 10 templates at a time.
+	ListTemplatesResponse listTemplates(Integer page, Integer pageSize) {
+		return listTemplates.execute(new ListTemplatesRequest(page, pageSize, null));
+	}
+
+	/**
+	 * Retrieve a specific template.
+	 *
+	 * @param templateId ID of the template to retrieve.
+	 *
+	 * @return The template metadata.
+	 *
+	 * @throws VerifyResponseException If the template could not be retrieved. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401</b>: Invalid credentials.</li>
+	 *     <li><b>402</b>: Low balance.</li>
+	 *     <li><b>403</b>: Template management is not enabled for your account.</li>
+	 *     <li><b>404</b>: Template ID was not found.</li>
+	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
+	 * </ul>
+	 *
+	 * @since 8.13.0
+	 */
+	public Template getTemplate(UUID templateId) {
+		return getTemplate.execute(validateTemplateId(templateId));
+	}
+
+	/**
+	 * Update an existing template.
+	 *
+	 * @param templateId ID of the template to update.
+	 * @param name New reference name for the template. Must not contain spaces or special characters.
+	 * @param isDefault Whether this template should be the default for the account.
+	 *
+	 * @return The updated template metadata.
+	 *
+	 * @throws VerifyResponseException If the template could not be updated. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401</b>: Invalid credentials.</li>
+	 *     <li><b>402</b>: Low balance.</li>
+	 *     <li><b>403</b>: Template management is not enabled for your account.</li>
+	 *     <li><b>404</b>: Template ID was not found.</li>
+	 *     <li><b>409</b>: A template with the same name already exists, or you have more than 9 templates.</li>
+	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
+	 * </ul>
+	 *
+	 * @since 8.13.0
+	 */
+	public Template updateTemplate(UUID templateId, String name, Boolean isDefault) {
+		Template template = new Template(name, isDefault);
+		template.id = validateTemplateId(templateId);
+		return updateTemplate.execute(template);
+	}
+
+	/**
+	 * Delete a template.
+	 *
+	 * @param templateId ID of the template to delete.
+	 *
+	 * @throws VerifyResponseException If the template could not be deleted. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401</b>: Invalid credentials.</li>
+	 *     <li><b>402</b>: Low balance.</li>
+	 *     <li><b>403</b>: Template management is not enabled for your account.</li>
+	 *     <li><b>404</b>: Template not found.</li>
+	 *     <li><b>409</b>: Template contains undeleted fragments or is the default.</li>
+	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
+	 * </ul>
+	 *
+	 * @since 8.13.0
+	 */
+	public void deleteTemplate(UUID templateId) {
+		deleteTemplate.execute(validateTemplateId(templateId));
+	}
+
+	/**
+	 * Create a new template fragment.
+	 *
+	 * @param templateId ID of the template to which the fragment belongs.
+	 * @param fragment The fragment to create.
+	 *
+	 * @return The created fragment metadata.
+	 *
+	 * @throws VerifyResponseException If the fragment could not be created. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401</b>: Invalid credentials.</li>
+	 *     <li><b>402</b>: Low balance.</li>
+	 *     <li><b>403</b>: Template management is not enabled for your account.</li>
+	 *     <li><b>404</b>: Template ID was not found.</li>
+	 *     <li><b>409</b>: Fragment for this channel and locale already exists.</li>
+	 *     <li><b>422</b>: Invalid parameters (e.g. unsupported locale or invalid text variables).</li>
+	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
+	 * </ul>
+	 *
+	 * @since 8.13.0
+	 */
+	public TemplateFragment createTemplateFragment(UUID templateId, TemplateFragment fragment) {
+		Objects.requireNonNull(fragment, "Template fragment is required.").templateId = validateTemplateId(templateId);
+		return createFragment.execute(fragment);
+	}
+
+	/**
+	 * List all fragments associated with a template.
+	 *
+	 * @param templateId ID of the template to list fragments for.
+	 *
+	 * @return The list of fragments.
+	 *
+	 * @throws VerifyResponseException If the fragments could not be retrieved. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401</b>: Invalid credentials.</li>
+	 *     <li><b>402</b>: Low balance.</li>
+	 *     <li><b>403</b>: Template management is not enabled for your account.</li>
+	 *     <li><b>404</b>: Template ID was not found.</li>
+	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
+	 * </ul>
+	 *
+	 * @since 8.13.0
+	 */
+	public List<TemplateFragment> listTemplateFragments(UUID templateId) {
+		return listTemplateFragments(templateId, 1, 1000).getTemplateFragments();
+	}
+
+	// Not useful in the general case to expose.
+	ListTemplateFragmentsResponse listTemplateFragments(UUID templateId, Integer page, Integer pageSize) {
+		return listFragments.execute(new ListTemplatesRequest(page, pageSize, validateTemplateId(templateId)));
+	}
+
+	/**
+	 * Retrieve a specific fragment.
+	 *
+	 * @param templateId ID of the template to which the fragment belongs.
+	 * @param fragmentId ID of the fragment to retrieve.
+	 *
+	 * @return The fragment metadata.
+	 *
+	 * @throws VerifyResponseException If the fragment could not be retrieved. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401</b>: Invalid credentials.</li>
+	 *     <li><b>402</b>: Low balance.</li>
+	 *     <li><b>403</b>: Template management is not enabled for your account.</li>
+	 *     <li><b>404</b>: Fragment not found for the provided IDs.</li>
+	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
+	 * </ul>
+	 *
+	 * @since 8.13.0
+	 */
+	public TemplateFragment getTemplateFragment(UUID templateId, UUID fragmentId) {
+		TemplateFragment fragment = new TemplateFragment();
+		fragment.templateId = validateTemplateId(templateId);
+		fragment.fragmentId = validateFragmentId(fragmentId);
+		return getFragment.execute(fragment);
+	}
+
+	/**
+	 * Update an existing template fragment.
+	 *
+	 * @param templateId ID of the template to which the fragment belongs.
+	 *
+	 * @param fragmentId ID of the fragment to update.
+	 *
+	 * @param text New text for the fragment.
+	 * There are 4 reserved variables available to use: ${code}, ${brand}, ${time-limit} and ${time-limit-unit}.
+	 *
+	 * @return The updated fragment metadata.
+	 *
+	 * @throws VerifyResponseException If the fragment could not be updated. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401</b>: Invalid credentials.</li>
+	 *     <li><b>402</b>: Low balance.</li>
+	 *     <li><b>403</b>: Template management is not enabled for your account.</li>
+	 *     <li><b>404</b>: Fragment not found for the provided IDs.</li>
+	 *     <li><b>409</b>: Fragment for this channel and locale already exists.</li>
+	 *     <li><b>422</b>: Invalid parameters (e.g. unsupported locale or invalid text variables).</li>
+	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
+	 * </ul>
+	 *
+	 * @since 8.13.0
+	 */
+	public TemplateFragment updateTemplateFragment(UUID templateId, UUID fragmentId, String text) {
+		TemplateFragment fragment = new TemplateFragment(text);
+		fragment.templateId = validateTemplateId(templateId);
+		fragment.fragmentId = validateFragmentId(fragmentId);
+		return updateFragment.execute(fragment);
+	}
+
+	/**
+	 * Delete a template fragment.
+	 *
+	 * @param templateId ID of the template to which the fragment belongs.
+	 * @param fragmentId ID of the fragment to delete.
+	 *
+	 * @throws VerifyResponseException If the fragment could not be deleted. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401</b>: Invalid credentials.</li>
+	 *     <li><b>402</b>: Low balance.</li>
+	 *     <li><b>403</b>: Template management is not enabled for your account.</li>
+	 *     <li><b>404</b>: Fragment not found for the provided IDs.</li>
+	 *     <li><b>409</b>: Fragment is in use by a template or is the default.</li>
+	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
+	 * </ul>
+	 *
+	 * @since 8.13.0
+	 */
+	public void deleteTemplateFragment(UUID templateId, UUID fragmentId) {
+		TemplateFragment fragment = new TemplateFragment();
+		fragment.templateId = validateTemplateId(templateId);
+		fragment.fragmentId = validateFragmentId(fragmentId);
+		deleteFragment.execute(fragment);
 	}
 }

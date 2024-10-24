@@ -35,6 +35,9 @@ import java.util.function.Consumer;
  * Enables convenient declaration of endpoints without directly implementing {@link AbstractMethod}.
  * This decouples the endpoint's implementation from the underlying HTTP library.
  *
+ * @param <T> The request body type.
+ * @param <R> The response body type.
+ *
  * @since 7.7.0
  */
 @SuppressWarnings("unchecked")

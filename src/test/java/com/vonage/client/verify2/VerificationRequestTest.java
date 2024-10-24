@@ -381,4 +381,17 @@ public class VerificationRequestTest {
 				.addWorkflow(new SmsWorkflow(TO_NUMBER)).brand("Test")).toJson()
 		);
 	}
+
+	@Test
+	public void testDeprecatedSmsWorkflowConstructor() {
+		var workflow = new SmsWorkflow(TO_NUMBER, FROM_NUMBER, APP_HASH);
+		assertEquals(TO_NUMBER, workflow.getTo());
+		assertEquals(FROM_NUMBER, workflow.getFrom());
+		assertEquals(APP_HASH, workflow.getAppHash());
+
+		workflow = new SmsWorkflow(TO_NUMBER, APP_HASH);
+		assertEquals(TO_NUMBER, workflow.getTo());
+		assertNull(workflow.getFrom());
+		assertEquals(APP_HASH, workflow.getAppHash());
+	}
 }
