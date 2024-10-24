@@ -47,9 +47,10 @@ public final class TemplateFragment extends JsonableBaseObject {
 	/**
 	 * Create a new template fragment. All parameters are required.
 	 *
-	 * @param channel The channel type for the template.
-	 * @param locale The BCP-47 locale for the template.
-	 * @param text The text content of the template.
+	 * @param channel Channel type for the template.
+	 * @param locale BCP-47 locale for the template.
+	 * @param text Text content of the template. There are 4 reserved variables available to use:
+	 *             {@code ${code}}, {@code ${brand}}, {@code ${time-limit}} and {@code ${time-limit-unit}}.
 	 */
 	public TemplateFragment(FragmentChannel channel, String locale, String text) {
 		this(text);
