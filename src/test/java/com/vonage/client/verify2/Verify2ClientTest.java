@@ -15,9 +15,7 @@
  */
 package com.vonage.client.verify2;
 
-import com.vonage.client.AbstractClientTest;
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.RestEndpoint;
+import com.vonage.client.*;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
@@ -76,14 +74,14 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 	}
 
 	void assertEqualsSampleTemplate(Template parsed) {
-		assertNotNull(parsed);
+		testJsonableBaseObject(parsed);
 		assertEquals(TEMPLATE_ID, parsed.getId());
 		assertEquals(TEMPLATE_NAME, parsed.getName());
 		assertEquals(true, parsed.isDefault());
 	}
 
 	void assertEqualsEmptyTemplate(Template parsed) {
-		assertNotNull(parsed);
+		testJsonableBaseObject(parsed);
 		assertNull(parsed.getId());
 		assertNull(parsed.getName());
 		assertNull(parsed.isDefault());
@@ -97,10 +95,12 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 		assertEquals(FragmentChannel.SMS, parsed.getChannel());
 		assertEquals(DATE_CREATED, parsed.getDateCreated());
 		assertEquals(DATE_UPDATED, parsed.getDateUpdated());
+		var json = parsed.toJson();
+		assertEquals(json, Jsonable.fromJson(json, TemplateFragment.class).toJson());
 	}
 
 	void assertEqualsEmptyFragment(TemplateFragment parsed) {
-		assertNotNull(parsed);
+		testJsonableBaseObject(parsed);
 		assertNull(parsed.getFragmentId());
 		assertNull(parsed.getText());
 		assertNull(parsed.getLocale());
@@ -406,7 +406,8 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 
 			@Override
 			protected String expectedEndpointUri(UUID request) {
-				return "/v2/verify/" + request;
+				assertEquals(REQUEST_ID, request);
+				return "/v2/verify/" + REQUEST_ID;
 			}
 
 			@Override
@@ -546,10 +547,10 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 
 	@Test
 	public void testDeleteTemplateFragmentEndpoint() throws Exception {
-		new Verify2EndpointTestSpec<TemplateFragment, Void>() {
+		new Verify2EndpointTestSpec<TemplateFragmentRequestWrapper, Void>() {
 
 			@Override
-			protected RestEndpoint<TemplateFragment, Void> endpoint() {
+			protected RestEndpoint<TemplateFragmentRequestWrapper, Void> endpoint() {
 				return client.deleteFragment;
 			}
 
@@ -559,16 +560,13 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 			}
 
 			@Override
-			protected String expectedEndpointUri(TemplateFragment request) {
-				return "/v2/verify/templates/"+request.templateId+"/template_fragments/"+request.fragmentId;
+			protected String expectedEndpointUri(TemplateFragmentRequestWrapper request) {
+				return "/v2/verify/templates/"+TEMPLATE_ID+"/template_fragments/"+FRAGMENT_ID;
 			}
 
 			@Override
-			protected TemplateFragment sampleRequest() {
-				var fragment = new TemplateFragment();
-				fragment.templateId = TEMPLATE_ID;
-				fragment.fragmentId = FRAGMENT_ID;
-				return fragment;
+			protected TemplateFragmentRequestWrapper sampleRequest() {
+				return new TemplateFragmentRequestWrapper(TEMPLATE_ID, FRAGMENT_ID);
 			}
 		}
 		.runTests();
@@ -632,10 +630,10 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 
 	@Test
 	public void testGetTemplateFragmentEndpoint() throws Exception {
-		new Verify2EndpointTestSpec<TemplateFragment, TemplateFragment>() {
+		new Verify2EndpointTestSpec<TemplateFragmentRequestWrapper, TemplateFragment>() {
 
 			@Override
-			protected RestEndpoint<TemplateFragment, TemplateFragment> endpoint() {
+			protected RestEndpoint<TemplateFragmentRequestWrapper, TemplateFragment> endpoint() {
 				return client.getFragment;
 			}
 
@@ -645,16 +643,13 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 			}
 
 			@Override
-			protected String expectedEndpointUri(TemplateFragment request) {
-				return "/v2/verify/templates/"+request.templateId+"/template_fragments/"+request.fragmentId;
+			protected String expectedEndpointUri(TemplateFragmentRequestWrapper request) {
+				return "/v2/verify/templates/"+TEMPLATE_ID+"/template_fragments/"+FRAGMENT_ID;
 			}
 
 			@Override
-			protected TemplateFragment sampleRequest() {
-				var fragment = new TemplateFragment();
-				fragment.templateId = TEMPLATE_ID;
-				fragment.fragmentId = FRAGMENT_ID;
-				return fragment;
+			protected TemplateFragmentRequestWrapper sampleRequest() {
+				return new TemplateFragmentRequestWrapper(TEMPLATE_ID, FRAGMENT_ID);
 			}
 		}
 		.runTests();
@@ -697,7 +692,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 
 			@Override
 			protected Template sampleRequest() {
-				return new Template(TEMPLATE_NAME, null);
+				return new Template(TEMPLATE_NAME, null, null);
 			}
 
 			@Override
@@ -720,8 +715,12 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 	@Test
 	public void testCreateTemplateFragmentFailure() throws Exception {
 		assertThrows(NullPointerException.class, () -> client.createTemplateFragment(TEMPLATE_ID, null));
-		assertThrows(NullPointerException.class, () -> client.createTemplateFragment(null, new TemplateFragment(FRAGMENT_TEXT)));
-		assertThrows(NullPointerException.class, () -> client.createTemplateFragment(TEMPLATE_ID, new TemplateFragment(null)));
+		assertThrows(NullPointerException.class, () ->
+				client.createTemplateFragment(null, new TemplateFragment(FragmentChannel.SMS, LOCALE, FRAGMENT_TEXT))
+		);
+		assertThrows(NullPointerException.class, () ->
+				client.createTemplateFragment(TEMPLATE_ID, new TemplateFragment(null, TEMPLATE_ID, FRAGMENT_ID))
+		);
 		stubResponseAndAssertThrows(409, () ->
 				client.createTemplateFragment(TEMPLATE_ID,
 						new TemplateFragment(FragmentChannel.SMS, LOCALE, FRAGMENT_TEXT)
@@ -746,7 +745,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 
 			@Override
 			protected String expectedEndpointUri(TemplateFragment request) {
-				return "/v2/verify/templates/"+request.templateId+"/template_fragments";
+				return "/v2/verify/templates/"+TEMPLATE_ID+"/template_fragments";
 			}
 
 			@Override
@@ -802,12 +801,12 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 
 			@Override
 			protected String expectedEndpointUri(Template request) {
-				return "/v2/verify/templates/"+request.getId();
+				return "/v2/verify/templates/"+TEMPLATE_ID;
 			}
 
 			@Override
 			protected Template sampleRequest() {
-				return new Template(null, false);
+				return new Template(null, false, TEMPLATE_ID);
 			}
 
 			@Override
@@ -852,15 +851,12 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 
 			@Override
 			protected String expectedEndpointUri(TemplateFragment request) {
-				return "/v2/verify/templates/"+request.templateId+"/template_fragments/"+request.fragmentId;
+				return "/v2/verify/templates/"+TEMPLATE_ID+"/template_fragments/"+FRAGMENT_ID;
 			}
 
 			@Override
 			protected TemplateFragment sampleRequest() {
-				var fragment = new TemplateFragment(text);
-				fragment.templateId = TEMPLATE_ID;
-				fragment.fragmentId = FRAGMENT_ID;
-				return fragment;
+				return new TemplateFragment(text, TEMPLATE_ID, FRAGMENT_ID);
 			}
 
 			@Override
@@ -1088,12 +1084,12 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 
 			@Override
 			protected String expectedEndpointUri(ListTemplatesRequest request) {
-				return "/v2/verify/templates/"+request.templateId+"/template_fragments";
+				return "/v2/verify/templates/"+TEMPLATE_ID+"/template_fragments";
 			}
 
 			@Override
 			protected ListTemplatesRequest sampleRequest() {
-				return new ListTemplatesRequest(null, 1000, null);
+				return new ListTemplatesRequest(null, 1000, TEMPLATE_ID);
 			}
 
 			@Override

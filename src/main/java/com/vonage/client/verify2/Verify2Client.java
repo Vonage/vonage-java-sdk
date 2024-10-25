@@ -35,8 +35,9 @@ public class Verify2Client {
 	final RestEndpoint<UUID, Template> getTemplate;
 	final RestEndpoint<Template, Template> createTemplate, updateTemplate;
 	final RestEndpoint<ListTemplatesRequest, ListTemplateFragmentsResponse> listFragments;
-	final RestEndpoint<TemplateFragment, TemplateFragment> getFragment, createFragment, updateFragment;
-	final RestEndpoint<TemplateFragment, Void> deleteFragment;
+	final RestEndpoint<TemplateFragmentRequestWrapper, TemplateFragment> getFragment;
+	final RestEndpoint<TemplateFragmentRequestWrapper, Void> deleteFragment;
+	final RestEndpoint<TemplateFragment, TemplateFragment> createFragment, updateFragment;
 
 	/**
 	 * Create a new Verify2Client.
@@ -70,7 +71,7 @@ public class Verify2Client {
 		listTemplates = new Endpoint<>(__ -> templatesBase, HttpMethod.GET);
 		getTemplate = new Endpoint<>(id -> templatesBase+'/'+id, HttpMethod.GET);
 		createTemplate = new Endpoint<>(__ -> templatesBase, HttpMethod.POST);
-		updateTemplate = new Endpoint<>(req -> templatesBase+'/'+req.getId(), HttpMethod.PATCH);
+		updateTemplate = new Endpoint<>(req -> templatesBase+'/'+req.id, HttpMethod.PATCH);
 		deleteTemplate = new Endpoint<>(id -> templatesBase+'/'+id, HttpMethod.DELETE);
 
 		final String fragmentsBase = "/template_fragments";
@@ -80,7 +81,7 @@ public class Verify2Client {
 		);
 		createFragment = new Endpoint<>(req -> templatesBase+'/'+req.templateId + fragmentsBase, HttpMethod.POST);
 		updateFragment = new Endpoint<>(req ->
-				templatesBase+'/'+req.templateId + fragmentsBase+'/'+req.fragmentId, HttpMethod.PATCH
+				templatesBase+'/'+req.getTemplateId() + fragmentsBase+'/'+req.fragmentId, HttpMethod.PATCH
 		);
 		deleteFragment = new Endpoint<>(req ->
 				templatesBase+'/'+req.templateId + fragmentsBase+'/'+req.fragmentId, HttpMethod.DELETE
@@ -225,7 +226,7 @@ public class Verify2Client {
 	 * @since 8.13.0
 	 */
 	public Template createTemplate(String name) {
-		return createTemplate.execute(new Template(Objects.requireNonNull(name, "Name is required."), null));
+		return createTemplate.execute(new Template(Objects.requireNonNull(name, "Name is required."), null, null));
 	}
 
 	/**
@@ -237,7 +238,6 @@ public class Verify2Client {
 	 * <ul>
 	 *     <li><b>401</b>: Invalid credentials.</li>
 	 *     <li><b>402</b>: Low balance.</li>
-	 *     <li><b>403</b>: Template management is not enabled for your account.</li>
 	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
 	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
 	 * </ul>
@@ -299,9 +299,7 @@ public class Verify2Client {
 	 * @since 8.13.0
 	 */
 	public Template updateTemplate(UUID templateId, String name, Boolean isDefault) {
-		Template template = new Template(name, isDefault);
-		template.id = validateTemplateId(templateId);
-		return updateTemplate.execute(template);
+		return updateTemplate.execute(new Template(name, isDefault, validateTemplateId(templateId)));
 	}
 
 	/**
@@ -364,7 +362,6 @@ public class Verify2Client {
 	 * <ul>
 	 *     <li><b>401</b>: Invalid credentials.</li>
 	 *     <li><b>402</b>: Low balance.</li>
-	 *     <li><b>403</b>: Template management is not enabled for your account.</li>
 	 *     <li><b>404</b>: Template ID was not found.</li>
 	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
 	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
@@ -402,10 +399,9 @@ public class Verify2Client {
 	 * @since 8.13.0
 	 */
 	public TemplateFragment getTemplateFragment(UUID templateId, UUID fragmentId) {
-		TemplateFragment fragment = new TemplateFragment();
-		fragment.templateId = validateTemplateId(templateId);
-		fragment.fragmentId = validateFragmentId(fragmentId);
-		return getFragment.execute(fragment);
+		return getFragment.execute(new TemplateFragmentRequestWrapper(
+				validateTemplateId(templateId), validateFragmentId(fragmentId)
+		));
 	}
 
 	/**
@@ -435,10 +431,9 @@ public class Verify2Client {
 	 * @since 8.13.0
 	 */
 	public TemplateFragment updateTemplateFragment(UUID templateId, UUID fragmentId, String text) {
-		TemplateFragment fragment = new TemplateFragment(text);
-		fragment.templateId = validateTemplateId(templateId);
-		fragment.fragmentId = validateFragmentId(fragmentId);
-		return updateFragment.execute(fragment);
+		return updateFragment.execute(new TemplateFragment(
+				text, validateTemplateId(templateId), validateFragmentId(fragmentId)
+		));
 	}
 
 	/**
@@ -461,9 +456,9 @@ public class Verify2Client {
 	 * @since 8.13.0
 	 */
 	public void deleteTemplateFragment(UUID templateId, UUID fragmentId) {
-		TemplateFragment fragment = new TemplateFragment();
-		fragment.templateId = validateTemplateId(templateId);
-		fragment.fragmentId = validateFragmentId(fragmentId);
-		deleteFragment.execute(fragment);
+		deleteFragment.execute(new TemplateFragmentRequestWrapper(
+				validateTemplateId(templateId),
+				validateFragmentId(fragmentId)
+		));
 	}
 }

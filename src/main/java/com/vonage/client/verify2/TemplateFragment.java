@@ -31,17 +31,20 @@ import java.util.UUID;
  * @since 8.13.0
  */
 public final class TemplateFragment extends JsonableBaseObject {
+	@JsonIgnore private boolean isUpdateRequest;
 	private String text;
 	private Locale locale;
 	private FragmentChannel channel;
 	private Instant dateCreated, dateUpdated;
-	@JsonProperty(value = "template_fragment_id", access = JsonProperty.Access.WRITE_ONLY) UUID fragmentId;
-	@JsonIgnore UUID templateId;
+	UUID fragmentId, templateId;
 
 	TemplateFragment() {}
 
-	TemplateFragment(String text) {
+	TemplateFragment(String text, UUID templateId, UUID fragmentId) {
 		this.text = Objects.requireNonNull(text, "Fragment text is required.");
+		this.templateId = templateId;
+		this.fragmentId = fragmentId;
+		isUpdateRequest = true;
 	}
 
 	/**
@@ -53,7 +56,7 @@ public final class TemplateFragment extends JsonableBaseObject {
 	 *             {@code ${code}}, {@code ${brand}}, {@code ${time-limit}} and {@code ${time-limit-unit}}.
 	 */
 	public TemplateFragment(FragmentChannel channel, String locale, String text) {
-		this(text);
+		this(text, null, null);
 		this.channel = Objects.requireNonNull(channel, "Channel is required.");
 		this.locale = Locale.forLanguageTag(Objects.requireNonNull(locale, "Locale is required."));
 	}
@@ -94,8 +97,19 @@ public final class TemplateFragment extends JsonableBaseObject {
 	 *
 	 * @return The template fragment ID, or {@code null} if this is a request object.
 	 */
+	@JsonProperty("template_fragment_id")
 	public UUID getFragmentId() {
-		return fragmentId;
+		return isUpdateRequest ? null : fragmentId;
+	}
+
+	/**
+	 * Unique identifier of the template this fragment belongs to.
+	 *
+	 * @return The parent template's ID, or {@code null} if unknown.
+	 */
+	@JsonIgnore
+	public UUID getTemplateId() {
+		return templateId;
 	}
 
 	/**
@@ -116,6 +130,12 @@ public final class TemplateFragment extends JsonableBaseObject {
 	@JsonProperty("date_updated")
 	public Instant getDateUpdated() {
 		return dateUpdated;
+	}
+
+	@Override
+	public void updateFromJson(String json) {
+		isUpdateRequest = false;
+		super.updateFromJson(json);
 	}
 
 	private static final class LocaleSerializer extends StdConverter<Locale, String> {

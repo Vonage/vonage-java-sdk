@@ -27,19 +27,22 @@ import java.util.regex.Pattern;
  */
 public final class Template extends JsonableBaseObject {
 	private static final Pattern NAME_REGEX = Pattern.compile("^[a-zA-Z0-9_\\-]+$");
+	private boolean isUpdateRequest;
 	@JsonProperty("name") private String name;
 	@JsonProperty("is_default") private Boolean isDefault;
-	@JsonProperty(value = "template_id", access = JsonProperty.Access.WRITE_ONLY) UUID id;
+	@JsonProperty("template_id") UUID id;
 
 	private Template() {}
 
-	Template(String name, Boolean isDefault) {
+	Template(String name, Boolean isDefault, UUID id) {
 		if ((this.name = name) != null && !NAME_REGEX.matcher(name).matches()) {
 			throw new IllegalArgumentException("Invalid template name. Must match pattern: "+NAME_REGEX.pattern());
 		}
 		if ((this.isDefault = isDefault) == null && name == null) {
 			throw new IllegalArgumentException("Must provide at least one field to update.");
 		}
+		this.id = id;
+		isUpdateRequest = true;
 	}
 
 	/**
@@ -47,6 +50,7 @@ public final class Template extends JsonableBaseObject {
 	 *
 	 * @return The template name.
 	 */
+	@JsonProperty("name")
 	public String getName() {
 		return name;
 	}
@@ -56,8 +60,9 @@ public final class Template extends JsonableBaseObject {
 	 *
 	 * @return The template ID, or {@code null} if this is a request object.
 	 */
+	@JsonProperty("template_id")
 	public UUID getId() {
-		return id;
+		return isUpdateRequest ? null : id;
 	}
 
 	/**
@@ -68,5 +73,11 @@ public final class Template extends JsonableBaseObject {
 	@JsonProperty("is_default")
 	public Boolean isDefault() {
 		return isDefault;
+	}
+
+	@Override
+	public void updateFromJson(String json) {
+		isUpdateRequest = false;
+		super.updateFromJson(json);
 	}
 }
