@@ -1,11 +1,11 @@
 # Vonage Server SDK for Java
 
 ![Java](https://img.shields.io/badge/java-8%2B-red)
-[![Maven Central](https://img.shields.io/maven-central/v/com.vonage/server-sdk)](https://central.sonatype.com/artifact/com.vonage/server-sdk)
+[![Version](https://img.shields.io/maven-central/v/com.vonage/server-sdk)](https://central.sonatype.com/artifact/com.vonage/server-sdk)
 [![Build Status](https://github.com/Vonage/vonage-java-sdk/actions/workflows/build.yml/badge.svg)](https://github.com/Vonage/vonage-java-sdk/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/vonage/vonage-java-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/vonage/vonage-java-sdk)
 ![SLOC](https://sloc.xyz/github/vonage/vonage-java-sdk/)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.1%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE.txt)
 [![Snyk](https://snyk.io/test/github/vonage/vonage-java-sdk/badge.svg)](https://snyk.io/test/github/vonage/vonage-java-sdk)
 <!---[![Pulse](https://img.shields.io/github/commit-activity/m/vonage/vonage-java-sdk)](https://github.com/vonage/vonage-java-sdk/pulse)-->
@@ -59,7 +59,6 @@ See all of our SDKs and integrations on the [Vonage Developer portal](https://de
 
 Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/server-sdk).
 Instructions for your build system can be found in the snippets section.
-They're also available from [here](https://mvnrepository.com/artifact/com.vonage/server-sdk/latest).
 Release notes can be found in the [changelog](CHANGELOG.md).
 
 ### Build It Yourself
@@ -179,5 +178,7 @@ Otherwise, [bug reports](https://github.com/Vonage/vonage-java-sdk/issues),
 library are always appreciated.
 
 ### Contact
+
+[![Email](https://img.shields.io/badge/Email-green?style=flat-square&logo=gmail&logoColor=FFFFFF&labelColor=3A3B3C&color=62F1CD)](mailto:community@vonage.com)
 [![Slack](https://img.shields.io/badge/Slack-4A154B?style=flat&logo=slack&logoColor=white)](https://developer.vonage.com/community/slack)
 [![Twitter](https://img.shields.io/badge/Twitter-000000?style=flat&logo=x&logoColor=white)](https://twitter.com/VonageDev)
