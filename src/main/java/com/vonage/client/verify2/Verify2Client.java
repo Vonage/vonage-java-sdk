@@ -264,7 +264,6 @@ public class Verify2Client {
 	 * <ul>
 	 *     <li><b>401</b>: Invalid credentials.</li>
 	 *     <li><b>402</b>: Low balance.</li>
-	 *     <li><b>403</b>: Template management is not enabled for your account.</li>
 	 *     <li><b>404</b>: Template ID was not found.</li>
 	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
 	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
@@ -390,7 +389,6 @@ public class Verify2Client {
 	 * <ul>
 	 *     <li><b>401</b>: Invalid credentials.</li>
 	 *     <li><b>402</b>: Low balance.</li>
-	 *     <li><b>403</b>: Template management is not enabled for your account.</li>
 	 *     <li><b>404</b>: Fragment not found for the provided IDs.</li>
 	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
 	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>

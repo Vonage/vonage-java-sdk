@@ -59,7 +59,10 @@ See all of our SDKs and integrations on the [Vonage Developer portal](https://de
 
 Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/server-sdk).
 Instructions for your build system can be found in the snippets section.
-Release notes can be found in the [changelog](CHANGELOG.md).
+We *strongly recommend* that you use a tool that supports dependency management,
+such as [Maven](https://maven.apache.org/), [Gradle](https://gradle.org/) or [Ivy](http://ant.apache.org/ivy/).
+
+Release notes for each version can be found in the [changelog](CHANGELOG.md).
 
 ### Build It Yourself
 
@@ -67,17 +70,14 @@ Alternatively you can clone the repo and build the JAR file yourself:
 
 ```bash
 git clone git@github.com:vonage/vonage-java-sdk.git
-mvn install
+mvn install -P uberjar
 ```
 
-### Download everything in a ZIP file
-
-**Note**: We *strongly recommend* that you use a tool that supports dependency management,
-such as [Maven](https://maven.apache.org/), [Gradle](https://gradle.org/) or [Ivy](http://ant.apache.org/ivy/).
-
-We provide a [ZIP file for each release](https://github.com/Vonage/vonage-java-sdk/releases/),
-containing the Java Server SDK JAR, along with all the dependencies. Download the file, unzip it, and add the JAR files
-to your project's classpath.
+The `uberjar` profile will create a JAR file with all dependencies required to run the SDK included,
+which can be found in the `target` directory. The `install` goal will make the SDK and its dependencies
+available in your local Maven repository (usually located under your `~/.m2` directory), which can then
+be used from other projects locally on your machine. To use this in a Gradle project, you need to include
+the dependency co-ordinates and add `mavenLocal()` to the `repositories` block in your `build.gradle` file.
 
 ## Usage
 

@@ -286,7 +286,6 @@
           <value>true</value>
         </property>
       </activation>
-
       <build>
         <plugins>
           <plugin>
@@ -308,7 +307,6 @@
               </gpgArguments>
             </configuration>
           </plugin>
-
           <plugin>
             <groupId>org.sonatype.plugins</groupId>
             <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -348,6 +346,5 @@
         </plugins>
       </build>
     </profile>
-
   </profiles>
 </project>
