@@ -27,11 +27,21 @@ public class SecretResponse extends JsonableBaseObject {
     private String id;
     private Instant created;
 
+    /**
+     * ID of the secret.
+     *
+     * @return The secret ID as a string.
+     */
     @JsonProperty("id")
     public String getId() {
         return id;
     }
 
+    /**
+     * Time the secret was created.
+     *
+     * @return The creation time as an Instant, or {@code null} if unknown.
+     */
     @JsonProperty("created_at")
     public Instant getCreated() {
         return created;

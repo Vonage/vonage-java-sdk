@@ -15,14 +15,23 @@
  */
 package com.vonage.client.account;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.QueryParamsRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Request wrapper for updating account settings.
+ *
+ * @deprecated This will be made package-private in the next major release.
+ */
+@Deprecated
 public class SettingsRequest implements QueryParamsRequest {
     private final String incomingSmsUrl, deliveryReceiptUrl;
 
     /**
+     * Constructor.
+     *
      * @param incomingSmsUrl     The URL where Vonage will send a webhook when an incoming SMS is received when a
      *                           number-specific URL is not configured. Set to an empty string to unset the value.
      * @param deliveryReceiptUrl The URL where Vonage will send a webhook when an incoming SMS is received when a
@@ -38,7 +47,9 @@ public class SettingsRequest implements QueryParamsRequest {
      *                       number-specific URL is not configured. Set to an empty string to unset the value.
      *
      * @return An SettingsRequest with only the incoming SMS URL set.
+     * @deprecated This will be removed in the next major release.
      */
+    @Deprecated
     public static SettingsRequest withIncomingSmsUrl(String incomingSmsUrl) {
         return new SettingsRequest(incomingSmsUrl, null);
     }
@@ -48,7 +59,9 @@ public class SettingsRequest implements QueryParamsRequest {
      *                           number-specific URL is not configured. Set to an empty string to unset the value.
      *
      * @return An SettingsRequest with only the delivery receipt URL set.
+     * @deprecated This will be removed in the next major release.
      */
+    @Deprecated
     public static SettingsRequest withDeliveryReceiptUrl(String deliveryReceiptUrl) {
         return new SettingsRequest(null, deliveryReceiptUrl);
     }
@@ -72,8 +85,12 @@ public class SettingsRequest implements QueryParamsRequest {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = new LinkedHashMap<>(4);
-        params.put("moCallBackUrl", incomingSmsUrl);
-        params.put("drCallBackUrl", deliveryReceiptUrl);
+        if (incomingSmsUrl != null) {
+            params.put("moCallBackUrl", incomingSmsUrl);
+        }
+        if (deliveryReceiptUrl != null) {
+            params.put("drCallBackUrl", deliveryReceiptUrl);
+        }
         return params;
     }
 }

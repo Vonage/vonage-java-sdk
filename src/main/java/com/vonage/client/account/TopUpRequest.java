@@ -20,16 +20,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 class TopUpRequest implements QueryParamsRequest {
-    private final String trx;
+    final String trx;
 
     public TopUpRequest(String trx) {
         if ((this.trx = trx) == null || trx.trim().isEmpty()) {
             throw new IllegalArgumentException("Transaction ID is required.");
         }
-    }
-
-    public String getTrx() {
-        return trx;
     }
 
     @Override

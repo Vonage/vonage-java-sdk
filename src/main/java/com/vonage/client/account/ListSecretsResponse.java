@@ -28,7 +28,9 @@ import java.util.List;
 public class ListSecretsResponse extends HalPageResponse {
     @JsonProperty("_embedded") private Embedded _embedded;
 
-    
+    @Deprecated
+    public ListSecretsResponse() {}
+
     private static final class Embedded extends JsonableBaseObject {
         @JsonProperty("secrets") private List<SecretResponse> secrets;
     }

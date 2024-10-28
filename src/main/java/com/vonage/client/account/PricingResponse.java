@@ -22,6 +22,9 @@ import com.vonage.client.JsonableBaseObject;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Pricing information for a specific country.
+ */
 public class PricingResponse extends JsonableBaseObject {
     private String dialingPrefix;
     private BigDecimal defaultPrice;
@@ -29,26 +32,55 @@ public class PricingResponse extends JsonableBaseObject {
     @JsonUnwrapped private Country country;
     private List<Network> networks;
 
+    @Deprecated
+    public PricingResponse() {
+    }
+
+    /**
+     * Dialing prefix for the country.
+     *
+     * @return The dialing prefix as a string.
+     */
     @JsonProperty("dialingPrefix")
     public String getDialingPrefix() {
         return dialingPrefix;
     }
 
+    /**
+     * Default price for the country.
+     *
+     * @return The default price.
+     */
     @JsonProperty("defaultPrice")
     public BigDecimal getDefaultPrice() {
         return defaultPrice;
     }
 
+    /**
+     * Currency that your account is being billed in (EUR by default).
+     *
+     * @return The billing currency code as a string.
+     */
     @JsonProperty("currency")
     public String getCurrency() {
         return currency;
     }
 
+    /**
+     * Details of the country this pricing information is for.
+     *
+     * @return The country.
+     */
     @JsonProperty("country")
     public Country getCountry() {
         return country;
     }
 
+    /**
+     * List of supported networks in the country.
+     *
+     * @return The list of networks.
+     */
     @JsonProperty("networks")
     public List<Network> getNetworks() {
         return networks;
@@ -59,7 +91,9 @@ public class PricingResponse extends JsonableBaseObject {
      *
      * @param json The JSON string to parse.
      * @return An instance of this class with the fields populated, if present.
+     * @deprecated This will be removed in the next major release.
      */
+    @Deprecated
     public static PricingResponse fromJson(String json) {
         return Jsonable.fromJson(json);
     }

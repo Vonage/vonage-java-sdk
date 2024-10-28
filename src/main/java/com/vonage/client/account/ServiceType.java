@@ -15,6 +15,9 @@
  */
 package com.vonage.client.account;
 
+/**
+ * Represents the service type for pricing requests.
+ */
 public enum ServiceType {
     SMS, VOICE, SMS_TRANSIT;
 

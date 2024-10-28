@@ -18,19 +18,37 @@ package com.vonage.client.account;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
+/**
+ * Groups the country details in {@link PricingResponse}.
+ */
 public class Country extends JsonableBaseObject {
     private String code, displayName, name;
 
+    /**
+     * Two-letter country code.
+     *
+     * @return The country code as a string.
+     */
     @JsonProperty("countryCode")
     public String getCode() {
         return code;
     }
 
+    /**
+     * Readable alternate country name.
+     *
+     * @return The country display name.
+     */
     @JsonProperty("countryDisplayName")
     public String getDisplayName() {
         return displayName;
     }
 
+    /**
+     * Country name.
+     *
+     * @return The country name.
+     */
     @JsonProperty("countryName")
     public String getName() {
         return name;

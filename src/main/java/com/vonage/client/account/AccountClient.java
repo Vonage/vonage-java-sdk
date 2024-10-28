@@ -33,7 +33,7 @@ public class AccountClient {
 
     final RestEndpoint<Void, BalanceResponse> balance;
     final RestEndpoint<PricingRequest, PricingResponse> pricing;
-    final RestEndpoint<FullPricingRequest, FullPricingResponse> fullPricing;
+    final RestEndpoint<ServiceType, FullPricingResponse> fullPricing;
     final RestEndpoint<PrefixPricingRequest, PrefixPricingResponse> prefixPricing;
     final RestEndpoint<TopUpRequest, Void> topUp;
     final RestEndpoint<SettingsRequest, SettingsResponse> settings;
@@ -49,7 +49,6 @@ public class AccountClient {
      */
     @SuppressWarnings("unchecked")
     public AccountClient(HttpWrapper wrapper) {
-        super();
         apiKeyGetter = () -> wrapper.getAuthCollection().getAuth(ApiKeyHeaderAuthMethod.class).getApiKey();
 
         class Endpoint<T, R> extends DynamicEndpoint<T, R> {
@@ -85,20 +84,20 @@ public class AccountClient {
 
         class SecretRequestEndpoint<R> extends Endpoint<SecretRequest, R> {
             SecretRequestEndpoint(HttpMethod method, R... type) {
-                super(req -> String.format(SECRETS_PATH, req.getApiKey()) + "/" + req.getSecretId(),
+                super(req -> String.format(SECRETS_PATH, req.apiKey) + "/" + req.secretId,
                         method, true, false, type
                 );
             }
         }
 
         balance = new Endpoint<>(req -> "/get-balance");
-        pricing = new Endpoint<>(req -> "/get-pricing/outbound/" + req.getServiceType());
-        fullPricing = new Endpoint<>(req -> "/get-full-pricing/outbound/" + req.getServiceType());
-        prefixPricing = new Endpoint<>(req -> "/get-prefix-pricing/outbound/" + req.getServiceType());
+        pricing = new Endpoint<>(req -> "/get-pricing/outbound/" + req.serviceType);
+        fullPricing = new Endpoint<>(req -> "/get-full-pricing/outbound/" + req);
+        prefixPricing = new Endpoint<>(req -> "/get-prefix-pricing/outbound/" + req.serviceType);
         topUp = new Endpoint<>(req -> "/top-up", HttpMethod.POST);
         settings = new Endpoint<>(req -> "/settings", HttpMethod.POST);
         listSecrets = new SecretsEndpoint<>(Function.identity(), HttpMethod.GET);
-        createSecret = new SecretsEndpoint<>(CreateSecretRequest::getApiKey, HttpMethod.POST);
+        createSecret = new SecretsEndpoint<>(req -> req.apiKey, HttpMethod.POST);
         getSecret = new SecretRequestEndpoint<>(HttpMethod.GET);
         revokeSecret = new SecretRequestEndpoint<>(HttpMethod.DELETE);
     }
@@ -115,14 +114,18 @@ public class AccountClient {
     }
 
     /**
+     * Obtain pricing data on all supported countries for a specific service type.
      *
      * @param service The service type to retrieve pricing and network information for.
      *
-     * @return The
+     * @return The list of pricing information for all supported countries.
+     *
+     * @throws AccountResponseException If the pricing data could not be retrieved.
+     *
+     * @since v7.9.0
      */
     public List<PricingResponse> listPriceAllCountries(ServiceType service) {
-        Objects.requireNonNull(service, "Service type is required.");
-        return fullPricing.execute(new FullPricingRequest(service)).getCountries();
+        return fullPricing.execute(Objects.requireNonNull(service, "Service type is required.")).countries;
     }
 
     /**
@@ -132,8 +135,7 @@ public class AccountClient {
      *
      * @return PricingResponse object which contains the results from the API.
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws AccountResponseException If there was an error making the request or retrieving the response.
      */
     public PricingResponse getVoicePrice(String country) throws AccountResponseException {
         return pricing.execute(new PricingRequest(country, ServiceType.VOICE));
@@ -146,8 +148,7 @@ public class AccountClient {
      *
      * @return PricingResponse object which contains the results from the API.
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws AccountResponseException If there was an error making the request or retrieving the response.
      */
     public PricingResponse getSmsPrice(String country) throws AccountResponseException {
         return pricing.execute(new PricingRequest(country, ServiceType.SMS));
@@ -161,8 +162,7 @@ public class AccountClient {
      *
      * @return PrefixPricingResponse object which contains the results from the API.
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws AccountResponseException If there was an error making the request or retrieving the response.
      */
     public PrefixPricingResponse getPrefixPrice(ServiceType type, String prefix) throws AccountResponseException {
         return prefixPricing.execute(new PrefixPricingRequest(type, prefix));
@@ -174,9 +174,7 @@ public class AccountClient {
      *
      * @param transaction The ID associated with your original auto-reload transaction
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
-     *                                     that the request was unsuccessful.
+     * @throws AccountResponseException If there was an error making the request or retrieving the response.
      */
     public void topUp(String transaction) throws AccountResponseException {
         topUp.execute(new TopUpRequest(transaction));
@@ -202,9 +200,7 @@ public class AccountClient {
      *
      * @return ListSecretsResponse object which contains the results from the API.
      *
-     * @throws VonageResponseParseException if a network error occurred contacting the Vonage Account API
-     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
-     *                                     that the request was unsuccessful.
+     * @throws AccountResponseException If there was an error making the request or retrieving the response.
      */
     public ListSecretsResponse listSecrets(String apiKey) throws AccountResponseException {
         if (apiKey == null || apiKey.trim().isEmpty()) {
@@ -236,9 +232,7 @@ public class AccountClient {
      *
      * @return SecretResponse object which contains the results from the API.
      *
-     * @throws VonageResponseParseException if a network error occurred contacting the Vonage Account API
-     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
-     *                                     that the request was unsuccessful.
+     * @throws AccountResponseException If there was an error making the request or retrieving the response.
      */
     public SecretResponse getSecret(String apiKey, String secretId) throws AccountResponseException {
         return getSecret.execute(new SecretRequest(apiKey, secretId));
@@ -267,9 +261,7 @@ public class AccountClient {
      *
      * @return SecretResponse object which contains the created secret from the API.
      *
-     * @throws VonageResponseParseException if a network error occurred contacting the Vonage Account API
-     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
-     *                                     that the request was unsuccessful.
+     * @throws AccountResponseException If there was an error making the request or retrieving the response.
      */
     public SecretResponse createSecret(String apiKey, String secret) throws AccountResponseException {
         return createSecret.execute(new CreateSecretRequest(apiKey, secret));
@@ -294,49 +286,52 @@ public class AccountClient {
      * @param apiKey   The API key that the secret is associated to.
      * @param secretId The id of the secret to revoke.
      *
-     * @throws VonageResponseParseException if a network error occurred contacting the Vonage Account API
-     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
-     *                                     that the request was unsuccessful.
+     * @throws AccountResponseException If there was an error making the request or retrieving the response.
      */
     public void revokeSecret(String apiKey, String secretId) throws AccountResponseException {
         revokeSecret.execute(new SecretRequest(apiKey, secretId));
     }
 
     /**
-     * @param url The new incoming sms webhook url to associate to your account.
+     * Updates the account-level incoming SMS URL, as used by the SMS API.
+     *
+     * @param url The URL where Vonage will send a webhook when an incoming SMS is received when a
+     * number-specific URL is not configured. Set to an empty string to unset the value.
      *
      * @return A {@link SettingsResponse} containing the newly-updated account settings.
      *
-     * @throws VonageResponseParseException if a network error occurred contacting the Vonage Account API
-     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
-     *                                     that the request was unsuccessful.
+     * @throws AccountResponseException If there was an error making the request or retrieving the response.
      */
     public SettingsResponse updateSmsIncomingUrl(String url) throws AccountResponseException {
         return updateSettings(SettingsRequest.withIncomingSmsUrl(url));
     }
 
     /**
-     * @param url The new delivery receipt webhook url to associate to your account.
+     * Updates the account-level delivery receipt URL (mainly used by the SMS API).
+     *
+     * @param url The URL where Vonage will send a webhook when an incoming SMS is received when a
+     * number-specific URL is not configured. Set to an empty string to unset the value.
      *
      * @return A {@link SettingsResponse} containing the newly-updated account settings.
      *
-     * @throws VonageResponseParseException if a network error occurred contacting the Vonage Account API
-     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
-     *                                     that the request was unsuccessful.
+     * @throws AccountResponseException If there was an error making the request or retrieving the response.
      */
     public SettingsResponse updateDeliveryReceiptUrl(String url) throws AccountResponseException {
         return updateSettings(SettingsRequest.withDeliveryReceiptUrl(url));
     }
 
     /**
+     * Updates the account-level settings.
+     *
      * @param request The {@link SettingsRequest} containing the fields to update.
      *
      * @return A {@link SettingsResponse} containing the newly-updated account settings.
      *
-     * @throws VonageResponseParseException if a network error occurred contacting the Vonage Account API
-     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
-     *                                     that the request was unsuccessful.
+     * @throws AccountResponseException If there was an error making the request or retrieving the response.
+     *
+     * @deprecated Use {@link #updateSmsIncomingUrl(String)} or {@link #updateDeliveryReceiptUrl(String)} instead.
      */
+    @Deprecated
     public SettingsResponse updateSettings(SettingsRequest request) throws AccountResponseException {
         return settings.execute(Objects.requireNonNull(request, "Settings request cannot be null."));
     }

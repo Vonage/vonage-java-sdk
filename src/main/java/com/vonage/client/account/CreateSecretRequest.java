@@ -20,20 +20,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
 class CreateSecretRequest extends JsonableBaseObject {
-    @JsonIgnore private final String apiKey;
-    private final String secret;
+    @JsonIgnore final String apiKey;
+    @JsonProperty("secret") private final String secret;
 
-    public CreateSecretRequest(String apiKey, String secret) {
+    CreateSecretRequest(String apiKey, String secret) {
         this.apiKey = apiKey;
         this.secret = secret;
-    }
-
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    @JsonProperty("secret")
-    public String getSecret() {
-        return secret;
     }
 }

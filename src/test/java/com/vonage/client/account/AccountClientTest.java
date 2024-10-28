@@ -618,7 +618,7 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
 
             @Override
             protected Map<String, String> sampleQueryParams() {
-                return Collections.singletonMap("trx", sampleRequest().getTrx());
+                return Collections.singletonMap("trx", sampleRequest().trx);
             }
         }
         .runTests();
@@ -637,7 +637,7 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
 
             @Override
             protected String expectedEndpointUri(PricingRequest request) {
-                return "/account/get-pricing/outbound/" + request.getServiceType();
+                return "/account/get-pricing/outbound/sms";
             }
 
             @Override
@@ -647,13 +647,7 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
 
             @Override
             protected Map<String, String> sampleQueryParams() {
-                PricingRequest request = sampleRequest();
-                assertEquals("de", request.getCountryCode());
-                assertEquals("sms", request.getServiceType());
-
-                Map<String, String> params = new LinkedHashMap<>();
-                params.put("country", request.getCountryCode());
-                return params;
+                return Map.of("country", "de");
             }
         }
         .runTests();
@@ -661,23 +655,21 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
 
     @Test
     public void testFullPricingEndpoint() throws Exception {
-        new AccountEndpointTestSpec<FullPricingRequest, FullPricingResponse>() {
+        new AccountEndpointTestSpec<ServiceType, FullPricingResponse>() {
 
             @Override
-            protected RestEndpoint<FullPricingRequest, FullPricingResponse> endpoint() {
+            protected RestEndpoint<ServiceType, FullPricingResponse> endpoint() {
                 return client.fullPricing;
             }
 
             @Override
-            protected String expectedEndpointUri(FullPricingRequest request) {
-                return "/account/get-full-pricing/outbound/" + request.getServiceType();
+            protected String expectedEndpointUri(ServiceType request) {
+                return "/account/get-full-pricing/outbound/sms-transit";
             }
 
             @Override
-            protected FullPricingRequest sampleRequest() {
-                FullPricingRequest request = new FullPricingRequest(ServiceType.SMS_TRANSIT);
-                assertEquals("sms-transit", request.getServiceType().toString());
-                return request;
+            protected ServiceType sampleRequest() {
+                return ServiceType.SMS_TRANSIT;
             }
         }
         .runTests();
@@ -694,7 +686,7 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
 
             @Override
             protected String expectedEndpointUri(PrefixPricingRequest request) {
-                return "/account/get-prefix-pricing/outbound/" + request.getServiceType();
+                return "/account/get-prefix-pricing/outbound/voice";
             }
 
             @Override
@@ -705,11 +697,8 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
             @Override
             protected Map<String, String> sampleQueryParams() {
                 PrefixPricingRequest request = sampleRequest();
-                assertEquals("voice", request.getServiceType().toString());
-                assertEquals("44", request.getPrefix());
-
                 Map<String, String> params = new LinkedHashMap<>();
-                params.put("prefix", request.getPrefix());
+                params.put("prefix", "44");
                 return params;
             }
         }
@@ -752,15 +741,9 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
 
             @Override
             protected Map<String, String> sampleQueryParams() {
-                SettingsRequest request = sampleRequest();
-                String smsUrl = request.getIncomingSmsUrl();
-                String drUrl = request.getDeliveryReceiptUrl();
-                assertEquals("https://example.com/inbound-sms", smsUrl);
-                assertEquals("https://example.com/delivery-receipt", drUrl);
-
                 Map<String, String> params = new LinkedHashMap<>();
-                params.put("moCallBackUrl", smsUrl);
-                params.put("drCallBackUrl", drUrl);
+                params.put("moCallBackUrl", "https://example.com/inbound-sms");
+                params.put("drCallBackUrl", "https://example.com/delivery-receipt");
                 return params;
             }
         }

@@ -20,6 +20,12 @@ import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 
+/**
+ * Wrapper for the response in {@link AccountClient#getPrefixPrice(ServiceType, String)}.
+ *
+ * @deprecated This will be removed in favour of returning the list of countries' pricing directly.
+ */
+@Deprecated
 public class PrefixPricingResponse extends JsonableBaseObject {
     private int count;
     private List<PricingResponse> countries;

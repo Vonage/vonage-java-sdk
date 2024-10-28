@@ -19,13 +19,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
+/**
+ * Details of the configured account settings.
+ */
 public class SettingsResponse extends JsonableBaseObject {
-    private String incomingSmsUrl,deliveryReceiptUrl;
+    private String incomingSmsUrl, deliveryReceiptUrl;
     private Integer maxOutboundMessagesPerSecond, maxInboundMessagesPerSecond, maxApiCallsPerSecond;
 
+    @Deprecated
+    public SettingsResponse() {}
+
     /**
-     * @return The URL where Vonage will send a webhook when an incoming SMS is received when a number-specific URL is
-     * not configured.
+     * URL where Vonage will send a webhook when an incoming SMS is received when a
+     * number-specific URL is not configured.
+     *
+     * @return The default URL for inbound SMS webhooks.
      */
     @JsonProperty("mo-callback-url")
     public String getIncomingSmsUrl() {
@@ -33,8 +41,10 @@ public class SettingsResponse extends JsonableBaseObject {
     }
 
     /**
-     * @return The URL where Vonage will send a webhook when a delivery receipt is received when a number-specific URL is
-     * not configured.
+     * URL where Vonage will send a webhook when a delivery receipt is received when a
+     * number-specific URL is not configured.
+     *
+     * @return The default URL for delivery receipt webhooks.
      */
     @JsonProperty("dr-callback-url")
     public String getDeliveryReceiptUrl() {
@@ -42,7 +52,9 @@ public class SettingsResponse extends JsonableBaseObject {
     }
 
     /**
-     * @return The maximum number of outbound messages per second.
+     * Maximum number of outbound messages per second for the account.
+     *
+     * @return The maximum number of messages that can be sent per second.
      */
     @JsonProperty("max-outbound-request")
     public Integer getMaxOutboundMessagesPerSecond() {
@@ -50,7 +62,9 @@ public class SettingsResponse extends JsonableBaseObject {
     }
 
     /**
-     * @return The maximum number of inbound messages per second.
+     * Maximum number of inbound messages per second for the account.
+     *
+     * @return The maximum number of messages that can be received per second.
      */
     @JsonProperty("max-inbound-request")
     public Integer getMaxInboundMessagesPerSecond() {
@@ -58,7 +72,9 @@ public class SettingsResponse extends JsonableBaseObject {
     }
 
     /**
-     * @return The maximum number of API calls per second.
+     * Maximum number of API calls per second for the account.
+     *
+     * @return The maximum number of API calls that can be made per second.
      */
     @JsonProperty("max-calls-per-second")
     public Integer getMaxApiCallsPerSecond() {

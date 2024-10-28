@@ -160,9 +160,9 @@ public final class ConnectRequest extends AbstractSessionTokenRequest {
         }
 
         /**
-         * Builds the StartCaptionsRequest object.
+         * Builds the ConnectRequest object.
          *
-         * @return The StartCaptionsRequest object with this builder's settings.
+         * @return The ConnectRequest object with this builder's settings.
          */
         @Override
         public ConnectRequest build() {

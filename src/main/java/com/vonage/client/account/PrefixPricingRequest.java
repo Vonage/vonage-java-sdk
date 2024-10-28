@@ -21,20 +21,12 @@ import java.util.Map;
 import java.util.Objects;
 
 class PrefixPricingRequest implements QueryParamsRequest {
-    private final ServiceType serviceType;
-    private final String prefix;
+    final ServiceType serviceType;
+    final String prefix;
 
     public PrefixPricingRequest(ServiceType serviceType, String prefix) {
         this.serviceType = Objects.requireNonNull(serviceType, "Service type cannot be null.");
         this.prefix = prefix;
-    }
-
-    public ServiceType getServiceType() {
-        return serviceType;
-    }
-
-    public String getPrefix() {
-        return prefix;
     }
 
     @Override

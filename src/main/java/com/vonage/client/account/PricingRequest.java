@@ -20,20 +20,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 class PricingRequest implements QueryParamsRequest {
-    private final String countryCode;
-    private final ServiceType serviceType;
+    final String countryCode;
+    final ServiceType serviceType;
 
-    public PricingRequest(String countryCode, ServiceType serviceType) {
+    PricingRequest(String countryCode, ServiceType serviceType) {
         this.countryCode = countryCode;
         this.serviceType = serviceType;
-    }
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public String getServiceType() {
-        return serviceType.toString();
     }
 
     @Override

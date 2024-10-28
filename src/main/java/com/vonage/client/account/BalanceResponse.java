@@ -19,22 +19,36 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
+/**
+ * Response data for the {@link AccountClient#getBalance()} method.
+ */
 public class BalanceResponse extends JsonableBaseObject {
     private double value;
     private boolean autoReload;
 
     protected BalanceResponse() {}
 
+    /**
+     * Account balance in EUR as a double.
+     *
+     * @return The balance in Euros.
+     */
     @JsonProperty("value")
     public double getValue() {
         return value;
     }
 
+    /**
+     * Whether balance auto-reloading is enabled.
+     *
+     * @return {@code true} if auto-reloading is enabled, {@code false} otherwise.
+     */
     @JsonProperty("autoReload")
     public boolean isAutoReload() {
         return autoReload;
     }
 
+    @Deprecated
     public static BalanceResponse fromJson(String json) {
         return Jsonable.fromJson(json);
     }
