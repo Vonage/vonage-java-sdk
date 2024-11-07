@@ -5,7 +5,7 @@
 
   <groupId>com.vonage</groupId>
   <artifactId>server-sdk</artifactId>
-  <version>8.13.0</version>
+  <version>8.13.1</version>
 
   <name>Vonage Java Server SDK</name>
   <description>Java client for Vonage APIs</description>
@@ -45,7 +45,7 @@
     <java.testVersion>21</java.testVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <nexusUrl>https://oss.sonatype.org</nexusUrl>
-    <jackson.version>2.18.0</jackson.version>
+    <jackson.version>2.18.1</jackson.version>
     <jjwt.version>0.12.6</jjwt.version>
   </properties>
 
@@ -190,7 +190,7 @@
 
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.5.1</version>
+        <version>3.5.2</version>
       </plugin>
 
       <plugin>
@@ -228,7 +228,7 @@
 
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.10.1</version>
+        <version>3.11.1</version>
         <configuration>
           <linksource>true</linksource>
         </configuration>
@@ -255,24 +255,6 @@
             </manifestEntries>
           </archive>
         </configuration>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.7.1</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <descriptorRefs>
-                <descriptorRef>jar-with-dependencies</descriptorRef>
-              </descriptorRefs>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
