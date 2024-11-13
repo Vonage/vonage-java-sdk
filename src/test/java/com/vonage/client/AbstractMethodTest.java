@@ -19,15 +19,15 @@ import com.sun.net.httpserver.HttpServer;
 import static com.vonage.client.TestUtils.*;
 import com.vonage.client.auth.*;
 import com.vonage.client.auth.hashutils.HashUtil;
-import io.jsonwebtoken.lang.Assert;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.*;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import static org.junit.jupiter.api.Assertions.*;
@@ -90,20 +90,29 @@ public class AbstractMethodTest {
         }
     }
 
+    static class CloseableBasicHttpResponse extends BasicHttpResponse implements CloseableHttpResponse {
+        CloseableBasicHttpResponse() {
+            super(new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK"));
+        }
+
+        @Override
+        public void close() {
+            System.out.println("CloseableBasicHttpResponse.close() called");
+        }
+    }
+
     private HttpServer httpServer;
     private HttpWrapper mockWrapper;
-    private HttpClient mockHttpClient;
+    private CloseableHttpClient mockHttpClient;
     private AuthMethod mockAuthMethod;
-    private final HttpResponse basicResponse = new BasicHttpResponse(
-            new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
-    );
+    private final CloseableHttpResponse basicResponse = new CloseableBasicHttpResponse();
 
     @BeforeEach
     public void setUp() throws Exception {
         mockWrapper = mock(HttpWrapper.class);
         AuthCollection mockAuthMethods = mock(AuthCollection.class);
         mockAuthMethod = mock(AuthMethod.class);
-        mockHttpClient = mock(HttpClient.class);
+        mockHttpClient = mock(CloseableHttpClient.class);
         when(mockAuthMethods.getAcceptableAuthMethod(any())).thenReturn(mockAuthMethod);
         when(mockWrapper.getHttpClient()).thenReturn(mockHttpClient);
         when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(basicResponse);
@@ -239,10 +248,10 @@ public class AbstractMethodTest {
         ConcreteMethod method = mockJsonResponse(json, true);
         try {
             method.execute("");
-            Assert.isTrue(false,"Should have gotten a Parsing exception");
+            fail("Should have gotten a Parsing exception");
         }
         catch (VonageResponseParseException ex){
-            Assert.isTrue(ex.getCause() instanceof IOException, "Unknown Exception Caused Throw");
+            assertInstanceOf(IOException.class, ex.getCause(), "Unknown Exception Caused Throw");
         }
     }
 
@@ -254,10 +263,10 @@ public class AbstractMethodTest {
         when(mockHttpClient.execute(any(HttpUriRequest.class))).thenThrow(ex);
         try {
             method.execute("");
-            Assert.isTrue(false, "There should have been a Vonage Client exception thrown");
+            fail("There should have been a Vonage Client exception thrown");
         }
         catch (VonageMethodFailedException e) {
-            Assert.isTrue(e.getCause() instanceof IOException, "The cause of the exception was not correct");
+            assertInstanceOf(IOException.class, e.getCause(), "The cause of the exception was not correct");
         }
     }
 

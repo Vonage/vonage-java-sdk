@@ -21,7 +21,6 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Collections;
 import java.util.Set;
-import java.util.UUID;
 
 public class AuthCollectionTest {
     private static final Set<Class<? extends AuthMethod>>

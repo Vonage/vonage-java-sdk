@@ -15,13 +15,16 @@
  */
 package com.vonage.client;
 
-
 /**
  * An exception that indicates the contents of an HttpResponse could not be parsed.
  */
 public class VonageResponseParseException extends VonageUnexpectedException {
     public VonageResponseParseException(String message) {
         this(message, null);
+    }
+
+    public VonageResponseParseException(Throwable ex) {
+        this("Failed to parse the API response.", ex);
     }
 
     public VonageResponseParseException(String message, Throwable t) {

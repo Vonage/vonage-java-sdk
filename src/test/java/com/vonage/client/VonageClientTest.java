@@ -21,14 +21,12 @@ import com.vonage.client.auth.hashutils.HashUtil;
 import com.vonage.client.voice.Call;
 import com.vonage.client.voice.CallEvent;
 import com.vonage.client.voice.CallStatus;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
-import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 
 public class VonageClientTest extends AbstractClientTest<VonageClient> {
@@ -89,11 +87,11 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
         String constructedToken = client.generateJwt();
 
         byte[] publicKeyBytes = testUtils.loadKey("test/keys/application_public_key.der");
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKeyBytes);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-        PublicKey key = kf.generatePublic(spec);
+        var spec = new X509EncodedKeySpec(publicKeyBytes);
+        var keyFactory = KeyFactory.getInstance("RSA");
+        var key = keyFactory.generatePublic(spec);
 
-        Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(constructedToken).getPayload();
+        var claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(constructedToken).getPayload();
 
         assertEquals(APPLICATION_ID_STR, claims.get("application_id"));
     }
