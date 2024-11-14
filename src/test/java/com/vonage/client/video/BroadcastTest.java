@@ -61,8 +61,8 @@ public class BroadcastTest {
 
 		String expectedRequestedJson = "{\"sessionId\":\""+sessionId+"\",\"streamMode\":\""+streamMode +
 				"\",\"resolution\":\""+resolution+"\",\"layout\":{\"type\":\"custom\",\"stylesheet\":\"" +
-				stylesheet+"\"},\"multiBroadcastTag\":\""+multiBroadcastTag + "\",\"maxDuration\":" +
-				maxDuration+",\"maxBitrate\":"+maxBitrate+",\"outputs\":{" + "\"rtmp\":[{\"id\":\"" +
+				stylesheet+"\"},\"maxBitrate\":"+maxBitrate+",\"multiBroadcastTag\":\""+multiBroadcastTag +
+				"\",\"maxDuration\":" + maxDuration+",\"outputs\":{" + "\"rtmp\":[{\"id\":\"" +
 				rtmp1.getId()+"\",\"streamName\":\""+rtmp1.getStreamName()+"\",\"serverUrl\":\"" +
 				rtmp1.getServerUrl()+"\"}],\"hls\":{\"dvr\":"+hls.dvr()+",\"lowLatency\":" +
 				hls.lowLatency()+"}}}", requestJson = request.toJson();
@@ -133,9 +133,10 @@ public class BroadcastTest {
 				"\"layout\":{" +
 					"\"type\":\"custom\"," +
 					"\"stylesheet\":\"stream.instructor {position: absolute; width: 100%;  height:50%;}\"" +
-				"},\"multiBroadcastTag\":\"Tag for multiple broadcasts\"," +
-				"\"maxDuration\":14500," +
+				"}," +
 				"\"maxBitrate\":300000," +
+				"\"multiBroadcastTag\":\"Tag for multiple broadcasts\"," +
+				"\"maxDuration\":14500," +
 				"\"outputs\":{" +
 					"\"rtmp\":[{" +
 						"\"id\":\"bar\"," +
@@ -160,10 +161,10 @@ public class BroadcastTest {
 				"\"hasAudio\":"+hasAudio+"," +
 				"\"createdAt\":"+createdAt+"," +
 				"\"streams\":[{}]," +
+				"\"maxBitrate\":"+maxBitrate+"," +
 				"\"multiBroadcastTag\":\""+multiBroadcastTag+"\"," +
 				"\"updatedAt\":"+updatedAt+"," +
 				"\"maxDuration\":"+maxDuration+"," +
-				"\"maxBitrate\":"+maxBitrate+"," +
 				"\"status\":\""+status+"\"," +
 				"\"broadcastUrls\":{\"hls\":\""+hlsUrl+"\"," +
 				"\"rtmp\":[{\"id\":\""+rtmp1.getId()+"\",\"streamName\":\""+rtmp1.getStreamName()+"\"," +

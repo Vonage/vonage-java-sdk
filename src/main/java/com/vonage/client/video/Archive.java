@@ -49,6 +49,9 @@ public class Archive extends StreamComposition {
         hasVideo = builder.hasVideo;
         resolution = builder.resolution;
         streamMode = builder.streamMode;
+        if ((maxBitrate = builder.maxBitrate) != null && (maxBitrate < 100000 || maxBitrate > 6000000)) {
+            throw new IllegalArgumentException("Maximum bitrate must be between 100000 and 6000000.");
+        }
     }
 
     /**
@@ -297,6 +300,20 @@ public class Archive extends StreamComposition {
          */
         public Builder multiArchiveTag(String multiArchiveTag) {
             this.multiArchiveTag = multiArchiveTag;
+            return this;
+        }
+
+        /**
+         * (OPTIONAL) The maximum bitrate for the archive, in bits per second.
+         * This must be between 100000 and 6000000.
+         *
+         * @param maxBitrate The maximum bitrate as an int.
+         *
+         * @return This builder.
+         * @since 8.14.0
+         */
+        public Builder maxBitrate(int maxBitrate) {
+            this.maxBitrate = maxBitrate;
             return this;
         }
 

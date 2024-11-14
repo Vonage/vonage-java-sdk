@@ -38,6 +38,7 @@ public abstract class StreamComposition extends JsonableBaseObject {
 	@JsonProperty("hasAudio") protected Boolean hasAudio;
 	@JsonProperty("createdAt") protected Long createdAt;
 	@JsonProperty("streams") protected List<VideoStream> streams;
+	@JsonProperty("maxBitrate") protected Integer maxBitrate;
 
 	protected StreamComposition() {
 	}
@@ -49,6 +50,7 @@ public abstract class StreamComposition extends JsonableBaseObject {
 		hasAudio = builder.hasAudio;
 		hasVideo = builder.hasVideo;
 		layout = builder.layout;
+		maxBitrate = builder.maxBitrate;
 	}
 
 	/**
@@ -135,6 +137,15 @@ public abstract class StreamComposition extends JsonableBaseObject {
 	}
 
 	/**
+	 * The maximum bitrate for the stream in bits per second (if one was set).
+	 *
+	 * @return The maximum bits per second as an integer, or {@code null} if unset.
+	 */
+	public Integer getMaxBitrate() {
+		return maxBitrate;
+	}
+
+	/**
 	 * The time at which this composition was started or created, in milliseconds since the Unix epoch.
 	 *
 	 * @return The created time as a long, or {@code null} if absent / not applicable.
@@ -156,6 +167,7 @@ public abstract class StreamComposition extends JsonableBaseObject {
 
 	protected static abstract class Builder {
 		protected String sessionId;
+		protected Integer maxBitrate;
 		protected Boolean hasAudio, hasVideo;
 		protected Resolution resolution;
 		protected StreamMode streamMode;

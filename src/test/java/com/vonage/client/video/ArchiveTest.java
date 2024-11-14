@@ -28,9 +28,11 @@ public class ArchiveTest {
 		String sessionId = "flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN";
 		String name = "Test archive", multiArchiveTag = "DemoArchive_TagName";
 		StreamCompositionLayout layout = StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL).build();
+		int maxBitrate = 321400;
 
 		Archive request = Archive.builder(sessionId)
-				.name(name).hasAudio(true).hasVideo(true)
+				.name(name).maxBitrate(maxBitrate)
+				.hasAudio(true).hasVideo(true)
 				.resolution(Resolution.HD_LANDSCAPE)
 				.outputMode(OutputMode.COMPOSED)
 				.streamMode(StreamMode.AUTO).layout(layout)
@@ -47,6 +49,7 @@ public class ArchiveTest {
 		assertTrue(json.contains("\"layout\":{\"type\":\"verticalPresentation\"}"));
 		assertTrue(json.contains("\"hasVideo\":true"));
 		assertTrue(json.contains("\"hasAudio\":true"));
+		assertTrue(json.contains("\"maxBitrate\":"+maxBitrate));
 	}
 
 	@Test
@@ -92,6 +95,16 @@ public class ArchiveTest {
 	@Test
 	public void testConstructEmptySessionId() {
 		assertThrows(IllegalArgumentException.class, () -> Archive.builder("").build());
+	}
+
+	@Test
+	public void testMaxBitrateBounds() {
+		var builder = Archive.builder("SESSION_ID");
+		int min = 100000, max = 6000000;
+		assertThrows(IllegalArgumentException.class, () -> builder.maxBitrate(min-1).build());
+		assertEquals(min, builder.maxBitrate(min).build().getMaxBitrate());
+		assertThrows(IllegalArgumentException.class, () -> builder.maxBitrate(max+1).build());
+		assertEquals(max, builder.maxBitrate(max).build().getMaxBitrate());
 	}
 
 	@Test
