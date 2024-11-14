@@ -23,8 +23,10 @@ import com.vonage.client.auth.hashutils.HashUtil;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import static org.junit.jupiter.api.Assertions.*;
@@ -159,15 +161,15 @@ public class TestUtils {
 
 
     // TODO make package-private after removing Meetings
-    public static HttpClient stubHttpClient(int statusCode) throws Exception {
+    public static CloseableHttpClient stubHttpClient(int statusCode) throws Exception {
         return stubHttpClient(statusCode, "");
     }
 
     // TODO make package-private after removing Meetings
-    public static HttpClient stubHttpClient(int statusCode, String content, String... additionalReturns) throws Exception {
-        HttpClient result = mock(HttpClient.class);
+    public static CloseableHttpClient stubHttpClient(int statusCode, String content, String... additionalReturns) throws Exception {
+        CloseableHttpClient result = mock(CloseableHttpClient.class);
 
-        HttpResponse response = mock(HttpResponse.class);
+        CloseableHttpResponse response = mock(CloseableHttpResponse.class);
         StatusLine sl = mock(StatusLine.class);
         HttpEntity entity = mock(HttpEntity.class);
 

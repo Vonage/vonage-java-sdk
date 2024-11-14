@@ -15,6 +15,7 @@
  */
 package com.vonage.client;
 
+@Deprecated
 public class VonageBadRequestException extends VonageClientException {
     public VonageBadRequestException() {
         super();

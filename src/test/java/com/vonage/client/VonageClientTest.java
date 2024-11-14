@@ -21,14 +21,12 @@ import com.vonage.client.auth.hashutils.HashUtil;
 import com.vonage.client.voice.Call;
 import com.vonage.client.voice.CallEvent;
 import com.vonage.client.voice.CallStatus;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
-import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 
 public class VonageClientTest extends AbstractClientTest<VonageClient> {
@@ -89,11 +87,11 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
         String constructedToken = client.generateJwt();
 
         byte[] publicKeyBytes = testUtils.loadKey("test/keys/application_public_key.der");
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKeyBytes);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-        PublicKey key = kf.generatePublic(spec);
+        var spec = new X509EncodedKeySpec(publicKeyBytes);
+        var keyFactory = KeyFactory.getInstance("RSA");
+        var key = keyFactory.generatePublic(spec);
 
-        Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(constructedToken).getPayload();
+        var claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(constructedToken).getPayload();
 
         assertEquals(APPLICATION_ID_STR, claims.get("application_id"));
     }
@@ -136,7 +134,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
     @Test
     public void testApiKeyWithSecret() throws VonageUnacceptableAuthException {
         VonageClient vonageClient = VonageClient.builder().apiKey("api-key").apiSecret("api-secret").build();
-        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
+        AuthCollection authCollection = vonageClient.httpWrapper.getAuthCollection();
         assertTrue(authCollection.hasAuthMethod(ApiKeyHeaderAuthMethod.class));
     }
 
@@ -146,7 +144,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
             var vonageClient = VonageClient.builder()
                     .apiKey(API_KEY).signatureSecret(SIGNATURE_SECRET).hashType(hashType).build();
 
-            var sigAuthMethod = vonageClient.getHttpWrapper().getAuthCollection().getAuth(SignatureAuthMethod.class);
+            var sigAuthMethod = vonageClient.httpWrapper.getAuthCollection().getAuth(SignatureAuthMethod.class);
             var params = sigAuthMethod.getAuthParams(new RequestQueryParams());
 
             // This is messy but trying to generate a signature auth method and then comparing with
@@ -171,7 +169,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
                 .privateKeyContents(keyBytes)
                 .build();
 
-        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
+        AuthCollection authCollection = vonageClient.httpWrapper.getAuthCollection();
         assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));
     }
 
@@ -181,7 +179,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
         String key = new String(testUtils.loadKey("test/keys/application_key"));
 
         VonageClient vonageClient = VonageClient.builder().applicationId(APPLICATION_ID_STR).privateKeyContents(key).build();
-        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
+        AuthCollection authCollection = vonageClient.httpWrapper.getAuthCollection();
         assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));
     }
 
@@ -191,7 +189,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
                 .applicationId(APPLICATION_ID_STR)
                 .privateKeyPath(privateKeyPath)
                 .build();
-        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
+        AuthCollection authCollection = vonageClient.httpWrapper.getAuthCollection();
         assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));
     }
 
@@ -201,7 +199,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
                 .applicationId(APPLICATION_ID)
                 .privateKeyPath(privateKeyPath)
                 .build();
-        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
+        AuthCollection authCollection = vonageClient.httpWrapper.getAuthCollection();
         assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));
     }
 
@@ -217,8 +215,8 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
         HttpConfig config = HttpConfig.defaultConfig();
         VonageClient vonageClient = VonageClient.builder().build();
 
-        assertEquals(config.getApiBaseUri(), vonageClient.getHttpWrapper().getHttpConfig().getApiBaseUri());
-        assertEquals(config.getRestBaseUri(), vonageClient.getHttpWrapper().getHttpConfig().getRestBaseUri());
+        assertEquals(config.getApiBaseUri(), vonageClient.httpWrapper.getHttpConfig().getApiBaseUri());
+        assertEquals(config.getRestBaseUri(), vonageClient.httpWrapper.getHttpConfig().getRestBaseUri());
     }
 
     @Test
@@ -226,7 +224,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
         HttpConfig config = HttpConfig.builder().apiBaseUri("https://example.org").build();
         VonageClient vonageClient = VonageClient.builder().httpConfig(config).build();
 
-        assertEquals(config, vonageClient.getHttpWrapper().getHttpConfig());
+        assertEquals(config, vonageClient.httpWrapper.getHttpConfig());
     }
 
     @Test

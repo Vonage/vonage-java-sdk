@@ -18,15 +18,14 @@ package com.vonage.client;
 import com.vonage.client.auth.*;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -77,20 +76,20 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
                     .setHeader("User-Agent", httpWrapper.getUserAgent())
                     .setCharset(StandardCharsets.UTF_8).build();
 
-            HttpResponse response = httpWrapper.getHttpClient().execute(httpRequest);
-            try {
-                return postProcessParsedResponse(parseResponse(response));
+            try (CloseableHttpResponse response = httpWrapper.getHttpClient().execute(httpRequest)) {
+                try {
+                    return postProcessParsedResponse(parseResponse(response));
+                }
+                catch (IOException iox) {
+                    throw new VonageResponseParseException(iox);
+                }
             }
-            catch (IOException io) {
-                throw new VonageResponseParseException("Unable to parse response.", io);
+            catch (IOException iox) {
+                throw new VonageMethodFailedException("Something went wrong while executing the HTTP request.", iox);
             }
         }
-        catch (UnsupportedEncodingException uee) {
-            throw new VonageUnexpectedException("UTF-8 encoding is not supported by this JVM.", uee);
-        }
-        catch (IOException io) {
-            throw new VonageMethodFailedException("Something went wrong while executing the HTTP request: " +
-                    io.getMessage() + ".", io);
+        catch (UnsupportedEncodingException uex) {
+            throw new VonageUnexpectedException("UTF-8 encoding is not supported by this JVM.", uex);
         }
     }
 
@@ -105,7 +104,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
      *
      * @throws VonageClientException If no appropriate {@link AuthMethod} is available
      */
-    protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
+    final RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
         AuthMethod am = getAuthMethod();
         if (am instanceof HeaderAuthMethod) {
             request.setHeader("Authorization", ((HeaderAuthMethod) am).getHeaderValue());

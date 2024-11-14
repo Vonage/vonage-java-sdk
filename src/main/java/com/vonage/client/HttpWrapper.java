@@ -23,6 +23,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.ConnectionConfig;
 import org.apache.http.config.SocketConfig;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import java.nio.charset.StandardCharsets;
@@ -34,12 +35,12 @@ import java.util.UUID;
 public class HttpWrapper {
     private static final String
             CLIENT_NAME = "vonage-java-sdk",
-            CLIENT_VERSION = "8.13.1",
+            CLIENT_VERSION = "8.14.0",
             JAVA_VERSION = System.getProperty("java.version"),
             USER_AGENT = String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION);
 
     private AuthCollection authCollection;
-    private HttpClient httpClient;
+    private CloseableHttpClient httpClient;
     private HttpConfig httpConfig;
 
     public HttpWrapper(HttpConfig httpConfig, AuthCollection authCollection) {
@@ -64,7 +65,7 @@ public class HttpWrapper {
      *
      * @return The Apache HTTP client instance.
      */
-    public HttpClient getHttpClient() {
+    public CloseableHttpClient getHttpClient() {
         if (httpClient == null) {
             httpClient = createHttpClient();
         }
@@ -103,7 +104,7 @@ public class HttpWrapper {
 
     @Deprecated
     public void setHttpClient(HttpClient httpClient) {
-        this.httpClient = httpClient;
+        this.httpClient = (CloseableHttpClient) httpClient;
     }
 
     @Deprecated
@@ -125,7 +126,7 @@ public class HttpWrapper {
         this.authCollection = authCollection;
     }
 
-    protected HttpClient createHttpClient() {
+    protected CloseableHttpClient createHttpClient() {
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
         connectionManager.setDefaultMaxPerRoute(200);
         connectionManager.setMaxTotal(200);

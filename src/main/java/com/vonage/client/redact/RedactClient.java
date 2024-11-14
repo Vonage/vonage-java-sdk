@@ -32,10 +32,10 @@ public class RedactClient {
             Endpoint(R... type) {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .wrapper(wrapper).requestMethod(HttpMethod.POST)
-                        .responseExceptionType(VonageBadRequestException.class)
+                        .responseExceptionType(RedactResponseException.class)
                         .authMethod(ApiKeyHeaderAuthMethod.class)
                         .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig()
-                                .getVersionedApiBaseUri("v1") + "/redact/transaction"
+                                .getApiBaseUri() + "/v1/redact/transaction"
                         )
                 );
             }

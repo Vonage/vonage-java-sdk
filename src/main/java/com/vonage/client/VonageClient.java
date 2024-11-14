@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -52,7 +53,11 @@ import java.util.UUID;
  * <p>.
  */
 public class VonageClient {
-    private final HttpWrapper httpWrapper;
+    /**
+     * The HTTP wrapper for this client and its sub-clients.
+     */
+    final HttpWrapper httpWrapper;
+
     private final AccountClient account;
     private final ApplicationClient application;
     private final InsightClient insight;
@@ -74,9 +79,16 @@ public class VonageClient {
     private final SimSwapClient simSwap;
     private final NumberVerificationClient numberVerification;
 
+    /**
+     * Constructor which uses the builder pattern for instantiation.
+     *
+     * @param builder The builder object to use for configuration.
+     */
     private VonageClient(Builder builder) {
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
-        httpWrapper.setHttpClient(builder.httpClient);
+        if (builder.httpClient != null) {
+            httpWrapper.setHttpClient(builder.httpClient);
+        }
 
         account = new AccountClient(httpWrapper);
         application = new ApplicationClient(httpWrapper);
@@ -100,45 +112,91 @@ public class VonageClient {
         numberVerification = new NumberVerificationClient(httpWrapper);
     }
 
+    /**
+     * Returns the Account API client.
+     *
+     * @return The {@linkplain AccountClient}.
+     */
     public AccountClient getAccountClient() {
         return account;
     }
 
+    /**
+     * Returns the Application API client.
+     *
+     * @return The {@linkplain ApplicationClient}.
+     */
     public ApplicationClient getApplicationClient() {
         return application;
     }
 
+    /**
+     * Returns the Number Insight API client.
+     *
+     * @return The {@linkplain InsightClient}.
+     */
     public InsightClient getInsightClient() {
         return insight;
     }
 
+    /**
+     * Returns the Numbers API client.
+     *
+     * @return The {@linkplain NumbersClient}.
+     */
     public NumbersClient getNumbersClient() {
         return numbers;
     }
 
+    /**
+     * Returns the SMS API client.
+     *
+     * @return The {@linkplain SmsClient}.
+     */
     public SmsClient getSmsClient() {
         return sms;
     }
 
+    /**
+     * Returns the Verify v1 API client.
+     *
+     * @return The {@linkplain VerifyClient}.
+     */
     public VerifyClient getVerifyClient() {
         return verify;
     }
 
+    /**
+     * Returns the Voice API client.
+     *
+     * @return The {@linkplain VoiceClient}.
+     */
     public VoiceClient getVoiceClient() {
         return voice;
     }
 
+    /**
+     * Returns the Conversion API client.
+     *
+     * @return The {@linkplain ConversionClient}.
+     */
     public ConversionClient getConversionClient() {
         return conversion;
     }
 
+    /**
+     * Returns the Redact API client.
+     *
+     * @return The {@linkplain RedactClient}.
+     */
     public RedactClient getRedactClient() {
         return redact;
     }
 
     /**
+     * Returns the Messages v1 API client.
      *
-     * @return The Messages v1 client.
+     * @return The {@linkplain MessagesClient}.
      * @since 6.5.0
      */
     public MessagesClient getMessagesClient() {
@@ -146,8 +204,9 @@ public class VonageClient {
     }
 
     /**
+     * Returns the Proactive Connect API client.
      *
-     * @return The Proactive Connect client.
+     * @return The {@linkplain ProactiveConnectClient}.
      * @since 7.6.0
      * @deprecated This API is sunset and will be removed in the next major release.
      */
@@ -157,10 +216,10 @@ public class VonageClient {
     }
 
     /**
+     * Returns the Meetings API client.
      *
-     * @return The Meetings client.
+     * @return The {@linkplain MeetingsClient}.
      * @since 7.6.0
-     *
      * @deprecated Support for this API will be removed in the next major release.
      */
     @Deprecated
@@ -169,8 +228,9 @@ public class VonageClient {
     }
 
     /**
+     * Returns the Verify v2 API client.
      *
-     * @return The Verify v2 client.
+     * @return The {@linkplain Verify2Client}.
      * @since 7.4.0
      */
     public Verify2Client getVerify2Client() {
@@ -178,9 +238,9 @@ public class VonageClient {
     }
 
     /**
+     * Returns the Subaccounts API client.
      *
-     *
-     * @return The Subaccounts client.
+     * @return The {@linkplain SubaccountsClient}.
      * @since 7.5.0
      */
     public SubaccountsClient getSubaccountsClient() {
@@ -188,9 +248,9 @@ public class VonageClient {
     }
 
     /**
+     * Returns the Users API client.
      *
-     *
-     * @return The Users client.
+     * @return The {@linkplain UsersClient}.
      * @since 7.7.0
      */
     public UsersClient getUsersClient() {
@@ -198,9 +258,9 @@ public class VonageClient {
     }
 
     /**
-     * Returns the Video client.
+     * Returns the Video API client.
      *
-     * @return The Video API client.
+     * @return The {@linkplain VideoClient}.
      * @since 8.0.0-beta1
      */
     public VideoClient getVideoClient() {
@@ -208,9 +268,9 @@ public class VonageClient {
     }
 
     /**
-     * Returns the Number Insight v2 client.
+     * Returns the Fraud Detection API client.
      *
-     * @return The NI v2 client.
+     * @return The {@linkplain NumberInsight2Client}.
      * @since 8.2.0
      */
     public NumberInsight2Client getNumberInsight2Client() {
@@ -228,9 +288,9 @@ public class VonageClient {
     }
 
     /**
-     * Returns the CAMARA SIM Swap client.
+     * Returns the CAMARA SIM Swap API client.
      *
-     * @return The SIM Swap client.
+     * @return The {@linkplain SimSwapClient}.
      * @since 8.8.0
      */
     public SimSwapClient getSimSwapClient() {
@@ -238,9 +298,9 @@ public class VonageClient {
     }
 
     /**
-     * Returns the CAMARA Number Verification client.
+     * Returns the CAMARA Number Verification API client.
      *
-     * @return The Number Verification client.
+     * @return The {@linkplain NumberVerificationClient}.
      * @since 8.9.0
      */
     public NumberVerificationClient getNumberVerificationClient() {
@@ -259,13 +319,6 @@ public class VonageClient {
     }
 
     /**
-     * @return The {@link HttpWrapper}
-     */
-    HttpWrapper getHttpWrapper() {
-        return httpWrapper;
-    }
-
-    /**
      * Entry point for constructing an instance of this class.
      *
      * @return A new Builder with default initial configuration.
@@ -274,6 +327,9 @@ public class VonageClient {
         return new Builder();
     }
 
+    /**
+     * Builder for specifying the properties of the client.
+     */
     public static class Builder {
         private AuthCollection authCollection;
         private HttpConfig httpConfig = HttpConfig.defaultConfig();
@@ -284,6 +340,8 @@ public class VonageClient {
         private HashUtil.HashType hashType = HashUtil.HashType.MD5;
 
         /**
+         * Configure the HTTP client parameters.
+         *
          * @param httpConfig Configuration options for the {@link HttpWrapper}.
          *
          * @return This builder.
@@ -294,6 +352,8 @@ public class VonageClient {
         }
 
         /**
+         * Set the underlying HTTP client instance.
+         *
          * @param httpClient Custom implementation of {@link HttpClient}.
          *
          * @return This builder.
@@ -370,8 +430,9 @@ public class VonageClient {
         }
 
         /**
+         * Sets the hash type to use for signing requests.
          *
-         * @param hashType The hashing strategy for signature keys.
+         * @param hashType The hashing strategy for signature keys as an enum.
          *
          * @return This builder.
          */
@@ -438,7 +499,9 @@ public class VonageClient {
         }
 
         /**
-         * @return a new {@link VonageClient} from the stored builder options.
+         * Builds the client with this builder's parameters.
+         *
+         * @return A new {@link VonageClient} from the stored builder options.
          *
          * @throws VonageClientCreationException if credentials aren't provided in a valid pairing or there were issues
          *                                      generating an {@link JWTAuthMethod} with the provided credentials.

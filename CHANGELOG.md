@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.14.0] - 2024-11-??
+- Close HTTP responses to prevent resource leaks
+- Added `RedactResponseException` and deprecated `VonageBadRequestException`
+
 # [8.13.0] - 2024-10-28
 - Added support for Verify custom templates
 
