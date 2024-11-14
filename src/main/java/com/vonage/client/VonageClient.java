@@ -39,10 +39,7 @@ import com.vonage.client.verify2.Verify2Client;
 import com.vonage.client.voice.VoiceClient;
 import org.apache.http.client.HttpClient;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Objects;
+import java.nio.file.*;
 import java.util.UUID;
 
 /**

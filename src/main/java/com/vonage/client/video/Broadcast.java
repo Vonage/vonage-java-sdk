@@ -33,7 +33,6 @@ public class Broadcast extends StreamComposition {
 	private String multiBroadcastTag;
 	@JsonProperty("updatedAt") private Long updatedAt;
 	@JsonProperty("maxDuration") private Integer maxDuration;
-	private Integer maxBitrate;
 	private BroadcastStatus status;
 	private BroadcastUrls broadcastUrls;
 	private Settings settings;
@@ -52,7 +51,6 @@ public class Broadcast extends StreamComposition {
 		if ((maxDuration = builder.maxDuration) != null && (maxDuration < 60 || maxDuration > 36000)) {
 			throw new IllegalArgumentException("maxDuration must be between 60 seconds and 10 hours.");
 		}
-		maxBitrate = builder.maxBitrate;
 		multiBroadcastTag = builder.multiBroadcastTag;
 	}
 
@@ -126,16 +124,6 @@ public class Broadcast extends StreamComposition {
 	}
 
 	/**
-	 * The maximum bitrate of the broadcast in bits per second (if one was set).
-	 *
-	 * @return The maximum bits per second as an integer, or {@code null} if unset.
-	 */
-	@JsonProperty("maxBitrate")
-	public Integer getMaxBitrate() {
-		return maxBitrate;
-	}
-
-	/**
 	 * The status of the broadcast at the time this object was created.
 	 *
 	 * @return Current status of the broadcast as an enum.
@@ -191,7 +179,7 @@ public class Broadcast extends StreamComposition {
 	public static class Builder extends StreamComposition.Builder {
 		private final List<Rtmp> rtmps = new ArrayList<>();
 		private Hls hls;
-		private Integer maxDuration, maxBitrate;
+		private Integer maxDuration;
 		private String multiBroadcastTag;
 
 		Builder(String sessionId) {

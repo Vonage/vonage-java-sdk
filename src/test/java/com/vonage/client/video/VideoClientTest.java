@@ -49,6 +49,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 			archiveJson = "{\n" +
 					"  \"createdAt\": 1384221730000,\n" +
 					"  \"duration\": 5049,\n" +
+					"  \"maxBitrate\": 1234567,\n" +
 					"  \"hasAudio\": true,\n" +
 					"  \"hasVideo\": true,\n" +
 					"  \"id\": \""+archiveId+"\",\n" +
@@ -191,6 +192,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 		assertEquals(Instant.ofEpochSecond(1384221730L), response.getCreatedAt());
 		assertEquals(Integer.valueOf(5049), response.getDurationSeconds());
 		assertEquals(Duration.ofSeconds(5049), response.getDuration());
+		assertEquals(Integer.valueOf(1234567), response.getMaxBitrate());
 		assertTrue(response.hasAudio());
 		assertTrue(response.hasVideo());
 		assertEquals(archiveId, response.getId().toString());
