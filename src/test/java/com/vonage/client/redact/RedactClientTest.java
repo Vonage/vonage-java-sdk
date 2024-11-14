@@ -18,6 +18,7 @@ package com.vonage.client.redact;
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.RestEndpoint;
+import com.vonage.client.TestUtils;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.common.HttpMethod;
@@ -25,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 public class RedactClientTest extends AbstractClientTest<RedactClient> {
 
@@ -43,7 +45,14 @@ public class RedactClientTest extends AbstractClientTest<RedactClient> {
     }
 
     @Test
-    public void testInvalidRedactRequests() {
+    public void testRedactResponseException() throws Exception {
+        assert401ApiResponseException(RedactResponseException.class, () ->
+                client.redactTransaction(UUID.randomUUID().toString(), RedactRequest.Product.MESSAGES)
+        );
+    }
+
+    @Test
+    public void testInvalidRedactRequests() throws Exception {
         assertThrows(IllegalArgumentException.class, () -> client.redactTransaction(
                 "test-id", RedactRequest.Product.SMS
         ));

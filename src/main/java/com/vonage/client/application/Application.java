@@ -192,6 +192,21 @@ public class Application extends JsonableBaseObject {
         }
 
         /**
+         * Removes the specified capabilities from the application.
+         *
+         * @param types The type of capabilities to remove as an array / varargs.
+         *
+         * @return This builder.
+         * @since 8.14.0
+         */
+        public Builder removeCapabilities(Capability.Type... types) {
+            for (Capability.Type type : types) {
+                removeCapability(type);
+            }
+            return this;
+        }
+
+        /**
          * Remove a capability from the application.
          *
          * @param type The type of capability to remove.

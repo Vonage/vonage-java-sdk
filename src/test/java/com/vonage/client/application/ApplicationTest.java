@@ -114,8 +114,7 @@ public class ApplicationTest {
         Application application = Application.builder()
                 .addCapability(Voice.builder().build())
                 .addCapability(Rtc.builder().build())
-                .removeCapability(Capability.Type.VOICE)
-                .removeCapability(Capability.Type.RTC)
+                .removeCapabilities(Capability.Type.VOICE, Capability.Type.RTC)
                 .build();
 
         assertEquals(json, application.toJson());
