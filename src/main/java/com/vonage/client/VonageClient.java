@@ -52,7 +52,7 @@ import java.util.UUID;
  * <p>.
  */
 public class VonageClient {
-    private final HttpWrapper httpWrapper;
+    final HttpWrapper httpWrapper;
     private final AccountClient account;
     private final ApplicationClient application;
     private final InsightClient insight;
@@ -76,7 +76,9 @@ public class VonageClient {
 
     private VonageClient(Builder builder) {
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
-        httpWrapper.setHttpClient(builder.httpClient);
+        if (builder.httpClient != null) {
+            httpWrapper.setHttpClient(builder.httpClient);
+        }
 
         account = new AccountClient(httpWrapper);
         application = new ApplicationClient(httpWrapper);
@@ -256,13 +258,6 @@ public class VonageClient {
      */
     public String generateJwt() throws VonageUnacceptableAuthException {
         return httpWrapper.getAuthCollection().getAuth(JWTAuthMethod.class).generateToken();
-    }
-
-    /**
-     * @return The {@link HttpWrapper}
-     */
-    HttpWrapper getHttpWrapper() {
-        return httpWrapper;
     }
 
     /**
