@@ -3,11 +3,14 @@
 ![Java](https://img.shields.io/badge/java-8%2B-red)
 [![Version](https://img.shields.io/maven-central/v/com.vonage/server-sdk)](https://central.sonatype.com/artifact/com.vonage/server-sdk)
 [![Build Status](https://github.com/Vonage/vonage-java-sdk/actions/workflows/build.yml/badge.svg)](https://github.com/Vonage/vonage-java-sdk/actions/workflows/build.yml)
+![CodeQL](https://github.com/Vonage/vonage-java-sdk/actions/workflows/codeql.yml/badge.svg)
 [![codecov](https://codecov.io/gh/vonage/vonage-java-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/vonage/vonage-java-sdk)
 ![SLOC](https://sloc.xyz/github/vonage/vonage-java-sdk/)
+[![Snyk](https://snyk.io/test/github/vonage/vonage-java-sdk/badge.svg)](https://snyk.io/test/github/vonage/vonage-java-sdk)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Vonage/vonage-java-sdk/badge)](https://scorecard.dev/viewer/?uri=github.com/Vonage/vonage-kotlin-sdk)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.1%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE.txt)
-[![Snyk](https://snyk.io/test/github/vonage/vonage-java-sdk/badge.svg)](https://snyk.io/test/github/vonage/vonage-java-sdk)
+[![javadoc](https://javadoc.io/badge2/com.vonage/server-sdk/javadoc.svg)](https://javadoc.io/doc/com.vonage/server-sdk)
 <!---[![Pulse](https://img.shields.io/github/commit-activity/m/vonage/vonage-java-sdk)](https://github.com/vonage/vonage-java-sdk/pulse)-->
 
 <img src="https://developer.nexmo.com/assets/images/Vonage_Nexmo.svg" height="48px" alt="Nexmo is now known as Vonage" />
