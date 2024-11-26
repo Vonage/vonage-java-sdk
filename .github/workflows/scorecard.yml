@@ -12,7 +12,7 @@ on:
   schedule:
     - cron: '16 23 * * 2'
   push:
-    branches: [ "main" ]
+    branches: [ 'main' ]
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -31,12 +31,12 @@ jobs:
       # actions: read
 
     steps:
-      - name: "Checkout code"
+      - name: Checkout code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
 
-      - name: "Run analysis"
+      - name: Run analysis
         uses: ossf/scorecard-action@62b2cac7ed8198b15735ed49ab1e5cf35480ba46
         with:
           results_file: results.sarif
@@ -58,7 +58,7 @@ jobs:
 
       # Upload the results as artifacts (optional). Commenting out will disable uploads of run results in SARIF
       # format to the repository Actions tab.
-      - name: "Upload artifact"
+      - name: Upload artifact
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
         with:
           name: SARIF file
@@ -67,7 +67,7 @@ jobs:
 
       # Upload the results to GitHub's code scanning dashboard (optional).
       # Commenting out will disable upload of results to your repo's Code Scanning dashboard
-      - name: "Upload to code-scanning"
+      - name: Upload to code-scanning
         uses: github/codeql-action/upload-sarif@86b04fb0e47484f7282357688f21d5d0e32175fe
         with:
           sarif_file: results.sarif
