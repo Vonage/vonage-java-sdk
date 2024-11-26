@@ -2,9 +2,11 @@
 # https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 version: 2
 updates:
-  - package-ecosystem: "maven"
-    directory: "/"
+  - package-ecosystem: 'maven'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     commit-message:
-      prefix: "build"
+      prefix: 'build'
+    ignore:
+      - dependency-name: 'jakarta.servlet:jakarta-servlet-api'

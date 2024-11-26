@@ -1,9 +1,9 @@
-name: "CodeQL"
+name: CodeQL
 on:
   push:
-    branches: [ "main" ]
+    branches: [ 'main' ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ 'main' ]
   schedule:
     - cron: '35 2 * * 2'
 
@@ -11,7 +11,7 @@ permissions: read-all
 
 jobs:
   analyze:
-    name: Analyze (${{ matrix.language }})
+    name: "Analyze (java-kotlin)"
     runs-on: 'ubuntu-latest'
     permissions:
       # required for all workflows
@@ -39,4 +39,4 @@ jobs:
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@cbe18979603527f12c7871a6eb04833ecf1548c7
       with:
-        category: "/language:${{matrix.language}}"
+        category: "/language:java-kotlin"
