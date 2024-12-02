@@ -63,7 +63,7 @@ public class AbstractMethodTest {
         }
 
         @Override
-        public RequestBuilder makeRequest(String request) throws UnsupportedEncodingException {
+        public RequestBuilder makeRequest(String request) {
             return RequestBuilder.get(request);
         }
 
@@ -119,7 +119,7 @@ public class AbstractMethodTest {
         when(mockWrapper.getAuthCollection()).thenReturn(mockAuthMethods);
     }
 
-    ConcreteMethod mockJsonResponse(String json, boolean failing) throws Exception {
+    ConcreteMethod mockJsonResponse(String json, boolean failing) {
         ConcreteMethod method = spy(failing ?
                 new ConcreteMethodFailingParse(mockWrapper) : new ConcreteMethod(mockWrapper)
         );
@@ -311,8 +311,8 @@ public class AbstractMethodTest {
             }
 
             @Override
-            public RequestBuilder makeRequest(String request) throws UnsupportedEncodingException {
-                return builder.setEntity(new StringEntity(request));
+            public RequestBuilder makeRequest(String request) {
+                return builder.setEntity(new StringEntity(request, ContentType.TEXT_PLAIN));
             }
         }
         return new LocalMethod();

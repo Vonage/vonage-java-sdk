@@ -16,7 +16,6 @@
 package com.vonage.client.verify;
 
 import com.vonage.client.*;
-import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.Locale;

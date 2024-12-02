@@ -22,7 +22,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.Set;
@@ -71,25 +70,20 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
      */
     @Override
     public ResultT execute(RequestT request) throws VonageResponseParseException, VonageClientException {
-        try {
-            HttpUriRequest httpRequest = applyAuth(makeRequest(request))
-                    .setHeader("User-Agent", httpWrapper.getUserAgent())
-                    .setCharset(StandardCharsets.UTF_8).build();
+        HttpUriRequest httpRequest = applyAuth(makeRequest(request))
+                .setHeader("User-Agent", httpWrapper.getUserAgent())
+                .setCharset(StandardCharsets.UTF_8).build();
 
-            try (CloseableHttpResponse response = httpWrapper.getHttpClient().execute(httpRequest)) {
-                try {
-                    return postProcessParsedResponse(parseResponse(response));
-                }
-                catch (IOException iox) {
-                    throw new VonageResponseParseException(iox);
-                }
+        try (CloseableHttpResponse response = httpWrapper.getHttpClient().execute(httpRequest)) {
+            try {
+                return postProcessParsedResponse(parseResponse(response));
             }
             catch (IOException iox) {
-                throw new VonageMethodFailedException("Something went wrong while executing the HTTP request.", iox);
+                throw new VonageResponseParseException(iox);
             }
         }
-        catch (UnsupportedEncodingException uex) {
-            throw new VonageUnexpectedException("UTF-8 encoding is not supported by this JVM.", uex);
+        catch (IOException iox) {
+            throw new VonageMethodFailedException("Something went wrong while executing the HTTP request.", iox);
         }
     }
 
@@ -140,10 +134,8 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
      * @param request A RequestT representing input to the REST call to be made
      *
      * @return A ResultT representing the response from the executed REST call
-     *
-     * @throws UnsupportedEncodingException if UTF-8 encoding is not supported by the JVM
      */
-    protected abstract RequestBuilder makeRequest(RequestT request) throws UnsupportedEncodingException;
+    protected abstract RequestBuilder makeRequest(RequestT request);
 
     /**
      * Construct a ResultT representing the contents of the HTTP response returned from the Vonage Voice API.
