@@ -17,6 +17,7 @@ package com.vonage.client;
 
 import com.vonage.client.auth.*;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -71,7 +72,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
     @Override
     public ResultT execute(RequestT request) throws VonageResponseParseException, VonageClientException {
         HttpUriRequest httpRequest = applyAuth(makeRequest(request))
-                .setHeader("User-Agent", httpWrapper.getUserAgent())
+                .setHeader(HttpHeaders.USER_AGENT, httpWrapper.getUserAgent())
                 .setCharset(StandardCharsets.UTF_8).build();
 
         try (CloseableHttpResponse response = httpWrapper.getHttpClient().execute(httpRequest)) {

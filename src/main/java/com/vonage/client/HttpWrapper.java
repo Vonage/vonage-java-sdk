@@ -19,6 +19,7 @@ import com.vonage.client.auth.ApiKeyAuthMethod;
 import com.vonage.client.auth.AuthCollection;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
+import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.ConnectionConfig;
@@ -26,6 +27,7 @@ import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
@@ -131,28 +133,30 @@ public class HttpWrapper {
         connectionManager.setDefaultMaxPerRoute(200);
         connectionManager.setMaxTotal(200);
         connectionManager.setDefaultConnectionConfig(
-            ConnectionConfig.custom()
-                .setCharset(StandardCharsets.UTF_8)
-                .build()
+            ConnectionConfig.custom().setCharset(StandardCharsets.UTF_8).build()
         );
         connectionManager.setDefaultSocketConfig(SocketConfig.custom().setTcpNoDelay(true).build());
 
         // Need to work out a good value for the following:
         // threadSafeClientConnManager.setValidateAfterInactivity();
-
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(httpConfig.getTimeoutMillis())
                 .setConnectionRequestTimeout(httpConfig.getTimeoutMillis())
                 .setSocketTimeout(httpConfig.getTimeoutMillis())
                 .build();
 
-        return HttpClientBuilder.create()
+        HttpClientBuilder clientBuilder = HttpClientBuilder.create()
                 .setConnectionManager(connectionManager)
                 .setUserAgent(getUserAgent())
                 .setDefaultRequestConfig(requestConfig)
-                .useSystemProperties()
-                .disableRedirectHandling()
-                .build();
+                .useSystemProperties().disableRedirectHandling();
+
+        URI proxy = httpConfig.getProxy();
+        if (proxy != null) {
+            clientBuilder.setProxy(new HttpHost(proxy.getHost(), proxy.getPort(), proxy.getScheme()));
+        }
+
+        return clientBuilder.build();
     }
 
     /**
