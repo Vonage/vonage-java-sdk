@@ -21,3 +21,4 @@ out/
 .DS_Store
 pom.xml.releaseBackup
 pom.xml.versionsBackup
+#src/main/test/java/BugRepro.java
