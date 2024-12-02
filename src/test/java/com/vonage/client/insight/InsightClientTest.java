@@ -17,10 +17,16 @@ package com.vonage.client.insight;
 
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
+import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
+import com.vonage.client.auth.AuthMethod;
+import com.vonage.client.auth.SignatureAuthMethod;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InsightClientTest extends AbstractClientTest<InsightClient> {
@@ -223,6 +229,11 @@ public class InsightClientTest extends AbstractClientTest<InsightClient> {
             }
 
             @Override
+            protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
+                return List.of(SignatureAuthMethod.class, ApiKeyHeaderAuthMethod.class);
+            }
+
+            @Override
             protected String expectedEndpointUri(BasicInsightRequest request) {
                 return "/ni/basic/json";
             }
@@ -252,6 +263,11 @@ public class InsightClientTest extends AbstractClientTest<InsightClient> {
             @Override
             protected RestEndpoint<StandardInsightRequest, StandardInsightResponse> endpoint() {
                 return client.standard;
+            }
+
+            @Override
+            protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
+                return List.of(SignatureAuthMethod.class, ApiKeyQueryParamsAuthMethod.class);
             }
 
             @Override
@@ -286,6 +302,11 @@ public class InsightClientTest extends AbstractClientTest<InsightClient> {
             @Override
             protected RestEndpoint<AdvancedInsightRequest, AdvancedInsightResponse> endpoint() {
                 return client.advanced;
+            }
+
+            @Override
+            protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
+                return List.of(SignatureAuthMethod.class, ApiKeyQueryParamsAuthMethod.class);
             }
 
             @Override
