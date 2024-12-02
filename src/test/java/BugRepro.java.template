@@ -2,8 +2,8 @@ import com.vonage.client.*;
 import java.util.*;
 
 /**
- * Convenience class for debugging / live testing. This file is ignored using the command
- * `git update-index --skip-worktree src/test/java/BugRepro.java` to prevent accidental commits ot the repository.
+ * Convenience class for debugging / live testing. You should copy this file and remove the
+ * `.template` extension from the filename to make it usable.
  */
 public class BugRepro {
 	public static void main(String[] args) throws Throwable {
@@ -19,7 +19,6 @@ public class BugRepro {
 
 		try {
 			// Debug code here
-			// client.getVoiceClient().createCall(new Call(TO_NUMBER, System.getenv("VONAGE_NUMBER"), "https://example.com/answer"));
 
 			System.out.println("Success");
 		}
