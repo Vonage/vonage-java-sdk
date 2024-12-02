@@ -2,8 +2,8 @@ import com.vonage.client.*;
 import java.util.*;
 
 /**
- * Convenience class for debugging / live testing.
- * This is .gitignored so that changes can be made locally without accidental commits to the repo.
+ * Convenience class for debugging / live testing. This file is ignored using the command
+ * `git update-index --skip-worktree src/test/java/BugRepro.java` to prevent accidental commits ot the repository.
  */
 public class BugRepro {
 	public static void main(String[] args) throws Throwable {
