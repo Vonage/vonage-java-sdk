@@ -16,7 +16,9 @@
 package com.vonage.client.insight;
 
 import com.vonage.client.*;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
+import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.function.Function;
@@ -38,10 +40,10 @@ public class InsightClient {
     public InsightClient(HttpWrapper wrapper) {
         @SuppressWarnings("unchecked")
         final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
-            Endpoint(Function<T, String> pathGetter, R... type) {
+            Endpoint(Function<T, String> pathGetter, Class<? extends AuthMethod> auth, R... type) {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .wrapper(wrapper).requestMethod(HttpMethod.POST)
-                        .authMethod(SignatureAuthMethod.class, ApiKeyQueryParamsAuthMethod.class)
+                        .authMethod(SignatureAuthMethod.class, auth)
                         .pathGetter((de, req) -> {
                             String base = de.getHttpWrapper().getHttpConfig().getApiBaseUri();
                             return base + "/ni/" + pathGetter.apply(req) + "/json";
@@ -50,9 +52,9 @@ public class InsightClient {
             }
         }
 
-        basic = new Endpoint<>(req -> "basic");
-        standard = new Endpoint<>(req -> "standard");
-        advanced = new Endpoint<>(req -> "advanced" + (req.isAsync() ? "/async" : ""));
+        basic = new Endpoint<>(req -> "basic", ApiKeyHeaderAuthMethod.class);
+        standard = new Endpoint<>(req -> "standard", ApiKeyQueryParamsAuthMethod.class);
+        advanced = new Endpoint<>(req -> "advanced" + (req.isAsync() ? "/async" : ""), ApiKeyQueryParamsAuthMethod.class);
     }
 
     /**

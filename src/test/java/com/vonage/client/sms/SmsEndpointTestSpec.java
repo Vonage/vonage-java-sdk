@@ -18,7 +18,7 @@ package com.vonage.client.sms;
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageApiResponseException;
-import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.common.HttpMethod;
@@ -47,7 +47,7 @@ abstract class SmsEndpointTestSpec extends DynamicEndpointTestSpec<Message, SmsS
 
     @Override
     protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-        return Arrays.asList(SignatureAuthMethod.class, ApiKeyQueryParamsAuthMethod.class);
+        return Arrays.asList(SignatureAuthMethod.class, ApiKeyHeaderAuthMethod.class);
     }
 
     @Override

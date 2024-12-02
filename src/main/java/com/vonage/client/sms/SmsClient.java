@@ -16,6 +16,7 @@
 package com.vonage.client.sms;
 
 import com.vonage.client.*;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
 import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.common.HttpMethod;
@@ -40,7 +41,7 @@ public class SmsClient {
             Endpoint() {
                 super(DynamicEndpoint.<Message, SmsSubmissionResponse> builder(SmsSubmissionResponse.class)
                         .wrapper(wrapper).requestMethod(HttpMethod.POST)
-                        .authMethod(SignatureAuthMethod.class, ApiKeyQueryParamsAuthMethod.class)
+                        .authMethod(SignatureAuthMethod.class, ApiKeyHeaderAuthMethod.class)
                         .urlFormEncodedContentType(true).pathGetter((de, req) ->
                                 de.getHttpWrapper().getHttpConfig().getRestBaseUri() + "/sms/json"
                         )
