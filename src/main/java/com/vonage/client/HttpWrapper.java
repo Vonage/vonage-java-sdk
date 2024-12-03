@@ -37,7 +37,7 @@ import java.util.UUID;
 public class HttpWrapper {
     private static final String
             CLIENT_NAME = "vonage-java-sdk",
-            CLIENT_VERSION = "8.14.0",
+            CLIENT_VERSION = "8.15.0",
             JAVA_VERSION = System.getProperty("java.version"),
             USER_AGENT = String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION);
 
