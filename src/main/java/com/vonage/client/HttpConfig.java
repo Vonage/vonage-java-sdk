@@ -210,7 +210,7 @@ public class HttpConfig {
         }
 
         /**
-         * Sets the proxy to use for requests.
+         * Sets the proxy to use for requests. This will route requests through the specified URL.
          *
          * @param proxy The proxy URI to use as a string.
          * @return This builder.
@@ -222,7 +222,7 @@ public class HttpConfig {
         }
 
         /**
-         * Sets the proxy to use for requests.
+         * Sets the proxy to use for requests. This will route requests through the specified URL.
          *
          * @param proxy The proxy URI to use.
          * @return This builder.
