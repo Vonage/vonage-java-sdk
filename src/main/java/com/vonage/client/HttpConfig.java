@@ -29,11 +29,13 @@ public class HttpConfig {
     private final int timeoutMillis;
     private final String customUserAgent, apiBaseUri, restBaseUri, apiEuBaseUri, videoBaseUri;
     private final Function<ApiRegion, String> regionalUriGetter;
+    private final URI proxy;
 
     private HttpConfig(Builder builder) {
         if ((timeoutMillis = builder.timeoutMillis) < 10) {
             throw new IllegalArgumentException("Timeout must be greater than 10ms.");
         }
+        proxy = builder.proxy;
         apiBaseUri = builder.apiBaseUri;
         restBaseUri = builder.restBaseUri;
         videoBaseUri = builder.videoBaseUri;
@@ -87,6 +89,16 @@ public class HttpConfig {
      */
     public String getCustomUserAgent() {
         return customUserAgent;
+    }
+
+    /**
+     * Returns the proxy URL to use for the underlying HTTP client configuration.
+     *
+     * @return The proxy URI, or {@code null} if not set.
+     * @since 8.15.0
+     */
+    public URI getProxy() {
+        return proxy;
     }
 
     @Deprecated
@@ -156,6 +168,7 @@ public class HttpConfig {
      */
     public static class Builder {
         private int timeoutMillis = 60_000;
+        private URI proxy;
         private Function<ApiRegion, String> regionalUriGetter = region -> "https://"+region+".vonage.com";
         private String customUserAgent,
                 apiBaseUri = DEFAULT_API_BASE_URI,
@@ -193,6 +206,30 @@ public class HttpConfig {
          */
         public Builder timeoutMillis(int timeoutMillis) {
             this.timeoutMillis = timeoutMillis;
+            return this;
+        }
+
+        /**
+         * Sets the proxy to use for requests. This will route requests through the specified URL.
+         *
+         * @param proxy The proxy URI to use as a string.
+         * @return This builder.
+         * @since 8.15.0
+         * @throws IllegalArgumentException If the proxy URI is invalid.
+         */
+        public Builder proxy(String proxy) {
+            return proxy(URI.create(proxy));
+        }
+
+        /**
+         * Sets the proxy to use for requests. This will route requests through the specified URL.
+         *
+         * @param proxy The proxy URI to use.
+         * @return This builder.
+         * @since 8.15.0
+         */
+        public Builder proxy(URI proxy) {
+            this.proxy = proxy;
             return this;
         }
 

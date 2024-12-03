@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.15.0] - 2024-12-03
+- Added proxy support to `HttpConfig.Builder`
+- Basic auth in header instead of query params in SMS API
+
 # [8.14.0] - 2024-11-14
 - Close HTTP responses to prevent resource leaks
 - Added `RedactResponseException` and deprecated `VonageBadRequestException`

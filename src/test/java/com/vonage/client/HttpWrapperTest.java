@@ -15,6 +15,10 @@
  */
 package com.vonage.client;
 
+import static com.vonage.client.TestUtils.API_KEY;
+import static com.vonage.client.TestUtils.API_SECRET;
+import com.vonage.client.application.ApplicationClient;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.AuthCollection;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -66,5 +70,25 @@ public class HttpWrapperTest {
         wrapper = new HttpWrapper(HttpConfig.builder().appendUserAgent(customUa).build());
         assertEquals(customUa, wrapper.getHttpConfig().getCustomUserAgent());
         assertEquals(defaultUa + " " + customUa, wrapper.getUserAgent());
+    }
+
+    @Test
+    public void testProxy() {
+        var headerAuth = new ApiKeyHeaderAuthMethod(API_KEY, API_SECRET);
+        wrapper = new HttpWrapper(headerAuth);
+        assertNull(wrapper.getHttpConfig().getProxy());
+
+        var appClient = new ApplicationClient(wrapper);
+        assertThrows(VonageApiResponseException.class, appClient::listApplications);
+
+        wrapper = new HttpWrapper(HttpConfig.builder().proxy("http://localhost:8080").build(), headerAuth);
+        var proxyUri = wrapper.getHttpConfig().getProxy();
+        assertNotNull(proxyUri);
+        assertEquals("localhost", proxyUri.getHost());
+        assertEquals(8080, proxyUri.getPort());
+        assertEquals("http", proxyUri.getScheme());
+
+        appClient = new ApplicationClient(wrapper);
+        assertThrows(VonageMethodFailedException.class, appClient::listApplications);
     }
 }
