@@ -532,12 +532,7 @@ public class VoiceClient {
      * @since 7.11.0
      */
     public byte[] downloadRecordingRaw(String recordingUrl) {
-        if (validateUrl(recordingUrl).contains(".nexmo.com/v1/files")) {
-            return downloadRecording.execute(recordingUrl);
-        }
-        else {
-            throw new IllegalArgumentException("Invalid recording URL");
-        }
+        return downloadRecording.execute(validateUrl(recordingUrl));
     }
 
     /**

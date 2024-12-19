@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.15.1] - 2024-12-19
+- Removed hardcoded domain validation from `VoiceClient.downloadRecordingRaw`
+
 # [8.15.0] - 2024-12-03
 - Added proxy support to `HttpConfig.Builder`
 - Basic auth in header instead of query params in SMS API

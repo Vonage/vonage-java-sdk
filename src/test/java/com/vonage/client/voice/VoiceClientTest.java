@@ -408,7 +408,7 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
         String recordingId = UUID.randomUUID().toString();
         String content = "<BINARY>";
         stubResponse(200, content);
-        String url = "https://api.nexmo.com/v1/files/" + recordingId;
+        String url = "https://api-eu.vonage.com/v1/files/" + recordingId;
         Path temp = Files.createTempFile(null, null);
         Files.delete(temp);
 
@@ -422,23 +422,11 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
         assertArrayEquals(content.getBytes(), Files.readAllBytes(recordingPath));
 
         stubResponseAndAssertThrows(content, () ->
-                client.saveRecording("ftp:///myserver.co.uk/rec.mp3", recordingPath),
-                IllegalArgumentException.class
-        );
-        stubResponseAndAssertThrows(content, () ->
-                client.saveRecording("http://example.org/recording.wav", recordingPath),
-                IllegalArgumentException.class
-        );
-        stubResponseAndAssertThrows(content, () ->
-                client.saveRecording("https://example.org/recording.wav", recordingPath),
-                IllegalArgumentException.class
-        );
-        stubResponseAndAssertThrows(content, () ->
                 client.saveRecording(url, null),
                 NullPointerException.class
         );
         stubResponseAndAssertThrows(content, () ->
-                client.saveRecording("not-a-url", recordingPath),
+                client.saveRecording(";not_a url£", recordingPath),
                 IllegalArgumentException.class
         );
     }
