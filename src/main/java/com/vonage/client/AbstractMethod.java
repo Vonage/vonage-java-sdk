@@ -16,7 +16,6 @@
 package com.vonage.client;
 
 import com.vonage.client.auth.*;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -26,26 +25,31 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
  * Abstract class to assist in implementing a call against a REST endpoint.
  * <p>
  * Concrete implementations must implement {@link #makeRequest(Object)} to construct a {@link RequestBuilder} from the
- * provided parameterized request object, and {@link #parseResponse(HttpResponse)} to construct the parameterized {@link
- * HttpResponse} object.
+ * provided parameterized request object, and {@link #parseResponse(HttpResponse)} to construct the parameterized
+ * {@link HttpResponse} object.
  * <p>
  * The REST call is executed by calling {@link #execute(Object)}.
  *
- * @param <RequestT> The type of the method-specific request object that will be used to construct an HTTP request
- * @param <ResultT>  The type of method-specific response object which will be constructed from the returned HTTP
- *                   response
+ * @param <RequestT> The request object type that will be used to construct the HTTP request body.
+ * @param <ResultT>  The response object type which will be constructed from the returned HTTP response body.
+ *
+ * @see DynamicEndpoint for an abstract implementation which handles the most common use cases.
  */
 public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<RequestT, ResultT> {
-    static {
-        LogFactory.getLog(AbstractMethod.class);
+    private static final Logger LOGGER = Logger.getLogger(AbstractMethod.class.getName());
+
+    private static boolean shouldLog() {
+        return LOGGER.isLoggable(Level.INFO);
     }
-    
+
     protected final HttpWrapper httpWrapper;
 
     public AbstractMethod(HttpWrapper httpWrapper) {
@@ -75,15 +79,41 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
                 .setHeader(HttpHeaders.USER_AGENT, httpWrapper.getUserAgent())
                 .setCharset(StandardCharsets.UTF_8).build();
 
+        if (shouldLog()) {
+            LOGGER.info("Request " + httpRequest.getMethod() + " " + httpRequest.getURI());
+            StringBuilder headers = new StringBuilder("Request headers:\n");
+            for (org.apache.http.Header header : httpRequest.getAllHeaders()) {
+                headers.append('\n').append(header.getName()).append(": ").append(header.getValue());
+            }
+            LOGGER.info(headers.toString());
+            LOGGER.info("Request body: " + request);
+        }
+
         try (CloseableHttpResponse response = httpWrapper.getHttpClient().execute(httpRequest)) {
             try {
-                return postProcessParsedResponse(parseResponse(response));
+                if (shouldLog()) {
+                    LOGGER.info("Response " + response.getStatusLine());
+                    StringBuilder headers = new StringBuilder("Response headers:\n");
+                    for (org.apache.http.Header header : response.getAllHeaders()) {
+                        headers.append('\n').append(header.getName()).append(": ").append(header.getValue());
+                    }
+                    LOGGER.info(headers.toString());
+                }
+
+                ResultT responseBody = parseResponse(response);
+                if (shouldLog()) {
+                    LOGGER.info("Response body: " + responseBody);
+                }
+
+                return postProcessParsedResponse(responseBody);
             }
             catch (IOException iox) {
+                LOGGER.log(Level.WARNING, "Failed to parse response", iox);
                 throw new VonageResponseParseException(iox);
             }
         }
         catch (IOException iox) {
+            LOGGER.log(Level.WARNING, "Failed to execute HTTP request", iox);
             throw new VonageMethodFailedException("Something went wrong while executing the HTTP request.", iox);
         }
     }

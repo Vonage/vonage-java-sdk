@@ -19,8 +19,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.hashutils.HashUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,19 +26,20 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Instant;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
  * A helper class for generating or verifying MD5 signatures when signing REST requests for submission to Vonage.
  */
 public class RequestSigning {
-    public static final int MAX_ALLOWABLE_TIME_DELTA = 5 * 60 * 1000;
+    private static final Logger LOGGER = Logger.getLogger(RequestSigning.class.getName());
 
+    public static final int MAX_ALLOWABLE_TIME_DELTA = 5 * 60 * 1000;
     public static final String PARAM_SIGNATURE = "sig";
     public static final String PARAM_TIMESTAMP = "timestamp";
     public static final String APPLICATION_JSON = "application/json";
-
-    private static final Log log = LogFactory.getLog(RequestSigning.class);
 
     /**
      * Signs a set of request parameters.
@@ -162,11 +161,11 @@ public class RequestSigning {
             hashed = HashUtil.calculate(str, secretKey, "UTF-8", hashType);
         }
         catch (Exception ex) {
-            log.error("error...", ex);
+            LOGGER.log(Level.WARNING, "error...", ex);
             hashed = "no signature";
         }
 
-        log.debug("SECURITY-KEY-GENERATION -- String [ " + str + " ] Signature [ " + hashed + " ] ");
+        LOGGER.info("SECURITY-KEY-GENERATION -- String [ " + str + " ] Signature [ " + hashed + " ] ");
 
         Map<String, String> outputParams = new LinkedHashMap<>(4);
         outputParams.put(PARAM_TIMESTAMP, timestampStr);
@@ -242,7 +241,7 @@ public class RequestSigning {
                 for (Map.Entry<String, String> entry : params.entrySet()) {
                     String name = entry.getKey();
                     String value = entry.getValue();
-                    log.info(name + " = " + value);
+                    LOGGER.info(name + " = " + value);
                     if (value == null || value.trim().isEmpty()) {
                         continue;
                     }
@@ -257,7 +256,7 @@ public class RequestSigning {
             for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
                 String name = entry.getKey();
                 String value = entry.getValue()[0];
-                log.info(name + " = " + value);
+                LOGGER.info(name + " = " + value);
                 if (value == null || value.trim().isEmpty()) {
                     continue;
                 }
@@ -276,12 +275,14 @@ public class RequestSigning {
             if (timeString != null)
                 time = Long.parseLong(timeString) * 1000;
         } catch (NumberFormatException e) {
-            log.error("Error parsing 'time' parameter [ " + timeString + " ]", e);
+            LOGGER.log(Level.WARNING, "Error parsing 'time' parameter [ " + timeString + " ]", e);
             time = 0;
         }
         long diff = currentTimeMillis - time;
         if (diff > MAX_ALLOWABLE_TIME_DELTA || diff < -MAX_ALLOWABLE_TIME_DELTA) {
-            log.warn("SECURITY-KEY-VERIFICATION -- BAD-TIMESTAMP ... Timestamp [ " + time + " ] delta [ " + diff + " ] max allowed delta [ " + -MAX_ALLOWABLE_TIME_DELTA + " ] ");
+            LOGGER.log(Level.WARNING, "SECURITY-KEY-VERIFICATION -- BAD-TIMESTAMP ... Timestamp [ " +
+                    time + " ] delta [ " + diff + " ] max allowed delta [ " + -MAX_ALLOWABLE_TIME_DELTA + " ] "
+            );
             return false;
         }
 
@@ -300,12 +301,15 @@ public class RequestSigning {
         String hashed;
         try {
             hashed = HashUtil.calculate(str, secretKey, "UTF-8", hashType);
-        } catch (Exception e) {
-            log.error("error...", e);
+        }
+        catch (Exception ex) {
+            LOGGER.log(Level.WARNING, "error...", ex);
             return false;
         }
 
-        log.info("SECURITY-KEY-VERIFICATION -- String [ " + str + " ] Signature [ " + hashed + " ] SUPPLIED SIGNATURE [ " + suppliedSignature + " ] ");
+        LOGGER.info("SECURITY-KEY-VERIFICATION -- String [ " + str + " ] Signature [ " + hashed +
+                " ] SUPPLIED SIGNATURE [ " + suppliedSignature + " ] "
+        );
 
         // verify that the supplied signature matches generated one
         // use MessageDigest.isEqual as an alternative to String.equals() to defend against timing based attacks
