@@ -26,6 +26,13 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum MessageType {
     TEXT, UNICODE, BINARY, UNKNOWN;
 
+    /**
+     * Convert a string value to a MessageType enum.
+     *
+     * @param name The string value to convert.
+     *
+     * @return The message type as an enum.
+     */
     @JsonCreator
     public static MessageType fromString(String name) {
         try {

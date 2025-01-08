@@ -15,7 +15,7 @@
  */
 package com.vonage.client.sms.messages;
 
-import org.apache.commons.codec.binary.Hex;
+import java.util.Formatter;
 import java.util.Map;
 
 /**
@@ -26,7 +26,7 @@ public class BinaryMessage extends Message {
     private int protocolId = 0;
 
     /**
-     * Instantiate a new binary sms message request.
+     * Instantiate a new binary SMS message request.
      *
      * @param from              the 'from' address that will be seen on the handset when this message arrives,
      *                          typically either a valid short-code / long code that can be replied to, or a short text description of the application sending the message (Max 11 chars)
@@ -51,32 +51,44 @@ public class BinaryMessage extends Message {
     }
 
     /**
-     * @return byte[] The raw binary message data to be sent to a handset.
-     * This api, and the Vonage sms service will send this data 'as-is' (in conjunction with the binary UDH) and will not make any corrections.
-     * so you should ensure that it is a correctly constructed message
+     * The raw binary message data to be sent to a handset. The Vonage SMS service will send this data 'as-is'
+     * (in conjunction with the binary UDH) and will not make any corrections, so you should ensure that it is correct.
+     *
+     * @return The message body as a byte array.
      */
     public byte[] getMessageBody() {
         return messageBody == null ? null : messageBody.clone();
     }
 
     /**
-     * @return byte[] Most binary content will require a UserDataHeader portion of the message containing commands to enable the handset to interpret the binary data
-     * (for example, a binary ringtone, a wap-push, OverTheAir configuration, etc.).
-     * Additionally, if you are sending a long text message as multiple concatenated messages and are performing this operation manually rather than
-     * using the automated long sms handling in the Vonage sms service, then you will need to construct and include here an appropriate
-     * UserDataHeader field that describes the segmentation/re-assembly fields required to successfully concatenate multiple short messages.
+     * Most binary content will require a UserDataHeader portion of the message containing commands to enable the
+     * handset to interpret the binary data (for example, a binary ringtone, a WAP-push, OverTheAir configuration, etc.).
+     * Additionally, if you are sending a long text message as multiple concatenated messages and are performing this
+     * operation manually rather than using the automated long sms handling in the Vonage SMS service, then you will
+     * need to construct and include here an appropriate UserDataHeader field that describes the segmentation /
+     * re-assembly fields required to successfully concatenate multiple short messages.
+     *
+     * @return The User Data Header as a byte array.
      */
     public byte[] getUdh() {
         return udh == null ? null : udh.clone();
     }
 
     /**
-     * @return Integer The value of the GSM Protocol ID field to be submitted with this message. Ordinarily this should be left as the default value of 0
+     * The value of the GSM Protocol ID field to be submitted with this message.
+     * Ordinarily this should be left as the default value of 0.
+     *
+     * @return The protocol ID.
      */
     public int getProtocolId() {
         return protocolId;
     }
 
+    /**
+     * Sets the protocol ID for this message.
+     *
+     * @param protocolId The protocol ID.
+     */
     public void setProtocolId(int protocolId) {
         this.protocolId = protocolId;
     }
@@ -84,9 +96,18 @@ public class BinaryMessage extends Message {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
-        params.put("udh", Hex.encodeHexString(getUdh()));
-        params.put("body", Hex.encodeHexString(getMessageBody()));
+        params.put("udh", toHexString(getUdh()));
+        params.put("body", toHexString(getMessageBody()));
         params.put("protocol-id", Integer.toString(getProtocolId()));
         return params;
+    }
+
+    private static String toHexString(byte[] data) {
+        StringBuilder sb = new StringBuilder(data.length * 2);
+        Formatter formatter = new Formatter(sb);
+        for (byte b : data) {
+            formatter.format("%02x", b);
+        }
+        return sb.toString();
     }
 }

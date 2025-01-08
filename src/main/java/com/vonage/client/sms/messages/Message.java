@@ -24,23 +24,29 @@ import java.util.Map;
  * Represents the details common to any message that is to be submitted to the Vonage SMS API.
  */
 public abstract class Message implements QueryParamsRequest {
+
+    /**
+     * Represents the type of message.
+     */
     public enum MessageType {
         /**
-         * Message is a regular TEXT SMS message
+         * Regular text SMS message.
          */
         TEXT,
+
         /**
-         * Message is a binary SMS message with a custom UDH and binary payload
+         * Binary SMS message with a custom UDH and binary payload.
          */
         BINARY,
+
         /**
-         * Message is a unicode message, for sending messages in non-latin script to a supported handset
+         * Unicode message, for sending messages in non-latin script to a supported handset.
          */
         UNICODE;
 
         @Override
         public String toString() {
-            return super.toString().toLowerCase();
+            return name().toLowerCase();
         }
     }
 
@@ -60,15 +66,15 @@ public abstract class Message implements QueryParamsRequest {
     /**
      * Abstract type for more specific SMS message types.<br>
      * This constructor exposes the full range of possible parameters and is not for general use
-     * Instead, it is accessed via super() in the constructors of various sub-classes that expose a relevant
-     * sub-set of the available parameters
+     * Instead, it is accessed via super() in the constructors of various subclasses that expose a relevant
+     * sub-set of the available parameters.
      *
-     * @param type the type of SMS message to be sent
+     * @param type the type of SMS message to be sent.
      * @param from the 'from' address that will be seen on the handset when this message arrives, typically either a
      *             valid short-code / long code that can be replied to, or a short text description of the application
-     *             sending the message (Max 15 chars)
-     * @param to   the phone number of the handset you wish to send the message to
-     * @param statusReportRequired flag to enable status updates about the delivery of this message
+     *             sending the message (Max 15 chars).
+     * @param to   the phone number of the handset you wish to send the message to.
+     * @param statusReportRequired flag to enable status updates about the delivery of this message.
      */
     protected Message(final MessageType type,
                       final String from,
@@ -81,35 +87,51 @@ public abstract class Message implements QueryParamsRequest {
     }
 
     /**
-     * @return int the type of message will influence the makeup of the request we post to the Vonage server, and also the action taken by the Vonage server in response to this message
+     * The type of message will influence the makeup of the request we post to the Vonage server, and also the
+     * action taken by the Vonage server in response to this message.
+     *
+     * @return The message type as an enum.
      */
     public MessageType getType() {
         return type;
     }
 
     /**
-     * @return String the 'from' address that will be seen on the handset when this message arrives,
-     * typically either a valid short-code / long code that can be replied to, or a short text description of the application sending the message (Max 11 chars)
+     * The 'from' address that will be seen on the handset when this message arrives, typically either
+     * valid short-code / long code that can be replied to, or a short text description of the application
+     * sending the message (maximum 11 characters).
+     *
+     * @return The message sender ID or number as a string.
      */
     public String getFrom() {
         return from;
     }
 
     /**
-     * @return String the phone number of the handset that you wish to send the message to
+     * The phone number of the handset that you wish to send the message to.
+     *
+     * @return The recipient phone number as a string, in E.164 format.
      */
     public String getTo() {
         return to;
     }
 
     /**
-     * @return String A user definable value that will be stored in the Vonage sms records. It will
-     * be available in detailed reporting and analytics in order to help with reconciliation of messages
+     * An optional user definable value that will be stored in the Vonage SMS records. It will be available
+     * in detailed reporting and analytics in order to help with reconciliation of messages.
+     *
+     * @return The client reference as a string, or {@code null} if unspecified.
      */
     public String getClientReference() {
         return clientReference;
     }
 
+    /**
+     * Sets the client reference for this message.
+     *
+     * @param clientReference The custom message reference, maximum 40 characters.
+     * @throws IllegalArgumentException if the client reference is longer than 40 characters.
+     */
     public void setClientReference(String clientReference) {
         if (clientReference.length() > 40) {
             throw new IllegalArgumentException("Client reference must be 40 characters or less.");
@@ -118,63 +140,116 @@ public abstract class Message implements QueryParamsRequest {
     }
 
     /**
-     * @return {@link MessageClass} The message class that is to be applied to this message.
+     * The message class that is to be applied to this message.
+     *
+     * @return The message class as an enum.
      */
     public MessageClass getMessageClass() {
         return messageClass;
     }
 
+    /**
+     * Set the message class for this message.
+     *
+     * @param messageClass The message class as an enum.
+     */
     public void setMessageClass(MessageClass messageClass) {
         this.messageClass = messageClass;
     }
 
+    /**
+     * The duration in milliseconds the delivery of an SMS will be attempted. By default, Vonage attempts
+     * delivery for 72 hours, however the maximum effective value depends on the operator and is typically 24 - 48
+     * hours. We recommend this value should be kept at its default or at least 30 minutes.
+     *
+     * @return The message TTL in milliseconds, or {@code null} if unspecified (the default).
+     */
     public Long getTimeToLive() {
         return timeToLive;
     }
 
+    /**
+     * The duration in milliseconds the delivery of an SMS will be attempted. By default, Vonage attempts
+     * delivery for 72 hours, however the maximum effective value depends on the operator and is typically 24 - 48
+     * hours. We recommend this value should be kept at its default or at least 30 minutes.
+     *
+     * @param timeToLive The message TTL in milliseconds.
+     */
     public void setTimeToLive(Long timeToLive) {
         this.timeToLive = timeToLive;
     }
 
+    /**
+     * The webhook endpoint the delivery receipt for this SMS is sent to. This parameter overrides the webhook
+     * endpoint you set in the Dashboard. Maximum 100 characters.
+     *
+     * @return The callback URL as a string, or {@code null} if unspecified (the default).
+     */
     public String getCallbackUrl() {
         return callbackUrl;
     }
 
+    /**
+     * The webhook endpoint the delivery receipt for this SMS is sent to. This parameter overrides the webhook
+     * endpoint you set in the Dashboard. Maximum 100 characters.
+     *
+     * @param callbackUrl The callback URL to send the delivery receipt to for this message.
+     */
     public void setCallbackUrl(String callbackUrl) {
         this.callbackUrl = callbackUrl;
     }
 
+    /**
+     * A parameter that satisfies regulatory requirements when sending an SMS to specific countries.
+     *
+     * @return The entity ID as a string, or {@code null} if unspecified.
+     */
     public String getEntityId() {
         return entityId;
     }
 
+    /**
+     * Sets a parameter that satisfies regulatory requirements when sending an SMS to specific countries.
+     *
+     * @param entityId The entity ID as a string.
+     */
     public void setEntityId(String entityId) {
         this.entityId = entityId;
     }
 
+    /**
+     * A parameter that satisfies regulatory requirements when sending an SMS to specific countries.
+     *
+     * @return The content ID as a string, or {@code null} if unspecified.
+     */
     public String getContentId() {
         return contentId;
     }
 
+    /**
+     * Sets a parameter that satisfies regulatory requirements when sending an SMS to specific countries.
+     *
+     * @param contentId The content ID as a string.
+     */
     public void setContentId(String contentId) {
         this.contentId = contentId;
     }
 
     /**
-     * @return get the value of the 'status-report-req' parameter.
+     * Boolean indicating if you'd like to receive a Delivery Receipt.
+     *
+     * @return {@code true} if a delivery receipt should be requested, {@code false} otherwise.
      */
     public boolean getStatusReportRequired() {
         return statusReportRequired;
     }
 
     /**
-     * Set the value of the 'status-report-req' parameter.
-     * <p>
-     * If set to 'true', Vonage will call 'callbackUrl' with status updates about the delivery of this message. If this
-     * value is set to 'true', then 'callbackUrl' should also be set to a URL that is configured to receive these
-     * status updates.
+     * Boolean indicating if you like to receive a Delivery Receipt.
+     * If set to {@code true}, Vonage will call 'callbackUrl' with status updates about the delivery of this message.
+     * Thus, the {@linkplain #setCallbackUrl(String)} should be configured if a global one isn't set already.
      *
-     * @param statusReportRequired 'true' if status reports are desired, 'false' otherwise.
+     * @param statusReportRequired {@code true} if status reports are desired, {@code false} otherwise.
      */
     public void setStatusReportRequired(boolean statusReportRequired) {
         this.statusReportRequired = statusReportRequired;
@@ -240,6 +315,11 @@ public abstract class Message implements QueryParamsRequest {
             this.messageClass = messageClass;
         }
 
+        /**
+         * Gets the message class as an integer.
+         *
+         * @return The message class number.
+         */
         @JsonValue
         public int getMessageClass() {
             return messageClass;

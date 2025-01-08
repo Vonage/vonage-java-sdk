@@ -20,11 +20,19 @@ import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 
+/**
+ * Represents the response from the SMS API when a request is made to submit a message.
+ * Since a message may be split into multiple parts, the response metadata for each individual SMS
+ * can be retrieved from the {@link #getMessages()} method, which returns a list of
+ * {@link SmsSubmissionResponseMessage} for each corresponding message that was submitted.
+ */
 public class SmsSubmissionResponse extends JsonableBaseObject {
     private int messageCount;
     private List<SmsSubmissionResponseMessage> messages;
 
     /**
+     * Default constructor.
+     *
      * @deprecated This will be made private in the next major release.
      */
     @Deprecated
