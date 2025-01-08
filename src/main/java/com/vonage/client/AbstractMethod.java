@@ -16,6 +16,7 @@
 package com.vonage.client;
 
 import com.vonage.client.auth.*;
+import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -81,11 +82,14 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
 
         if (shouldLog()) {
             LOGGER.info("Request " + httpRequest.getMethod() + " " + httpRequest.getURI());
-            StringBuilder headers = new StringBuilder("Request headers:\n");
-            for (org.apache.http.Header header : httpRequest.getAllHeaders()) {
-                headers.append('\n').append(header.getName()).append(": ").append(header.getValue());
+            Header[] headers = httpRequest.getAllHeaders();
+            if (headers != null && headers.length > 0) {
+                StringBuilder headersStr = new StringBuilder("--- REQUEST HEADERS ---\n");
+                for (Header header : headers) {
+                    headersStr.append('\n').append(header.getName()).append(": ").append(header.getValue());
+                }
+                LOGGER.info(headersStr.toString());
             }
-            LOGGER.info(headers.toString());
             LOGGER.info("Request body: " + request);
         }
 
@@ -93,11 +97,14 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
             try {
                 if (shouldLog()) {
                     LOGGER.info("Response " + response.getStatusLine());
-                    StringBuilder headers = new StringBuilder("Response headers:\n");
-                    for (org.apache.http.Header header : response.getAllHeaders()) {
-                        headers.append('\n').append(header.getName()).append(": ").append(header.getValue());
+                    Header[] headers = response.getAllHeaders();
+                    if (headers != null && headers.length > 0) {
+                        StringBuilder headersStr = new StringBuilder("Response headers:\n");
+                        for (Header header : headers) {
+                            headersStr.append('\n').append(header.getName()).append(": ").append(header.getValue());
+                        }
+                        LOGGER.info(headersStr.toString());
                     }
-                    LOGGER.info(headers.toString());
                 }
 
                 ResultT responseBody = parseResponse(response);
