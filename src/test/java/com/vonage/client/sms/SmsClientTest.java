@@ -21,11 +21,13 @@ import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.sms.messages.BinaryMessage;
 import com.vonage.client.sms.messages.Message;
 import com.vonage.client.sms.messages.TextMessage;
+import org.apache.commons.codec.binary.Hex;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class SmsClientTest extends AbstractClientTest<SmsClient> {
 
@@ -78,6 +80,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
     @Test
     public void testSendMessageEndpoint() throws Exception {
         new SmsEndpointTestSpec(client) {
+            private final String sender = "TestSender", recipient = "not-a-number", text = "Test Hi";
 
             @Override
             public void runTests() throws Exception {
@@ -86,6 +89,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
                 testStatusReportRequiredSetter();
                 testConstructParamsUnicode();
                 testConstructParamsBinary();
+                testConstructParamsBinaryRandom();
                 testConstructParamsValidityPeriodTTL();
                 testConstructParamsContentId();
                 testConstructParamsEntityId();
@@ -99,17 +103,17 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
             }
 
             void testConstructParamsText() throws Exception {
-                var message = new TextMessage("TestSender", "not-a-number", "Test Hi");
+                var message = new TextMessage(sender, recipient, text);
                 message.setClientReference("40 char reference");
                 message.setMessageClass(Message.MessageClass.CLASS_3);
                 message.setCallbackUrl("https://example.org/sms/cb");
                 message.setStatusReportRequired(true);
                 Map<String, String> params = new LinkedHashMap<>();
                 params.put("status-report-req", "1");
-                params.put("from", "TestSender");
-                params.put("to", "not-a-number");
+                params.put("from", sender);
+                params.put("to", recipient);
                 params.put("type", "text");
-                params.put("text", "Test Hi");
+                params.put("text", text);
                 params.put("client-ref", "40 char reference");
                 params.put("message-class", "3");
                 params.put("callback", "https://example.org/sms/cb");
@@ -119,38 +123,55 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
             }
 
             void testStatusReportRequiredSetter() throws Exception {
-                Message message = new TextMessage("TestSender", "not-a-number", "Test");
+                Message message = new TextMessage(sender, recipient, text);
                 message.setStatusReportRequired(true);
                 Map<String, String> params = new LinkedHashMap<>();
-                params.put("from", "TestSender");
-                params.put("to", "not-a-number");
+                params.put("from", sender);
+                params.put("to", recipient);
                 params.put("type", "text");
                 params.put("status-report-req", "1");
-                params.put("text", "Test");
+                params.put("text", text);
                 assertRequestParams(params, message);
             }
 
             void testConstructParamsUnicode() throws Exception {
-                var message = new TextMessage("TestSender", "not-a-number", "Test", true);
+                var message = new TextMessage(sender, recipient, text, true);
                 Map<String, String> params = new LinkedHashMap<>();
-                params.put("from", "TestSender");
-                params.put("to", "not-a-number");
+                params.put("from", sender);
+                params.put("to", recipient);
                 params.put("type", "unicode");
-                params.put("text", "Test");
+                params.put("text", text);
                 assertTrue(message.isUnicode());
                 assertRequestParams(params, message);
             }
 
             void testConstructParamsBinary() throws Exception {
-                var message = new BinaryMessage("TestSender", "not-a-number", "abc".getBytes(), "def".getBytes());
+                var message = new BinaryMessage(sender, recipient, "abc".getBytes(), "def".getBytes());
                 message.setProtocolId(123456);
                 Map<String, String> params = new LinkedHashMap<>();
-                params.put("from", "TestSender");
-                params.put("to", "not-a-number");
+                params.put("from", sender);
+                params.put("to", recipient);
                 params.put("type", "binary");
                 params.put("udh", "646566");
                 params.put("body", "616263");
                 params.put("protocol-id", "123456");
+                assertRequestParams(params, message);
+            }
+
+            void testConstructParamsBinaryRandom() throws Exception {
+                var random = new Random();
+                byte[] body = new byte[512], udh = new byte[100];
+                random.nextBytes(body);
+                random.nextBytes(udh);
+
+                var message = new BinaryMessage(sender, recipient, body, udh);
+                Map<String, String> params = new LinkedHashMap<>();
+                params.put("from", sender);
+                params.put("to", recipient);
+                params.put("type", "binary");
+                params.put("body", Hex.encodeHexString(body));
+                params.put("udh", Hex.encodeHexString(udh));
+                params.put("protocol-id", "0");
                 assertRequestParams(params, message);
             }
 

@@ -59,16 +59,20 @@ public class TextMessage extends Message {
     }
 
     /**
-     * @return String The text of the message to be sent to the handset
+     * The text of the message to be sent to the handset.
+     *
+     * @return String The message body as a string.
      */
     public String getMessageBody() {
         return messageBody;
     }
 
     /**
-     * @return boolean This flag is set to true if the message needs to be submitted as a unicode message. This would
-     * be for scenario's where the message contains text that does not fit within the Latin GSM alphabet. Examples
+     * This flag is set to true if the message needs to be submitted as a Unicode message. This would
+     * be for scenarios where the message contains text that does not fit within the Latin GSM alphabet. Examples
      * would be messages to be sent in non-western scripts, such as Arabic, Kanji, Chinese, etc.
+     *
+     * @return {@code true} if the message is to be submitted as a Unicode message, {@code false} otherwise.
      */
     public boolean isUnicode() {
         return getType() == MessageType.UNICODE;

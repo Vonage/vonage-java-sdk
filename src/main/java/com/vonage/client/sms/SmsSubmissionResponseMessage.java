@@ -19,13 +19,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.math.BigDecimal;
 
+/**
+ * Represents the API response for a single SMS submission.
+ */
 public class SmsSubmissionResponseMessage extends JsonableBaseObject {
     private MessageStatus status;
     private String to, id, network, errorText, clientRef, accountRef;
     private BigDecimal remainingBalance, messagePrice;
 
     /**
-     * @return The number the message was sent to. Numbers are specified in E.164 format.
+     * The number the message was sent to.
+     *
+     * @return The receiving number in E.164 format.
      */
     @JsonProperty("to")
     public String getTo() {
@@ -33,7 +38,9 @@ public class SmsSubmissionResponseMessage extends JsonableBaseObject {
     }
 
     /**
-     * @return The ID of the message.
+     * ID of the message.
+     *
+     * @return The message ID as a string.
      */
     @JsonProperty("message-id")
     public String getId() {
@@ -41,9 +48,11 @@ public class SmsSubmissionResponseMessage extends JsonableBaseObject {
     }
 
     /**
-     * @return The status of the message. A non-zero code (i.e. anything that isn't
-     * {@link MessageStatus#OK} indicates an error. See
-     * <a href=https://developer.vonage.com/messaging/sms/guides/troubleshooting-sms>Troubleshooting Failed SMS</a>.
+     * Status of the message. A non-zero code (i.e. anything that isn't {@link MessageStatus#OK}) indicates an
+     * error. See <a href=https://developer.vonage.com/messaging/sms/guides/troubleshooting-sms>
+     * Troubleshooting Failed SMS</a> for more details.
+     *
+     * @return The message status as an enum.
      */
     @JsonProperty("status")
     public MessageStatus getStatus() {
@@ -51,7 +60,9 @@ public class SmsSubmissionResponseMessage extends JsonableBaseObject {
     }
 
     /**
-     * @return The description of the error, if present.
+     * Error description, if present.
+     *
+     * @return The description of the error, or {@code null} if not applicable.
      */
     @JsonProperty("error-text")
     public String getErrorText() {
@@ -59,7 +70,9 @@ public class SmsSubmissionResponseMessage extends JsonableBaseObject {
     }
 
     /**
-     * @return Your estimated remaining balance.
+     * Estimated account remaining balance.
+     *
+     * @return The remaining balance as a {@link BigDecimal}.
      */
     @JsonProperty("remaining-balance")
     public BigDecimal getRemainingBalance() {
@@ -67,7 +80,9 @@ public class SmsSubmissionResponseMessage extends JsonableBaseObject {
     }
 
     /**
-     * @return The estimated cost of the message.
+     * Estimated cost of the message.
+     *
+     * @return The message price as a {@link BigDecimal}.
      */
     @JsonProperty("message-price")
     public BigDecimal getMessagePrice() {
@@ -75,7 +90,9 @@ public class SmsSubmissionResponseMessage extends JsonableBaseObject {
     }
 
     /**
-     * @return The estimated ID of the network of the recipient.
+     * Estimated ID of the network of the recipient.
+     *
+     * @return The recipient's network ID as a string, or {@code null} if unknown.
      */
     @JsonProperty("network")
     public String getNetwork() {
@@ -83,8 +100,9 @@ public class SmsSubmissionResponseMessage extends JsonableBaseObject {
     }
 
     /**
-     * @return If a client-ref was included when sending the SMS,
-     * this field will be included and hold the value that was sent.
+     * If a client-ref was included when sending the SMS, this field will be the value that was sent.
+     *
+     * @return The reference associated with the message as a string, or {@code null} if there wasn't one set.
      */
     @JsonProperty("client-ref")
     public String getClientRef() {
@@ -92,15 +110,21 @@ public class SmsSubmissionResponseMessage extends JsonableBaseObject {
     }
 
     /**
-     * This is an advanced feature and requires activation via a support request before it can be used.
+     * Account reference. An optional string used to identify separate accounts using the SMS endpoint for billing
+     * purposes. This is an advanced feature and requires activation via a support request before it can be used.
      *
-     * @return An optional string used to identify separate accounts using the SMS endpoint for billing purposes.
+     * @return The account reference, or {@code null} if not applicable.
      */
     @JsonProperty("account-ref")
     public String getAccountRef() {
         return accountRef;
     }
 
+    /**
+     * Convenience method for checking if the message status indicates a temporary error.
+     *
+     * @return {@code true} if the status is a temporary error, {@code false} otherwise.
+     */
     public boolean isTemporaryError() {
         return status == MessageStatus.INTERNAL_ERROR || status == MessageStatus.TOO_MANY_BINDS
                 || status == MessageStatus.THROTTLED;

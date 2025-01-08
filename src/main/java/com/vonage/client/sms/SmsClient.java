@@ -17,7 +17,6 @@ package com.vonage.client.sms;
 
 import com.vonage.client.*;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
-import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
 import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.sms.messages.Message;
