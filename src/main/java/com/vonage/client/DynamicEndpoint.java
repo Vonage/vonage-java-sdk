@@ -329,7 +329,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 				R customParsedResponse = parseResponseFromString(deser);
 				if (customParsedResponse == null) {
 					String errorMsg = "Unhandled return type: " + responseType;
-					logger.warning(errorMsg);
+					logger.severe(errorMsg);
 					throw new IllegalStateException(errorMsg);
 				}
 				else {
@@ -350,6 +350,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 					varex.title = response.getStatusLine().getReasonPhrase();
 				}
 				varex.statusCode = response.getStatusLine().getStatusCode();
+				logger.log(Level.WARNING, "Failed to parse response", varex);
 				throw varex;
 			}
 			else {
@@ -368,6 +369,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 		R customParsedResponse = parseResponseFromString(exMessage);
 		if (customParsedResponse == null) {
+			logger.warning(exMessage);
 			throw new VonageApiResponseException(exMessage);
 		}
 		else {
