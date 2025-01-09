@@ -42,9 +42,15 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.Executors;
+import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 
 public class AbstractMethodTest {
+
+    static {
+        LogManager.getLogManager().getLogger(AbstractMethod.class.getName())
+                .setLevel(java.util.logging.Level.FINE);
+    }
 
     private static class ConcreteMethod extends AbstractMethod<String, String> {
         public ConcreteMethod(HttpWrapper httpWrapper) {

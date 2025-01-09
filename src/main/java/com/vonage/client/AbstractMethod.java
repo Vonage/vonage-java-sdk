@@ -46,9 +46,10 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractMethod<REQ, RES> implements RestEndpoint<REQ, RES> {
     private static final Logger LOGGER = Logger.getLogger(AbstractMethod.class.getName());
+    private static final Level LOG_LEVEL = Level.FINE;
 
     private static boolean shouldLog() {
-        return LOGGER.isLoggable(Level.INFO);
+        return LOGGER.isLoggable(LOG_LEVEL);
     }
 
     private final HttpWrapper httpWrapper;
@@ -103,37 +104,37 @@ public abstract class AbstractMethod<REQ, RES> implements RestEndpoint<REQ, RES>
         final HttpUriRequest httpRequest = createFullHttpRequest(request);
 
         if (shouldLog()) {
-            LOGGER.info("Request " + httpRequest.getMethod() + " " + httpRequest.getURI());
+            LOGGER.log(LOG_LEVEL, "Request " + httpRequest.getMethod() + " " + httpRequest.getURI());
             Header[] headers = httpRequest.getAllHeaders();
             if (headers != null && headers.length > 0) {
                 StringBuilder headersStr = new StringBuilder("--- REQUEST HEADERS ---");
                 for (Header header : headers) {
                     headersStr.append('\n').append(header.getName()).append(": ").append(header.getValue());
                 }
-                LOGGER.info(headersStr.toString());
+                LOGGER.log(LOG_LEVEL, headersStr.toString());
             }
             if (request != null) {
-                LOGGER.info("--- REQUEST BODY ---\n" + request);
+                LOGGER.log(LOG_LEVEL, "--- REQUEST BODY ---\n" + request);
             }
         }
 
         try (final CloseableHttpResponse response = httpWrapper.getHttpClient().execute(httpRequest)) {
             try {
                 if (shouldLog()) {
-                    LOGGER.info("Response " + response.getStatusLine());
+                    LOGGER.log(LOG_LEVEL, "Response " + response.getStatusLine());
                     Header[] headers = response.getAllHeaders();
                     if (headers != null && headers.length > 0) {
                         StringBuilder headersStr = new StringBuilder("--- RESPONSE HEADERS ---");
                         for (Header header : headers) {
                             headersStr.append('\n').append(header.getName()).append(": ").append(header.getValue());
                         }
-                        LOGGER.info(headersStr.toString());
+                        LOGGER.log(LOG_LEVEL, headersStr.toString());
                     }
                 }
 
                 final RES responseBody = parseResponse(response);
                 if (responseBody != null && shouldLog()) {
-                    LOGGER.info("--- RESPONSE BODY ---\n" + responseBody);
+                    LOGGER.log(LOG_LEVEL, "--- RESPONSE BODY ---\n" + responseBody);
                 }
 
                 return postProcessParsedResponse(responseBody);
