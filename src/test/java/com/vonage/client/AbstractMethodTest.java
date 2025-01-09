@@ -32,8 +32,6 @@ import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
 import java.io.*;
@@ -52,6 +50,11 @@ public class AbstractMethodTest {
     private static class ConcreteMethod extends AbstractMethod<String, String> {
         public ConcreteMethod(HttpWrapper httpWrapper) {
             super(httpWrapper);
+        }
+
+        static {
+            LogManager.getLogManager().getLogger(AbstractMethod.class.getName())
+                    .setLevel(java.util.logging.Level.FINE);
         }
 
         RequestBuilder makeRequest() throws UnsupportedEncodingException {
@@ -109,12 +112,6 @@ public class AbstractMethodTest {
     private CloseableHttpClient mockHttpClient;
     private AuthMethod mockAuthMethod;
     private final CloseableHttpResponse basicResponse = new CloseableBasicHttpResponse();
-
-    @BeforeAll
-    public static void setUpBeforeClass() {
-        LogManager.getLogManager().getLogger(AbstractMethod.class.getName())
-                .setLevel(java.util.logging.Level.FINE);
-    }
 
     @BeforeEach
     public void setUp() throws Exception {

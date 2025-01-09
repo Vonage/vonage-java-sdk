@@ -22,16 +22,20 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.net.URI;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DynamicEndpointTest {
     private static final HttpWrapper WRAPPER = new HttpWrapper(new NoAuthMethod());
 
     @SuppressWarnings("unchecked")
     static <T, R> DynamicEndpoint<T, R> newEndpoint(R... responseType) {
-        return DynamicEndpoint.<T, R> builder(responseType)
+        var endpoint = DynamicEndpoint.<T, R> builder(responseType)
                 .wrapper(WRAPPER).authMethod(NoAuthMethod.class)
                 .pathGetter((de, req) -> TEST_BASE_URI)
                 .requestMethod(HttpMethod.GET).acceptHeader("text").build();
+        Logger.getLogger(endpoint.getClass().getName()).setLevel(Level.FINE);
+        return endpoint;
     }
 
     @Test
