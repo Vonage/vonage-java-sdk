@@ -18,24 +18,23 @@ package com.vonage.client.incoming;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InputEventTest {
 
-    private static final Log LOG = LogFactory.getLog(InputEventTest.class);
+    private static final Logger LOG = Logger.getLogger(InputEventTest.class.getName());
 
     @Test
     public void testDeserializeInputEvent() {
         String inputJsonStr = getInputEventJsonString().toString();
-        LOG.debug(inputJsonStr);
+        LOG.info(inputJsonStr);
 
-        InputEvent inputEvent = InputEvent.fromJson(inputJsonStr);
+        var inputEvent = InputEvent.fromJson(inputJsonStr);
         assertEquals("aaaaaaaa-bbbb-cccc-dddd-0123456789ab", inputEvent.getUuid());
         assertEquals("bbbbbbbb-cccc-dddd-eeee-0123456789ab", inputEvent.getConversationUuid());
         assertTrue(inputEvent.getDtmf().isTimedOut());
@@ -65,11 +64,10 @@ public class InputEventTest {
         speechNode.put("error", expectedMessage);
         jsonNode.set("speech", speechNode);
 
-        InputEvent inputEvent = InputEvent.fromJson(jsonNode.toString());
+        var inputEvent = InputEvent.fromJson(jsonNode.toString());
         String actualMessage = inputEvent.getSpeech().getError();
 
         assertEquals(expectedMessage, actualMessage);
-
     }
 
 

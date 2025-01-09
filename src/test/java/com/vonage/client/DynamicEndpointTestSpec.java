@@ -194,16 +194,16 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 		assertEquals(expectedUri, builder.build().getURI().toString().split("\\?")[0]);
 
 		AbstractMethod<T, R> endpoint = endpointAsAbstractMethod();
-		HttpConfig originalConfig = endpoint.httpWrapper.getHttpConfig();
+		HttpConfig originalConfig = endpoint.getHttpWrapper().getHttpConfig();
 		try {
 			String baseUri = customBaseUri();
-			endpoint.httpWrapper.setHttpConfig(HttpConfig.builder().baseUri(baseUri).build());
+			endpoint.getHttpWrapper().setHttpConfig(HttpConfig.builder().baseUri(baseUri).build());
 			builder = makeTestRequest(request);
 			expectedUri = expectedCustomBaseUri() + expectedEndpointUri(request);
 			assertEquals(expectedUri, builder.build().getURI().toString().split("\\?")[0]);
 		}
 		finally {
-			endpoint.httpWrapper.setHttpConfig(originalConfig);
+			endpoint.getHttpWrapper().setHttpConfig(originalConfig);
 		}
 	}
 

@@ -16,7 +16,7 @@
 package com.vonage.client;
 
 import com.vonage.client.auth.*;
-import org.apache.commons.logging.LogFactory;
+import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -26,78 +26,143 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
  * Abstract class to assist in implementing a call against a REST endpoint.
  * <p>
  * Concrete implementations must implement {@link #makeRequest(Object)} to construct a {@link RequestBuilder} from the
- * provided parameterized request object, and {@link #parseResponse(HttpResponse)} to construct the parameterized {@link
- * HttpResponse} object.
+ * provided parameterized request object, and {@link #parseResponse(HttpResponse)} to construct the parameterized
+ * {@link HttpResponse} object.
  * <p>
  * The REST call is executed by calling {@link #execute(Object)}.
  *
- * @param <RequestT> The type of the method-specific request object that will be used to construct an HTTP request
- * @param <ResultT>  The type of method-specific response object which will be constructed from the returned HTTP
- *                   response
+ * @param <REQ> The request object type that will be used to construct the HTTP request body.
+ * @param <RES>  The response object type which will be constructed from the returned HTTP response body.
+ *
+ * @see DynamicEndpoint for a flexible implementation which handles the most common use cases.
  */
-public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<RequestT, ResultT> {
-    static {
-        LogFactory.getLog(AbstractMethod.class);
-    }
-    
-    protected final HttpWrapper httpWrapper;
+public abstract class AbstractMethod<REQ, RES> implements RestEndpoint<REQ, RES> {
+    private static final Logger LOGGER = Logger.getLogger(AbstractMethod.class.getName());
+    private static final Level LOG_LEVEL = Level.FINE;
 
-    public AbstractMethod(HttpWrapper httpWrapper) {
+    private static boolean shouldLog() {
+        return LOGGER.isLoggable(LOG_LEVEL);
+    }
+
+    /**
+     * HTTP client and configuration used by this endpoint.
+     */
+    private final HttpWrapper httpWrapper;
+
+    /**
+     * Construct a new AbstractMethod instance with the given HTTP client.
+     *
+     * @param httpWrapper The wrapper containing the HTTP client and configuration.
+     */
+    protected AbstractMethod(HttpWrapper httpWrapper) {
         this.httpWrapper = httpWrapper;
     }
 
+    /**
+     * Gets the underlying HTTP client wrapper.
+     *
+     * @return The {@link HttpWrapper} used by this endpoint.
+     */
     public HttpWrapper getHttpWrapper() {
         return httpWrapper;
     }
 
-    protected ResultT postProcessParsedResponse(ResultT response) {
+    /**
+     * Method which allows further modification of the response object after it has been parsed.
+     *
+     * @param response The unmarshalled response object.
+     *
+     * @return The final result object to return; usually the same object that was passed in.
+     */
+    protected RES postProcessParsedResponse(RES response) {
         return response;
     }
 
-    /**
-     * Execute the REST call represented by this method object.
-     *
-     * @param request A RequestT representing input to the REST call to be made
-     *
-     * @return A ResultT representing the response from the executed REST call
-     *
-     * @throws VonageClientException if there is a problem parsing the HTTP response
-     */
-    @Override
-    public ResultT execute(RequestT request) throws VonageResponseParseException, VonageClientException {
-        HttpUriRequest httpRequest = applyAuth(makeRequest(request))
+    private HttpUriRequest createFullHttpRequest(REQ request) throws VonageClientException {
+        return applyAuth(makeRequest(request))
                 .setHeader(HttpHeaders.USER_AGENT, httpWrapper.getUserAgent())
                 .setCharset(StandardCharsets.UTF_8).build();
+    }
 
-        try (CloseableHttpResponse response = httpWrapper.getHttpClient().execute(httpRequest)) {
+    /**
+     * Executes the REST call represented by this endpoint.
+     *
+     * @param request The request object representing input to the REST call to be made.
+     *
+     * @return The result object representing the response from the executed REST call.
+     *
+     * @throws VonageResponseParseException if there was a problem parsing the HTTP response.
+     * @throws VonageMethodFailedException if there was a problem executing the HTTP request.
+     */
+    @Override
+    public RES execute(REQ request) throws VonageMethodFailedException, VonageResponseParseException {
+        final HttpUriRequest httpRequest = createFullHttpRequest(request);
+
+        if (shouldLog()) {
+            LOGGER.log(LOG_LEVEL, "Request " + httpRequest.getMethod() + " " + httpRequest.getURI());
+            Header[] headers = httpRequest.getAllHeaders();
+            if (headers != null && headers.length > 0) {
+                StringBuilder headersStr = new StringBuilder("--- REQUEST HEADERS ---");
+                for (Header header : headers) {
+                    headersStr.append('\n').append(header.getName()).append(": ").append(header.getValue());
+                }
+                LOGGER.log(LOG_LEVEL, headersStr.toString());
+            }
+            if (request != null) {
+                LOGGER.log(LOG_LEVEL, "--- REQUEST BODY ---\n" + request);
+            }
+        }
+
+        try (final CloseableHttpResponse response = httpWrapper.getHttpClient().execute(httpRequest)) {
             try {
-                return postProcessParsedResponse(parseResponse(response));
+                if (shouldLog()) {
+                    LOGGER.log(LOG_LEVEL, "Response " + response.getStatusLine());
+                    Header[] headers = response.getAllHeaders();
+                    if (headers != null && headers.length > 0) {
+                        StringBuilder headersStr = new StringBuilder("--- RESPONSE HEADERS ---");
+                        for (Header header : headers) {
+                            headersStr.append('\n').append(header.getName()).append(": ").append(header.getValue());
+                        }
+                        LOGGER.log(LOG_LEVEL, headersStr.toString());
+                    }
+                }
+
+                final RES responseBody = parseResponse(response);
+                if (responseBody != null && shouldLog()) {
+                    LOGGER.log(LOG_LEVEL, "--- RESPONSE BODY ---\n" + responseBody);
+                }
+
+                return postProcessParsedResponse(responseBody);
             }
             catch (IOException iox) {
+                LOGGER.log(Level.WARNING, "Failed to parse response", iox);
                 throw new VonageResponseParseException(iox);
             }
         }
         catch (IOException iox) {
+            LOGGER.log(Level.WARNING, "Failed to execute HTTP request", iox);
             throw new VonageMethodFailedException("Something went wrong while executing the HTTP request.", iox);
         }
     }
 
     /**
-     * Apply an appropriate authentication method (specified by {@link #getAcceptableAuthMethods()}) to the provided
-     * {@link RequestBuilder}, and return the result.
+     * Apply an appropriate authentication method (specified by {@link #getAcceptableAuthMethods()}) to the
+     * provided {@link RequestBuilder}, and return the result.
      *
-     * @param request A RequestBuilder which has not yet had authentication information applied
+     * @param request A RequestBuilder which has not yet had authentication information applied.
      *
-     * @return A RequestBuilder with appropriate authentication information applied (may or not be the same instance as
-     * <pre>request</pre>)
+     * @return A RequestBuilder with appropriate authentication information applied
+     * (may or not be the same instance as <pre>request</pre>).
      *
-     * @throws VonageClientException If no appropriate {@link AuthMethod} is available
+     * @throws VonageClientException If no appropriate {@link AuthMethod} is available.
      */
     final RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
         AuthMethod am = getAuthMethod();
@@ -127,25 +192,30 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
         return httpWrapper.getAuthCollection().getAcceptableAuthMethod(getAcceptableAuthMethods());
     }
 
+    /**
+     * Gets applicable authentication methods for this endpoint.
+     *
+     * @return The set of acceptable authentication method classes (at least one must be provided).
+     */
     protected abstract Set<Class<? extends AuthMethod>> getAcceptableAuthMethods();
 
     /**
      * Construct and return a RequestBuilder instance from the provided request.
      *
-     * @param request A RequestT representing input to the REST call to be made
+     * @param request A request object representing input to the REST call to be made.
      *
-     * @return A ResultT representing the response from the executed REST call
+     * @return A RequestBuilder instance representing the HTTP request to be made.
      */
-    protected abstract RequestBuilder makeRequest(RequestT request);
+    protected abstract RequestBuilder makeRequest(REQ request);
 
     /**
-     * Construct a ResultT representing the contents of the HTTP response returned from the Vonage Voice API.
+     * Construct a response object representing the contents of the HTTP response returned from the Vonage API.
      *
-     * @param response An HttpResponse returned from the Vonage Voice API
+     * @param response An HttpResponse returned from the Vonage API.
      *
-     * @return A ResultT type representing the result of the REST call
+     * @return The unmarshalled result of the REST call.
      *
-     * @throws IOException if a problem occurs parsing the response
+     * @throws IOException if a problem occurs parsing the response.
      */
-    protected abstract ResultT parseResponse(HttpResponse response) throws IOException;
+    protected abstract RES parseResponse(HttpResponse response) throws IOException;
 }

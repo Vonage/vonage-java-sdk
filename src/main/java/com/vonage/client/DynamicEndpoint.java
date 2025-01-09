@@ -30,6 +30,8 @@ import java.net.URI;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Enables convenient declaration of endpoints without directly implementing {@link AbstractMethod}.
@@ -42,6 +44,8 @@ import java.util.function.Consumer;
  */
 @SuppressWarnings("unchecked")
 public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
+	protected final Logger logger = Logger.getLogger(getClass().getName());
+
 	protected Set<Class<? extends AuthMethod>> authMethods;
 	protected String contentType, accept;
 	protected HttpMethod requestMethod;
@@ -242,6 +246,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	@Override
 	protected final R parseResponse(HttpResponse response) throws IOException {
 		int statusCode = response.getStatusLine().getStatusCode();
+		logger.fine(() -> "Response status: " + statusCode);
 		try {
 			if (statusCode >= 200 && statusCode < 300) {
 				return parseResponseSuccess(response);
@@ -255,6 +260,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 		catch (InvocationTargetException ex) {
 			Throwable wrapped = ex.getTargetException();
+			logger.log(Level.SEVERE, "Internal SDK error", ex);
 			if (wrapped instanceof RuntimeException) {
 				throw (RuntimeException) wrapped;
 			}
@@ -263,6 +269,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			}
 		}
 		catch (ReflectiveOperationException ex) {
+			logger.log(Level.SEVERE, "Internal SDK error", ex);
 			throw new VonageUnexpectedException(ex);
 		}
 		finally {
@@ -276,6 +283,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	private R parseResponseRedirect(HttpResponse response) throws ReflectiveOperationException, IOException {
 		final String location = response.getFirstHeader("Location").getValue();
+		logger.fine(() -> "Redirect: " + location);
 
 		if (java.net.URI.class.equals(responseType)) {
 			return (R) URI.create(location);
@@ -290,13 +298,17 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	private R parseResponseSuccess(HttpResponse response) throws IOException, ReflectiveOperationException {
 		if (Void.class.equals(responseType)) {
+			logger.fine(() -> "No response body.");
 			return null;
 		}
 		else if (byte[].class.equals(responseType)) {
-			return (R) EntityUtils.toByteArray(response.getEntity());
+			byte[] result = EntityUtils.toByteArray(response.getEntity());
+			logger.fine(() -> "Binary response body of length " + result.length);
+			return (R) result;
 		}
 		else {
 			String deser = EntityUtils.toString(response.getEntity());
+			logger.fine(() -> deser);
 
 			if (responseType.equals(String.class)) {
 				return (R) deser;
@@ -316,7 +328,9 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			else {
 				R customParsedResponse = parseResponseFromString(deser);
 				if (customParsedResponse == null) {
-					throw new IllegalStateException("Unhandled return type: " + responseType);
+					String errorMsg = "Unhandled return type: " + responseType;
+					logger.severe(errorMsg);
+					throw new IllegalStateException(errorMsg);
 				}
 				else {
 					return customParsedResponse;
@@ -336,6 +350,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 					varex.title = response.getStatusLine().getReasonPhrase();
 				}
 				varex.statusCode = response.getStatusLine().getStatusCode();
+				logger.log(Level.WARNING, "Failed to parse response", varex);
 				throw varex;
 			}
 			else {
@@ -345,13 +360,16 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 						if (!constructor.isAccessible()) {
 							constructor.setAccessible(true);
 						}
-						throw (RuntimeException) constructor.newInstance(exMessage);
+						RuntimeException ex = (RuntimeException) constructor.newInstance(exMessage);
+						logger.log(Level.SEVERE, "Internal SDK error", ex);
+						throw ex;
 					}
 				}
 			}
 		}
 		R customParsedResponse = parseResponseFromString(exMessage);
 		if (customParsedResponse == null) {
+			logger.warning(exMessage);
 			throw new VonageApiResponseException(exMessage);
 		}
 		else {
