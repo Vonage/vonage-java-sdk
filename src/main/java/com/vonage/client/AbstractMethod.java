@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  * @param <REQ> The request object type that will be used to construct the HTTP request body.
  * @param <RES>  The response object type which will be constructed from the returned HTTP response body.
  *
- * @see DynamicEndpoint for an abstract implementation which handles the most common use cases.
+ * @see DynamicEndpoint for a flexible implementation which handles the most common use cases.
  */
 public abstract class AbstractMethod<REQ, RES> implements RestEndpoint<REQ, RES> {
     private static final Logger LOGGER = Logger.getLogger(AbstractMethod.class.getName());
@@ -52,6 +52,9 @@ public abstract class AbstractMethod<REQ, RES> implements RestEndpoint<REQ, RES>
         return LOGGER.isLoggable(LOG_LEVEL);
     }
 
+    /**
+     * HTTP client and configuration used by this endpoint.
+     */
     private final HttpWrapper httpWrapper;
 
     /**

@@ -32,6 +32,8 @@ import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
 import java.io.*;
@@ -45,6 +47,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 
+@Execution(ExecutionMode.SAME_THREAD)
 public class AbstractMethodTest {
 
     static {
