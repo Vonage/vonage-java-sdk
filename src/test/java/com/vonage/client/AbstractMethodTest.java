@@ -47,13 +47,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 
-@Execution(ExecutionMode.SAME_THREAD)
 public class AbstractMethodTest {
-
-    static {
-        LogManager.getLogManager().getLogger(AbstractMethod.class.getName())
-                .setLevel(java.util.logging.Level.FINE);
-    }
 
     private static class ConcreteMethod extends AbstractMethod<String, String> {
         public ConcreteMethod(HttpWrapper httpWrapper) {
@@ -115,6 +109,12 @@ public class AbstractMethodTest {
     private CloseableHttpClient mockHttpClient;
     private AuthMethod mockAuthMethod;
     private final CloseableHttpResponse basicResponse = new CloseableBasicHttpResponse();
+
+    @BeforeAll
+    public static void setUpBeforeClass() {
+        LogManager.getLogManager().getLogger(AbstractMethod.class.getName())
+                .setLevel(java.util.logging.Level.FINE);
+    }
 
     @BeforeEach
     public void setUp() throws Exception {
