@@ -269,7 +269,9 @@ public class VonageClient {
      *
      * @return The {@linkplain NumberInsight2Client}.
      * @since 8.2.0
+     * @deprecated This API is deprecated and will be removed in the next major release.
      */
+    @Deprecated
     public NumberInsight2Client getNumberInsight2Client() {
         return numberInsight2;
     }
