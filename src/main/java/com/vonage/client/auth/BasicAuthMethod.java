@@ -15,6 +15,8 @@
  */
 package com.vonage.client.auth;
 
+import java.util.Objects;
+
 /**
  * Base class for auth methods which use the {@code Authorization: Basic } header.
  *
@@ -27,5 +29,18 @@ public abstract class BasicAuthMethod extends AbstractAuthMethod implements Head
     @Override
     public final String getHeaderValue() {
         return "Basic " + getBasicToken();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof BasicAuthMethod) || !super.equals(obj)) {
+            return false;
+        }
+        return ((BasicAuthMethod) obj).getBasicToken().equals(this.getBasicToken());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getBasicToken().hashCode());
     }
 }

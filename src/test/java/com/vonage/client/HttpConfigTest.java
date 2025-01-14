@@ -109,6 +109,7 @@ public class HttpConfigTest {
             assertEquals(toString, region.name().toLowerCase().replace('_', '-'));
             assertEquals(region, ApiRegion.fromString(toString));
         }
+        assertNull(ApiRegion.fromString(null));
     }
 
     @Test

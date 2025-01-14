@@ -16,4 +16,7 @@
 package com.vonage.client.video;
 
 final class ListRendersResponse extends ListResourceResponse<RenderResponse> {
+    ListRendersResponse() {
+        super();
+    }
 }

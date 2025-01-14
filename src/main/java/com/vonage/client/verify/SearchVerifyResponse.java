@@ -57,6 +57,8 @@ public class SearchVerifyResponse extends JsonableBaseObject {
     }
 
     /**
+     * Gets the error message, if applicable.
+     *
      * @return If status is not SUCCESS, this message explains the issue encountered.
      */
     @JsonProperty("error_text")
@@ -82,6 +84,7 @@ public class SearchVerifyResponse extends JsonableBaseObject {
         }
     }
 
+    @Deprecated
     public static SearchVerifyResponse fromJson(String json) {
         return Jsonable.fromJson(json);
     }

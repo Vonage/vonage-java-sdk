@@ -24,7 +24,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ListArchivesResponseTest {
-	
+
+	@Test
+	public void testEmptyConstructor() {
+		ListArchivesResponse response = new ListArchivesResponse();
+		assertNull(response.getCount());
+		assertNull(response.getItems());
+	}
+
 	@Test
 	public void testFromJsonAllFields() {
 		Integer count = 4;

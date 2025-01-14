@@ -48,6 +48,10 @@ public class AuthCollectionTest {
         AuthCollection auths = new AuthCollection(jwtAuth, tokenAuth);
         assertEquals(jwtAuth, auths.getAcceptableAuthMethod(JWT_AUTH_CLASS_SET));
         assertEquals(tokenAuth, auths.getAcceptableAuthMethod(TOKEN_AUTH_CLASS_SET));
+        assertNotEquals(jwtAuth, tokenAuth);
+        assertNotEquals(tokenAuth.hashCode(), jwtAuth.hashCode());
+        var altAuth = new ApiKeyQueryParamsAuthMethod(tokenAuth.getApiKey(), "api_secret");
+        assertNotEquals(tokenAuth, altAuth);
     }
 
     @Test

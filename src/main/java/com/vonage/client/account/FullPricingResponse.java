@@ -27,4 +27,8 @@ import java.util.List;
 class FullPricingResponse extends JsonableBaseObject {
     @JsonProperty("count") Integer count;
     @JsonProperty("countries") List<PricingResponse> countries;
+
+    FullPricingResponse() {
+        super();
+    }
 }

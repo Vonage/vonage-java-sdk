@@ -96,7 +96,8 @@ public class UserTest {
 				new Mms("+49 171 1234567"),
 				new Pstn("49 1522 000000"),
 				new Whatsapp("+447700900001"),
-				new Viber("447700900002"),
+				new WhatsappVoice("447000900003"),
+				new Viber("4 4 7 7 0 0 9 0 0 0 0 2"),
 				new Messenger("0123456789abc"),
 				new Vbc(7890),
 				new Sip("sip:1234568790@sip.example.org", "admin", "53cRe7"),
@@ -138,6 +139,7 @@ public class UserTest {
 		Whatsapp whatsapp0 = whatsapp.get(0);
 		assertTrue(whatsapp.hashCode() != 0);
 		assertEquals("447700900001", whatsapp0.getNumber());
+
 
 		List<Viber> viber = channels.getViber();
 		assertNotNull(viber);

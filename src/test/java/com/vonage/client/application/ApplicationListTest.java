@@ -35,4 +35,11 @@ public class ApplicationListTest {
         assertNotNull(al);
         assertNull(al.getApplications());
     }
+
+    @Test
+    public void testEmptyJson() {
+        var al = ApplicationList.fromJson("{}");
+        assertNotNull(al);
+        assertNull(al.getApplications());
+    }
 }

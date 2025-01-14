@@ -28,17 +28,23 @@ public class BinaryMessage extends Message {
     /**
      * Instantiate a new binary SMS message request.
      *
-     * @param from              the 'from' address that will be seen on the handset when this message arrives,
-     *                          typically either a valid short-code / long code that can be replied to, or a short text description of the application sending the message (Max 11 chars)
-     * @param to                the phone number of the handset that you wish to send the message to
-     * @param messageBody The raw binary message data to be sent to a handset.
-     *                          This api, and the Vonage sms service will send this data 'as-is' (in conjunction with the binary UDH) and will not make any corrections.
-     *                          so you should ensure that it is a correctly constructed message
-     * @param udh  Most binary content will require a UserDataHeader portion of the message containing commands to enable the handset to interpret the binary data
-     *                          (for example, a binary ringtone, a wap-push, OverTheAir configuration etc.).
-     *                          Additionally, if you are sending a long text message as multiple concatenated messages and are performing this operation manually rather than
-     *                          using the automated long sms handling in the Vonage sms service, then you will need to construct and include here an appropriate
-     *                          UserDataHeader field that describes the segmentation/re-assembly fields required to successfully concatenate multiple short messages.
+     * @param from              The sender address that will be seen on the handset when this message arrives,
+     *                          typically either a valid short-code / long code that can be replied to, or a short
+     *                          text description of the application sending the message (Max 11 chars).
+     *
+     * @param to The phone number of the handset that you wish to send the message to.
+     *
+     * @param messageBody The raw binary message data to be sent to a handset. The Vonage SMS service will send this
+     *                    data 'as-is' (in conjunction with the binary UDH) and will not make any corrections, so you
+     *                    should ensure that it is correct.
+     *
+     * @param udh Most binary content will require a UserDataHeader portion of the message containing commands to
+     *            enable the handset to interpret the binary data (for example, a binary ringtone, a WAP-push,
+     *            OverTheAir configuration, etc.). Additionally, if you are sending a long text message as multiple
+     *            concatenated messages and are performing this operation manually rather than using the automated
+     *            long sms handling in the Vonage SMS service, then you will need to construct and include here an
+     *            appropriate UserDataHeader field that describes the segmentation / re-assembly fields required to
+     *            successfully concatenate multiple short messages.
      */
     public BinaryMessage(final String from,
                          final String to,
@@ -57,7 +63,7 @@ public class BinaryMessage extends Message {
      * @return The message body as a byte array.
      */
     public byte[] getMessageBody() {
-        return messageBody == null ? null : messageBody.clone();
+        return messageBody.clone();
     }
 
     /**
@@ -71,7 +77,7 @@ public class BinaryMessage extends Message {
      * @return The User Data Header as a byte array.
      */
     public byte[] getUdh() {
-        return udh == null ? null : udh.clone();
+        return udh.clone();
     }
 
     /**

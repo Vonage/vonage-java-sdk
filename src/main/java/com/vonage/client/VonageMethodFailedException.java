@@ -16,10 +16,13 @@
 package com.vonage.client;
 
 public class VonageMethodFailedException extends VonageClientException {
+
+    @Deprecated
     public VonageMethodFailedException() {
         super();
     }
 
+    @Deprecated
     public VonageMethodFailedException(String message) {
         super(message);
     }
@@ -28,6 +31,7 @@ public class VonageMethodFailedException extends VonageClientException {
         super(message, cause);
     }
 
+    @Deprecated
     public VonageMethodFailedException(Throwable cause) {
         super(cause);
     }

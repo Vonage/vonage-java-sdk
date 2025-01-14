@@ -22,58 +22,36 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.util.UUID;
 
-public class ListStreamsResponseTest {
+public class ListRendersResponseTest {
 
 	@Test
 	public void testEmptyConstructor() {
-		ListStreamsResponse response = new ListStreamsResponse();
+		ListRendersResponse response = new ListRendersResponse();
 		assertNull(response.getCount());
 		assertNull(response.getItems());
 	}
 
 	@Test
-	public void testFromJsonAllFields() {
-		UUID id1 = UUID.randomUUID();
-		String name0 = "LiveStream 1";
-		Integer count = 2;
-		ListStreamsResponse response = Jsonable.fromJson("{\n" +
-				"\"count\":\""+count+"\",\n" +
-				"\"items\":[{\n" +
-				"  \"id\": \"8b732909-0a06-46a2-8ea8-074e64d43422\",\n" +
-				"  \"videoType\": \"camera\",\n" +
-				"  \"name\": \""+name0+"\",\n" +
-				"  \"layoutClassList\": [\n" +
-				"    \"full\"\n" +
-				"   ]\n" +
-				"},{\n" +
-				"  \"id\": \""+id1+"\",\n" +
-				"  \"layoutClassList\": []\n" +
-				"}]}"
-		);
-
+	public void testFromJsonSingleEmptyItem() {
+		ListRendersResponse response = Jsonable.fromJson("{\"count\":\"0\",\n\"items\":[{}]}");
 		TestUtils.testJsonableBaseObject(response);
-		assertEquals(count, response.getCount());
-		assertEquals(count.intValue(), response.getItems().size());
-		GetStreamResponse gsr0 = response.getItems().get(0), gsr1 = response.getItems().get(1);
-		assertEquals(VideoType.CAMERA, gsr0.getVideoType());
-		assertEquals(name0, gsr0.getName());
-		assertEquals(1, gsr0.getLayoutClassList().size());
-		assertNull(gsr1.getVideoType());
-		assertNull(gsr1.getName());
-		assertEquals(id1, gsr1.getId());
-		assertEquals(0, gsr1.getLayoutClassList().size());
+		assertEquals(0, response.getCount());
+		var items = response.getItems();
+		assertNotNull(items);
+		assertEquals(1, items.size());
+		TestUtils.testJsonableBaseObject(items.getFirst());
 	}
 	
 	@Test
 	public void testFromJsonInvalid() {
 		assertThrows(VonageResponseParseException.class,
-				() -> Jsonable.fromJson("{malformed]", ListStreamsResponse.class)
+				() -> Jsonable.fromJson("{malformed]", ListRendersResponse.class)
 		);
 	}
 
 	@Test
 	public void testFromJsonEmpty() {
-		ListStreamsResponse response = Jsonable.fromJson("{}");
+		ListRendersResponse response = Jsonable.fromJson("{}");
 		assertNull(response.getCount());
 		assertNull(response.getItems());
 	}

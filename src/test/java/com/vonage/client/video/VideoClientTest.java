@@ -843,6 +843,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 	public void testListRenders() throws Exception {
 		stubListRenderJsonAndAssertEquals(client::listRenders);
 		stubListRenderJsonAndAssertEquals(() -> client.listRenders(null));
+
 	}
 
 	@Test

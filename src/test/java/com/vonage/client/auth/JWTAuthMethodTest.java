@@ -17,18 +17,20 @@ package com.vonage.client.auth;
 
 import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.APPLICATION_ID_STR;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 public class JWTAuthMethodTest {
+    private byte[] keyBytes;
     private JWTAuthMethod auth;
 
     @BeforeEach
     public void setUp() throws Exception {
-        byte[] keyBytes = new TestUtils().loadKey("test/keys/application_key");
+        keyBytes = new TestUtils().loadKey("test/keys/application_key");
         auth = new JWTAuthMethod(APPLICATION_ID_STR, keyBytes);
     }
 
@@ -44,5 +46,16 @@ public class JWTAuthMethodTest {
         String header = auth.getHeaderValue();
         assertNotNull(header);
         assertEquals("Bearer ", header.substring(0, 7));
+    }
+
+    @Test
+    public void testEqualsAndHashCode() throws Exception {
+        assertNotEquals(new Object(), auth);
+        var clone = new JWTAuthMethod(APPLICATION_ID_STR, keyBytes);
+        assertEquals(auth, clone);
+        assertEquals(auth.hashCode(), clone.hashCode());
+        var random = new JWTAuthMethod(UUID.randomUUID().toString(), keyBytes);
+        assertNotEquals(auth, random);
+        assertNotEquals(auth.hashCode(), random.hashCode());
     }
 }
