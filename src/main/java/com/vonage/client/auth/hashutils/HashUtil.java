@@ -38,17 +38,15 @@ public class HashUtil {
     }
 
     /**
-     * Calculates hash for string. assume string is UTF-8 encoded.
+     * Calculates hash for string, assuming UTF-8 encoding and no secret.
      *
-     * @param input string which is going to be encoded into requested format
-     * @param hashType The type of hash to be applied to the input string
-     * @return representation of the input string with given hash type
+     * @param input string which is going to be encoded into requested format.
+     * @param hashType The type of hash to be applied to the input string.
+     * @return representation of the input string with given hash type.
+     *
      * @throws NoSuchAlgorithmException if the algorithm is not available.
      * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
-     *
-     * @deprecated This will be removed in the next major release.
      */
-    @Deprecated
     public static String calculate(String input, HashType hashType) throws NoSuchAlgorithmException, InvalidKeyException {
         return HASH_TYPES.get(hashType).calculate(input);
     }
@@ -56,10 +54,10 @@ public class HashUtil {
     /**
      * Calculates hash for string.
      *
-     * @param input string which is going to be encoded into requested format
-     * @param encoding encoding type of input
-     * @param hashType The type of hash to be applied to the input string
-     * @return representation of the input string with given hash type
+     * @param input string which is going to be encoded into requested format.
+     * @param encoding encoding type of input.
+     * @param hashType The type of hash to be applied to the input string.
+     * @return representation of the input string with given hash type.
      * @throws NoSuchAlgorithmException if the algorithm is not available.
      * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      * @throws UnsupportedEncodingException if the specified encoding is unavailable.
