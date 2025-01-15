@@ -151,6 +151,30 @@ public class ApplicationTest {
     }
 
     @Test
+    public void testRemoveCapabilityThatDoesExist() {
+        String json = "{\"capabilities\":{\"verify\":{},\"network_apis\":{}}}";
+        Application application = Application.builder()
+                .addCapability(NetworkApis.builder().build())
+                .addCapability(Messages.builder().build())
+                .addCapability(Verify.builder().build())
+                .removeCapability(Type.MESSAGES)
+                .build();
+
+        assertEquals(json, application.toJson());
+        testJsonableBaseObject(application);
+
+        json = "{\"capabilities\":{\"network_apis\":{}}}";
+        application = Application.builder()
+                .addCapability(NetworkApis.builder().build())
+                .addCapability(Verify.builder().build())
+                .removeCapability(Type.VERIFY)
+                .build();
+
+        assertEquals(json, application.toJson());
+        testJsonableBaseObject(application);
+    }
+
+    @Test
     public void testRemoveNullCapability() {
         assertThrows(NullPointerException.class, () -> Application.builder()
                 .addCapability(Rtc.builder().build())
@@ -172,6 +196,13 @@ public class ApplicationTest {
                 .removeCapability(Type.VBC).build();
         assertEquals("{}", application.toJson());
         testJsonableBaseObject(application);
+    }
+
+    @Test
+    public void testRemoveWebhookWhenThereAreNone() {
+        var voice = Voice.builder().removeWebhook(Webhook.Type.FALLBACK_ANSWER).build();
+        assertNotNull(voice);
+        assertNull(voice.getWebhooks());
     }
 
     @Test
