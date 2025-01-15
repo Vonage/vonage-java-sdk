@@ -107,6 +107,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 		assertNull(parsed.getChannel());
 		assertNull(parsed.getDateCreated());
 		assertNull(parsed.getDateUpdated());
+		assertNull(FragmentChannel.fromString(null));
 	}
 
 	void assert429ResponseException(Executable invocation) throws Exception {

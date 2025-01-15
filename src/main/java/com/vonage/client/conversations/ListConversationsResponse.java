@@ -30,7 +30,7 @@ public final class ListConversationsResponse extends HalPageResponse {
 	ListConversationsResponse() {
 	}
 
-		static final class Embedded extends JsonableBaseObject {
+	static final class Embedded extends JsonableBaseObject {
 		private List<BaseConversation> conversations;
 
 		@JsonProperty("conversations")

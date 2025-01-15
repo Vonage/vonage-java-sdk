@@ -18,6 +18,7 @@ package com.vonage.client.account;
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.API_KEY;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
@@ -330,6 +331,7 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
     public void testTopUpNoTransactionId() throws Exception {
         stubResponse(200);
         assertThrows(IllegalArgumentException.class, () -> client.topUp(" "));
+        assertThrows(IllegalArgumentException.class, () -> client.topUp(null));
     }
 
     @Test
@@ -377,7 +379,7 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
     @Test
     public void testParseListSecretsMalformed() throws Exception {
         stubResponse(200, "{malformed]");
-        assertThrows(VonageResponseParseException.class, () -> client.listSecrets(TestUtils.API_KEY));
+        assertThrows(VonageResponseParseException.class, () -> client.listSecrets(API_KEY));
     }
 
     @Test
@@ -403,6 +405,7 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
     public void testListSecretNoApiKey() throws Exception {
         stubResponse(200, "{}");
         assertThrows(IllegalArgumentException.class, () -> client.listSecrets("  "));
+        assertThrows(IllegalArgumentException.class, () -> client.listSecrets(null));
     }
 
     @Test
@@ -437,7 +440,7 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
                         + "      \"reason\": \"Does not meet complexity requirements\"\n" + "    }\n" + "  ],\n"
                         + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
         stubResponse(400, json);
-        assertThrows(AccountResponseException.class, () -> client.createSecret(TestUtils.API_KEY, "secret"));
+        assertThrows(AccountResponseException.class, () -> client.createSecret(API_KEY, "secret"));
     }
 
     @Test
@@ -459,18 +462,20 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
     @Test
     public void testGetSecretMalformed() throws Exception {
         stubResponse(200, "{malformed]");
-        assertThrows(VonageResponseParseException.class, () -> client.getSecret(TestUtils.API_KEY, SECRET_ID));
+        assertThrows(VonageResponseParseException.class, () -> client.getSecret(API_KEY, SECRET_ID));
     }
 
     @Test
     public void testGetSecretNoSecretId() throws Exception {
         stubResponse(200, "{}");
-        assertThrows(IllegalArgumentException.class, () -> client.getSecret(TestUtils.API_KEY, "  "));
+        assertThrows(IllegalArgumentException.class, () -> client.getSecret(API_KEY, "  "));
+        assertThrows(IllegalArgumentException.class, () -> client.getSecret(API_KEY, null));
     }
 
     @Test
     public void testGetSecretNoApiKey() throws Exception {
         stubResponse(200, "{}");
+        assertThrows(IllegalArgumentException.class, () -> client.getSecret("\n", SECRET_ID));
         assertThrows(IllegalArgumentException.class, () -> client.getSecret(null, SECRET_ID));
     }
 
@@ -499,7 +504,7 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
                 + "  \"detail\": \"Can not delete the last secret. The account must always have at least 1 secret active at any time\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
         stubResponse(403, json);
-        assertThrows(AccountResponseException.class, () -> client.revokeSecret(TestUtils.API_KEY, SECRET_ID));
+        assertThrows(AccountResponseException.class, () -> client.revokeSecret(API_KEY, SECRET_ID));
     }
 
     @Test
@@ -768,7 +773,7 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
 
             @Override
             protected CreateSecretRequest sampleRequest() {
-                return new CreateSecretRequest(TestUtils.API_KEY, SECRET_ID);
+                return new CreateSecretRequest(API_KEY, SECRET_ID);
             }
         }
         .runTests();
@@ -785,7 +790,7 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
 
             @Override
             protected SecretRequest sampleRequest() {
-                return new SecretRequest(TestUtils.API_KEY, SECRET_ID);
+                return new SecretRequest(API_KEY, SECRET_ID);
             }
         }
         .runTests();
@@ -802,7 +807,7 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
 
             @Override
             protected String sampleRequest() {
-                return TestUtils.API_KEY;
+                return API_KEY;
             }
         }
         .runTests();
@@ -824,7 +829,7 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
 
             @Override
             protected SecretRequest sampleRequest() {
-                return new SecretRequest(TestUtils.API_KEY, SECRET_ID);
+                return new SecretRequest(API_KEY, SECRET_ID);
             }
         }
         .runTests();

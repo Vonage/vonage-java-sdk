@@ -38,8 +38,10 @@ public final class Channels extends JsonableBaseObject {
 	Channels() {
 	}
 
-	private <C extends Channel> List<C> initChannelList(List<C> channelList) {
-		return channelList != null ? channelList : new ArrayList<>(2);
+	private <C extends Channel> List<C> initChannelList(C firstElement) {
+		List<C> channel = new ArrayList<>(2);
+		channel.add(firstElement);
+		return channel;
 	}
 
 	/**
@@ -52,31 +54,31 @@ public final class Channels extends JsonableBaseObject {
 		if (channels == null || channels.isEmpty()) return;
 		for (Channel channel : channels) {
 			if (channel instanceof Pstn) {
-				(pstn = initChannelList(pstn)).add((Pstn) channel);
+				pstn = initChannelList((Pstn) channel);
 			}
 			else if (channel instanceof Sip) {
-				(sip = initChannelList(sip)).add((Sip) channel);
+				sip = initChannelList((Sip) channel);
 			}
 			else if (channel instanceof Vbc) {
-				(vbc = initChannelList(vbc)).add((Vbc) channel);
+				vbc = initChannelList((Vbc) channel);
 			}
 			else if (channel instanceof Websocket) {
-				(websocket = initChannelList(websocket)).add((Websocket) channel);
+				websocket = initChannelList((Websocket) channel);
 			}
 			else if (channel instanceof Sms) {
-				(sms = initChannelList(sms)).add((Sms) channel);
+				sms = initChannelList((Sms) channel);
 			}
 			else if (channel instanceof Mms) {
-				(mms = initChannelList(mms)).add((Mms) channel);
+				mms = initChannelList((Mms) channel);
 			}
 			else if (channel instanceof Whatsapp) {
-				(whatsapp = initChannelList(whatsapp)).add((Whatsapp) channel);
+				whatsapp = initChannelList((Whatsapp) channel);
 			}
 			else if (channel instanceof Viber) {
-				(viber = initChannelList(viber)).add((Viber) channel);
+				viber = initChannelList((Viber) channel);
 			}
 			else if (channel instanceof Messenger) {
-				(messenger = initChannelList(messenger)).add((Messenger) channel);
+				messenger = initChannelList((Messenger) channel);
 			}
 		}
 	}

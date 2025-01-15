@@ -311,4 +311,10 @@ public class ApplicationTest {
         assertFalse(voice.getSignedCallbacks());
         assertNull(voice.getRegion());
     }
+
+    @Test
+    public void testMissingWebhookAddress() {
+        assertThrows(IllegalStateException.class, () -> Webhook.builder().build());
+        assertThrows(IllegalStateException.class, () -> Webhook.builder().address("  ").build());
+    }
 }

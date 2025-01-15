@@ -1233,6 +1233,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 				assertEquals(IllegalStateException.class, ex.getCause().getCause().getClass());
             }
 		}
+		assertEquals(ChannelType.PHONE, ChannelType.fromString("pstn"));
 	}
 
 	@Test
