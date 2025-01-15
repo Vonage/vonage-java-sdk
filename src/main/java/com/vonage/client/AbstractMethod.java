@@ -108,17 +108,14 @@ public abstract class AbstractMethod<REQ, RES> implements RestEndpoint<REQ, RES>
 
         if (shouldLog()) {
             LOGGER.log(LOG_LEVEL, "Request " + httpRequest.getMethod() + " " + httpRequest.getURI());
-            Header[] headers = httpRequest.getAllHeaders();
-            if (headers != null && headers.length > 0) {
-                StringBuilder headersStr = new StringBuilder("--- REQUEST HEADERS ---");
-                for (Header header : headers) {
-                    headersStr.append('\n').append(header.getName()).append(": ").append(header.getValue());
-                }
-                LOGGER.log(LOG_LEVEL, headersStr.toString());
+
+            StringBuilder headersStr = new StringBuilder("--- REQUEST HEADERS ---");
+            for (Header header : httpRequest.getAllHeaders()) {
+                headersStr.append('\n').append(header.getName()).append(": ").append(header.getValue());
             }
-            if (request != null) {
-                LOGGER.log(LOG_LEVEL, "--- REQUEST BODY ---\n" + request);
-            }
+            LOGGER.log(LOG_LEVEL, headersStr.toString());
+
+            LOGGER.log(LOG_LEVEL, "--- REQUEST BODY ---\n" + request);
         }
 
         try (final CloseableHttpResponse response = httpWrapper.getHttpClient().execute(httpRequest)) {

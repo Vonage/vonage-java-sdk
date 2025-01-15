@@ -33,14 +33,12 @@ public abstract class BasicAuthMethod extends AbstractAuthMethod implements Head
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof BasicAuthMethod) || !super.equals(obj)) {
-            return false;
-        }
-        return ((BasicAuthMethod) obj).getBasicToken().equals(this.getBasicToken());
+        return obj instanceof BasicAuthMethod && super.equals(obj) &&
+                ((BasicAuthMethod) obj).getBasicToken().equals(this.getBasicToken());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getBasicToken().hashCode());
+        return Objects.hash(super.hashCode(), getBasicToken());
     }
 }

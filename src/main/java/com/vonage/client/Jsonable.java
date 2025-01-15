@@ -121,9 +121,7 @@ public interface Jsonable {
 				return createDefaultObjectMapper().readValue(json, jsonable);
 			}
 			Constructor<? extends J> constructor = jsonable.getDeclaredConstructor();
-			if (!(constructor.isAccessible())) {
-				constructor.setAccessible(true);
-			}
+			constructor.setAccessible(true);
 			J instance = constructor.newInstance();
 			instance.updateFromJson(json);
 			return instance;

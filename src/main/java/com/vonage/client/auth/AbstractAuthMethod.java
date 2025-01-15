@@ -26,13 +26,9 @@ public abstract class AbstractAuthMethod implements AuthMethod {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof AuthMethod)) {
-            return false;
-        }
-        return ((AuthMethod) obj).getSortKey() == this.getSortKey() &&
+        if (this == obj) return true;
+        return obj instanceof AuthMethod &&
+                ((AuthMethod) obj).getSortKey() == this.getSortKey() &&
                 obj.getClass().equals(this.getClass());
     }
 

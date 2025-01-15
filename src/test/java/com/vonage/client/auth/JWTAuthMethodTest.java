@@ -56,6 +56,25 @@ public class JWTAuthMethodTest {
         assertEquals(auth.hashCode(), clone.hashCode());
         var random = new JWTAuthMethod(UUID.randomUUID().toString(), keyBytes);
         assertNotEquals(auth, random);
-        assertNotEquals(auth.hashCode(), random.hashCode());
+        clone = new JWTAuthMethod(random.getApplicationId(), keyBytes);
+        assertNotEquals(auth, clone);
+        boolean equalsNull = auth.equals(null);
+        assertFalse(equalsNull);
+        boolean equalsObject = auth.equals(new Object());
+        assertFalse(equalsObject);
+
+        class CustomJwtAuthMethod extends JWTAuthMethod {
+            public CustomJwtAuthMethod() {
+                super(APPLICATION_ID_STR, keyBytes);
+            }
+
+            @Override
+            public int getSortKey() {
+                return 37;
+            }
+        }
+
+        clone = new CustomJwtAuthMethod();
+        assertNotEquals(auth, clone);
     }
 }

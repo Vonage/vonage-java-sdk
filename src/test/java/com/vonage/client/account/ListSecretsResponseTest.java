@@ -73,4 +73,10 @@ public class ListSecretsResponseTest {
         assertNotNull(response);
         assertNull(response.getSecrets());
     }
+
+    @Test
+    public void testNullAndEmptyJson() {
+        assertNotNull(ListSecretsResponse.fromJson(null));
+        assertNotNull(ListSecretsResponse.fromJson(""));
+    }
 }

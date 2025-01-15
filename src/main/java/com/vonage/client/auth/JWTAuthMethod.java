@@ -61,10 +61,8 @@ public class JWTAuthMethod extends BearerAuthMethod {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof JWTAuthMethod) || !(super.equals(obj))) {
-            return false;
-        }
-        return Objects.equals(applicationId, ((JWTAuthMethod) obj).applicationId) &&
+        return obj instanceof JWTAuthMethod && super.equals(obj) &&
+                Objects.equals(applicationId, ((JWTAuthMethod) obj).applicationId) &&
                 Objects.equals(privateKeyContents, ((JWTAuthMethod) obj).privateKeyContents);
     }
 
