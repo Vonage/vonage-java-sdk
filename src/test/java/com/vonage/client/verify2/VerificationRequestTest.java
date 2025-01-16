@@ -348,10 +348,13 @@ public class VerificationRequestTest {
 	}
 
 	@Test
-	public void testInvalidLocale() throws Exception {
+	public void testInvalidLocale() {
 		VerificationRequest.Builder builder = getBuilderRequiredParamsSingleWorkflow(Channel.SMS);
 		assertThrows(IllegalArgumentException.class, () -> builder.locale("--++").build());
 		assertThrows(IllegalArgumentException.class, () -> builder.locale("en_GB").build());
+		assertThrows(IllegalArgumentException.class, () -> builder.locale("  ").build());
+		assertThrows(IllegalArgumentException.class, () -> builder.locale((Locale) null).build());
+		assertThrows(NullPointerException.class, () -> builder.locale((String) null).build());
 		assertNotNull(builder.locale("ab-cd").build().getLocale());
 	}
 

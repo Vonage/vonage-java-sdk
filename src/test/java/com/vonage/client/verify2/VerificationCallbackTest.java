@@ -82,7 +82,8 @@ public class VerificationCallbackTest {
 				"      }\n" +
 				"   ],\n" +
 				"   \"price\": \"0.300000125\",\n" +
-				"   \"client_ref\": \"my-personal-ref\"\n" +
+				"   \"client_ref\": \"my-personal-ref\",\n" +
+				"   \"action\": {}\n" +
 				"}"
 		);
 		TestUtils.testJsonableBaseObject(webhook);

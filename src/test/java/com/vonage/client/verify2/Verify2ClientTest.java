@@ -17,6 +17,8 @@ package com.vonage.client.verify2;
 
 import com.vonage.client.*;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
+import com.vonage.client.auth.NoAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -152,6 +154,9 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 	@Test
 	public void testVerifyUserSuccess() throws Exception {
 		stubSuccessfulVerifyUserResponseAndRun(newVerificationRequestWithAllParamsAndWorkflows());
+		stubSuccessfulVerifyUserResponseAndRun(VerificationRequest.builder()
+				.brand("Vonage").addWorkflow(new SilentAuthWorkflow("447700900001")).build()
+		);
 	}
 
 	@Test
@@ -199,16 +204,16 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 			@Override
 			public void runTests() throws Exception {
 				super.runTests();
-				testCodelessAndBasicAuth();
+				testCodelessAndNoJwtAuth();
 				testParseResponseFailureAllParams();
 				testParseResponseFailureNoBody();
 			}
 
-			void testCodelessAndBasicAuth() throws Exception {
+			void testCodelessAndNoJwtAuth() throws Exception {
 				VerificationRequest request = VerificationRequest.builder()
 						.brand("Vonage").addWorkflow(new SilentAuthWorkflow("447700900001")).build();
 
-				Verify2Client tempClient = new Verify2Client(new HttpWrapper());
+				var tempClient = new Verify2Client(new HttpWrapper());
 				assertThrows(IllegalStateException.class, () -> tempClient.sendVerification(request));
 				String expectedJson = "{\"brand\":\""+request.getBrand() +
 						"\",\"workflow\":[{\"channel\":\"silent_auth\",\"to\":\"447700900001\"}]}";
@@ -619,6 +624,9 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 	public void testGetTemplateFragmentSuccess() throws Exception {
 		stubResponse(200, FRAGMENT_RESPONSE);
 		assertEqualsSampleFragment(client.getTemplateFragment(TEMPLATE_ID, FRAGMENT_ID));
+
+		stubResponse(200, "{\"locale\":null}");
+		assertEqualsEmptyFragment(client.getTemplateFragment(TEMPLATE_ID, FRAGMENT_ID));
 	}
 
 	@Test
@@ -934,6 +942,10 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 		assertEquals(2, templates.size());
 		assertEqualsEmptyTemplate(templates.getFirst());
 		assertEqualsSampleTemplate(templates.getLast());
+
+		stubResponse(200, "{}");
+		templates = client.listTemplates();
+		assertNull(templates);
 	}
 
 	@Test
@@ -1050,6 +1062,10 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 		assertEquals(2, fragments.size());
 		assertEqualsEmptyFragment(fragments.getFirst());
 		assertEqualsSampleFragment(fragments.getLast());
+
+		stubResponse(200, "{}");
+		fragments = client.listTemplateFragments(TEMPLATE_ID);
+		assertNull(fragments);
 	}
 
 	@Test
