@@ -30,7 +30,7 @@ import java.util.Collection;
 public class Call extends JsonableBaseObject {
     private Endpoint[] to;
     private Endpoint from;
-    private HttpMethod answerMethod = HttpMethod.GET, eventMethod;
+    private HttpMethod answerMethod, eventMethod;
     private String answerUrl, eventUrl;
     private MachineDetection machineDetection;
     private AdvancedMachineDetection advancedMachineDetection;
@@ -54,13 +54,13 @@ public class Call extends JsonableBaseObject {
         if ((ringingTimer = builder.ringingTimer) != null && (ringingTimer > 120 || ringingTimer < 1)) {
             throw new IllegalArgumentException("Ringing timer must be between 1 and 120.");
         }
-        if (builder.answerMethod != null) switch (answerMethod = builder.answerMethod) {
+        if ((answerMethod = builder.answerMethod) != null) switch (answerMethod) {
             case GET: case POST: break;
-            default: throw new IllegalArgumentException("Answer method must be GET or POST");
+            default: throw new IllegalArgumentException("Answer method must be GET or POST.");
         }
         if ((eventMethod = builder.eventMethod) != null) switch (eventMethod) {
             case GET: case POST: break;
-            default: throw new IllegalArgumentException("Event method must be GET or POST");
+            default: throw new IllegalArgumentException("Event method must be GET or POST.");
         }
         if ((from = builder.from) == null) {
             fromRandomNumber = true;
@@ -208,7 +208,7 @@ public class Call extends JsonableBaseObject {
     public static class Builder {
         private Endpoint[] to;
         private Endpoint from;
-        private HttpMethod answerMethod, eventMethod;
+        private HttpMethod answerMethod = HttpMethod.GET, eventMethod;
         private String answerUrl, eventUrl;
         private MachineDetection machineDetection;
         private AdvancedMachineDetection advancedMachineDetection;

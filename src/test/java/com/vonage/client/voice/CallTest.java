@@ -107,7 +107,7 @@ public class CallTest {
         };
         com.vonage.client.voice.Endpoint fromEndpoint = new com.vonage.client.voice.AppEndpoint("nexmo");
         Call expectedCall = new Call(endpoints, fromEndpoint, "http://example.com/answer");
-        String jsonString = toFromJsonStart + ",\"answer_url\":\"http://example.com/answer\"}";
+        String jsonString = toFromJsonStart + ",\"answer_method\":\"GET\",\"answer_url\":\"http://example.com/answer\"}";
         Call fromJson = Call.fromJson(jsonString);
         assertEquals(expectedCall.toJson(), fromJson.toJson());
 
@@ -310,7 +310,7 @@ public class CallTest {
                     RecordAction.builder().build(),
                     ConnectAction.builder(com.vonage.client.voice.ncco.VbcEndpoint.builder("123").build()).build()
                 )
-                .answerMethod(HttpMethod.POST).eventMethod(HttpMethod.POST)
+                .answerMethod(HttpMethod.POST).eventMethod(HttpMethod.GET)
                 .eventUrl("https://example.com/voice/event")
                 .answerUrl("https://example.com/voice/answer")
                 .fromRandomNumber(false).machineDetection(MachineDetection.HANGUP)
@@ -321,7 +321,7 @@ public class CallTest {
         assertNotNull(call.getAnswerUrl());
         assertNotNull(call.getEventUrl());
         assertEquals("POST", call.getAnswerMethod());
-        assertEquals("POST", call.getEventMethod());
+        assertEquals("GET", call.getEventMethod());
         assertFalse(call.getFromRandomNumber());
         assertEquals(MachineDetection.HANGUP, call.getMachineDetection());
         assertEquals("phone", call.getFrom().getType());
@@ -427,5 +427,23 @@ public class CallTest {
         call = Call.builder().to(call.getTo()).from(new AppEndpoint("admin")).build();
         assertNotNull(call.getFrom());
         assertNull(call.getFromRandomNumber());
+    }
+
+    @Test
+    public void testSipHeader() {
+        SipHeader header = SipHeader.USER_TO_USER;
+        assertEquals("User-to-User", header.toString());
+        assertEquals(SipHeader.USER_TO_USER, SipHeader.fromString("user-to-user"));
+        assertNull(SipHeader.fromString(null));
+        assertNull(SipHeader.fromString(""));
+        assertThrows(IllegalArgumentException.class, () -> SipHeader.fromString("unknown"));
+    }
+
+    @Test
+    public void testNulllAnswerMethod() {
+        Call call = Call.builder().to(new VbcEndpoint("123"))
+                .answerUrl("http://example.com/answer")
+                .answerMethod(null).build();
+        assertNull(call.getAnswerMethod());
     }
 }

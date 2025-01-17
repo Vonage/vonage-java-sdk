@@ -19,6 +19,7 @@ import com.vonage.client.voice.AdvancedMachineDetection;
 import com.vonage.client.voice.MachineDetection;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.Collection;
 import java.util.Map;
 
 public class ConnectActionTest {
@@ -275,5 +276,10 @@ public class ConnectActionTest {
         assertThrows(IllegalArgumentException.class, () -> builder.timeOut(max + 1).build());
         assertEquals(min, builder.timeOut(min).build().getTimeOut());
         assertThrows(IllegalArgumentException.class, () -> builder.timeOut(min - 1).build());
+    }
+
+    @Test
+    public void testNullEndpoint() {
+        assertThrows(IllegalStateException.class, () -> ConnectAction.builder((Collection<Endpoint>) null).build());
     }
 }

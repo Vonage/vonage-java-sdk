@@ -29,7 +29,7 @@ public class SipEndpointTest {
         String user2UserHeader = "342342ef34;encoding=hex";
         SipEndpoint endpoint = SipEndpoint.builder(URI.create("foo"))
                 .uri(uri).headers(Collections.singletonMap("k1", "v1"))
-                .userToUserHeader(user2UserHeader).build();
+                .userToUserHeader(null).userToUserHeader(user2UserHeader).build();
 
         ConnectAction connect = ConnectAction.builder(endpoint).build();
 

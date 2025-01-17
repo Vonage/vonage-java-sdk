@@ -235,5 +235,6 @@ public class InputActionTest {
         assertEquals(InputMode.SYNCHRONOUS, InputMode.fromString("synchronous"));
         assertEquals(InputMode.ASYNCHRONOUS, InputMode.fromString("asynchronous"));
         assertNull(InputMode.fromString("invalid"));
+        assertNull(InputMode.fromString(null));
     }
 }
