@@ -326,6 +326,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 		assertNotNull(response.get(2));
 		assertEqualsExpectedMoneyTransfer(response.get(1));
 		assertNotNull(stubResponseAndGet(responseJson, client::listCreditTransfers));
+		assertNull(stubResponseAndGet("{}", client::listCreditTransfers));
 		stubResponseAndAssertThrows(200, () -> client.listCreditTransfers(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.listCreditTransfers(request), SubaccountsResponseException.class);
 		assert403ResponseException(client::listCreditTransfers);
@@ -370,6 +371,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 		assertNotNull(response.get(2));
 		assertEqualsExpectedMoneyTransfer(response.get(1));
 		assertNotNull(stubResponseAndGet(responseJson, client::listBalanceTransfers));
+		assertNull(stubResponseAndGet("{}", client::listBalanceTransfers));
 		stubResponseAndAssertThrows(200, () -> client.listBalanceTransfers(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.listBalanceTransfers(request), SubaccountsResponseException.class);
 		assert403ResponseException(client::listBalanceTransfers);
@@ -512,6 +514,9 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 		assertThrows(IllegalArgumentException.class, () -> NumberTransfer.builder()
 				.from(request.getFrom()).to(request.getTo()).number(request.getNumber())
 				.country("United Kingdom").build()
+		);
+		assertThrows(IllegalArgumentException.class, () -> NumberTransfer.builder()
+				.from(request.getFrom()).to(request.getTo()).number(request.getNumber()).build()
 		);
 
 		new SubaccountsEndpointTestSpec<NumberTransfer, NumberTransfer>() {
