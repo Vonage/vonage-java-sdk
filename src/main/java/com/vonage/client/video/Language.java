@@ -99,7 +99,6 @@ public enum Language {
 	@Override
 	public String toString() {
 		String[] split = name().split("_");
-		assert split.length == 2;
 		return split[0].toLowerCase() + '-' + split[1];
 	}	
 }

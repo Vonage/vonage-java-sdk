@@ -33,9 +33,16 @@ public final class CaptionsRequest extends AbstractSessionTokenRequest {
 
     private CaptionsRequest(Builder builder) {
         super(builder);
-        statusCallbackUrl = builder.statusCallbackUrl;
         languageCode = builder.languageCode;
         partialCaptions = builder.partialCaptions;
+        if (builder.statusCallbackUrl != null) {
+            if (builder.statusCallbackUrl.length() < 15 || builder.statusCallbackUrl.length() > 2048) {
+                throw new IllegalArgumentException("Status callback URL must be between 15 and 2048 characters.");
+            }
+            else {
+                statusCallbackUrl = URI.create(builder.statusCallbackUrl);
+            }
+        }
         if ((maxDuration = builder.maxDuration) != null && (maxDuration < 300 || maxDuration > 14400)) {
             throw new IllegalArgumentException("Max duration must be between 300 and 14400 seconds.");
         }
@@ -95,7 +102,7 @@ public final class CaptionsRequest extends AbstractSessionTokenRequest {
      * Builder for defining the fields in a StartCaptionsRequest object.
      */
     public static final class Builder extends AbstractSessionTokenRequest.Builder<CaptionsRequest, Builder> {
-        private URI statusCallbackUrl;
+        private String statusCallbackUrl;
         private Language languageCode;
         private Integer maxDuration;
         private Boolean partialCaptions;
@@ -125,10 +132,7 @@ public final class CaptionsRequest extends AbstractSessionTokenRequest {
          * @return This Builder with the statusCallbackUrl property setting.
          */
         public Builder statusCallbackUrl(String statusCallbackUrl) {
-            if (statusCallbackUrl == null || statusCallbackUrl.length() < 15 || statusCallbackUrl.length() > 2048) {
-                throw new IllegalArgumentException("Status callback URL must be between 15 and 2048 characters.");
-            }
-            this.statusCallbackUrl = URI.create(statusCallbackUrl);
+            this.statusCallbackUrl = statusCallbackUrl;
             return this;
         }
 

@@ -73,7 +73,7 @@ public class CreateSessionResponse extends JsonableBaseObject {
 		try {
 			CreateSessionResponse[] array = Jsonable.createDefaultObjectMapper()
 					.readValue(json, CreateSessionResponse[].class);
-			if (array == null || array.length == 0) {
+			if (array.length == 0) {
 				return new CreateSessionResponse();
 			}
 			return array[0];
