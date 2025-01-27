@@ -66,4 +66,11 @@ public class StandardInsightRequestTest {
         assertEquals("GB", request.getCountry());
         assertTrue(request.getCnam());
     }
+
+    @Test
+    public void testInvalidNumber() {
+        var builder = StandardInsightRequest.builder("1");
+        assertThrows(IllegalStateException.class, builder::build);
+        assertThrows(IllegalStateException.class, () -> builder.country("US").build());
+    }
 }

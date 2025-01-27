@@ -31,9 +31,7 @@ public class RealTimeData extends JsonableBaseObject {
 	static class ActiveStatusDeserializer extends JsonDeserializer<Boolean> {
 		@Override
 		public Boolean deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-			String text = p.getText();
-			if (text == null) return null;
-			switch (text.toLowerCase()) {
+			switch (p.getText().toLowerCase()) {
 				default:
 					return null;
 				case "true":

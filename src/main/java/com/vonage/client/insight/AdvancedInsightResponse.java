@@ -30,6 +30,7 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     private RealTimeData realTimeData;
     private String errorText;
 
+    @Deprecated
     public static AdvancedInsightResponse fromJson(String json) {
         return Jsonable.fromJson(json);
     }
@@ -67,7 +68,7 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     }
 
     /**
-     * @return The roaming information, as an enum.
+     * @return The roaming information.
      */
     @JsonProperty("roaming")
     public RoamingDetails getRoaming() {
