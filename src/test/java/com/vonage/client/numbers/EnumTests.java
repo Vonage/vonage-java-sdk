@@ -15,6 +15,7 @@
  */
 package com.vonage.client.numbers;
 
+import com.vonage.client.numbers.UpdateNumberRequest.CallbackType;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,6 +35,7 @@ public class EnumTests {
         assertEquals("mobile-lvn", Type.MOBILE_LVN.toString());
         assertEquals("landline-toll-free", Type.LANDLINE_TOLL_FREE.toString());
         assertEquals("unknown", Type.UNKNOWN.getType());
+        assertNull(Type.fromString(null));
     }
 
     @Test
@@ -41,5 +43,21 @@ public class EnumTests {
         assertEquals(0, SearchPattern.STARTS_WITH.getValue());
         assertEquals(1, SearchPattern.ANYWHERE.getValue());
         assertEquals(2, SearchPattern.ENDS_WITH.getValue());
+    }
+
+    @Test
+    public void testFeatureFromString() {
+        assertEquals(Feature.SMS, Feature.fromString("sms"));
+        assertEquals(Feature.MMS, Feature.fromString("Mms"));
+        assertEquals(Feature.VOICE, Feature.fromString("vOiCE"));
+        assertNull(Feature.fromString(null));
+    }
+
+    @Test
+    public void testCallbackTypeFromString() {
+        assertEquals(CallbackType.SIP, CallbackType.fromString("sip"));
+        assertEquals(CallbackType.APP, CallbackType.fromString("App"));
+        assertEquals(CallbackType.TEL, CallbackType.fromString("tEL"));
+        assertNull(CallbackType.fromString(null));
     }
 }
