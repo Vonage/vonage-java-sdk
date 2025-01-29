@@ -32,6 +32,7 @@ import com.vonage.client.messages.viber.ViberImageRequest;
 import com.vonage.client.messages.viber.ViberTextRequest;
 import com.vonage.client.messages.viber.ViberVideoRequest;
 import com.vonage.client.messages.whatsapp.*;
+import com.vonage.client.users.channels.Sms;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.util.*;
@@ -134,6 +135,16 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
                   "instance": "bf0ca0bf927b3b52e3cb03217e1a1ddf"
                 }"""
 		);
+	}
+
+	@Test
+	public void testSensSmsSandboxFailure() throws Exception {
+		assertThrows(MessageResponseException.class, () -> client.useSandboxEndpoint()
+				.sendMessage(SmsTextRequest.builder()
+					.text(TEXT).from("447700900001").to("447700900002").build()
+				)
+		);
+		client.useRegularEndpoint();
 	}
 
 	@Test

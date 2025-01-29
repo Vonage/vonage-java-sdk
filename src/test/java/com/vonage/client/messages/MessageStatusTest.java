@@ -17,7 +17,9 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.messages.MessageStatus.Status;
 import com.vonage.client.messages.whatsapp.ConversationType;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
@@ -34,7 +36,7 @@ public class MessageStatusTest {
 		UUID messageUuid = UUID.randomUUID();
 		String to = "447700900000", from = "447700900001", networkCode = "54321";
 		String timestamp = "2020-01-01T14:00:03.010Z";
-		MessageStatus.Status status = MessageStatus.Status.SUBMITTED;
+		Status status = Status.SUBMITTED;
 		Channel channel = Channel.SMS;
 		URI type = URI.create("https://developer.nexmo.com/api-errors/messages-olympus#1000");
 		int title = 1000, countTotal = 3;
@@ -98,7 +100,7 @@ public class MessageStatusTest {
 				"}";
 
 		MessageStatus ms = MessageStatus.fromJson(json);
-		TestUtils.testJsonableBaseObject(ms);
+		testJsonableBaseObject(ms);
 
 		assertEquals(messageUuid, ms.getMessageUuid());
 		assertEquals(to, ms.getTo());
@@ -124,7 +126,7 @@ public class MessageStatusTest {
 		UUID messageUuid = UUID.randomUUID();
 		String to = "447700900000", from = "447700900001";
 		String timestamp = "2020-01-08T15:43:21.000Z";
-		MessageStatus.Status status = MessageStatus.Status.UNDELIVERABLE;
+		Status status = Status.UNDELIVERABLE;
 		Channel channel = Channel.MMS;
 
 		String json = "{\n" +
@@ -137,7 +139,7 @@ public class MessageStatusTest {
 				"}";
 
 		MessageStatus ms = MessageStatus.fromJson(json);
-		TestUtils.testJsonableBaseObject(ms);
+		testJsonableBaseObject(ms);
 
 		assertEquals(messageUuid, ms.getMessageUuid());
 		assertEquals(to, ms.getTo());
@@ -147,6 +149,10 @@ public class MessageStatusTest {
 		assertEquals("undeliverable", status.toString());
 		assertEquals(channel, ms.getChannel());
 		assertEquals("mms", channel.toString());
+		assertNull(ms.getSmsTotalCount());
+		assertNull(ms.getDestinationNetworkCode());
+		assertNull(ms.getWhatsappConversationType());
+		assertNull(ms.getWhatsappConversationId());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -180,7 +186,7 @@ public class MessageStatusTest {
 				"   }\n" +
 				"}";
 		MessageStatus ms = MessageStatus.fromJson(json);
-		TestUtils.testJsonableBaseObject(ms);
+		testJsonableBaseObject(ms);
 
 		Map<String, ?> unknown = ms.getAdditionalProperties();
 		assertNotNull(unknown);
@@ -203,5 +209,37 @@ public class MessageStatusTest {
 			@JsonProperty("self") final SelfRefrencing self = this;
 		}
 		assertThrows(VonageUnexpectedException.class, () -> new SelfRefrencing().toJson());
+	}
+
+	@Test
+	public void testStatusEnum() {
+		assertEquals(Status.DELIVERED, Status.fromString("delivereD"));
+		assertEquals(Status.REJECTED, Status.fromString("rejected"));
+		assertEquals(Status.READ, Status.fromString("Read"));
+		assertEquals(Status.SUBMITTED, Status.fromString("SUBMITTED"));
+		assertEquals(Status.UNDELIVERABLE, Status.fromString("UNdeliverable"));
+		assertNull(Status.fromString(null));
+	}
+
+	@Test
+	public void testConversationTypeEnum() {
+		assertEquals(ConversationType.AUTHENTICATION, ConversationType.fromString("authentication"));
+		assertEquals(ConversationType.MARKETING, ConversationType.fromString("marketing"));
+		assertEquals(ConversationType.REFERRAL_CONVERSION, ConversationType.fromString("referral_conversion"));
+		assertEquals(ConversationType.SERVICE, ConversationType.fromString("service"));
+		assertEquals(ConversationType.UTILITY, ConversationType.fromString("utility"));
+		assertNull(ConversationType.fromString(null));
+	}
+
+	@Test
+	public void testWhatsappConversation() {
+		String json = "{\"whatsapp\": {\"conversation\":{}}}";
+		MessageStatus ms = MessageStatus.fromJson(json);
+		assertNull(ms.getWhatsappConversationType());
+		assertNull(ms.getWhatsappConversationId());
+		json = "{\"whatsapp\":{}}";
+		ms = MessageStatus.fromJson(json);
+		assertNull(ms.getWhatsappConversationType());
+		assertNull(ms.getWhatsappConversationId());
 	}
 }

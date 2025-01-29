@@ -143,8 +143,12 @@ public class MessageRequestTest {
 
 	@Test
 	public void testConstructNoNumber() {
+		String number = "447900000009";
 		assertThrows(NullPointerException.class, () ->
-				ConcreteMessageRequest.builder(MessageType.CUSTOM, Channel.WHATSAPP).from("447900000009").build()
+				ConcreteMessageRequest.builder(MessageType.CUSTOM, Channel.WHATSAPP).from(number).build()
+		);
+		assertThrows(IllegalArgumentException.class, () ->
+				ConcreteMessageRequest.builder(MessageType.TEXT, Channel.RCS).to(number).build()
 		);
 	}
 
@@ -153,6 +157,10 @@ public class MessageRequestTest {
 		assertThrows(IllegalArgumentException.class, () ->
 				ConcreteMessageRequest.builder(MessageType.TEMPLATE, Channel.WHATSAPP)
 					.from("447900000001").to("+0 NaN").build()
+		);
+		assertThrows(IllegalArgumentException.class, () ->
+				ConcreteMessageRequest.builder(MessageType.REACTION, Channel.WHATSAPP)
+						.from("").to("447900000001").build()
 		);
 	}
 

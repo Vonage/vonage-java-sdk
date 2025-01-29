@@ -118,17 +118,23 @@ public class InboundMessageTest {
 
 		assertNull(im.getAudioUrl());
 		assertNull(im.getVcardUrl());
+		assertNull(im.getVcardName());
 		assertNull(im.getVideoUrl());
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
+		assertNull(im.getImageCaption());
+		assertNull(im.getStickerUrl());
+		assertNull(im.getSelfUrl());
 		assertNull(im.getReaction());
 		assertNull(im.getButton());
 		assertNull(im.getWhatsappContext());
 		assertNull(im.getWhatsappReply());
+		assertNull(im.getWhatsappReferral());
 		assertNull(im.getWhatsappLocation());
 		assertNull(im.getWhatsappOrder());
 		assertNull(im.getProviderMessage());
 		assertNull(im.getContent());
+		assertNull(im.getNetworkCode());
 	}
 
 	@Test
@@ -218,6 +224,22 @@ public class InboundMessageTest {
 	}
 
 	@Test
+	public void testVcardOnly() {
+		String name = "contact.vcf", url = "https://example.com/contact.vcf",
+				json = "{\"vcard\": {\"url\":\""+url+"\"}}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		assertEquals(URI.create(url), im.getVcardUrl());
+		json = "{\"vcard\":{}}";
+		im = InboundMessage.fromJson(json);
+		assertNull(im.getVcardUrl());
+		assertNull(im.getVcardName());
+		json = "{\"vcard\": {\"name\":\""+name+"\"}}";
+		im = InboundMessage.fromJson(json);
+		assertNull(im.getVcardUrl());
+		assertEquals(name, im.getVcardName());
+	}
+
+	@Test
 	public void testImageOnly() {
 		URI image = URI.create("https://www.example.org/path/to/image.png");
 		String caption = "Alt text accompanying the image";
@@ -225,6 +247,10 @@ public class InboundMessageTest {
 		InboundMessage im = InboundMessage.fromJson(json);
 		assertEquals(image, im.getImageUrl());
 		assertEquals(caption, im.getImageCaption());
+		json = "{\"image\":{}}";
+		im = InboundMessage.fromJson(json);
+		assertNull(im.getImageUrl());
+		assertNull(im.getImageCaption());
 	}
 
 	@Test
@@ -257,6 +283,9 @@ public class InboundMessageTest {
 		String json = "{\"sticker\": {\"url\":\""+sticker+"\"}}";
 		InboundMessage im = InboundMessage.fromJson(json);
 		assertEquals(sticker, im.getStickerUrl());
+		json = "{\"sticker\":{}}";
+		im = InboundMessage.fromJson(json);
+		assertNull(im.getStickerUrl());
 	}
 
 	@Test
@@ -436,6 +465,14 @@ public class InboundMessageTest {
 		assertEquals(URI.create(videoUrl), referral.getVideoUrl());
 		assertEquals(URI.create(thumbnailUrl), referral.getThumbnailUrl());
 		assertEquals(ctwaClid, referral.getClickId());
+
+		json = "{\"whatsapp\":{\"referral\":{}}}";
+		im = InboundMessage.fromJson(json);
+		assertNotNull(im.getWhatsappReferral());
+
+		json = "{\"whatsapp\":{}}";
+		im = InboundMessage.fromJson(json);
+		assertNull(im.getWhatsappReferral());
 	}
 
 	@Test
@@ -447,6 +484,9 @@ public class InboundMessageTest {
 				"}";
 		var im = InboundMessage.fromJson(json);
 		assertEquals(networkCode, im.getNetworkCode());
+		json = "{\"origin\": {}}";
+		im = InboundMessage.fromJson(json);
+		assertNull(im.getNetworkCode());
 	}
 
 	@Test
@@ -460,6 +500,9 @@ public class InboundMessageTest {
 		var im = InboundMessage.fromJson(json);
 		testJsonableBaseObject(im);
 		assertEquals(URI.create(selfUrl), im.getSelfUrl());
+		json = "{\"_self\": {}}";
+		im = InboundMessage.fromJson(json);
+		assertNull(im.getSelfUrl());
 	}
 
 	@Test
@@ -484,5 +527,37 @@ public class InboundMessageTest {
 		assertNotNull(image);
 		assertEquals(MessageType.IMAGE, image.getType());
 		assertEquals(URI.create(url), image.getUrl());
+	}
+
+	@Test
+	public void testChannelFromString() {
+		assertEquals(Channel.SMS, Channel.fromString("sms"));
+		assertEquals(Channel.MMS, Channel.fromString("mms"));
+		assertEquals(Channel.RCS, Channel.fromString("rcs"));
+		assertEquals(Channel.WHATSAPP, Channel.fromString("whatsapp"));
+		assertEquals(Channel.MESSENGER, Channel.fromString("messenger"));
+		assertEquals(Channel.VIBER, Channel.fromString("viber"));
+		assertNull(Channel.fromString(null));
+	}
+
+	@Test
+	public void testMessageTypeEnum() {
+		assertEquals(MessageType.TEXT, MessageType.fromString("text"));
+		assertEquals(MessageType.VCARD, MessageType.fromString("vcard"));
+		assertEquals(MessageType.IMAGE, MessageType.fromString("image"));
+		assertEquals(MessageType.AUDIO, MessageType.fromString("audio"));
+		assertEquals(MessageType.VIDEO, MessageType.fromString("video"));
+		assertEquals(MessageType.FILE, MessageType.fromString("file"));
+		assertEquals(MessageType.STICKER, MessageType.fromString("sticker"));
+		assertEquals(MessageType.REACTION, MessageType.fromString("reaction"));
+		assertEquals(MessageType.BUTTON, MessageType.fromString("button"));
+		assertNull(MessageType.fromString(null));
+	}
+
+	@Test
+	public void testContextStatusEnum() {
+		assertEquals(ContextStatus.AVAILABLE, ContextStatus.fromString("available"));
+		assertEquals(ContextStatus.UNAVAILABLE, ContextStatus.fromString("unavailable"));
+		assertNull(ContextStatus.fromString(null));
 	}
 }

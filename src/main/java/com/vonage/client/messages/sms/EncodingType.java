@@ -30,7 +30,7 @@ public enum EncodingType {
 
     @JsonCreator
     public static EncodingType fromString(String value) {
-        if (value == null || value.trim().isEmpty()) return null;
+        if (value == null) return null;
         return EncodingType.valueOf(value.toUpperCase());
     }
 

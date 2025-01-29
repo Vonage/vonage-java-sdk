@@ -15,9 +15,9 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.vonage.client.messages.whatsapp.Reaction.Action;
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.UUID;
 
 public class WhatsappReactionRequestTest {
@@ -62,5 +62,13 @@ public class WhatsappReactionRequestTest {
 		assertThrows(IllegalStateException.class, () -> WhatsappReactionRequest.builder()
 				.unreact().from("447900000001").to("317900000002").build()
 		);
+	}
+
+	@Test
+	public void testActionEnum() {
+		assertEquals(Action.REACT, Action.fromString("react"));
+		assertEquals(Action.UNREACT, Action.fromString("unreact"));
+		assertNull(Action.fromString(null));
+		assertThrows(IllegalArgumentException.class, () -> Action.fromString("test unknown"));
 	}
 }

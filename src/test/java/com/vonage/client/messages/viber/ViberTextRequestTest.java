@@ -77,6 +77,23 @@ public class ViberTextRequestTest {
 	}
 
 	@Test
+	public void testSerializeWithType() {
+		ViberTextRequest msg = ViberTextRequest.builder()
+				.viberType("template")
+				.from("Alice")
+				.to("447900012345")
+				.text("Hello, World!")
+				.build();
+		String json = msg.toJson();
+		assertTrue(json.contains("\"text\":\""+msg.getText()+"\""));
+		assertTrue(json.contains("\"from\":\""+msg.getFrom()+"\""));
+		assertTrue(json.contains("\"to\":\""+msg.getTo()+"\""));
+		assertTrue(json.contains("\"message_type\":\""+msg.getMessageType()+"\""));
+		assertTrue(json.contains("\"channel\":\""+msg.getChannel()+"\""));
+		assertTrue(json.contains("\"viber_service\":{\"type\":\"template\"}"));
+	}
+
+	@Test
 	public void testSerializeWithTtl() {
 		ViberTextRequest msg = ViberTextRequest.builder()
 				.ttl(2147)

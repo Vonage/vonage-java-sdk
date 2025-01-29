@@ -38,7 +38,7 @@ public class MessengerTextRequestTest {
 	@Test
 	public void testSerializeWithCategoryAndTag() {
 		MessengerTextRequest msg = MessengerTextRequest.builder()
-				.category(Category.UPDATE).tag(Tag.CONFIRMED_EVENT_UPDATE)
+				.category(Category.MESSAGE_TAG).tag(Tag.CONFIRMED_EVENT_UPDATE)
 				.from("Sara Lance").to("Ava Sharpe").text("I love you!!").build();
 		String json = msg.toJson();
 		assertTrue(json.contains("\"text\":\""+msg.getText()+"\""));
@@ -46,7 +46,7 @@ public class MessengerTextRequestTest {
 		assertTrue(json.contains("\"to\":\""+msg.getTo()+"\""));
 		assertTrue(json.contains("\"message_type\":\"text\""));
 		assertTrue(json.contains("\"channel\":\"messenger\""));
-		assertTrue(json.contains("\"messenger\":{\"category\":\"update\",\"tag\":\"CONFIRMED_EVENT_UPDATE\"}"));
+		assertTrue(json.contains("\"messenger\":{\"category\":\"message-tag\",\"tag\":\"CONFIRMED_EVENT_UPDATE\"}"));
 	}
 
 	@Test
@@ -64,6 +64,19 @@ public class MessengerTextRequestTest {
 		assertTrue(json.contains("\"message_type\":\"text\""));
 		assertTrue(json.contains("\"channel\":\"messenger\""));
 		assertTrue(json.contains("\"messenger\":{\"category\":\"response\"}"));
+	}
+
+	@Test
+	public void testSerializeTagWithoutCategory() {
+		assertEquals(
+				"{\"message_type\":\"text\",\"channel\":\"messenger\"," +
+				"\"from\":\"Oliver\",\"to\":\"Felicity\",\"text\":\"<3\"," +
+				"\"messenger\":{\"tag\":\"HUMAN_AGENT\"}}",
+				MessengerTextRequest.builder()
+						.tag(Tag.HUMAN_AGENT)
+						.from("Oliver").to("Felicity")
+						.text("<3").build().toJson()
+		);
 	}
 
 	@Test
