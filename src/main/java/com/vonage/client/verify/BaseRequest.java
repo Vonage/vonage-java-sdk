@@ -124,10 +124,8 @@ public abstract class BaseRequest implements QueryParamsRequest {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = new LinkedHashMap<>();
-        if (number != null) {
-            params.put("number", number);
-        }
-        if (length != null && length > 0) {
+        params.put("number", number);
+        if (length != null) {
             params.put("code_length", String.valueOf(length));
         }
         if (locale != null) {

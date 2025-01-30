@@ -159,7 +159,7 @@ public class ConnectAction extends JsonableBaseObject implements Action {
         private Boolean randomFromNumber;
         private URI ringbackTone;
 
-        Builder(Collection<Endpoint> endpoint) {
+        private Builder(Collection<Endpoint> endpoint) {
             this.endpoint = endpoint;
         }
 

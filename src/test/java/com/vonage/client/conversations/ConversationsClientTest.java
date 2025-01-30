@@ -17,11 +17,8 @@ package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.AbstractClientTest;
-import com.vonage.client.RestEndpoint;
-import com.vonage.client.TestUtils;
+import com.vonage.client.*;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
-import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.common.ChannelType;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.SortOrder;
@@ -615,6 +612,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 
 		var listOnly = stubResponseAndGet(SAMPLE_LIST_CONVERSATIONS_RESPONSE, client::listConversations);
 		assertEquals(response.getConversations(), listOnly);
+		assertNull(stubResponseAndGet("{}", client::listConversations));
 
 		stubResponseAndAssertThrows(200,
 				() -> client.listConversations(null), NullPointerException.class
@@ -726,9 +724,11 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 	@Test
 	public void testCreateConversationEndpoint() throws Exception {
 		new ConversationsEndpointTestSpec<Conversation, Conversation>() {
-			final Callback callback = Callback.builder().url("http://example.com/callback")
+			final Callback.Builder callbackBuilder = Callback.builder().url("http://example.com/callback")
 					.eventMask("Test value").applicationId(TestUtils.APPLICATION_ID_STR)
-					.nccoUrl("http://example.com/ncco").method(HttpMethod.POST).build();
+					.nccoUrl("http://example.com/ncco").method(HttpMethod.POST);
+
+			final Callback callback = callbackBuilder.build();
 
 			@Override
 			protected RestEndpoint<Conversation, Conversation> endpoint() {
@@ -803,6 +803,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 				assertThrows(IllegalArgumentException.class,
 						() -> Conversation.builder().name(limit+'1').build()
 				);
+				assertThrows(IllegalArgumentException.class, () -> Conversation.builder().name("  ").build());
 			}
 
 			void testDisplayNameLength() {
@@ -811,6 +812,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 				assertThrows(IllegalArgumentException.class,
 						() -> Conversation.builder().displayName(limit+'1').build()
 				);
+				assertThrows(IllegalArgumentException.class, () -> Conversation.builder().displayName("  ").build());
 			}
 
 			void testEventMaskLength() {
@@ -822,6 +824,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 				assertThrows(IllegalArgumentException.class, () -> Conversation.builder()
 						.callback(Callback.builder().eventMask(limit+'1').build()).build()
 				);
+				assertThrows(IllegalArgumentException.class, () -> callbackBuilder.eventMask("  ").build());
 			}
 
 			void testCallbackMethod() {
@@ -847,6 +850,9 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 				assertThrows(IllegalArgumentException.class, () ->
 						ConversationProperties.builder().type(limit+'1').build()
 				);
+				assertThrows(IllegalArgumentException.class, () ->
+						ConversationProperties.builder().type("\n ").build()
+				);
 			}
 
 			void testCustomSortKeyLength() {
@@ -857,6 +863,9 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 				);
 				assertThrows(IllegalArgumentException.class, () ->
 						ConversationProperties.builder().customSortKey(limit+'0').build()
+				);
+				assertThrows(IllegalArgumentException.class, () ->
+						ConversationProperties.builder().customSortKey(" \r").build()
 				);
 			}
 		}
@@ -1030,6 +1039,8 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 		var request = ListUserConversationsRequest.builder().build();
 		stubResponse(200, SAMPLE_LIST_USER_CONVERSATIONS_RESPONSE);
 		assertEqualsSampleListUserConversations(client.listUserConversations(USER_ID, request));
+		stubResponse(200, "{}");
+		assertNull(client.listUserConversations(USER_ID));
 
 		var userConversations = stubResponseAndGet(SAMPLE_LIST_USER_CONVERSATIONS_RESPONSE,
 				() -> client.listUserConversations(USER_ID)
@@ -1121,6 +1132,8 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 		assertEqualsSampleListMembers(fullResponse);
 		stubResponse(200, SAMPLE_LIST_MEMBERS_RESPONSE);
 		assertEquals(fullResponse.getMembers(), client.listMembers(CONVERSATION_ID));
+		stubResponse(200, "{}");
+		assertNull(client.listMembers(CONVERSATION_ID));
 
 		stubResponseAndAssertThrows(SAMPLE_LIST_MEMBERS_RESPONSE,
 				() -> client.listMembers(CONVERSATION_ID, null),
@@ -1233,6 +1246,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 				assertEquals(IllegalStateException.class, ex.getCause().getCause().getClass());
             }
 		}
+		assertEquals(ChannelType.PHONE, ChannelType.fromString("pstn"));
 	}
 
 	@Test
@@ -1367,6 +1381,12 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 				assertThrows(IllegalArgumentException.class, () ->
 						MEMBER_REQUEST_BUILDER_FACTORY.get().user(" \t").build()
 				);
+				assertNull(MEMBER_REQUEST_BUILDER_FACTORY.get()
+						.user("USR-"+USER_ID+"x").build().getUser().getId()
+				);
+				assertNull(MEMBER_REQUEST_BUILDER_FACTORY.get()
+						.user("USR-"+(USER_ID.substring(1))).build().getUser().getId()
+				);
 			}
 
 			void testUserNameIsSelectedWhenPassingInvalidUserId() {
@@ -1454,6 +1474,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 				testInvalidState();
 				testReasonCodeIsValidForLeftStateOnly();
 				testReasonTextIsValidForLeftStateOnly();
+				testNoReason();
 			}
 
 			void testInvalidState() {
@@ -1467,7 +1488,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 			}
 
 			void testReasonCodeIsValidForLeftStateOnly() {
-				var builder = builderFactoryNoState.get().code(REASON_CODE);
+				var builder = builderFactoryNoState.get().code("").code(REASON_CODE);
 				assertThrows(NullPointerException.class, builder::build);
 				var valid = builder.state(MemberState.LEFT).build();
 				assertEquals(REASON_CODE, valid.getCode());
@@ -1492,6 +1513,16 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 				assertNull(valid.getCode());
 				builder.state(MemberState.JOINED);
 				assertThrows(IllegalStateException.class, builder::build);
+			}
+
+			void testNoReason() {
+				var valid = builderFactoryNoState.get().state(MemberState.JOINED).build();
+				assertEquals(MemberState.JOINED, valid.getState());
+				assertEquals(MEMBER_ID, valid.getMemberId());
+				assertEquals(CONVERSATION_ID, valid.getConversationId());
+				assertNull(valid.getFrom());
+				assertNull(valid.getCode());
+				assertNull(valid.getText());
 			}
 		}
 		.runTests();
@@ -1599,6 +1630,8 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 		stubResponse(200, SAMPLE_LIST_EVENTS_RESPONSE);
 		var events = client.listEvents(CONVERSATION_ID);
 		assertEquals(response.getEvents(), events);
+		stubResponse(200, "{}");
+		assertNull(client.listEvents(CONVERSATION_ID));
 
 		stubResponseAndAssertThrows(200, SAMPLE_LIST_EVENTS_RESPONSE,
 				() -> client.listEvents(null, request),

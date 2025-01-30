@@ -34,11 +34,8 @@ public class VonageUnacceptableAuthException extends VonageAuthException {
         this.acceptableAuthClasses = new ArrayList<>(acceptableAuthClasses);
     }
 
+    @Override
     public String getMessage() {
-        return generateErrorMessage();
-    }
-
-    private String generateErrorMessage() {
         SortedSet<String> availableTypes = new TreeSet<>();
         for (AuthMethod auth : availableAuths) {
             availableTypes.add(AUTH_DESCRIPTION_MAP.getOrDefault(auth.getClass(), auth.getClass().getSimpleName()));
@@ -51,7 +48,7 @@ public class VonageUnacceptableAuthException extends VonageAuthException {
 
         return String.format(
                 "No acceptable authentication type could be found. " +
-                "Acceptable types are: %s. Supplied types were: %s",
+                        "Acceptable types are: %s. Supplied types were: %s",
                 String.join(", ", acceptableTypes),
                 String.join(", ", availableTypes)
         );

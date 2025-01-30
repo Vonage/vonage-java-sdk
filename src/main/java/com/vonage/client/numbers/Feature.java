@@ -44,7 +44,7 @@ public enum Feature {
     @JsonCreator
     public static Feature fromString(String feature) {
         if (feature == null) return null;
-        return valueOf(feature);
+        return valueOf(feature.toUpperCase());
     }
 
     static Feature[] setFromString(String[] features) {

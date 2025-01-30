@@ -17,6 +17,7 @@ package com.vonage.client.application;
 
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.application.capabilities.*;
+import com.vonage.client.application.capabilities.Capability.Type;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
 import static org.junit.jupiter.api.Assertions.*;
@@ -101,7 +102,7 @@ public class ApplicationTest {
         Application application = Application.builder()
                 .addCapability(Voice.builder().build())
                 .addCapability(Rtc.builder().build())
-                .removeCapability(Capability.Type.VOICE)
+                .removeCapability(Type.VOICE)
                 .build();
 
         assertEquals(json, application.toJson());
@@ -110,11 +111,39 @@ public class ApplicationTest {
 
     @Test
     public void testRemoveMultipleCapabilities() {
-        String json = "{}";
         Application application = Application.builder()
                 .addCapability(Voice.builder().build())
                 .addCapability(Rtc.builder().build())
-                .removeCapabilities(Capability.Type.VOICE, Capability.Type.RTC)
+                .removeCapabilities(Type.VOICE, Type.RTC)
+                .build();
+
+        assertEquals("{}", application.toJson());
+        testJsonableBaseObject(application);
+    }
+
+    @Test
+    public void testRemoveAllCapabilities() {
+        Application application = Application.builder()
+                .addCapability(Messages.builder().build())
+                .addCapability(Verify.builder().build())
+                .addCapability(Voice.builder().build())
+                .addCapability(Rtc.builder().build())
+                .addCapability(Vbc.builder().build())
+                .removeCapabilities(Type.MESSAGES, Type.VERIFY, Type.VOICE, Type.RTC, Type.VBC)
+                .build();
+
+        assertEquals("{}", application.toJson());
+        testJsonableBaseObject(application);
+    }
+
+    @Test
+    public void testRemoveCapabilityThatDoesntExist() {
+        String json = "{\"capabilities\":{\"messages\":{},\"verify\":{},\"network_apis\":{}}}";
+        Application application = Application.builder()
+                .addCapability(NetworkApis.builder().build())
+                .addCapability(Messages.builder().build())
+                .addCapability(Verify.builder().build())
+                .removeCapability(Type.VBC)
                 .build();
 
         assertEquals(json, application.toJson());
@@ -122,16 +151,58 @@ public class ApplicationTest {
     }
 
     @Test
-    public void testRemoveCapabilityThatDoesntExist() {
-        String json = "{\"capabilities\":{\"voice\":{},\"rtc\":{}}}";
+    public void testRemoveCapabilityThatDoesExist() {
+        String json = "{\"capabilities\":{\"verify\":{},\"network_apis\":{}}}";
         Application application = Application.builder()
-                .addCapability(Voice.builder().build())
-                .addCapability(Rtc.builder().build())
-                .removeCapability(Capability.Type.VBC)
+                .addCapability(NetworkApis.builder().build())
+                .addCapability(Messages.builder().build())
+                .addCapability(Verify.builder().build())
+                .removeCapability(Type.MESSAGES)
                 .build();
 
         assertEquals(json, application.toJson());
         testJsonableBaseObject(application);
+
+        json = "{\"capabilities\":{\"network_apis\":{}}}";
+        application = Application.builder()
+                .addCapability(NetworkApis.builder().build())
+                .addCapability(Verify.builder().build())
+                .removeCapability(Type.VERIFY)
+                .build();
+
+        assertEquals(json, application.toJson());
+        testJsonableBaseObject(application);
+    }
+
+    @Test
+    public void testRemoveNullCapability() {
+        assertThrows(NullPointerException.class, () -> Application.builder()
+                .addCapability(Rtc.builder().build())
+                .removeCapability(null)
+        );
+    }
+
+    @Test
+    public void testRemoveCapabilityWhenThereAreNoneAnyway() {
+        Application application = Application.builder().removeCapability(Type.VBC).build();
+        assertEquals("{}", application.toJson());
+        testJsonableBaseObject(application);
+    }
+
+    @Test
+    public void testRemoveLastRemainingCapability() {
+        Application application = Application.builder()
+                .addCapability(Vbc.builder().build())
+                .removeCapability(Type.VBC).build();
+        assertEquals("{}", application.toJson());
+        testJsonableBaseObject(application);
+    }
+
+    @Test
+    public void testRemoveWebhookWhenThereAreNone() {
+        var voice = Voice.builder().removeWebhook(Webhook.Type.FALLBACK_ANSWER).build();
+        assertNotNull(voice);
+        assertNull(voice.getWebhooks());
     }
 
     @Test
@@ -209,7 +280,7 @@ public class ApplicationTest {
     public void testPrivacy() {
         String json = "{\"privacy\":{";
 
-        Application request = Application.builder().improveAi(true).build();
+        Application request = Application.builder().improveAi(false).improveAi(true).build();
         assertEquals(json + "\"improve_ai\":"+request.getPrivacy().getImproveAi()+"}}", request.toJson());
         Application parsed = Application.fromJson(json + "}}");
         assertNotNull(parsed.getPrivacy());
@@ -270,5 +341,11 @@ public class ApplicationTest {
         assertEquals(0, voice.getConversationsTtl().intValue());
         assertFalse(voice.getSignedCallbacks());
         assertNull(voice.getRegion());
+    }
+
+    @Test
+    public void testMissingWebhookAddress() {
+        assertThrows(IllegalStateException.class, () -> Webhook.builder().build());
+        assertThrows(IllegalStateException.class, () -> Webhook.builder().address("  ").build());
     }
 }

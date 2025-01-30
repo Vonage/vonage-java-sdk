@@ -15,11 +15,8 @@
  */
 package com.vonage.client.video;
 
-import com.vonage.client.AbstractClientTest;
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.OrderedMap;
+import com.vonage.client.*;
 import static com.vonage.client.OrderedMap.entry;
-import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.*;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HttpMethod;
@@ -347,6 +344,16 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 		assertEquals(createDt, response.getCreateDt());
 		assertEquals(msUrl, response.getMediaServerUrl().toString());
 
+		stubResponse("[]");
+		response = client.createSession();
+		assertNotNull(response);
+		assertNull(response.getSessionId());
+		assertNull(response.getApplicationId());
+		assertNull(response.getCreateDt());
+		assertNull(response.getMediaServerUrl());
+
+		stubResponseAndAssertThrows(200, "{}", client::createSession, VonageResponseParseException.class);
+
 		responseJson = "{\n" + "  \"code\": 400,\n" + "  \"message\": "+
 				"\"Invalid request. This response may indicate that data in your request data is invalid JSON. "+
 			    "Or it may indicate that you do not pass in a session ID or you passed in an invalid stream ID.\"\n}";
@@ -453,6 +460,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 		stubResponseAndRun(204, () -> client.signalAll(sessionId, signalRequest));
 		stubResponseAndAssertThrowsIAX(() -> client.signalAll(sessionId, null));
 		stubResponseAndAssertThrowsIAX(() -> client.signalAll(null, signalRequest));
+		stubResponseAndAssertThrowsIAX(() -> client.signalAll("", signalRequest));
 
 		String responseJson = "{\n  \"code\": 413,\n  \"message\": \"The type string exceeds the maximum" +
 			  "length (128 bytes), or the data string exceeds the maximum size (8 kB).\"\n}";
@@ -465,6 +473,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 	public void testForceDisconnect() throws Exception {
 		stubResponseAndRun(204, () -> client.forceDisconnect(sessionId, connectionId));
 		stubResponseAndAssertThrowsIAX(() -> client.forceDisconnect(null, connectionId));
+		stubResponseAndAssertThrowsIAX(() -> client.forceDisconnect("", connectionId));
 		stubResponseAndAssertThrowsIAX(() -> client.forceDisconnect(sessionId, null));
 
 		String responseJson = "{\n  \"code\": 403,\n  \"message\": " +
@@ -843,6 +852,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 	public void testListRenders() throws Exception {
 		stubListRenderJsonAndAssertEquals(client::listRenders);
 		stubListRenderJsonAndAssertEquals(() -> client.listRenders(null));
+
 	}
 
 	@Test

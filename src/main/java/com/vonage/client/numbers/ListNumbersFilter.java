@@ -97,7 +97,7 @@ public class ListNumbersFilter extends BaseNumbersFilter {
         if (size != null) {
             builder.size(size);
         }
-        if (pattern != null && searchPattern != null) {
+        if (pattern != null) {
             builder.pattern(searchPattern, pattern);
         }
         return builder;

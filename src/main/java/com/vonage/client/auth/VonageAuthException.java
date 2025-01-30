@@ -22,14 +22,17 @@ public class VonageAuthException extends VonageClientException {
         super();
     }
 
+    @Deprecated
     public VonageAuthException(String message) {
         super(message);
     }
 
+    @Deprecated
     public VonageAuthException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    @Deprecated
     public VonageAuthException(Throwable cause) {
         super(cause);
     }

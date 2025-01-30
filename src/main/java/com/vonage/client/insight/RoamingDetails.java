@@ -23,7 +23,7 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Information about the roaming status for number. This is applicable to mobile numbers only.
  */
-@JsonDeserialize(using = RoamingDeseriazlizer.class)
+@JsonDeserialize(using = RoamingDeserializer.class)
 public class RoamingDetails extends JsonableBaseObject {
     private final RoamingStatus status;
     private final String roamingCountryCode, roamingNetworkCode, roamingNetworkName;
@@ -50,7 +50,8 @@ public class RoamingDetails extends JsonableBaseObject {
         }
     }
 
-    public RoamingDetails(RoamingStatus status, String roamingCountryCode, String roamingNetworkCode, String roamingNetworkName){
+    @Deprecated
+    public RoamingDetails(RoamingStatus status, String roamingCountryCode, String roamingNetworkCode, String roamingNetworkName) {
         this.status = status;
         this.roamingCountryCode = roamingCountryCode;
         this.roamingNetworkCode = roamingNetworkCode;

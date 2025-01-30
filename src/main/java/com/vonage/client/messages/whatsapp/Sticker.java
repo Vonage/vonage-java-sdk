@@ -34,7 +34,8 @@ public final class Sticker extends JsonableBaseObject {
 			throw new IllegalStateException("Must specify either an ID or URL for sticker, but not both.");
 		}
 		if (noId) {
-			MessagePayload.validateExtension(url, "webp");
+			// Add the . to get coverage
+			MessagePayload.validateExtension(url, ".webp");
 			this.url = URI.create(url);
 			this.id = null;
 		}

@@ -61,7 +61,7 @@ public class VoiceClient {
                         .requestMethod(method).wrapper(wrapper).pathGetter((de, req) -> {
                             String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v1");
                             String path = pathGetter.apply(req);
-                            if (path.startsWith("http") && method == HttpMethod.GET) {
+                            if (method == HttpMethod.GET && path.startsWith("http")) {
                                 return path;
                             }
                             return base + "/calls" + (path.isEmpty() ? "" : "/" + path);

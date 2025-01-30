@@ -15,7 +15,6 @@
  */
 package com.vonage.client.account;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.QueryParamsRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -70,6 +69,7 @@ public class SettingsRequest implements QueryParamsRequest {
      * @return The URL where Vonage will send a webhook when an incoming SMS is received when a number-specific URL is
      * not configured.
      */
+    @Deprecated
     public String getIncomingSmsUrl() {
         return incomingSmsUrl;
     }
@@ -78,6 +78,7 @@ public class SettingsRequest implements QueryParamsRequest {
      * @return The URL where Vonage will send a webhook when a delivery receipt is received when a number-specific URL is
      * not configured.
      */
+    @Deprecated
     public String getDeliveryReceiptUrl() {
         return deliveryReceiptUrl;
     }

@@ -18,6 +18,7 @@ package com.vonage.client.verify;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Describes a Verify request.
@@ -28,7 +29,7 @@ public class VerifyRequest extends BaseRequest {
 
     public VerifyRequest(Builder builder) {
         super(builder.number, builder.length, builder.locale, builder.country, builder.pinExpiry, builder.nextEventWait);
-        if ((brand = builder.brand) != null && brand.length() > 18) {
+        if ((brand = Objects.requireNonNull(builder.brand, "Brand is required.")).length() > 18) {
             throw new IllegalArgumentException("Brand '"+brand+"' is longer than 18 characters.");
         }
         if ((pinCode = builder.pinCode) != null && (pinCode.length() < 4 || pinCode.length() > 10)) {
@@ -78,9 +79,7 @@ public class VerifyRequest extends BaseRequest {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
-        if (brand != null) {
-            params.put("brand", brand);
-        }
+        params.put("brand", brand);
         if (from != null) {
             params.put("sender_id", from);
         }

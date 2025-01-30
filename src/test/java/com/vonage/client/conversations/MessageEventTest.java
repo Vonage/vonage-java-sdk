@@ -32,6 +32,28 @@ public class MessageEventTest extends AbstractEventTest {
     }
 
     @Test
+    public void testMessageType() {
+        assertNull(MessageType.fromString(null));
+        assertEquals("text", TEXT.toString());
+        assertEquals("image", IMAGE.toString());
+        assertEquals("audio", AUDIO.toString());
+        assertEquals("video", VIDEO.toString());
+        assertEquals("file", FILE.toString());
+        assertEquals("vcard", VCARD.toString());
+        assertEquals("template", TEMPLATE.toString());
+        assertEquals("custom", CUSTOM.toString());
+        assertEquals("location", LOCATION.toString());
+        assertEquals("sticker", STICKER.toString());
+        assertEquals("unsupported", UNSUPPORTED.toString());
+        assertEquals("reply", REPLY.toString());
+        assertEquals("order", ORDER.toString());
+        assertEquals("random", RANDOM.toString());
+        assertEquals("button", BUTTON.toString());
+        assertEquals("reaction", REACTION.toString());
+        assertEquals("contact", CONTACT.toString());
+    }
+
+    @Test
     public void testUrlMediaEvents() {
         MessageType[] messageTypes = {IMAGE, AUDIO, VIDEO, FILE, VCARD};
 

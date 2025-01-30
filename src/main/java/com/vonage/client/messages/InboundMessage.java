@@ -329,8 +329,6 @@ public class InboundMessage extends JsonableBaseObject {
 		return whatsappOrder;
 	}
 
-
-
 	/**
 	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns information
 	 * about the sender's WhatsApp profile.

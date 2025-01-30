@@ -39,7 +39,7 @@ public enum ConversationType {
 
     @JsonCreator
     public static ConversationType fromString(String value) {
-        if (value == null || value.trim().isEmpty()) return null;
+        if (value == null) return null;
         return ConversationType.valueOf(value.toUpperCase());
     }
 }

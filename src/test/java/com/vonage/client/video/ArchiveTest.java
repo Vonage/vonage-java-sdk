@@ -111,4 +111,24 @@ public class ArchiveTest {
 	public void testFromJsonInvalid() {
 		assertThrows(VonageResponseParseException.class, () -> Archive.fromJson("{malformed]"));
 	}
+
+	@Test
+	public void testFromJsonEmpty() {
+		var archive = Archive.fromJson("{}");
+		assertNotNull(archive);
+		assertNull(archive.getSessionId());
+		assertNull(archive.getName());
+		assertNull(archive.getMultiArchiveTag());
+		assertNull(archive.getResolution());
+		assertNull(archive.getOutputMode());
+		assertNull(archive.getStreamMode());
+		assertNull(archive.getLayout());
+		assertNull(archive.hasAudio());
+		assertNull(archive.hasVideo());
+		assertNull(archive.getMaxBitrate());
+		assertNull(archive.getDuration());
+		assertNull(archive.getDurationSeconds());
+		assertNull(archive.getCreatedAt());
+		assertNull(archive.getCreatedAtMillis());
+	}
 }

@@ -22,12 +22,13 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import java.io.IOException;
 
-public class RoamingDeseriazlizer extends StdDeserializer<RoamingDetails> {
-    public RoamingDeseriazlizer(){
+class RoamingDeserializer extends StdDeserializer<RoamingDetails> {
+
+    RoamingDeserializer() {
         this(null);
     }
 
-    public RoamingDeseriazlizer(Class<?> vc){
+    RoamingDeserializer(Class<?> vc) {
         super(vc);
     }
 
@@ -43,14 +44,17 @@ public class RoamingDeseriazlizer extends StdDeserializer<RoamingDetails> {
         }
         else if (node.getNodeType() == JsonNodeType.OBJECT) {
             status = RoamingDetails.RoamingStatus.fromString(node.get("status").asText());
-            if (!(node.get("roaming_country_code") == null)) {
-                roamingCountryCode = node.get("roaming_country_code").asText();
+            JsonNode rcc = node.get("roaming_country_code");
+            if (rcc != null) {
+                roamingCountryCode = rcc.asText();
             }
-            if (!(node.get("roaming_network_code") == null)) {
-                roamingNetworkCode = node.get("roaming_network_code").asText();
+            JsonNode rnc = node.get("roaming_network_code");
+            if (rnc != null) {
+                roamingNetworkCode = rnc.asText();
             }
-            if (!(node.get("roaming_network_name") == null)) {
-                roamingNetworkName = node.get("roaming_network_name").asText();
+            JsonNode rnn = node.get("roaming_network_name");
+            if (rnn != null) {
+                roamingNetworkName = rnn.asText();
             }
         }
         return new RoamingDetails(status, roamingCountryCode, roamingNetworkCode, roamingNetworkName);

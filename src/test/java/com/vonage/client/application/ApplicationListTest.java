@@ -13,28 +13,33 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.conversations;
+package com.vonage.client.application;
 
-import com.vonage.client.Jsonable;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
-import java.util.Map;
+import org.junit.jupiter.api.*;
 
-public class AudioRecordStopEventTest extends AbstractEventTest {
+public class ApplicationListTest {
 
     @Test
-    public void testAudioRecordStopEvent() {
-        var event = testBaseEvent(EventType.AUDIO_RECORD_STOP,
-                AudioRecordStopEvent.builder().recordId(randomIdStr),
-                Map.of("record_id", randomId)
-        );
-        assertEquals(randomId, event.getRecordId());
+    public void testEmptyApplications() {
+        var al = ApplicationList.fromJson("{\"_embedded\":{\"applications\":[]}}");
+        assertNotNull(al);
+        var applications = al.getApplications();
+        assertNotNull(applications);
+        assertEquals(0, applications.size());
+    }
+
+    @Test
+    public void testNoApplications() {
+        var al = ApplicationList.fromJson("{\"_embedded\":{}}");
+        assertNotNull(al);
+        assertNull(al.getApplications());
     }
 
     @Test
     public void testEmptyJson() {
-        var event = Jsonable.fromJson("{}", AudioRecordStopEvent.class);
-        assertNotNull(event);
-        assertNull(event.getRecordId());
+        var al = ApplicationList.fromJson("{}");
+        assertNotNull(al);
+        assertNull(al.getApplications());
     }
 }

@@ -219,7 +219,7 @@ public class VideoClient {
 	 */
 	public CreateSessionResponse createSession(CreateSessionRequest request) {
 		CreateSessionResponse[] response = createSession.execute(request);
-        return response == null || response.length == 0 ? new CreateSessionResponse() : response[0];
+        return response.length == 0 ? new CreateSessionResponse() : response[0];
 	}
 
 	/**
@@ -407,7 +407,7 @@ public class VideoClient {
 	}
 
 	/**
-	 * Play DMTF tones into a specific connection.
+	 * Play DTMF tones into a specific connection.
 	 * Telephony events are negotiated over SDP and transmitted as RFC4733/RFC2833 digits to the remote endpoint.
 	 *
 	 * @param sessionId The session ID.
@@ -419,9 +419,7 @@ public class VideoClient {
 	 */
 	public void sendDtmf(String sessionId, String connectionId, String digits) {
 		sendDtmfToConnection.execute(new SendDtmfRequest(
-				validateSessionId(sessionId),
-				validateConnectionId(connectionId),
-				String.valueOf(digits)
+				validateSessionId(sessionId), validateConnectionId(connectionId), digits
 		));
 	}
 
@@ -437,8 +435,7 @@ public class VideoClient {
 	 */
 	public void sendDtmf(String sessionId, String digits) {
 		sendDtmfToSession.execute(new SendDtmfRequest(
-				validateSessionId(sessionId),
-				null, String.valueOf(digits)
+				validateSessionId(sessionId), null, digits
 		));
 	}
 

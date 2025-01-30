@@ -97,7 +97,7 @@ public class ListSubaccountsResponseTest {
 	}
 
 	@Test
-	public void testFromJsonEmpty() {
+	public void testFromEmptyJson() {
 		ListSubaccountsResponse response = ListSubaccountsResponse.fromJson("{}");
 		assertNull(response.getPrimaryAccount());
 		assertNull(response.getSubaccounts());
@@ -110,5 +110,12 @@ public class ListSubaccountsResponseTest {
 		assertNotNull(response.getPrimaryAccount());
 		assertNotNull(response.getSubaccounts());
 		assertEquals(0, response.getSubaccounts().size());
+	}
+
+	@Test
+	public void testFromNullJson() {
+		var response = ListSubaccountsResponse.fromJson(null);
+		assertNotNull(response);
+		assertEquals(response, ListSubaccountsResponse.fromJson(""));
 	}
 }

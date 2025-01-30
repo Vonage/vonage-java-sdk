@@ -54,9 +54,13 @@ public class CreateSubaccountRequestTest {
 	}
 
 	@Test
-	public void testConstructShortSecret() {
+	public void testConstructSecretLength() {
 		CreateSubaccountRequest.Builder builder = CreateSubaccountRequest.builder().name("Department C");
-		assertThrows(IllegalArgumentException.class, () -> builder.secret("A1b23c5").build());
+		String min = "*A1b23c5", max = "A1b2*".repeat(5);
+		assertEquals(min, builder.secret(min).build().getSecret());
+		assertEquals(max, builder.secret(max).build().getSecret());
+		assertThrows(IllegalArgumentException.class, () -> builder.secret(min.substring(1)).build());
+		assertThrows(IllegalArgumentException.class, () -> builder.secret(max + "T").build());
 	}
 
 	@Test

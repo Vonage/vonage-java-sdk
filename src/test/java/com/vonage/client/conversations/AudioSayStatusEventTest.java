@@ -15,8 +15,8 @@
  */
 package com.vonage.client.conversations;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.Map;
 
 public class AudioSayStatusEventTest extends AbstractEventTest {
@@ -34,17 +34,20 @@ public class AudioSayStatusEventTest extends AbstractEventTest {
     <E extends AudioSayStatusEvent> void testStatusEvent(
             EventType eventType, String eventTypeStr, Class<E> eventClass) {
 
-        E event = parseEvent(eventType, eventClass, "{\n" +
-            "  \"id\": " + randomEventId + ",\n" +
-            "  \"type\": \"audio:say:" + eventTypeStr + "\",\n" +
-            "  \"body\": {\n" +
-            "    \"say_id\": \"" + randomIdStr + "\"\n" +
-            "  },\n" +
-            "  \"_links\": {}\n" +
-            "}"
-        );
+        String bodyJson = "  \"body\": {\n" +
+                "    \"say_id\": \"" + randomIdStr + "\"\n" +
+                "  },\n",
+            fullJson = "{\n" +
+                    "  \"id\": " + randomEventId + ",\n" +
+                    "  \"type\": \"audio:say:" + eventTypeStr + "\",\n" + bodyJson +
+                    "  \"_links\": {}\n" +
+                    "}";
+        E event = parseEvent(eventType, eventClass, fullJson);
         assertEquals(randomId, event.getSayId());
         assertEquals(randomEventId, event.getId());
+
+        event = parseEvent(eventType, eventClass, fullJson.replace(bodyJson, ""));
+        assertNull(event.getSayId());
     }
 
     @Test
@@ -56,5 +59,16 @@ public class AudioSayStatusEventTest extends AbstractEventTest {
     @Test
     public void testAudioSayDoneEvent() {
         testStatusEvent(EventType.AUDIO_SAY_DONE, "done", AudioSayDoneEvent.class);
+    }
+
+    @Test
+    public void testEmptyBodyOnly() {
+        var event = parseEvent(
+                EventType.AUDIO_SAY_DONE,
+                AudioSayDoneEvent.class,
+                "{\"body\":{},\"type\":\"audio:say:done\"}"
+        );
+        assertNotNull(event);
+        assertNull(event.getSayId());
     }
 }

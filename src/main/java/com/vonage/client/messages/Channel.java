@@ -61,7 +61,7 @@ public enum Channel {
 				mt != MessageType.CONTACT && mt != MessageType.BUTTON &&
 				(this != Channel.MMS || mt != MessageType.TEXT) &&
 				(this != Channel.RCS || (
-					mt != AUDIO && mt != LOCATION && mt != BUTTON && mt != VCARD
+					mt != AUDIO && mt != LOCATION && mt != VCARD
 				))
 		).collect(Collectors.toSet());
 	}

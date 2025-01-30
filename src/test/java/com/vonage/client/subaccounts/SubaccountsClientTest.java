@@ -16,8 +16,12 @@
 package com.vonage.client.subaccounts;
 
 import com.vonage.client.AbstractClientTest;
+import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
+import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.auth.NoAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -62,7 +66,8 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 	}
 
 	static void assertEqualsExpectedAccount(Account response) {
-		TestUtils.testJsonableBaseObject(response);
+		testJsonableBaseObject(response);
+		assertEquals(Account.fromJson(ACCOUNT_RESPONSE_JSON), response);
 		assertEquals("Password123", response.getSecret());
 		assertEquals("bbe6222f", response.getApiKey());
 		assertEquals("acc6111f", response.getPrimaryAccountApiKey());
@@ -75,7 +80,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 	}
 
 	static void assertEqualsExpectedMoneyTransfer(MoneyTransfer response) {
-		TestUtils.testJsonableBaseObject(response);
+		testJsonableBaseObject(response);
 		assertEquals(BigDecimal.valueOf(145.32), response.getAmount());
 		assertEquals("7c9738e6", response.getFrom());
 		assertEquals("ad6dc56f", response.getTo());
@@ -83,7 +88,16 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 		assertEquals(Instant.parse("2019-03-02T16:34:51Z"), response.getCreatedAt());
 		assertEquals(UUID.fromString("ec48b760-8f26-40c6-9082-a122b6ca3640"), response.getId());
 	}
-	
+
+	@Test
+	public void testGetSubaccountWithoutApiKeyAuth() throws Exception {
+		var sac = new SubaccountsClient(new HttpWrapper(new NoAuthMethod()));
+		assertNotNull(sac);
+		stubResponse(200, ACCOUNT_RESPONSE_JSON);
+		var request = CreateSubaccountRequest.builder().name("S").build();
+		assertThrows(IllegalStateException.class, () -> sac.createSubaccount(request));
+	}
+
 	@Test
 	public void testCreateSubaccount() throws Exception {
 		CreateSubaccountRequest request = CreateSubaccountRequest.builder()
@@ -151,7 +165,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 						"}";
 
 				Account parsed = parseResponse(expectedResponse);
-				TestUtils.testJsonableBaseObject(parsed);
+				testJsonableBaseObject(parsed);
 				assertEquals("bbe6222f", parsed.getApiKey());
 				assertEquals("Subaccount department A", parsed.getName());
 				assertEquals("Password123", parsed.getSecret());
@@ -164,7 +178,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 
 			void testEmptyResponse() throws Exception {
 				Account parsed = parseResponse("{}");
-				TestUtils.testJsonableBaseObject(parsed);
+				testJsonableBaseObject(parsed);
 				assertNull(parsed.getApiKey());
 				assertNull(parsed.getSecret());
 				assertNull(parsed.getPrimaryAccountApiKey());
@@ -312,6 +326,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 		assertNotNull(response.get(2));
 		assertEqualsExpectedMoneyTransfer(response.get(1));
 		assertNotNull(stubResponseAndGet(responseJson, client::listCreditTransfers));
+		assertNull(stubResponseAndGet("{}", client::listCreditTransfers));
 		stubResponseAndAssertThrows(200, () -> client.listCreditTransfers(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.listCreditTransfers(request), SubaccountsResponseException.class);
 		assert403ResponseException(client::listCreditTransfers);
@@ -356,6 +371,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 		assertNotNull(response.get(2));
 		assertEqualsExpectedMoneyTransfer(response.get(1));
 		assertNotNull(stubResponseAndGet(responseJson, client::listBalanceTransfers));
+		assertNull(stubResponseAndGet("{}", client::listBalanceTransfers));
 		stubResponseAndAssertThrows(200, () -> client.listBalanceTransfers(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.listBalanceTransfers(request), SubaccountsResponseException.class);
 		assert403ResponseException(client::listBalanceTransfers);
@@ -486,7 +502,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 				"   \"to\": \"ad6dc56f\"\n" +
 				"}";
 		NumberTransfer response = stubResponseAndGet(responseJson, () -> client.transferNumber(request));
-		TestUtils.testJsonableBaseObject(response);
+		testJsonableBaseObject(response);
 		assertEquals("235077036", response.getNumber());
 		assertEquals("DE", response.getCountry());
 		assertEquals("7c9738e6", response.getFrom());
@@ -498,6 +514,9 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 		assertThrows(IllegalArgumentException.class, () -> NumberTransfer.builder()
 				.from(request.getFrom()).to(request.getTo()).number(request.getNumber())
 				.country("United Kingdom").build()
+		);
+		assertThrows(IllegalArgumentException.class, () -> NumberTransfer.builder()
+				.from(request.getFrom()).to(request.getTo()).number(request.getNumber()).build()
 		);
 
 		new SubaccountsEndpointTestSpec<NumberTransfer, NumberTransfer>() {

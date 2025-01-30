@@ -60,4 +60,14 @@ public class AnswerWebhookTest {
         assertNull(parsed.getRegionUrl());
         assertNull(parsed.getCustomData());
     }
+
+    @Test
+    public void testEndpointTypeFromString() {
+        assertNull(EndpointType.fromString(null));
+        assertEquals(EndpointType.PHONE, EndpointType.fromString("phone"));
+        assertEquals(EndpointType.VBC, EndpointType.fromString("vbc"));
+        assertEquals(EndpointType.APP, EndpointType.fromString("app"));
+        assertEquals(EndpointType.SIP, EndpointType.fromString("sip"));
+        assertEquals(EndpointType.WEBSOCKET, EndpointType.fromString("websocket"));
+    }
 }

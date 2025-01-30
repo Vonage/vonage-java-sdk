@@ -41,7 +41,7 @@ public class Sip extends Channel {
 	public Sip(String uri, String username, String password) {
 		this(uri);
 		this.username = username;
-		if ((this.password = password) != null && !password.isEmpty() && username == null) {
+		if ((this.password = password) != null && username == null) {
 			throw new IllegalArgumentException("Username should be provided along with password.");
 		}
 	}

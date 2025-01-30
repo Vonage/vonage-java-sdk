@@ -16,6 +16,7 @@
 package com.vonage.client.auth;
 
 import com.vonage.jwt.Jwt;
+import java.util.Objects;
 
 public class JWTAuthMethod extends BearerAuthMethod {
     private static final int SORT_KEY = 10;
@@ -56,5 +57,17 @@ public class JWTAuthMethod extends BearerAuthMethod {
     @Override
     public int getSortKey() {
         return SORT_KEY;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof JWTAuthMethod && super.equals(obj) &&
+                Objects.equals(applicationId, ((JWTAuthMethod) obj).applicationId) &&
+                Objects.equals(privateKeyContents, ((JWTAuthMethod) obj).privateKeyContents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), applicationId, privateKeyContents);
     }
 }

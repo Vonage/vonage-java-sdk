@@ -86,4 +86,27 @@ public class AudioRecordEventTest extends AbstractEventTest {
         assertNull(event.getBeepStart());
         assertNull(event.getBeepStop());
     }
+
+    @Test
+    public void testSentimentAnalysisOnly() {
+        var event = testBaseEvent(EventType.AUDIO_RECORD,
+                AudioRecordEvent.builder().sentimentAnalysis(sentimentAnalysis),
+                new OrderedMap(
+                        entry("transcription", new OrderedMap(
+                                entry("sentiment_analysis", sentimentAnalysis)
+                        ))
+                )
+        );
+        assertNull(event.getLanguage());
+        assertEquals(sentimentAnalysis, event.getSentimentAnalysis());
+        assertNull(event.getFormat());
+        assertNull(event.getValidity());
+        assertNull(event.getChannels());
+        assertNull(event.getStreamed());
+        assertNull(event.getSplit());
+        assertNull(event.getMultitrack());
+        assertNull(event.getDetectSpeech());
+        assertNull(event.getBeepStart());
+        assertNull(event.getBeepStop());
+    }
 }

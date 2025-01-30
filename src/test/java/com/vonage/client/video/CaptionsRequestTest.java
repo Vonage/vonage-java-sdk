@@ -95,8 +95,8 @@ public class CaptionsRequestTest {
 				.statusCallbackUrl(twoThousandAndFourtySeven + 'y')
 				.build().getStatusCallbackUrl().toString().length()
 		);
-		assertThrows(IllegalArgumentException.class,
-				() -> builder.statusCallbackUrl(twoThousandAndFourtySeven + "yz")
+		assertThrows(IllegalArgumentException.class, () ->
+				builder.statusCallbackUrl(twoThousandAndFourtySeven + "yz").build()
 		);
 	}
 
@@ -117,5 +117,10 @@ public class CaptionsRequestTest {
 	@Test
 	public void testUnknownLanguage() {
 		assertNull(Language.fromString("fa-IR"));
+	}
+
+	@Test
+	public void testNullLanguage() {
+		assertNull(Language.fromString(null));
 	}
 }

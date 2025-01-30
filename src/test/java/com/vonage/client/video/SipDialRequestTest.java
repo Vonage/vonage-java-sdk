@@ -71,7 +71,32 @@ public class SipDialRequestTest {
 				"\"sip\":{\"uri\":\""+uri+"\"}}";
 		assertEquals(expectedJson, request.toJson());
 
+		assertEquals(uri, request.getUri());
+		assertEquals(sessionId, request.getSessionId());
+		assertEquals(token, request.getToken());
 		assertNull(request.getUsername());
+		assertNull(request.getPassword());
+		assertNull(request.getFrom());
+		assertNull(request.getHeaders());
+		assertNull(request.getVideo());
+		assertNull(request.getSecure());
+		assertNull(request.getObserveForceMute());
+	}
+
+	@Test
+	public void testSerializeUsername() {
+		String uri = "sip:name@sip.example.org", sessionId = "SESSION", token = "TOKEN", user = "Admin";
+		SipDialRequest request = SipDialRequest.builder().uri(URI.create(uri), false)
+				.sessionId(sessionId).token(token).username(user).build();
+
+		String expectedJson = "{\"sessionId\":\""+sessionId+"\",\"token\":\""+token+"\"," +
+				"\"sip\":{\"uri\":\""+uri+"\",\"auth\":{\"username\":\""+user+"\"}}}";
+		assertEquals(expectedJson, request.toJson());
+
+		assertEquals(user, request.getUsername());
+		assertEquals(uri, request.getUri());
+		assertEquals(sessionId, request.getSessionId());
+		assertEquals(token, request.getToken());
 		assertNull(request.getPassword());
 		assertNull(request.getFrom());
 		assertNull(request.getHeaders());

@@ -68,7 +68,12 @@ public class Psd2RequestTest {
 
 	@Test
 	public void testConstructMissingRequiredParams() {
-		assertThrows(NullPointerException.class, () -> Psd2Request.builder().build());
+		var builder = Psd2Request.builder();
+		assertThrows(NullPointerException.class, builder::build);
+		assertThrows(IllegalArgumentException.class, () -> builder.number("447700900001").build());
+		assertThrows(IllegalArgumentException.class, () -> builder.amount(0.87).build());
+		assertThrows(IllegalArgumentException.class, () -> builder.payee("").build());
+		assertNotNull(builder.payee("Myself").build());
 	}
 
 	@Test

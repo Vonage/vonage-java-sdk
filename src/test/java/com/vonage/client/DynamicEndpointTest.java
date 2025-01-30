@@ -16,12 +16,17 @@
 package com.vonage.client;
 
 import static com.vonage.client.TestUtils.*;
+import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.NoAuthMethod;
+import com.vonage.client.auth.RequestQueryParams;
 import com.vonage.client.common.HttpMethod;
 import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import java.net.URI;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,7 +36,7 @@ public class DynamicEndpointTest {
     @SuppressWarnings("unchecked")
     static <T, R> DynamicEndpoint<T, R> newEndpoint(R... responseType) {
         var endpoint = DynamicEndpoint.<T, R> builder(responseType)
-                .wrapper(WRAPPER).authMethod(NoAuthMethod.class)
+                .wrapper(WRAPPER).authMethod(NoAuthMethod.class, (Class<? extends AuthMethod>[]) null)
                 .pathGetter((de, req) -> TEST_BASE_URI)
                 .requestMethod(HttpMethod.GET).acceptHeader("text").build();
         Logger.getLogger(endpoint.getClass().getName()).setLevel(Level.FINE);
@@ -41,7 +46,7 @@ public class DynamicEndpointTest {
     @Test
     public void testRedirectHandling() throws Exception {
         DynamicEndpoint<byte[], URI> uriEndpoint = newEndpoint();
-        stubResponse(WRAPPER, 302, TEST_REDIRECT_URI);
+        stubResponse(WRAPPER, 300, TEST_REDIRECT_URI);
         assertEquals(URI.create(TEST_REDIRECT_URI), uriEndpoint.execute(new byte[0]));
 
         DynamicEndpoint<Object, String> stringEndpoint = newEndpoint();
@@ -54,7 +59,31 @@ public class DynamicEndpointTest {
     }
 
     @Test
-    public void testUnknownRequestMethod() throws Exception {
+    public void testInformationalResponse() throws Exception {
+        var endpoint = newEndpoint();
+        stubResponse(WRAPPER, 100, "Continue");
+        assertNull(endpoint.execute(new byte[0]));
+    }
+
+    @Test
+    public void testIterableQueryParamsRequest() throws Exception {
+        class IterableQueryParamsRequest implements QueryParamsRequest {
+            @Override
+            public Map<String, Collection<?>> makeParams() {
+                return Map.of(
+                        "Foo", Set.of("Bar", "Baz"),
+                        "Qux", List.of(1, 2, 3, 5, 4, 6)
+                );
+            }
+        }
+
+        var endpoint = DynamicEndpointTest.<IterableQueryParamsRequest, String> newEndpoint();
+        stubResponse(WRAPPER, 200, "OK");
+        assertEquals("OK", endpoint.execute(new IterableQueryParamsRequest()));
+    }
+
+    @Test
+    public void testUnknownRequestMethod() {
         @SuppressWarnings("unchecked")
         var endpoint = DynamicEndpoint.builder(Void.class)
                 .wrapper(WRAPPER).authMethod(NoAuthMethod.class)

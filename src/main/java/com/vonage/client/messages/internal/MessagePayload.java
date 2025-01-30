@@ -86,7 +86,6 @@ public class MessagePayload extends JsonableBaseObject {
 	}
 
 	public void validateUrlLength(int min, int max) {
-		if (url == null) return;
 		int length = getUrl().toString().length();
 		if (length < min) {
 			throw new IllegalArgumentException("URL must be longer than "+min+" characters.");

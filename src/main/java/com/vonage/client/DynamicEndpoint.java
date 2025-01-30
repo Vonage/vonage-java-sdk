@@ -18,14 +18,13 @@ package com.vonage.client;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.common.HttpMethod;
 import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.*;
 import java.util.function.BiFunction;
@@ -50,7 +49,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	protected String contentType, accept;
 	protected HttpMethod requestMethod;
 	protected BiFunction<DynamicEndpoint<T, R>, ? super T, String> pathGetter;
-	protected Class<? extends RuntimeException> responseExceptionType;
+	protected Class<? extends VonageApiResponseException> responseExceptionType;
 	protected Class<R> responseType;
 	protected T cachedRequestBody;
 
@@ -96,7 +95,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		private String contentType, accept;
 		private HttpMethod requestMethod;
 		private BiFunction<DynamicEndpoint<T, R>, ? super T, String> pathGetter;
-		private Class<? extends RuntimeException> responseExceptionType;
+		private Class<? extends VonageApiResponseException> responseExceptionType;
 
 		Builder(Class<R> responseType) {
 			this.responseType = responseType;
@@ -130,7 +129,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			return this;
 		}
 
-		public Builder<T, R> responseExceptionType(Class<? extends RuntimeException> responseExceptionType) {
+		public Builder<T, R> responseExceptionType(Class<? extends VonageApiResponseException> responseExceptionType) {
 			this.responseExceptionType = responseExceptionType;
 			return this;
 		}
@@ -245,32 +244,23 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	@Override
 	protected final R parseResponse(HttpResponse response) throws IOException {
-		int statusCode = response.getStatusLine().getStatusCode();
+		StatusLine statusLine = response.getStatusLine();
+		int statusCode = statusLine.getStatusCode();
 		logger.fine(() -> "Response status: " + statusCode);
 		try {
-			if (statusCode >= 200 && statusCode < 300) {
+			if (statusCode < 200) {
+				logger.info(statusLine::getReasonPhrase);
+				return null;
+			}
+			if (statusCode < 300) {
 				return parseResponseSuccess(response);
 			}
-			else if (statusCode >= 300 && statusCode < 400) {
+			if (statusCode < 400) {
 				return parseResponseRedirect(response);
 			}
 			else {
 				return parseResponseFailure(response);
 			}
-		}
-		catch (InvocationTargetException ex) {
-			Throwable wrapped = ex.getTargetException();
-			logger.log(Level.SEVERE, "Internal SDK error", ex);
-			if (wrapped instanceof RuntimeException) {
-				throw (RuntimeException) wrapped;
-			}
-			else {
-				throw new VonageUnexpectedException(wrapped);
-			}
-		}
-		catch (ReflectiveOperationException ex) {
-			logger.log(Level.SEVERE, "Internal SDK error", ex);
-			throw new VonageUnexpectedException(ex);
 		}
 		finally {
 			cachedRequestBody = null;
@@ -281,7 +271,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		return null;
 	}
 
-	private R parseResponseRedirect(HttpResponse response) throws ReflectiveOperationException, IOException {
+	private R parseResponseRedirect(HttpResponse response) throws IOException {
 		final String location = response.getFirstHeader("Location").getValue();
 		logger.fine(() -> "Redirect: " + location);
 
@@ -296,7 +286,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 	}
 
-	private R parseResponseSuccess(HttpResponse response) throws IOException, ReflectiveOperationException {
+	private R parseResponseSuccess(HttpResponse response) throws IOException {
 		if (Void.class.equals(responseType)) {
 			logger.fine(() -> "No response body.");
 			return null;
@@ -339,33 +329,18 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 	}
 
-	private R parseResponseFailure(HttpResponse response) throws IOException, ReflectiveOperationException {
+	private R parseResponseFailure(HttpResponse response) throws IOException {
 		String exMessage = EntityUtils.toString(response.getEntity());
 		if (responseExceptionType != null) {
-			if (VonageApiResponseException.class.isAssignableFrom(responseExceptionType)) {
-				VonageApiResponseException varex = Jsonable.fromJson(exMessage,
-						(Class<? extends VonageApiResponseException>) responseExceptionType
-				);
-				if (varex.title == null) {
-					varex.title = response.getStatusLine().getReasonPhrase();
-				}
-				varex.statusCode = response.getStatusLine().getStatusCode();
-				logger.log(Level.WARNING, "Failed to parse response", varex);
-				throw varex;
+			VonageApiResponseException varex = Jsonable.fromJson(exMessage,
+					(Class<? extends VonageApiResponseException>) responseExceptionType
+			);
+			if (varex.title == null) {
+				varex.title = response.getStatusLine().getReasonPhrase();
 			}
-			else {
-				for (Constructor<?> constructor : responseExceptionType.getDeclaredConstructors()) {
-					Class<?>[] params = constructor.getParameterTypes();
-					if (params.length == 1 && String.class.equals(params[0])) {
-						if (!constructor.isAccessible()) {
-							constructor.setAccessible(true);
-						}
-						RuntimeException ex = (RuntimeException) constructor.newInstance(exMessage);
-						logger.log(Level.SEVERE, "Internal SDK error", ex);
-						throw ex;
-					}
-				}
-			}
+			varex.statusCode = response.getStatusLine().getStatusCode();
+			logger.log(Level.WARNING, "Failed to parse response", varex);
+			throw varex;
 		}
 		R customParsedResponse = parseResponseFromString(exMessage);
 		if (customParsedResponse == null) {

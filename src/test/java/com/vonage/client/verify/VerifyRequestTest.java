@@ -39,7 +39,7 @@ public class VerifyRequestTest {
 
 	@Test
 	public void testConstructVerifyParamsMissingValues() throws Exception {
-		VerifyRequest verifyRequest = VerifyRequest.builder("4477990090090","Brand.com").build();
+		VerifyRequest verifyRequest = VerifyRequest.builder("4477990090090", "Brand.com").build();
 
 		Map<String, ?> params = verifyRequest.makeParams();
 		assertEquals(2, params.size());
@@ -58,8 +58,10 @@ public class VerifyRequestTest {
 
 	@Test
 	public void testInvalidBrand() {
+		String number = "4477990090090";
 		assertThrows(IllegalArgumentException.class, () ->
-				VerifyRequest.builder("4477990090090", "A very looooooooooooooong brand name").build()
+				VerifyRequest.builder(number, "A very looooooooooooooong brand name").build()
 		);
+		assertThrows(NullPointerException.class, () -> VerifyRequest.builder(number, null).build());
 	}
 }

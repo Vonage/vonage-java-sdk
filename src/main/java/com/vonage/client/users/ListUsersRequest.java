@@ -181,7 +181,10 @@ public final class ListUsersRequest implements QueryParamsRequest {
 
     /**
      * Represents the sort order for events.
+     *
+     * @deprecated Will be replaced with {@linkplain com.vonage.client.common.SortOrder} in the next major release.
      */
+    @Deprecated
     public enum SortOrder {
         /**
          * Ascending

@@ -69,7 +69,9 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
         assertEquals("63f61863-4a51-4f6b-86e1-46edebio0391", evt.getConversationUuid());
         assertEquals(SAMPLE_CALL_ID, evt.getUuid());
         assertEquals(CallDirection.OUTBOUND, evt.getDirection());
-        assert401Response(() -> client.createCall(Call.builder().to(new VbcEndpoint("123")).build()));
+        assert401Response(() -> client.createCall(Call.builder()
+                .to(new VbcEndpoint("123")).eventMethod(HttpMethod.POST).build())
+        );
     }
 
     @Test
@@ -139,6 +141,7 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
         assertThrows(IllegalArgumentException.class, () ->
                 client.sendDtmf("944dd293-ca13-4a58-bc37-6252e11474be", null)
         );
+        assertThrows(IllegalArgumentException.class, () -> client.sendDtmf(SAMPLE_CALL_ID, "  "));
         assertThrows(NullPointerException.class, () -> client.sendDtmf(null, "1234"));
         assert401Response(() -> client.sendDtmf(SAMPLE_CALL_ID, "789#0"));
     }
@@ -427,6 +430,10 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
         );
         stubResponseAndAssertThrows(content, () ->
                 client.saveRecording(";not_a url£", recordingPath),
+                IllegalArgumentException.class
+        );
+        stubResponseAndAssertThrows(content, () ->
+                        client.saveRecording(" \t", recordingPath),
                 IllegalArgumentException.class
         );
     }

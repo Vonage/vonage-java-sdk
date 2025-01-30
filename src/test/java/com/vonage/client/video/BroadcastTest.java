@@ -94,7 +94,9 @@ public class BroadcastTest {
 		assertEquals(multiBroadcastTag, response.getMultiBroadcastTag());
 		assertEquals(applicationId, response.getApplicationId());
 		assertEquals(createdAt, response.getCreatedAtMillis());
+		assertEquals(Instant.ofEpochMilli(createdAt), response.getCreatedAt());
 		assertEquals(updatedAt, response.getUpdatedAtMillis());
+		assertEquals(Instant.ofEpochMilli(updatedAt), response.getUpdatedAt());
 		assertEquals(maxDuration, response.getMaxDurationSeconds());
 		assertEquals(maxBitrate, response.getMaxBitrate());
 		assertEquals(hasAudio, response.hasAudio());

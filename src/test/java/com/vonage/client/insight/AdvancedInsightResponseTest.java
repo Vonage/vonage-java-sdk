@@ -15,6 +15,7 @@
  */
 package com.vonage.client.insight;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import org.junit.jupiter.api.Test;
@@ -110,7 +111,7 @@ public class AdvancedInsightResponseTest {
 
     @Test
     public void testFromJsonUnknownRoaming() {
-        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
+        AdvancedInsightResponse response = Jsonable.fromJson("{\n" +
                 "    \"roaming\": \"unknown\",\n" +
                 "    \"caller_type\": \"dunno\",\n" +
                 "    \"real_time_data\": {\n" +
@@ -124,6 +125,13 @@ public class AdvancedInsightResponseTest {
         assertEquals("unknown", response.getCallerType().toString());
         assertEquals(false, response.getRealTimeData().getActiveStatus());
         assertNull(response.getRealTimeData().getHandsetStatus());
+    }
+
+    @Test
+    public void testInvalidRoamingShape() {
+        AdvancedInsightResponse response = Jsonable.fromJson("{\"roaming\": []}");
+        assertNotNull(response);
+        assertEquals(RoamingDetails.RoamingStatus.UNKNOWN, response.getRoaming().getStatus());
     }
 
     @Test
@@ -247,4 +255,56 @@ public class AdvancedInsightResponseTest {
         assertThrows(VonageResponseParseException.class, () -> AdvancedInsightResponse.fromJson("blarg"));
     }
 
+    @Test
+    public void testRealTimeDataActiveStatus() {
+        String json = "{\n" +
+                "    \"real_time_data\": {\n" +
+                "       \"active_status\": \"ACTIVE\",\n" +
+                "       \"handset_status\": \"On\"\n" +
+                "    }\n" +
+                "}";
+        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson(json);
+
+        assertEquals(true, response.getRealTimeData().getActiveStatus());
+        assertEquals("On", response.getRealTimeData().getHandsetStatus());
+
+        response = AdvancedInsightResponse.fromJson(json.replace("ACTIVE", "False"));
+        assertFalse(response.getRealTimeData().getActiveStatus());
+
+        response = AdvancedInsightResponse.fromJson(json.replace("ACTIVE", ""));
+        assertNull(response.getRealTimeData().getActiveStatus());
+
+        response = AdvancedInsightResponse.fromJson(json.replace("ACTIVE", "Unknown??"));
+        assertNull(response.getRealTimeData().getActiveStatus());
+
+        response = AdvancedInsightResponse.fromJson(json.replace("       \"active_status\": \"ACTIVE\",\n", ""));
+        assertNull(response.getRealTimeData().getActiveStatus());
+    }
+
+    @Test
+    public void testLookupOutcome() {
+        String json = "{\n" +
+                "    \"lookup_outcome\": 0,\n" +
+                "    \"lookup_outcome_message\": \"Success\"\n" +
+                "}";
+        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson(json);
+
+        assertEquals(LookupOutcome.SUCCESS, response.getLookupOutcome());
+        assertEquals(0, response.getLookupOutcome().getCode());
+        assertEquals("Success", response.getLookupOutcomeMessage());
+
+        response = AdvancedInsightResponse.fromJson(json.replace("0", "1"));
+        assertEquals(LookupOutcome.PARTIAL_SUCCESS, response.getLookupOutcome());
+
+        response = AdvancedInsightResponse.fromJson(json.replace("0", "2"));
+        assertEquals(LookupOutcome.FAILED, response.getLookupOutcome());
+
+        response = AdvancedInsightResponse.fromJson(json.replace("0", "null"));
+        assertNull(response.getLookupOutcome());
+
+        response = AdvancedInsightResponse.fromJson(json.replace("    \"lookup_outcome\": 0,\n", ""));
+        assertNull(response.getLookupOutcome());
+
+        assertNull(LookupOutcome.fromInt(null));
+    }
 }

@@ -185,10 +185,11 @@ public class HttpConfig {
         public Builder() {}
 
         private String sanitizeUri(String uri) {
-            if (uri != null && uri.endsWith("/")) {
-                return uri.substring(0, uri.length() - 1);
+            String sanitized = Objects.requireNonNull(uri, "URI must not be null");
+            if (sanitized.endsWith("/")) {
+                sanitized = sanitized.substring(0, sanitized.length() - 1);
             }
-            return uri;
+            return URI.create(sanitized).toString();
         }
 
         /**

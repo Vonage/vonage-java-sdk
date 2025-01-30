@@ -30,6 +30,9 @@ public class ApplicationList extends HalPageResponse {
         @JsonProperty("applications") List<Application> applications;
     }
 
+    @Deprecated
+    public ApplicationList() {}
+
     /**
      * Retrieves the embedded resource contents.
      *

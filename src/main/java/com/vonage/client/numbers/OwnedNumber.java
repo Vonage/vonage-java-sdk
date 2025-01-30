@@ -92,9 +92,7 @@ public class OwnedNumber extends JsonableNumber {
 
     @Deprecated
     public void setMoHttpUrl(String moHttpUrl) {
-        if (moHttpUrl != null) {
-            this.moHttpUrl = URI.create(moHttpUrl);
-        }
+        this.moHttpUrl = URI.create(moHttpUrl);
     }
 
     @Deprecated

@@ -39,7 +39,7 @@ public enum ContextStatus {
 
     @JsonCreator
     public static ContextStatus fromString(String value) {
-        if (value == null || value.trim().isEmpty()) return null;
+        if (value == null) return null;
         return ContextStatus.valueOf(value.toUpperCase());
     }
 }

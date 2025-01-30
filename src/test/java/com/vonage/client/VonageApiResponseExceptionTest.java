@@ -16,6 +16,7 @@
 package com.vonage.client;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.account.AccountResponseException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.net.URI;
@@ -27,29 +28,41 @@ public class VonageApiResponseExceptionTest {
 	static class ConcreteVonageApiResponseException extends VonageApiResponseException {}
 
 	static class VARXWithoutNoArgs extends VonageApiResponseException {
-		public VARXWithoutNoArgs(boolean dummy) {}
+		public VARXWithoutNoArgs(String message) {
+			super(message);
+		}
+
+		public VARXWithoutNoArgs(String message, Throwable cause) {
+			super(message, cause);
+		}
+
+		public VARXWithoutNoArgs(Throwable cause) {
+			super(cause);
+		}
 	}
 
 	static class VARXWithField extends VonageApiResponseException {
 		@JsonProperty boolean dummy;
 	}
 
-	@Test
-	public void testConstructFromValidJson() {
-		final int status = 402;
-		final String
+	final int status = 402;
+	final String
 			type = "https://developer.nexmo.com/api-errors/#low-balance",
 			title = "Low balance",
 			detail = "This request could not be performed due to your account balance being low.",
 			instance = "bf0ca0bf927b3b52e3cb03217e1a1ddf";
+	final ConcreteVonageApiResponseException expected = new ConcreteVonageApiResponseException();
 
-		ConcreteVonageApiResponseException expected = new ConcreteVonageApiResponseException();
+	VonageApiResponseExceptionTest() {
 		expected.statusCode = status;
 		expected.type = URI.create(type);
 		expected.title = title;
 		expected.detail = detail;
 		expected.instance = instance;
+	}
 
+	@Test
+	public void testConstructFromValidJson() {
 		ConcreteVonageApiResponseException actual = VonageApiResponseException.fromJson(
 				ConcreteVonageApiResponseException.class, "{\n" +
 			"  \"type\": \""+type+"\",\n" +
@@ -135,5 +148,101 @@ public class VonageApiResponseExceptionTest {
 		assertThrows(VonageUnexpectedException.class, () ->
 				VonageApiResponseException.fromJson(MissingNoArgs.class, "")
 		);
+	}
+
+	@Test
+	public void testMessageAndCause() {
+		Throwable cause = new Throwable("Cause");
+		VARXWithoutNoArgs varx = new VARXWithoutNoArgs("Message", cause);
+		assertEquals("Message", varx.getMessage());
+		assertEquals(cause, varx.getCause());
+	}
+
+	@Test
+	public void testCauseOnly() {
+		Throwable cause = new RuntimeException();
+		VARXWithoutNoArgs varx = new VARXWithoutNoArgs(cause);
+		assertEquals(cause, varx.getCause());
+	}
+
+	@Test
+	public void testMessageOnly() {
+		var message = "Oops! Something went wrong :(";
+		VARXWithoutNoArgs varx = new VARXWithoutNoArgs(message);
+		assertEquals(message, varx.getMessage());
+	}
+
+	@Test
+	public void testSetErrorCode() {
+		var ex = VonageApiResponseException.fromJson(
+				ConcreteVonageApiResponseException.class,
+				"{\"error-code\":null}"
+		);
+		assertNotNull(ex);
+		ex = VonageApiResponseException.fromJson(
+				ConcreteVonageApiResponseException.class,
+				"{\"error-code\":\"\"}"
+		);
+		assertNotNull(ex);
+	}
+
+	@Test
+	public void testEmptyJson() {
+		var ex = VonageApiResponseException.fromJson(
+				ConcreteVonageApiResponseException.class,
+				"{}"
+		);
+		assertNotNull(ex);
+	}
+
+	@Test
+	public void testNullJson() {
+		assertThrows(VonageUnexpectedException.class, () ->
+				VonageApiResponseException.fromJson(ConcreteVonageApiResponseException.class, null)
+		);
+	}
+
+	@Test
+	public void testEquals() {
+		var statusOnlyJson = "{\"error-code\":"+status+"}";
+		var ex1 = VonageApiResponseException.fromJson(
+				ConcreteVonageApiResponseException.class,
+				statusOnlyJson
+		);
+		var ex2 = VonageApiResponseException.fromJson(
+				ConcreteVonageApiResponseException.class,
+				statusOnlyJson
+		);
+		assertEquals(ex1, ex2);
+		assertEquals(ex1.hashCode(), ex2.hashCode());
+		ex2 = ex1;
+		assertEquals(ex1, ex2);
+		ex2 = null;
+		boolean equals = ex1.equals(ex2);
+		assertFalse(equals);
+		equals = ex1.equals(new Object());
+		assertFalse(equals);
+
+		ex2 = VonageApiResponseException.fromJson(
+				ConcreteVonageApiResponseException.class,
+				expected.toJson()
+		);
+		assertNotEquals(expected, ex2);
+		ex2.statusCode = status;
+		assertEquals(expected, ex2);
+		assertNotEquals(ex2, ex1);
+		ex2.type = null;
+		assertNotEquals(expected, ex2);
+		ex2.type = expected.type;
+		ex2.title = null;
+		assertNotEquals(expected, ex2);
+		ex2.title = expected.title;
+		ex2.detail = null;
+		assertNotEquals(expected, ex2);
+		ex2.detail = expected.detail;
+		ex2.instance = null;
+		assertNotEquals(expected, ex2);
+		ex2.instance = expected.instance;
+		assertEquals(expected, ex2);
 	}
 }

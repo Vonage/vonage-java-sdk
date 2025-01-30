@@ -18,6 +18,7 @@ package com.vonage.client.users;
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.common.HalLinks;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.users.channels.*;
@@ -118,7 +119,7 @@ public class UsersClientTest extends AbstractClientTest<UsersClient> {
     }
 
     static void assertEqualsSampleUser(User response) {
-        TestUtils.testJsonableBaseObject(response);
+        testJsonableBaseObject(response);
         assertEquals(SAMPLE_USER_ID, response.getId());
         assertEquals("my_user_name", response.getName());
         assertEquals("My User Name", response.getDisplayName());
@@ -356,7 +357,7 @@ public class UsersClientTest extends AbstractClientTest<UsersClient> {
                 "    }\n" +
                 "}");
         ListUsersResponse parsed = client.listUsers(ListUsersRequest.builder().build());
-        TestUtils.testJsonableBaseObject(parsed);
+        testJsonableBaseObject(parsed);
         assertNull(parsed.getPageSize());
 
         HalLinks links = parsed.getLinks();
@@ -387,15 +388,24 @@ public class UsersClientTest extends AbstractClientTest<UsersClient> {
     public void testListUsersWithNoResults() throws Exception {
         String json = "{\"page_size\":3,\"_embedded\":{\"users\":[]}}";
         ListUsersResponse hal = stubResponseAndGet(json, () ->
-                client.listUsers(ListUsersRequest.builder().build())
+                client.listUsers(ListUsersRequest.builder().order(null).build())
         );
-        TestUtils.testJsonableBaseObject(hal);
+        testJsonableBaseObject(hal);
         assertNotNull(hal.getUsers());
         assertEquals(0, hal.getUsers().size());
         assertEquals(3, hal.getPageSize().intValue());
         assertEquals(0, stubResponseAndGet(json, client::listUsers).size());
         assertNotNull(stubResponseAndGet(json, () -> client.listUsers(null)));
         assert429ResponseException(client::listUsers);
+    }
+
+    @Test
+    public void testListUsersEmptyJson() throws Exception {
+        ListUsersResponse hal = stubResponseAndGet("{}", () ->
+                client.listUsers(ListUsersRequest.builder().order(ListUsersRequest.SortOrder.DESC).build())
+        );
+        assertNotNull(hal);
+        assertNull(hal.getUsers());
     }
 
     @Test

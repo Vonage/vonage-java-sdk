@@ -21,6 +21,7 @@
 package com.vonage.client.video;
 
 import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -43,7 +44,7 @@ public class CreateSessionResponseTest {
 				"\"media_server_url\":\""+mediaServerUrl+"\"\n" +
 		"}]");
 
-		TestUtils.testJsonableBaseObject(response);
+		testJsonableBaseObject(response);
 		assertEquals(sessionId, response.getSessionId());
 		assertEquals(applicationId, response.getApplicationId());
 		assertEquals(createDt, response.getCreateDt());
@@ -58,7 +59,7 @@ public class CreateSessionResponseTest {
 	@Test
 	public void testFromJsonEmptyObject() {
 		CreateSessionResponse response = CreateSessionResponse.fromJson("[{}]");
-		TestUtils.testJsonableBaseObject(response);
+		testJsonableBaseObject(response);
 		assertNull(response.getApplicationId());
 		assertNull(response.getSessionId());
 		assertNull(response.getMediaServerUrl());
@@ -67,7 +68,13 @@ public class CreateSessionResponseTest {
 
 	@Test
 	public void testFromJsonEmptyArray() {
-		TestUtils.testJsonableBaseObject(CreateSessionResponse.fromJson("[]"));
+		testJsonableBaseObject(CreateSessionResponse.fromJson("[]"));
+	}
+
+	@Test
+	public void testFromJsonEmptyJson() {
+		assertThrows(VonageResponseParseException.class, () -> CreateSessionResponse.fromJson("{}"));
+		assertThrows(VonageResponseParseException.class, () -> CreateSessionResponse.fromJson(""));
 	}
 
 	@Test
@@ -75,7 +82,7 @@ public class CreateSessionResponseTest {
 		String sessionId = "TheSessionIdYouWant";
 		String json = "[{\"session_id\":\""+sessionId+"\"},{},{\"session_id\":\"fake\"}]";
 		CreateSessionResponse response = CreateSessionResponse.fromJson(json);
-		TestUtils.testJsonableBaseObject(response);
+		testJsonableBaseObject(response);
 		assertEquals(sessionId, response.getSessionId());
 		assertNull(response.getApplicationId());
 		assertNull(response.getMediaServerUrl());

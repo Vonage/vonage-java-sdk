@@ -100,6 +100,13 @@ public class HttpConfigTest {
                 config.getRegionalBaseUri(ApiRegion.API_EU)
         );
         assertEquals("https://api-ap.example.com", config.getRegionalBaseUri(ApiRegion.API_AP).toString());
+
+        assertThrows(NullPointerException.class, () ->
+                HttpConfig.builder().baseUri((String) null).build()
+        );
+        assertThrows(IllegalArgumentException.class, () ->
+                HttpConfig.builder().baseUri("*&^%$£;@not-a_'u(R)L").build()
+        );
     }
 
     @Test
@@ -109,6 +116,7 @@ public class HttpConfigTest {
             assertEquals(toString, region.name().toLowerCase().replace('_', '-'));
             assertEquals(region, ApiRegion.fromString(toString));
         }
+        assertNull(ApiRegion.fromString(null));
     }
 
     @Test

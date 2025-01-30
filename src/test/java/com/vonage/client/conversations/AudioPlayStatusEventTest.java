@@ -17,6 +17,7 @@ package com.vonage.client.conversations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import java.util.Map;
 
 public class AudioPlayStatusEventTest extends AbstractEventTest {
@@ -34,17 +35,21 @@ public class AudioPlayStatusEventTest extends AbstractEventTest {
     <E extends AudioPlayStatusEvent> void testStatusEvent(
             EventType eventType, String eventTypeStr, Class<E> eventClass) {
 
-        E event = parseEvent(eventType, eventClass, "{\n" +
-            "  \"id\": " + randomEventId + ",\n" +
-            "  \"type\": \"audio:play:" + eventTypeStr + "\",\n" +
-            "  \"body\": {\n" +
-            "    \"play_id\": \"" + randomIdStr + "\"\n" +
-            "  },\n" +
-            "  \"_links\": {}\n" +
-            "}"
-        );
+        String bodyJson = "  \"body\": {\n" +
+                "    \"play_id\": \"" + randomIdStr + "\"\n" +
+                "  },\n",
+                fullJson = "{\n" +
+                        "  \"id\": " + randomEventId + ",\n" +
+                        "  \"type\": \"audio:play:" + eventTypeStr + "\",\n" + bodyJson +
+                        "  \"_links\": {}\n" +
+                        "}";
+
+        E event = parseEvent(eventType, eventClass, fullJson);
         assertEquals(randomId, event.getPlayId());
         assertEquals(randomEventId, event.getId());
+
+        event = parseEvent(eventType, eventClass, fullJson.replace(bodyJson, ""));
+        assertNull(event.getPlayId());
     }
 
     @Test

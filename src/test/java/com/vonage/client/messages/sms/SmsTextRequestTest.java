@@ -85,6 +85,46 @@ public class SmsTextRequestTest {
 	}
 
 	@Test
+	public void testContentIdOnly() {
+		var sms = SmsTextRequest.builder().from(from).to(to).text(msg).contentId(contentId).build();
+
+		String json = sms.toJson();
+		assertTrue(json.contains("\"text\":\""+msg+"\""));
+		assertTrue(json.contains("\"from\":\""+from+"\""));
+		assertTrue(json.contains("\"to\":\""+to+"\""));
+		assertTrue(json.contains("\"message_type\":\"text\""));
+		assertTrue(json.contains("\"channel\":\"sms\""));
+		assertTrue(json.contains("\"sms\":{\"content_id\":\""+contentId+"\"}"));
+
+		assertNull(sms.getTtl());
+		OutboundSettings settings = sms.getMessageSettings();
+		assertNotNull(settings);
+		assertNull(settings.getEncodingType());
+		assertNull(settings.getEntityId());
+		assertEquals(contentId, settings.getContentId());
+	}
+
+	@Test
+	public void testEntityIdOnly() {
+		var sms = SmsTextRequest.builder().from(from).to(to).text(msg).entityId(entityId).build();
+
+		String json = sms.toJson();
+		assertTrue(json.contains("\"text\":\""+msg+"\""));
+		assertTrue(json.contains("\"from\":\""+from+"\""));
+		assertTrue(json.contains("\"to\":\""+to+"\""));
+		assertTrue(json.contains("\"message_type\":\"text\""));
+		assertTrue(json.contains("\"channel\":\"sms\""));
+		assertTrue(json.contains("\"sms\":{\"entity_id\":\""+entityId+"\"}"));
+
+		assertNull(sms.getTtl());
+		OutboundSettings settings = sms.getMessageSettings();
+		assertNotNull(settings);
+		assertNull(settings.getEncodingType());
+		assertEquals(entityId, settings.getEntityId());
+		assertNull(settings.getContentId());
+	}
+
+	@Test
 	public void testInvalidContentId() {
 		assertThrows(IllegalArgumentException.class, () ->
 				OutboundSettings.construct(EncodingType.TEXT, " ", entityId)
@@ -136,5 +176,13 @@ public class SmsTextRequestTest {
 		assertThrows(IllegalArgumentException.class, () -> SmsTextRequest.builder()
 				.from(sms.getFrom()).text(text.toString()).to(sms.getTo()).build()
 		);
+	}
+
+	@Test
+	public void testEncodingTypeEnum() {
+		assertEquals(EncodingType.TEXT, EncodingType.fromString("text"));
+		assertEquals(EncodingType.UNICODE, EncodingType.fromString("unicode"));
+		assertEquals(EncodingType.AUTO, EncodingType.fromString("auto"));
+		assertNull(EncodingType.fromString(null));
 	}
 }

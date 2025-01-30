@@ -16,4 +16,7 @@
 package com.vonage.client.video;
 
 final class ListArchivesResponse extends ListResourceResponse<Archive> {
+    ListArchivesResponse() {
+        super();
+    }
 }

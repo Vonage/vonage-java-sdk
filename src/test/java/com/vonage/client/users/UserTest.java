@@ -17,6 +17,7 @@ package com.vonage.client.users;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.users.channels.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -67,7 +68,7 @@ public class UserTest {
 		User user = User.builder().build();
 		String json = user.toJson();
 		assertEquals("{}", json);
-		TestUtils.testJsonableBaseObject(user);
+		testJsonableBaseObject(user);
 		assertNull(user.getChannels());
 		assertNull(user.getImageUrl());
 		assertNull(user.getCustomData());
@@ -96,7 +97,8 @@ public class UserTest {
 				new Mms("+49 171 1234567"),
 				new Pstn("49 1522 000000"),
 				new Whatsapp("+447700900001"),
-				new Viber("447700900002"),
+				new WhatsappVoice("447000900003"),
+				new Viber("4 4 7 7 0 0 9 0 0 0 0 2"),
 				new Messenger("0123456789abc"),
 				new Vbc(7890),
 				new Sip("sip:1234568790@sip.example.org", "admin", "53cRe7"),
@@ -107,7 +109,7 @@ public class UserTest {
 				)
 		).build();
 
-		TestUtils.testJsonableBaseObject(user);
+		testJsonableBaseObject(user);
 		Channels channels = user.getChannels();
 		assertNotNull(channels);
 
@@ -199,6 +201,8 @@ public class UserTest {
 				"{\"number\":\""+viber0.getNumber()+"\"}" +
 				"],\"messenger\":[{\"id\":\""+messenger0.getId()+"\"}" +
 				"]}}";
+
+		assertEquals(expectedJson, user.toJson());
 	}
 
 	@Test
@@ -218,7 +222,7 @@ public class UserTest {
                   }
                 }""";
 		User parsed = User.fromJson(json);
-		TestUtils.testJsonableBaseObject(parsed);
+		testJsonableBaseObject(parsed);
 		Channels channels = parsed.getChannels();
 		assertNotNull(channels);
 		assertTrue(channels.getPstn().isEmpty());
@@ -230,6 +234,50 @@ public class UserTest {
 		assertTrue(channels.getWhatsapp().isEmpty());
 		assertTrue(channels.getViber().isEmpty());
 		assertTrue(channels.getMessenger().isEmpty());
+	}
+
+	@Test
+	public void testAllChannelsOneOfEachEmpty() {
+		String json = """
+			{
+			  "channels": {
+				"pstn": [{}],
+				"sip": [{}],
+				"vbc": [{}],
+				"websocket": [{}],
+				"sms": [{}],
+				"mms": [{}],
+				"whatsapp": [{}],
+				"viber": [{}],
+				"messenger": [{}]
+			  }
+			}""";
+		User parsed = User.fromJson(json);
+		testJsonableBaseObject(parsed);
+		Channels channels = parsed.getChannels();
+		assertNotNull(channels);
+		assertEquals(1, channels.getPstn().size());
+		assertEquals(1, channels.getSip().size());
+		assertEquals(1, channels.getVbc().size());
+		assertEquals(1, channels.getWebsocket().size());
+		assertEquals(1, channels.getSms().size());
+		assertEquals(1, channels.getMms().size());
+		assertEquals(1, channels.getWhatsapp().size());
+		assertEquals(1, channels.getViber().size());
+		assertEquals(1, channels.getMessenger().size());
+	}
+
+	@Test
+	public void testNullChannels() {
+		User user = User.builder().channels((Collection<Channel>) null).build();
+		assertEquals("{\"channels\":{}}", user.toJson());
+		testJsonableBaseObject(user);
+		assertNotNull(user.getChannels());
+	}
+
+	@Test
+	public void testWebsocketContentTypeNull() {
+		assertNull(Websocket.ContentType.fromString(null));
 	}
 
 	@Test

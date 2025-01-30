@@ -36,22 +36,75 @@ public class AuthCollectionTest {
 
 
     @Test
-    public void testGetAcceptableAuthMethod() throws Exception {
+    public void testGetAcceptableAuthMethod() {
         AuthCollection auths = new AuthCollection();
         auths.add(jwtAuth);
         assertEquals(jwtAuth, auths.getAcceptableAuthMethod(JWT_AUTH_CLASS_SET));
     }
 
     @Test
-    public void testMultipleAuthMethods() throws Exception {
+    public void testMultipleAuthMethods() {
         ApiKeyHeaderAuthMethod tokenAuth = new ApiKeyHeaderAuthMethod("api_key", "api_secret");
         AuthCollection auths = new AuthCollection(jwtAuth, tokenAuth);
         assertEquals(jwtAuth, auths.getAcceptableAuthMethod(JWT_AUTH_CLASS_SET));
         assertEquals(tokenAuth, auths.getAcceptableAuthMethod(TOKEN_AUTH_CLASS_SET));
+        assertNotEquals(jwtAuth, tokenAuth);
+        assertNotEquals(tokenAuth.hashCode(), jwtAuth.hashCode());
+        var altAuth = new ApiKeyQueryParamsAuthMethod(tokenAuth.getApiKey(), "api_secret");
+        assertNotEquals(tokenAuth, altAuth);
     }
 
     @Test
-    public void testNoAcceptableAuthMethod() throws Exception {
+    public void testUnknownAuthMethod() {
+        class ConcreteBasicAuthMethod extends BasicAuthMethod {
+            @Override
+            protected String getBasicToken() {
+                return "T1=";
+            }
+
+            @Override
+            public int getSortKey() {
+                return Short.MAX_VALUE;
+            }
+        }
+        var am = new ConcreteBasicAuthMethod();
+        var ac = new AuthCollection(am);
+        assertEquals(am, ac.getAcceptableAuthMethod(Set.of(ConcreteBasicAuthMethod.class)));
+        assertEquals(am, ac.getAcceptableAuthMethod(Set.of(BasicAuthMethod.class)));
+        ac.add(jwtAuth);
+        assertEquals(jwtAuth, ac.getAcceptableAuthMethod(JWT_AUTH_CLASS_SET));
+        assertNotEquals(jwtAuth, am);
+        boolean equalsNull = am.equals(null);
+        assertFalse(equalsNull);
+        boolean equalsObject = am.equals(new Object());
+        assertFalse(equalsObject);
+
+        class ConcreteBasicAuthMethod2 extends ConcreteBasicAuthMethod {
+            @Override
+            public int getSortKey() {
+                return Byte.MAX_VALUE;
+            }
+        }
+
+        var am2 = new ConcreteBasicAuthMethod2();
+        assertNotEquals(am, am2);
+
+        class ConcreteAuthMethod extends AbstractAuthMethod {
+            @Override
+            public int getSortKey() {
+                return 0;
+            }
+        }
+
+        var am3 = new ConcreteAuthMethod();
+        assertNotEquals(am, am3);
+        assertNotEquals(am3, am2);
+        equalsObject = am3.equals(new Object());
+        assertFalse(equalsObject);
+    }
+
+    @Test
+    public void testNoAcceptableAuthMethod() {
         AuthCollection auths = new AuthCollection();
 
         try {
@@ -63,7 +116,7 @@ public class AuthCollectionTest {
     }
 
     @Test
-    public void testAuthMethodPrecedence() throws Exception {
+    public void testAuthMethodPrecedence() {
         ApiKeyHeaderAuthMethod tAuth = new ApiKeyHeaderAuthMethod(API_KEY, API_SECRET);
         AuthCollection auths = new AuthCollection();
         auths.add(tAuth);
@@ -74,7 +127,7 @@ public class AuthCollectionTest {
     }
 
     @Test
-    public void testIncompatibleAuths() throws Exception {
+    public void testIncompatibleAuths() {
         ApiKeyHeaderAuthMethod tAuth = new ApiKeyHeaderAuthMethod(API_KEY, API_SECRET);
         AuthCollection auths = new AuthCollection();
         auths.add(tAuth);
@@ -88,7 +141,7 @@ public class AuthCollectionTest {
     }
 
     @Test
-    public void testLongConstructorJwtAndApiSecret() throws Exception {
+    public void testLongConstructorJwtAndApiSecret() {
         var ac = new AuthCollection(APPLICATION_ID, privateKeyContents, API_KEY, API_SECRET, null, null);
 
         assertTrue(ac.hasAuthMethod(JWTAuthMethod.class));
@@ -110,7 +163,7 @@ public class AuthCollectionTest {
     }
 
     @Test
-    public void testAddReplacesExistingAuthMethod() throws Exception {
+    public void testAddReplacesExistingAuthMethod() {
         class CustomJwt extends JWTAuthMethod {
             public CustomJwt() {
                 super(APPLICATION_ID_STR, privateKeyContents);

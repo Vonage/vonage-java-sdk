@@ -186,6 +186,14 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
         assertEqualsSampleListNumbers(() -> client.listNumbers(filter));
         assert401ResponseException(() -> client.listNumbers(filter));
+
+        stubResponse("{}");
+        var response = client.listNumbers();
+        assertNotNull(response);
+        assertEquals(0, response.getCount());
+        var numbers = response.getNumbers();
+        assertNotNull(numbers);
+        assertEquals(0, numbers.length);
     }
 
     @Test
@@ -194,6 +202,14 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
         assertEqualsSampleSearchNumbers(() -> client.searchNumbers("in"));
         assertEqualsSampleSearchNumbers(() -> client.searchNumbers(filter));
         assert401ResponseException(() -> client.searchNumbers(filter));
+
+        stubResponse("{}");
+        var response = client.searchNumbers(filter);
+        assertNotNull(response);
+        assertEquals(0, response.getCount());
+        var numbers = response.getNumbers();
+        assertNotNull(numbers);
+        assertEquals(0, numbers.length);
     }
 
     @Test
@@ -367,7 +383,16 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
             @Override
             public void runTests() throws Exception {
                 super.runTests();
+                testEmptyFeatures();
                 testDeprecated();
+            }
+
+            private void testEmptyFeatures() throws Exception {
+                var filter = SearchNumbersFilter.builder().features().build();
+                assertEquals(0, filter.getFeatures().length);
+                assertRequestUriAndBody(filter, Map.of());
+                filter = SearchNumbersFilter.builder().features((Feature[]) null).build();
+                assertNull(filter.getFeatures());
             }
 
             private void testDeprecated() throws Exception {

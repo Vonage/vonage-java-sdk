@@ -38,9 +38,11 @@ public class UpdateSubaccountRequestTest {
 
 	@Test
 	public void testSerializeRequiredParameters() {
-		UpdateSubaccountRequest.Builder builder  = UpdateSubaccountRequest.builder("abc6123f");
+		var builder = UpdateSubaccountRequest.builder("abc6123f");
 		assertThrows(IllegalStateException.class, builder::build);
 		assertEquals("{\"suspended\":false}", builder.suspended(false).build().toJson());
+		builder.usePrimaryAccountBalance(true);
+		assertEquals("{\"use_primary_account_balance\":true,\"suspended\":false}", builder.build().toJson());
 	}
 
 	@Test

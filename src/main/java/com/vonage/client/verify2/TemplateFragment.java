@@ -142,7 +142,7 @@ public final class TemplateFragment extends JsonableBaseObject {
 
 		@Override
 		public String convert(Locale value) {
-			return value == null ? null : value.toString().toLowerCase().replace('_', '-');
+			return value.toString().toLowerCase().replace('_', '-');
 		}
 	}
 }
