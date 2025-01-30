@@ -51,3 +51,5 @@ jobs:
         run: mvn -e --batch-mode verify -T 1C
       - name: Run Codecov
         uses: codecov/codecov-action@288befbd1044bd1756afb0bdae077549e0ddb31f
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
