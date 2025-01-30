@@ -15,8 +15,10 @@
  */
 package com.vonage.client.conversations;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.vonage.client.Jsonable;
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 import java.util.Map;
 
 public class AudioRtcEventTest extends AbstractEventTest {
@@ -37,5 +39,20 @@ public class AudioRtcEventTest extends AbstractEventTest {
         testRtcEvent(AudioMuteOnEvent.builder(), EventType.AUDIO_MUTE_ON);
         testRtcEvent(AudioEarmuffOffEvent.builder(), EventType.AUDIO_EARMUFF_OFF);
         testRtcEvent(AudioEarmuffOnEvent.builder(), EventType.AUDIO_EARMUFF_ON);
+    }
+
+    @Test
+    public void testFromEmptyJson() {
+        final String json = "{}";
+        for (var clazz : List.of(
+                AudioMuteOffEvent.class,
+                AudioMuteOnEvent.class,
+                AudioEarmuffOffEvent.class,
+                AudioEarmuffOnEvent.class
+        )) {
+            var event = Jsonable.fromJson(json, clazz);
+            assertNotNull(event);
+            assertNull(event.getRtcId());
+        }
     }
 }

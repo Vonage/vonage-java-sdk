@@ -60,7 +60,7 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 	void assertResponse(MessageRequest request) throws Exception {
 		String responseJson = "{\"message_uuid\":\""+MESSAGE_ID+"\"}";
 		stubResponse(202, responseJson);
-		MessageResponse responseObject = client.sendMessage(request);
+		MessageResponse responseObject = client.useRegularEndpoint().sendMessage(request);
 		assertEquals(UUID.fromString(MESSAGE_ID), responseObject.getMessageUuid());
 		var messageType = request.getMessageType();
 		var channel = request.getChannel();
@@ -92,7 +92,7 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 
 	void assertException(int statusCode, String json) throws Exception {
 		assertApiResponseException(statusCode, json, MessageResponseException.class, () ->
-				client.sendMessage(SmsTextRequest.builder()
+				client.useRegularEndpoint().sendMessage(SmsTextRequest.builder()
 					.from("447700900001").to("447700900000")
 					.text("Hello").build()
 				)

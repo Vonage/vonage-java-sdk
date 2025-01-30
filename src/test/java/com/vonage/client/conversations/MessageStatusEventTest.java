@@ -15,10 +15,12 @@
  */
 package com.vonage.client.conversations;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.vonage.client.Jsonable;
 import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class MessageStatusEventTest extends AbstractEventTest {
 
@@ -52,5 +54,21 @@ public class MessageStatusEventTest extends AbstractEventTest {
         testMessageEvent(MessageRejectedEvent.builder(), EventType.MESSAGE_REJECTED);
         testMessageEvent(MessageDeliveredEvent.builder(), EventType.MESSAGE_DELIVERED);
         testMessageEvent(MessageUndeliverableEvent.builder(), EventType.MESSAGE_UNDELIVERABLE);
+    }
+
+    @Test
+    public void testFromEmptyJson() {
+        final String json = "{}";
+        for (var clazz : List.of(
+                MessageSeenEvent.class,
+                MessageSubmittedEvent.class,
+                MessageRejectedEvent.class,
+                MessageDeliveredEvent.class,
+                MessageUndeliverableEvent.class
+        )) {
+            var event = Jsonable.fromJson(json, clazz);
+            assertNotNull(event);
+            assertNull(event.getEventId());
+        }
     }
 }

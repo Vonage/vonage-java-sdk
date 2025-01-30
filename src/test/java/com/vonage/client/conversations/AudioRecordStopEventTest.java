@@ -15,8 +15,9 @@
  */
 package com.vonage.client.conversations;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.vonage.client.Jsonable;
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.Map;
 
 public class AudioRecordStopEventTest extends AbstractEventTest {
@@ -28,5 +29,12 @@ public class AudioRecordStopEventTest extends AbstractEventTest {
                 Map.of("record_id", randomId)
         );
         assertEquals(randomId, event.getRecordId());
+    }
+
+    @Test
+    public void testEmptyJson() {
+        var event = Jsonable.fromJson("{}", AudioRecordStopEvent.class);
+        assertNotNull(event);
+        assertNull(event.getRecordId());
     }
 }

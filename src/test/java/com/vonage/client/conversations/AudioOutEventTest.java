@@ -15,6 +15,7 @@
  */
 package com.vonage.client.conversations;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.OrderedMap;
 import static com.vonage.client.OrderedMap.entry;
 import com.vonage.client.voice.TextToSpeechLanguage;
@@ -119,6 +120,7 @@ public class AudioOutEventTest extends AbstractEventTest {
     @Test
     public void testAudioSayEventNoText() {
         assertThrows(IllegalArgumentException.class, () -> applyBaseFields(AudioSayEvent.builder()).build());
+        assertThrows(IllegalArgumentException.class, () -> applyBaseFields(AudioSayEvent.builder().text(" ")).build());
     }
 
     @Test
@@ -140,5 +142,36 @@ public class AudioOutEventTest extends AbstractEventTest {
     @Test
     public void testAudioPlayStreamRequired() {
         assertThrows(NullPointerException.class, () -> applyBaseFields(AudioPlayEvent.builder()).build());
+    }
+
+    @Test
+    public void testAudioSayEmptyJson() {
+        var event = Jsonable.fromJson("{}", AudioSayEvent.class);
+        assertNotNull(event);
+        assertNull(event.getSayId());
+        assertNull(event.getQueue());
+        assertNull(event.getLevel());
+        assertNull(event.getLoop());
+    }
+
+    @Test
+    public void testAudioPlayEmptyJson() {
+        var event = Jsonable.fromJson("{}", AudioPlayEvent.class);
+        assertNotNull(event);
+        assertNull(event.getPlayId());
+        assertNull(event.getStreamUrl());
+        assertNull(event.getQueue());
+        assertNull(event.getLevel());
+        assertNull(event.getLoop());
+    }
+
+    @Test
+    public void testAudioPlayStreamUrlEmpty() {
+        var event = Jsonable.fromJson("{\"body\":{\"stream_url\":[]}}", AudioPlayEvent.class);
+        assertNotNull(event);
+        assertNull(event.getStreamUrl());
+        event = Jsonable.fromJson("{\"body\":{}}", AudioPlayEvent.class);
+        assertNotNull(event);
+        assertNull(event.getStreamUrl());
     }
 }
