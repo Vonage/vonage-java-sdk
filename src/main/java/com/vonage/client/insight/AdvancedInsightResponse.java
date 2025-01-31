@@ -77,7 +77,10 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
 
     /**
      * @return Real-time data about the number if it was requested, {@code null} otherwise.
+     *
+     * @deprecated This feature will be removed in the next major release.
      */
+    @Deprecated
     @JsonProperty("real_time_data")
     public RealTimeData getRealTimeData() {
         return realTimeData;

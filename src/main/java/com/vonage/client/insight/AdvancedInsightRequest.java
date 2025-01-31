@@ -58,6 +58,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         return new Builder();
     }
 
+    @Deprecated
     public Boolean getRealTimeData() {
         return realTimeData;
     }
@@ -180,7 +181,10 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
          *                     This only applies when {@link #async(boolean)} is {@code false}.
          *
          * @return This builder.
+         *
+         * @deprecated This feature will be removed in the next major release.
          */
+        @Deprecated
         public Builder realTimeData(boolean realTimeData) {
             this.realTimeData = realTimeData;
             return this;
