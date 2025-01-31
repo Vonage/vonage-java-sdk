@@ -147,6 +147,28 @@ VonageClient client = VonageClient.builder()
         .build();
 ```
 
+### Logging
+
+The SDK uses [Java's built-in logging library (`java.util.logging`)](https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html) to log requests and responses.
+This is primarily centralised in two places: [AbstractMethod](src/main/java/com/vonage/client/AbstractMethod.java)
+and [DynamicEndpoint](src/main/java/com/vonage/client/DynamicEndpoint.java).
+For most cases, the former should provide sufficient level of detail.
+It can be activated by setting the logger level to `FINE`, like so:
+
+```java
+LogManager.getLogManager().getLogger("com.vonage.client.AbstractMethod").setLevel(Level.FINE);
+```
+
+Since the logger on `DynamicEndpoint` is not static and based on the class name, it will only be activated if the
+global log level is set to `FINE`. You can set the global log level like so:
+
+```java
+LogManager.getLogManager().getLogger("").setLevel(Level.FINE);
+```
+
+This will also activate the logger on `AbstractMethod` if you haven't already specified the desired log level on
+that class, so you don't need to set it separately.
+
 ## Frequently Asked Questions
 
 **Q: What happened to [`com.vonage:client`](https://search.maven.org/artifact/com.vonage/client)?**
