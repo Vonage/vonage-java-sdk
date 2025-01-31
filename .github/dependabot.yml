@@ -8,5 +8,3 @@ updates:
       interval: 'monthly'
     commit-message:
       prefix: 'build'
-    ignore:
-      - dependency-name: 'jakarta.servlet:jakarta-servlet-api'
