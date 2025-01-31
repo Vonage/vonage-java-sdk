@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.16.0] - 2025-01-31
+- Added logging for requests & responses based on `java.util.logging`
+- Improved SMS API documentation
+- Deprecated Number Insight v2 / Fraud Score API
+- Minor internal refactoring based on code coverage improvements
+
 # [8.15.1] - 2024-12-19
 - Removed hardcoded domain validation from `VoiceClient.downloadRecordingRaw`
 

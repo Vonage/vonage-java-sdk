@@ -18,5 +18,7 @@
  * Number Insight v2 API</a>.
  *
  * @since 8.2.0
+ *
+ * @deprecated This API is deprecated and will be removed in the next major release.
  */
 package com.vonage.client.numberinsight2;

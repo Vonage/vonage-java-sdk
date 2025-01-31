@@ -7,7 +7,7 @@
 [![codecov](https://codecov.io/gh/vonage/vonage-java-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/vonage/vonage-java-sdk)
 ![SLOC](https://sloc.xyz/github/vonage/vonage-java-sdk/)
 [![Snyk](https://snyk.io/test/github/vonage/vonage-java-sdk/badge.svg)](https://snyk.io/test/github/vonage/vonage-java-sdk)
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Vonage/vonage-java-sdk/badge)](https://scorecard.dev/viewer/?uri=github.com/Vonage/vonage-kotlin-sdk)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Vonage/vonage-java-sdk/badge)](https://scorecard.dev/viewer/?uri=github.com/Vonage/vonage-java-sdk)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.1%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE.txt)
 <!---[![Pulse](https://img.shields.io/github/commit-activity/m/vonage/vonage-java-sdk)](https://github.com/vonage/vonage-java-sdk/pulse)-->
@@ -146,6 +146,28 @@ VonageClient client = VonageClient.builder()
         .httpConfig(HttpConfig.builder().timeoutMillis(12_000).build())
         .build();
 ```
+
+### Logging
+
+The SDK uses [Java's built-in logging library (`java.util.logging`)](https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html) to log requests and responses.
+This is primarily centralised in two places: [AbstractMethod](src/main/java/com/vonage/client/AbstractMethod.java)
+and [DynamicEndpoint](src/main/java/com/vonage/client/DynamicEndpoint.java).
+For most cases, the former should provide sufficient level of detail.
+It can be activated by setting the logger level to `FINE`, like so:
+
+```java
+LogManager.getLogManager().getLogger("com.vonage.client.AbstractMethod").setLevel(Level.FINE);
+```
+
+Since the logger on `DynamicEndpoint` is not static and based on the class name, it will only be activated if the
+global log level is set to `FINE`. You can set the global log level like so:
+
+```java
+LogManager.getLogManager().getLogger("").setLevel(Level.FINE);
+```
+
+This will also activate the logger on `AbstractMethod` if you haven't already specified the desired log level on
+that class, so you don't need to set it separately.
 
 ## Frequently Asked Questions
 

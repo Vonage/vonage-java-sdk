@@ -23,7 +23,7 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: Setup Java
-        uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12
         with:
           distribution: 'corretto'
           java-version: ${{ matrix.java }}
@@ -42,7 +42,7 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: Setup Java
-        uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12
         with:
           distribution: 'zulu'
           java-version: ${{ matrix.java }}
@@ -50,6 +50,6 @@ jobs:
       - name: Test with Maven
         run: mvn -e --batch-mode verify -T 1C
       - name: Run Codecov
-        uses: codecov/codecov-action@288befbd1044bd1756afb0bdae077549e0ddb31f
+        uses: codecov/codecov-action@13ce06bfc6bbe3ecf90edbbf1bc32fe5978ca1d3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

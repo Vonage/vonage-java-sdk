@@ -25,7 +25,10 @@ import com.vonage.client.common.HttpMethod;
 /**
  * A client for talking to the Vonage NumberInsight2Client API. The standard way to obtain an instance of this class is to use
  * {@link VonageClient#getNumberInsight2Client()}.
+ *
+ * @deprecated This API is deprecated and will be removed in the next major release.
  */
+@Deprecated
 public class NumberInsight2Client {
 	final RestEndpoint<FraudCheckRequest, FraudCheckResponse> fraudCheck;
 
