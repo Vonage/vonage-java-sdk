@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added logging for requests & responses based on `java.util.logging`
 - Improved SMS API documentation
 - Deprecated Number Insight v2 / Fraud Score API
+- Deprecated `real_time_data` in Number Insight API
 - Minor internal refactoring based on code coverage improvements
 
 # [8.15.1] - 2024-12-19
