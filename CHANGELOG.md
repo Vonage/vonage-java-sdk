@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.16.1] -2025-02-04
+- Removed mandatory `from` parameter for event creation in Conversation API
+- Re-added URL domain validation in `VoiceClient.downloadRecordingRaw`
+- Bumped JWT library version to 2.0.1
+- Added `commons-codec` to runtime classpath to fix WS-2019-0379 warning
+
 # [8.16.0] - 2025-01-31
 - Added logging for requests & responses based on `java.util.logging`
 - Improved SMS API documentation
