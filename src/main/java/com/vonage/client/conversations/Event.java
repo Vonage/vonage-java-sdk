@@ -72,7 +72,7 @@ public abstract class Event extends JsonableBaseObject {
 
 	Event(Builder<?, ?> builder) {
 		type = Objects.requireNonNull(builder.type, "Event type is required.");
-		from = ConversationsClient.validateMemberId(builder.from);
+		from = builder.from;
 	}
 
 	/**
@@ -154,12 +154,12 @@ public abstract class Event extends JsonableBaseObject {
 		/**
 		 * Member ID this event was sent from.
 		 *
-		 * @param from The member ID, or {@code null} if unspecified.
+		 * @param from The member ID.
 		 *
 		 * @return This builder.
 		 */
 		public B from(String from) {
-			this.from = from;
+			this.from = ConversationsClient.validateMemberId(from);
 			return (B) this;
 		}
 
