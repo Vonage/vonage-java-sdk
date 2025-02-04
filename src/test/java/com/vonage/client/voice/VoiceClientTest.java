@@ -424,6 +424,17 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
         assertTrue(Files.exists(recordingPath));
         assertArrayEquals(content.getBytes(), Files.readAllBytes(recordingPath));
 
+        stubResponse(200, content);
+        assertArrayEquals(content.getBytes(), client.downloadRecordingRaw(url.replace("vonage", "nexmo")));
+
+        stubResponseAndAssertThrows(content, () ->
+                client.downloadRecordingRaw(null),
+                IllegalArgumentException.class
+        );
+        stubResponseAndAssertThrows(content, () ->
+                client.downloadRecordingRaw("https://api.nexmo.vonage.commerce.io/v1/files/" + recordingId),
+                IllegalArgumentException.class
+        );
         stubResponseAndAssertThrows(content, () ->
                 client.saveRecording(url, null),
                 NullPointerException.class
@@ -433,7 +444,7 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
                 IllegalArgumentException.class
         );
         stubResponseAndAssertThrows(content, () ->
-                        client.saveRecording(" \t", recordingPath),
+                client.saveRecording(" \t", recordingPath),
                 IllegalArgumentException.class
         );
     }
