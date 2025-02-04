@@ -532,7 +532,13 @@ public class VoiceClient {
      * @since 7.11.0
      */
     public byte[] downloadRecordingRaw(String recordingUrl) {
-        return downloadRecording.execute(validateUrl(recordingUrl));
+        String validated = validateUrl(recordingUrl);
+        if (validated.contains(".nexmo.com/") || validated.contains(".vonage.com/")) {
+            return downloadRecording.execute(recordingUrl);
+        }
+        else {
+            throw new IllegalArgumentException("Recording URL must be from Vonage.");
+        }
     }
 
     /**

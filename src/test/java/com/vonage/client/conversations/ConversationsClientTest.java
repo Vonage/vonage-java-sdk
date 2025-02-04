@@ -1697,7 +1697,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 
 	@Test
 	public void testCreateEvent() throws Exception {
-		Event request = CustomEvent.builder().from(MEMBER_FROM).body(CONVERSATION_CUSTOM_DATA).build();
+		Event request = CustomEvent.builder().body(CONVERSATION_CUSTOM_DATA).build();
 		stubResponse(201, SAMPLE_EVENT_RESPONSE);
 		assertEqualsSampleEvent(client.createEvent(CONVERSATION_ID, request));
 
