@@ -104,9 +104,9 @@ public class Member extends BaseMember {
 	}
 
 	/**
-	 * TODO document this
+	 * 'From' field for this member.
 	 * 
-	 * @return The from field, or {@code null} if unspecified.
+	 * @return The 'from' field, or {@code null} if unspecified.
 	 */
 	@JsonProperty("from")
 	public String getFrom() {
@@ -282,9 +282,9 @@ public class Member extends BaseMember {
 		}
 
 		/**
-		 * (OPTIONAL) TODO document this
+		 * (OPTIONAL) 'From' ID to associate with this request
 		 *
-		 * @param from The from field.
+		 * @param from The 'from' field as a string.
 		 *
 		 * @return This builder.
 		 */

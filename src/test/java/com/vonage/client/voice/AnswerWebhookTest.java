@@ -19,7 +19,6 @@ import static com.vonage.client.TestUtils.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.net.URI;
-import java.util.UUID;
 
 public class AnswerWebhookTest {
 
@@ -28,7 +27,7 @@ public class AnswerWebhookTest {
         String regionUrl = "https://api-us-3.vonage.com",
                 endpointType = "phone", to = "442079460000",
                 conversationId = "CON-55d50a94-7c84-484a-b1b7-f27633133cb4",
-                uuid = "f7aebf19-bd37-4d63-8f35-32352f48901b",
+                uuid = "f7aebf19bd374d638f3532352f48901b",
                 from = "447700900000", json = "{\n" +
                     "  \"to\": \""+to+"\",\n" +
                     "  \"from\": \""+from+"\",\n" +
@@ -43,7 +42,7 @@ public class AnswerWebhookTest {
         assertEquals(to, parsed.getTo());
         assertEquals(from, parsed.getFrom());
         assertEquals(conversationId, parsed.getConversationUuid());
-        assertEquals(UUID.fromString(uuid), parsed.getUuid());
+        assertEquals(uuid, parsed.getUuid());
         assertEquals(URI.create(regionUrl), parsed.getRegionUrl());
     }
 
