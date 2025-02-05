@@ -37,7 +37,7 @@ public class AnswerWebhook extends JsonableBaseObject {
     @JsonProperty("from_user") private String fromUser;
     @JsonProperty("to") private String to;
     @JsonProperty("conversation_uuid") private String conversationUuid;
-    @JsonProperty("uuid") private UUID uuid;
+    @JsonProperty("uuid") private String uuid;
     @JsonProperty("region_url") private URI regionUrl;
     @JsonProperty("custom_data") private Map<String, ?> customData;
 
@@ -85,9 +85,9 @@ public class AnswerWebhook extends JsonableBaseObject {
     /**
      * Unique identifier for this call.
      *
-     * @return The call ID as a UUID.
+     * @return The call ID as a string.
      */
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
     }
 

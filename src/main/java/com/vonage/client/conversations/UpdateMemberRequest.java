@@ -57,9 +57,9 @@ public final class UpdateMemberRequest extends ConversationResourceRequestWrappe
 	}
 
 	/**
-	 * TODO document this.
+	 * ID to associate with this request.
 	 *
-	 * @return The from, or {@code null} if unspecified.
+	 * @return The 'from' ID as a string, or {@code null} if unspecified.
 	 */
 	@JsonProperty("from")
 	public String getFrom() {
@@ -162,9 +162,9 @@ public final class UpdateMemberRequest extends ConversationResourceRequestWrappe
 		}
 
 		/**
-		 * TODO document this
+		 * ID to associate with this request.
 		 *
-		 * @param from The from (??)
+		 * @param from The 'from' ID as a string.
 		 *
 		 * @return This builder.
 		 */
