@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.16.2] - 2025-02-05
+- Changed `AnswerWebhook#getUuid()` return type to String
+- Updated Voice `Call` documentation
+
 # [8.16.1] - 2025-02-04
 - Removed mandatory `from` parameter for event creation in Conversation API
 - Re-added URL domain validation in `VoiceClient.downloadRecordingRaw`
