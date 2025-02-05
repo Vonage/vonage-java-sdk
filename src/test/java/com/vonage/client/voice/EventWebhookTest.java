@@ -16,6 +16,7 @@
 package com.vonage.client.voice;
 
 import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.net.URI;
@@ -30,6 +31,7 @@ public class EventWebhookTest {
         String from = "442079460000",
                 to = "447700900000",
                 status = "completed",
+                disconnectedBy = "platform",
                 subState = "beep_start",
                 conversationUuid = "CON-aaaaaaaa-bbbb-cccc-dddd-0123456789ab",
                 direction = "inbound",
@@ -63,6 +65,7 @@ public class EventWebhookTest {
                 "  \"from\": \"" + from + "\",\n" +
                 "  \"to\": \"" + to + "\",\n" +
                 "  \"status\": \"" + status + "\",\n" +
+                "  \"disconnected_by\": \"" + disconnectedBy + "\",\n" +
                 "  \"sub_state\": \"" + subState + "\",\n" +
                 "  \"conversation_uuid\": \"" + conversationUuid + "\",\n" +
                 "  \"direction\": \"" + direction + "\",\n" +
@@ -102,7 +105,7 @@ public class EventWebhookTest {
                 "}\n";
 
         EventWebhook event = EventWebhook.fromJson(json);
-        TestUtils.testJsonableBaseObject(event);
+        testJsonableBaseObject(event);
         assertEquals(callUuid, event.getCallUuid());
         assertEquals(conversationUuid, event.getConversationUuid());
         assertEquals(conversationUuidFrom, event.getConversationUuidFrom());
@@ -110,6 +113,7 @@ public class EventWebhookTest {
         assertEquals(from, event.getFrom());
         assertEquals(to, event.getTo());
         assertEquals(status, event.getStatus().toString());
+        assertEquals(disconnectedBy, event.getDisconnectedBy().toString());
         assertEquals(subState, event.getMachineDetectionSubstate().toString());
         assertEquals(detail, event.getDetail().toString());
         assertEquals(direction, event.getDirection().toString());
@@ -149,7 +153,7 @@ public class EventWebhookTest {
     @Test
     public void testParseEmptyJson() {
         EventWebhook event = EventWebhook.fromJson("{}");
-        TestUtils.testJsonableBaseObject(event);
+        testJsonableBaseObject(event);
         assertNull(event.getDetail());
         assertNull(event.getCallUuid());
         assertNull(event.getReason());
@@ -170,6 +174,7 @@ public class EventWebhookTest {
         assertNull(event.getConversationUuidFrom());
         assertNull(event.getDirection());
         assertNull(event.getMachineDetectionSubstate());
+        assertNull(event.getDisconnectedBy());
         assertNull(event.getStatus());
         assertNull(event.getDtmf());
         assertNull(event.getSpeech());
@@ -181,7 +186,7 @@ public class EventWebhookTest {
                 uuid = UUID.randomUUID().toString().replace("-", "");
         String json = "{\"call_uuid\":\""+callUuid+"\",\"uuid\":\""+uuid+"\"}";
         EventWebhook event = EventWebhook.fromJson(json);
-        TestUtils.testJsonableBaseObject(event);
+        testJsonableBaseObject(event);
         assertEquals(uuid, event.getCallUuid());
         assertEquals(uuid, EventWebhook.fromJson("{\"uuid\": \""+uuid+"\"}").getCallUuid());
     }
@@ -221,5 +226,13 @@ public class EventWebhookTest {
         assertNull(speech.getResults());
         assertNull(speech.getRecordingUrl());
         assertNull(speech.getError());
+    }
+
+    @Test
+    public void testDisconnectedByEnum() {
+        assertEquals(DisconnectedBy.PLATFORM, DisconnectedBy.fromString("platform"));
+        assertEquals(DisconnectedBy.USER, DisconnectedBy.fromString("user"));
+        assertNull(DisconnectedBy.fromString(null));
+        assertEquals(DisconnectedBy.UNKNOWN, DisconnectedBy.fromString("Somebody Else"));
     }
 }

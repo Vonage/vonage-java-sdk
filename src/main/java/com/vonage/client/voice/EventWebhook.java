@@ -36,6 +36,7 @@ public class EventWebhook extends JsonableBaseObject {
     private CallStatus status;
     private CallDirection direction;
     private CallStatusDetail detail;
+    private DisconnectedBy disconnectedBy;
     private MachineDetectionStatus machineDetectionSubstate;
     private DtmfResult dtmf;
     private SpeechResults speech;
@@ -76,6 +77,17 @@ public class EventWebhook extends JsonableBaseObject {
     @JsonProperty("detail")
     public CallStatusDetail getDetail() {
         return detail;
+    }
+
+    /**
+     * If {@linkplain #getStatus()} is {@linkplain CallStatus#COMPLETED}, this field will indicate who ended the call.
+     *
+     * @return The disconnection initiator as an enum, or {@code null} if not applicable.
+     * @since 8.16.2
+     */
+    @JsonProperty("disconnected_by")
+    public DisconnectedBy getDisconnectedBy() {
+        return disconnectedBy;
     }
 
     /**
