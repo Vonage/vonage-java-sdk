@@ -103,21 +103,41 @@ public class Call extends JsonableBaseObject {
         this(builder().to(to).from(from).ncco(ncco));
     }
 
+    /**
+     * Endpoint of the call recipient.
+     *
+     * @return The callee endpoint wrapped in an array.
+     */
     @JsonProperty("to")
     public Endpoint[] getTo() {
         return to;
     }
 
+    /**
+     * Endpoint from which the call will be made.
+     *
+     * @return The caller number / URI, or {@code null} if unspecified.
+     */
     @JsonProperty("from")
     public Endpoint getFrom() {
         return from;
     }
 
+    /**
+     * URL that Vonage makes a request to when the call is answered to retrieve NCCOs.
+     *
+     * @return The publicly accessible NCCO URL, or {@code null} if unspecified.
+     */
     @JsonProperty("answer_url")
     public String[] getAnswerUrl() {
         return (answerUrl != null) ? new String[]{answerUrl} : null;
     }
 
+    /**
+     * HTTP method used to send event information to {@code answer_url}.
+     *
+     * @return The HTTP answer method type as a string, or {@code null} if not set.
+     */
     @JsonProperty("answer_method")
     public String getAnswerMethod() {
         // Hide the answer method if the answer url isn't defined
@@ -125,6 +145,11 @@ public class Call extends JsonableBaseObject {
         return answerMethod.toString();
     }
 
+    /**
+     * URL to send event information to.
+     *
+     * @return The event URL wrapped in a string, or {@code null} if not set.
+     */
     @JsonProperty("event_url")
     public String[] getEventUrl() {
         if (eventUrl == null) {
@@ -133,11 +158,21 @@ public class Call extends JsonableBaseObject {
         return new String[]{eventUrl};
     }
 
+    /**
+     * HTTP method used to send event information to {@code event_url}.
+     *
+     * @return The HTTP event method type as a string, or {@code null} if unspecified (the default).
+     */
     @JsonProperty("event_method")
     public String getEventMethod() {
         return eventMethod != null ? eventMethod.toString() : null;
     }
 
+    /**
+     * Machine detection behaviour.
+     *
+     * @return The machine detection mode as an enum, or {@code null} if not set.
+     */
     @JsonProperty("machine_detection")
     public MachineDetection getMachineDetection() {
         return machineDetection;
@@ -155,22 +190,38 @@ public class Call extends JsonableBaseObject {
         return advancedMachineDetection;
     }
 
+    /**
+     * Call timeout i.e. when Vonage will hang up after the call is answered.
+     *
+     * @return The call length in seconds, or {@code null} if unspecified (the default).
+     */
     @JsonProperty("length_timer")
     public Integer getLengthTimer() {
         return lengthTimer;
     }
 
+    /**
+     * The time to wait whilst ringing in seconds.
+     *
+     * @return The ringing timer in seconds, or {@code null} if unspecified (the default).
+     */
     @JsonProperty("ringing_timer")
     public Integer getRingingTimer() {
         return ringingTimer;
     }
 
+    /**
+     * Whether the call will be made from a random number assigned to the application.
+     *
+     * @return {@code true} if a random number will be used to for the caller ID, or {@code null} if unspecified.
+     */
     @JsonProperty("random_from_number")
     public Boolean getFromRandomNumber() {
         return fromRandomNumber;
     }
 
     /**
+     * Gets the NCCOs to use for this call.
      *
      * @return The NCCO actions.
      */
@@ -231,14 +282,14 @@ public class Call extends JsonableBaseObject {
         }
 
         /**
-         * Connect to a Phone (PSTN) number.
+         * Sets the outbound caller.
          *
-         * @param number The number to place the call from in E.164 format.
+         * @param caller The caller's phone number (in E.164 format) or SIP URI.
          *
          * @return This builder.
          */
-        public Builder from(String number) {
-            return from(new PhoneEndpoint(number));
+        public Builder from(String caller) {
+            return from(new PhoneEndpoint(caller));
         }
 
         /**
