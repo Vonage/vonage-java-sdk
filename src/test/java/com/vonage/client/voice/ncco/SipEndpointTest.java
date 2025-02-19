@@ -39,4 +39,57 @@ public class SipEndpointTest {
                 "\"type\":\"sip\"}],\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
     }
+
+    @Test
+    public void testUriOnly() {
+        String uri = "sip:vonage.com";
+        SipEndpoint endpoint = SipEndpoint.builder().uri(uri).build();
+
+        ConnectAction connect = ConnectAction.builder(endpoint).build();
+
+        String expectedJson = "[{\"endpoint\":[{\"uri\":\"" + uri + "\",\"type\":\"sip\"}],\"action\":\"connect\"}]";
+        assertEquals(expectedJson, new Ncco(connect).toJson());
+    }
+
+    @Test
+    public void testDomainOnly() {
+        String domain = "example";
+        SipEndpoint endpoint = SipEndpoint.builder().domain(domain).build();
+
+        ConnectAction connect = ConnectAction.builder(endpoint).build();
+
+        String expectedJson = "[{\"endpoint\":[{\"domain\":\""+domain+"\",\"type\":\"sip\"}],\"action\":\"connect\"}]";
+        assertEquals(expectedJson, new Ncco(connect).toJson());
+    }
+
+    @Test
+    public void testDomainAndUserOnly() {
+        String domain = "Nexmo";
+        String user = "My_user";
+        SipEndpoint endpoint = SipEndpoint.builder().domain(domain).user(user).build();
+
+        ConnectAction connect = ConnectAction.builder(endpoint).build();
+
+        String expectedJson = "[{\"endpoint\":[{\"domain\":\""+domain+"\",\"user\":\""+user+"\",\"type\":\"sip\"}],\"action\":\"connect\"}]";
+        assertEquals(expectedJson, new Ncco(connect).toJson());
+    }
+
+    @Test
+    public void testDomainAndUri() {
+        assertThrows(IllegalStateException.class, () -> SipEndpoint.builder()
+                .domain("example").uri("sip:test@example.com").build()
+        );
+    }
+
+    @Test
+    public void testUserOnly() {
+        assertThrows(IllegalStateException.class, () -> SipEndpoint.builder().user("my_user").build());
+    }
+
+    @Test
+    public void testUserAndUri() {
+        assertThrows(IllegalStateException.class, () -> SipEndpoint.builder()
+                .user("my_user").uri(URI.create("sip:my_user@example.com")).build()
+        );
+    }
 }

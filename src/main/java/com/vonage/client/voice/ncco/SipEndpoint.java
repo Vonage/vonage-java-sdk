@@ -30,11 +30,20 @@ import java.util.Map;
  */
 public class SipEndpoint extends JsonableBaseObject implements Endpoint {
     private final URI uri;
+    private final String domain, user;
     private final Map<String, ?> headers;
     private final Map<SipHeader, String> standardHeaders;
 
     private SipEndpoint(Builder builder) {
         uri = builder.uri;
+        domain = builder.domain;
+        user = builder.user;
+        if (uri == null && domain == null) {
+            throw new IllegalStateException("Domain or SIP URI must be specified.");
+        }
+        if (uri != null && (domain != null || user != null)) {
+            throw new IllegalStateException("Either SIP URI or domain/user must be specified, not both.");
+        }
         headers = builder.headers;
         standardHeaders = builder.standardHeaders;
     }
@@ -52,6 +61,29 @@ public class SipEndpoint extends JsonableBaseObject implements Endpoint {
     @JsonProperty("uri")
     public URI getUri() {
         return uri;
+    }
+
+    /**
+     * Identifier for a trunk created using the dashboard. The URIs provisioned in the trunk will be used along
+     * the user property to create the full SIP URI.
+     *
+     * @return The domain name, or {@code null} if not set.
+     * @since 8.17.0
+     */
+    @JsonProperty("domain")
+    public String getDomain() {
+        return domain;
+    }
+
+    /**
+     * User component of the URI. It will be used along the domain property to create the full SIP URI.
+     *
+     * @return The domain user, or {@code null} if unset or not applicable.
+     * @since 8.17.0
+     */
+    @JsonProperty("user")
+    public String getUser() {
+        return user;
     }
 
     /**
@@ -98,8 +130,20 @@ public class SipEndpoint extends JsonableBaseObject implements Endpoint {
         return new Builder().uri(uri);
     }
 
+    /**
+     * Entry point for constructing an instance of this class.
+     * You must specify either the URI or domain, but not both.
+     *
+     * @return A new Builder.
+     * @since 8.17.0
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private URI uri;
+        private String domain, user;
         private Map<String, ?> headers;
         private Map<SipHeader, String> standardHeaders;
 
@@ -110,6 +154,36 @@ public class SipEndpoint extends JsonableBaseObject implements Endpoint {
                 standardHeaders = new LinkedHashMap<>(2);
             }
             standardHeaders.put(key, value);
+            return this;
+        }
+
+        /**
+         * Domain username. This will be used along the {@linkplain #domain(String)} property to create the full
+         * SIP URI. If you set this property, you must also set the {@linkplain #domain(String)} property and
+         * leave the {@linkplain #uri(URI)} property unset.
+         *
+         * @param user The user component of the SIP URI.
+         *
+         * @return This builder,
+         * @since 8.17.0
+         */
+        public Builder user(String user) {
+            this.user = user;
+            return this;
+        }
+
+        /**
+         * Identifier for a trunk created using the dashboard. The URIs provisioned in the trunk will be used
+         * along the user property to create the full SIP URI. If you set this property, you must leave the
+         * {@linkplain #uri(URI)} property unset.
+         *
+         * @param domain The SIP domain name to use.
+         *
+         * @return This builder,
+         * @since 8.17.0
+         */
+        public Builder domain(String domain) {
+            this.domain = domain;
             return this;
         }
 
