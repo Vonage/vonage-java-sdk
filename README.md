@@ -86,6 +86,7 @@ the dependency co-ordinates and add `mavenLocal()` to the `repositories` block i
 * For help understanding our APIs, check out our awesome [developer portal](https://developer.vonage.com/).
 * Check the [Javadoc](https://www.javadoc.io/doc/com.vonage/server-sdk/latest/index.html) for full reference documentation.
 * There are also **many useful code samples** in our [Vonage/vonage-java-code-snippets](https://github.com/Vonage/vonage-java-code-snippets) repository.
+* For a searchable list of code snippets examples, see [**SNIPPETS.md**](https://github.com/Vonage/vonage-java-code-snippets/blob/main/SNIPPETS.md).
 * For Video API usage instructions, see [the guide on our developer portal](https://developer.vonage.com/en/video/server-sdks/java).
 
 ## Configuration
@@ -186,7 +187,24 @@ If you would like to use the SDK in a multithreaded environment, create a separa
 
 **Q: Does this SDK support asynchronous request / response processing?**
 
-**A:** Currently no, but it is on the roadmap.
+**A:** Currently no, but it is [on the roadmap](https://github.com/Vonage/vonage-java-sdk/issues/269).
+
+**Q: I'm having issues with my project when including the SDK as a dependency. How can I troubleshoot this?**
+
+**A:** Please see [this blog post](https://developer.vonage.com/en/blog/one-simple-trick-for-resolving-java-runtime-dependency-issues).
+In short, you may have conflicting dependency versions in your project which clash with this SDK's transitive dependencies.
+
+**Q: I'm encountering HTTP request issues, such as timeouts. How can I remedy or report this?**
+
+**A:** This SDK uses [Apache HTTP Client 4](https://hc.apache.org/httpcomponents-client-4.5.x/index.html) under the
+hood, so you may be able to use system properties to configure the client, or use this SDK's `httpConfig` method on
+the `Vonage` class  for more fine-grained control. If you believe there is an issue with the underlying client, please
+[raise an issue](https://github.com/Vonage/vonage-java-sdk/issues/new/choose) with a minimal reproducible example,
+including details of your environment (JVM runtime version, SDK version, operating system etc.)
+
+**Q: I'm not sure if my issue is with the SDK. How can I get help?**
+
+**A:** Please see our [support page](https://api.support.vonage.com/), including contact information.
 
 **Q: How do I migrate from TokBox to Vonage?**
 
