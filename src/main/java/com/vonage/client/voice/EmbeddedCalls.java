@@ -18,9 +18,17 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
+/**
+ * Results wrapper for the {@linkplain VoiceClient#listCalls(CallsFilter)} method.
+ */
 public class EmbeddedCalls extends JsonableBaseObject {
     @JsonProperty("calls") private CallInfo[] callInfos;
 
+    /**
+     * Gets the call details.
+     *
+     * @return The CallInfos as an array.
+     */
     public CallInfo[] getCallInfos() {
         return callInfos;
     }

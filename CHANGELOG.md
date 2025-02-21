@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 # [8.17.0] - 2025-02-2?
 - Added user/domain name support to `com.vonage.client.voice.ncco.SipEndpoint`
+- Improved Voice API documentation
+- Deprecated primitive wrapper methods in NCCO action builders
 
 # [8.16.2] - 2025-02-05
 - Added `disconnected_by` enum to `com.vonage.client.voice.EventWebhook`

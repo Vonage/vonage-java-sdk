@@ -60,15 +60,34 @@ public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
         return dtmfAnswer;
     }
 
+    /**
+     * An object containing a required URL key. The URL serves an NCCO to execute in the number being connected to,
+     * before that call is joined to your existing conversation. Optionally, the ringbackTone key can be specified
+     * with a URL value that points to a ringbackTone to be played back on repeat to the caller, so they do not hear
+     * just silence. The ringbackTone will automatically stop playing when the call is fully connected. Please note,
+     * the key ringback is still supported.
+     *
+     * @return The OnAnswer object, or {@code null} if unspecified.
+     */
     @JsonProperty("onAnswer")
     public OnAnswer getOnAnswer() {
         return onAnswer;
     }
 
+    /**
+     * Entry point for constructing an instance of this class.
+     *
+     * @param number The phone number to connect to in E.164 format.
+     *
+     * @return A new Builder.
+     */
     public static Builder builder(String number) {
         return new Builder(number);
     }
 
+    /**
+     * Builder for specifying properties of a phone endpoint.
+     */
     public static class Builder {
         private String number, dtmfAnswer, onAnswerUrl, onAnswerRingback;
 
@@ -76,27 +95,67 @@ public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
             this.number = number;
         }
 
+        /**
+         * Phone number to connect to in E.164 format.
+         *
+         * @param number The phone number as a string.
+         *
+         * @return This builder.
+         */
         public Builder number(String number) {
             this.number = number;
             return this;
         }
 
+        /**
+         * Set the digits that are sent to the user as soon as the Call is answered.
+         * The * and # digits are respected. You create pauses using p. Each pause is 500ms.
+         *
+         * @param dtmfAnswer The DTMF digits as a string.
+         *
+         * @return This builder.
+         */
         public Builder dtmfAnswer(String dtmfAnswer) {
             this.dtmfAnswer = dtmfAnswer;
             return this;
         }
 
+        /**
+         * Set the URL to an NCCO to execute in the number being connected to, before that call is joined to your
+         * existing conversation.
+         *
+         * @param url The URL to an NCCO as a string.
+         *
+         * @return This builder.
+         */
         public Builder onAnswer(String url) {
             this.onAnswerUrl = url;
             return this;
         }
 
+        /**
+         * Set the URL to an NCCO to execute in the number being connected to, before that call is joined to your
+         * existing conversation. Optionally, the ringbackTone key can be specified with a URL value that points to a
+         * ringbackTone to be played back on repeat to the caller, so they do not hear just silence. The ringbackTone
+         * will automatically stop playing when the call is fully connected. Please note, the key ringback is still
+         * supported.
+         *
+         * @param url The URL to an NCCO as a string.
+         * @param ringback The URL to a ringback tone as a string.
+         *
+         * @return This builder.
+         */
         public Builder onAnswer(String url, String ringback) {
             this.onAnswerUrl = url;
             this.onAnswerRingback = ringback;
             return this;
         }
 
+        /**
+         * Builds the PhoneEndpoint with this builder's properties.
+         *
+         * @return A new PhoneEndpoint instance.
+         */
         public PhoneEndpoint build() {
             return new PhoneEndpoint(this);
         }
@@ -109,7 +168,7 @@ public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
      * just silence. The ringbackTone will automatically stop playing when the call is fully connected. Please note,
      * the key ringback is still supported.
      */
-        public static class OnAnswer {
+    public static class OnAnswer {
         private final String url, ringback;
 
         private OnAnswer(String url, String ringback) {

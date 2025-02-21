@@ -24,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @since 8.16.2
  */
 public enum DisconnectedBy {
-
     /**
      * The call was terminated by the Voice API platform,
      * for example the NCCO finished its last action and call was disconnected.

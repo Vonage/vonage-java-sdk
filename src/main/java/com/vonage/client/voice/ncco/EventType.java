@@ -18,9 +18,13 @@ package com.vonage.client.voice.ncco;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * The type of event to use.
+ * The type of event to use for {@link ConnectAction}.
  */
 public enum EventType {
+
+    /**
+     * Enables eventUrl to return an NCCO that overrides the current NCCO when a call moves to specific states.
+     */
     SYNCHRONOUS;
 
     @JsonValue

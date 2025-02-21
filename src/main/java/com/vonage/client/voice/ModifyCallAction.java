@@ -30,6 +30,13 @@ public enum ModifyCallAction {
         return name().toLowerCase();
     }
 
+    /**
+     * Convert a string to a ModifyCallAction enum.
+     *
+     * @param name The call modification action as a string.
+     *
+     * @return The call modification action as an enum, or {@link #UNKNOWN} if an invalid value was passed in.
+     */
     @JsonCreator
     public static ModifyCallAction fromString(String name) {
         try {

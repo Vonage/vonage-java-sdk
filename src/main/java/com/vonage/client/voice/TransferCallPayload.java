@@ -21,7 +21,6 @@ import java.util.Objects;
 
 /**
  * Extension of ModifyCallPayload which adds an NCCO destination to the serialized form.
- *
  */
 class TransferCallPayload extends ModifyCallPayload {
     private final TransferDestination destination;

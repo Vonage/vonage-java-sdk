@@ -20,18 +20,27 @@ import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
 /**
- * Response if DTMF tones were successfully sent to an active {@link Call}.
- * <p>
- * Returned by {@link VoiceClient#sendDtmf(String, String)}
+ * Response if DTMF tones were successfully sent to an active {@link Call}, as
+ * returned by {@link VoiceClient#sendDtmf(String, String)}.
  */
 public class DtmfResponse extends JsonableBaseObject {
     private String uuid, message;
 
+    /**
+     * Unique identifier for the call leg DTMF was sent to.
+     *
+     * @return The call ID as a string.
+     */
     @JsonProperty("uuid")
     public String getUuid() {
         return uuid;
     }
 
+    /**
+     * Description of the action taken.
+     *
+     * @return The action description.
+     */
     @JsonProperty("message")
     public String getMessage() {
         return message;
