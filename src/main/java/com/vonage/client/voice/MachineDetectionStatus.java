@@ -46,6 +46,13 @@ public enum MachineDetectionStatus {
 		return name().toLowerCase();
 	}
 
+	/**
+	 * Convert a string to a MachineDetectionStatus enum.
+	 *
+	 * @param name The machine detection status as a string.
+	 *
+	 * @return The machine detection status as an enum, or {@link #UNKNOWN} if an invalid value was provided.
+	 */
 	@JsonCreator
 	public static MachineDetectionStatus fromString(String name) {
 		try {

@@ -21,17 +21,26 @@ import com.vonage.client.JsonableBaseObject;
 
 /**
  * Response from successfully streaming an audio file or stopping a stream to an active {@link Call}.
- * <p>
- * This would be returned by {@link VoiceClient#startStream(String, String)} or {@link VoiceClient#stopStream(String)}
+ * This is returned by {@link VoiceClient#startStream(String, String)} or {@link VoiceClient#stopStream(String)}
  */
 public class StreamResponse extends JsonableBaseObject {
     private String uuid, message;
 
+    /**
+     * UUID of the call to which the message was sent.
+     *
+     * @return The call ID as a string.
+     */
     @JsonProperty("uuid")
     public String getUuid() {
         return uuid;
     }
 
+    /**
+     * A message describing the result of the operation.
+     *
+     * @return The response message.
+     */
     @JsonProperty("message")
     public String getMessage() {
         return message;

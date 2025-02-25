@@ -16,6 +16,8 @@
 package com.vonage.client.voice;
 
 /**
+ * Represents the order in which calls are returned in {@link VoiceClient#listCalls(CallsFilter)}.
+ *
  * @deprecated Replaced by {@link com.vonage.client.common.SortOrder}.
  */
 @Deprecated

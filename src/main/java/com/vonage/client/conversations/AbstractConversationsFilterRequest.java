@@ -29,18 +29,16 @@ abstract class AbstractConversationsFilterRequest extends HalFilterRequest {
         super(builder);
     }
 
+    protected String formatTimestamp(Instant time) {
+        return time != null ? time.toString().replace('T', ' ').replace("Z", "") : null;
+    }
+
     @Override
     protected Integer validatePageSize(Integer pageSize) {
         if (pageSize != null && (pageSize < 1 || pageSize > 100)) {
             throw new IllegalArgumentException("Page size must be between 1 and 100.");
         }
         return pageSize;
-    }
-
-    protected String formatTimestamp(Instant time) {
-        return time.toString()
-                .replace('T', ' ')
-                .replace("Z", "");
     }
 
     @Override
@@ -51,12 +49,8 @@ abstract class AbstractConversationsFilterRequest extends HalFilterRequest {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
-        if (startDate != null) {
-            params.put("date_start", formatTimestamp(startDate));
-        }
-        if (endDate != null) {
-            params.put("date_end", formatTimestamp(endDate));
-        }
+        conditionalAdd(params, "date_start", formatTimestamp(startDate));
+        conditionalAdd(params, "date_end", formatTimestamp(endDate));
         return params;
     }
 

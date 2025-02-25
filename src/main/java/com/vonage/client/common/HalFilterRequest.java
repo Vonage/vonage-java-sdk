@@ -17,6 +17,7 @@ package com.vonage.client.common;
 
 import com.vonage.client.QueryParamsRequest;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -66,19 +67,24 @@ public abstract class HalFilterRequest implements QueryParamsRequest {
 	@Override
 	public Map<String, String> makeParams() {
 		Map<String, String> params = new LinkedHashMap<>();
-		if (cursor != null) {
-			params.put("cursor", cursor);
-		}
-		if (page != null) {
-			params.put("page", page.toString());
-		}
-		if (pageSize != null) {
-			params.put("page_size", pageSize.toString());
-		}
-		if (order != null) {
-			params.put("order", order.toString());
-		}
+		conditionalAdd(params, "cursor", cursor);
+		conditionalAdd(params, "page", page);
+		conditionalAdd(params, "page_size", pageSize);
+		conditionalAdd(params, "order", order);
 		return params;
+	}
+
+	protected static void conditionalAdd(Map<String, String> params, String name, Object value) {
+		if (value != null) {
+			String valueStr;
+			if (value instanceof Instant) {
+				valueStr = DateTimeFormatter.ISO_INSTANT.format((Instant) value);
+			}
+			else {
+				valueStr = value.toString();
+			}
+			params.put(name, valueStr);
+		}
 	}
 
 	/**
@@ -171,7 +177,7 @@ public abstract class HalFilterRequest implements QueryParamsRequest {
 		/**
 		 * Number of results per page.
 		 *
-		 * @param pageSize he page size as an int.
+		 * @param pageSize The page size as an int.
 		 *
 		 * @return This builder.
 		 */

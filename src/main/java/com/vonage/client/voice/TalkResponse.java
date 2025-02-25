@@ -21,17 +21,26 @@ import com.vonage.client.JsonableBaseObject;
 
 /**
  * Response from successfully sending a synthesized speech message or stopping a message to an active {@link Call}.
- * <p>
- * This would be returned by {@link VoiceClient#startTalk(String, TalkPayload)} or {@link VoiceClient#stopTalk(String)}
+ * This is returned by {@link VoiceClient#startTalk(String, TalkPayload)} or {@link VoiceClient#stopTalk(String)}.
  */
 public class TalkResponse extends JsonableBaseObject {
     private String uuid, message;
 
+    /**
+     * UUID of the call to which the message was sent.
+     *
+     * @return The call ID as a string.
+     */
     @JsonProperty("uuid")
     public String getUuid() {
         return uuid;
     }
 
+    /**
+     * A message describing the result of the operation.
+     *
+     * @return The response message.
+     */
     @JsonProperty("message")
     public String getMessage() {
         return message;
