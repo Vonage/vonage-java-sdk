@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Describes the status of the call, and also the event in {@link EventWebhook#getStatus()}.
  */
 public enum CallStatus {
-
     /**
      * Indicates that the call has been created.
      */
@@ -113,6 +112,13 @@ public enum CallStatus {
         return name().toLowerCase();
     }
 
+    /**
+     * Convert a string into a {@link CallStatus} enum.
+     *
+     * @param name The call status name as a string.
+     *
+     * @return The call status as an enum, or {@code UNKNOWN} if an invalid value is provided.
+     */
     @JsonCreator
     public static CallStatus fromString(String name) {
         try {

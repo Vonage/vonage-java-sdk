@@ -22,7 +22,20 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Represents machine detection behaviour.
  */
 public enum MachineDetection {
-    CONTINUE, HANGUP, UNKNOWN;
+    /**
+     * Vonage sends an HTTP request to the event URL with the Call event machine.
+     */
+    CONTINUE,
+
+    /**
+     * End the call on encounter.
+     */
+    HANGUP,
+
+    /**
+     * Unmapped / invalid value.
+     */
+    UNKNOWN;
 
     @JsonValue
     @Override
@@ -30,6 +43,13 @@ public enum MachineDetection {
         return name().toLowerCase();
     }
 
+    /**
+     * Convert a string to a MachineDetection enum.
+     *
+     * @param name The string to convert to a MachineDetection enum.
+     *
+     * @return The machine detection mode as an enum, or {@linkplain #UNKNOWN} if an invalid value is provided.
+     */
     @JsonCreator
     public static MachineDetection fromString(String name) {
         try {

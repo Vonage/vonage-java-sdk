@@ -61,6 +61,11 @@ public class Ncco implements Jsonable {
         this(Arrays.asList(action));
     }
 
+    /**
+     * Gets the NCCO actions as an ordered collection.
+     *
+     * @return The call actions to take in execution order.
+     */
     public Collection<? extends Action> getActions() {
         return this.actions;
     }

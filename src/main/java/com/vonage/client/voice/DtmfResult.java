@@ -25,6 +25,9 @@ public class DtmfResult extends JsonableBaseObject {
     private String digits;
     private boolean timedOut;
 
+    @Deprecated
+    public DtmfResult() {}
+
     /**
      * The button sequence pressed by the user.
      *

@@ -27,8 +27,6 @@ import java.util.Collection;
  * An NCCO connect action that allows for the establishment of a connection to various {@link Endpoint}.
  */
 public class ConnectAction extends JsonableBaseObject implements Action {
-    private static final String ACTION = "connect";
-
     private Collection<Endpoint> endpoint;
     private String from;
     private EventType eventType;
@@ -64,62 +62,116 @@ public class ConnectAction extends JsonableBaseObject implements Action {
         ringbackTone = builder.ringbackTone;
     }
 
-    @JsonProperty("action")
     @Override
     public String getAction() {
-        return ACTION;
+        return "connect";
     }
 
+    /**
+     * Endpoint to connect the call to.
+     *
+     * @return The endpoint wrapped in a collection.
+     */
     @JsonProperty("endpoint")
     public Collection<Endpoint> getEndpoint() {
         return endpoint;
     }
 
+    /**
+     * Caller ID number in E.164 format.
+     *
+     * @return The caller ID number as a string, or {@code null} if unspecified.
+     */
     @JsonProperty("from")
     public String getFrom() {
         return from;
     }
 
+    /**
+     * Event type for the action.
+     *
+     * @return The event type as an enum, or {@code null} if unspecified.
+     */
     @JsonProperty("eventType")
     public EventType getEventType() {
         return eventType;
     }
 
+    /**
+     * Number in seconds before Vonage stops ringing if the call is unanswered.
+     *
+     * @return The ringing timeout in seconds, or {@code null} if unspecified.
+     */
     @JsonProperty("timeout")
     public Integer getTimeOut() {
         return timeOut;
     }
 
+    /**
+     * Maximum length of the call in seconds.
+     *
+     * @return The maximum call length in seconds as an integer, or {@code null} if unspecified.
+     */
     @JsonProperty("limit")
     public Integer getLimit() {
         return limit;
     }
 
+    /**
+     * Behavior when Vonage detects an answerphone.
+     *
+     * @return The machine detection mode as an enum, or {@code null} if unspecified.
+     */
     @JsonProperty("machineDetection")
     public MachineDetection getMachineDetection() {
         return machineDetection;
     }
 
+    /**
+     * Behavior of Vonage's advanced machine detection.
+     *
+     * @return The advanced machine detection settings, or {@code null} if unspecified.
+     */
     @JsonProperty("advancedMachineDetection")
     public AdvancedMachineDetection getAdvancedMachineDetection() {
         return advancedMachineDetection;
     }
 
+    /**
+     * Webhook endpoint that Vonage calls asynchronously on each of the possible call states.
+     *
+     * @return The event URL wrapped in a collection, or {@code null} if unspecified.
+     */
     @JsonProperty("eventUrl")
     public Collection<String> getEventUrl() {
         return eventUrl;
     }
 
+    /**
+     * HTTP method Vonage uses to make the request to eventUrl.
+     *
+     * @return The HTTP method as an enum, or {@code null} if unspecified.
+     */
     @JsonProperty("eventMethod")
     public EventMethod getEventMethod() {
         return eventMethod;
     }
 
+    /**
+     * Use a random phone number as {@code from}.
+     *
+     * @return Whether the caller ID number will be randomly selected, or {@code null} if unspecified.
+     */
     @JsonProperty("randomFromNumber")
     public Boolean getRandomFromNumber() {
         return randomFromNumber;
     }
 
+    /**
+     * Ringback tone to be played back on repeat to the caller.
+     *
+     * @return The ringback tone URL, or {@code null} if unspecified.
+     */
     @JsonProperty("ringbackTone")
     public URI getRingbackTone() {
         return ringbackTone;
@@ -131,7 +183,9 @@ public class ConnectAction extends JsonableBaseObject implements Action {
      * @param endpoint Connect the call to a specific #{@link Endpoint}.
      *
      * @return A new Builder.
+     * @deprecated Use {@link #builder(Endpoint...)}. This will be removed in the next major release.
      */
+    @Deprecated
     public static Builder builder(Collection<Endpoint> endpoint) {
         return new Builder(endpoint);
     }
@@ -147,6 +201,9 @@ public class ConnectAction extends JsonableBaseObject implements Action {
         return builder(Arrays.asList(endpoint));
     }
 
+    /**
+     * Builder to create a ConnectAction. The endpoint to connect to is mandatory.
+     */
     public static class Builder {
         private Collection<Endpoint> endpoint;
         private String from;
@@ -169,7 +226,7 @@ public class ConnectAction extends JsonableBaseObject implements Action {
          * @param endpoint The endpoints to connect to.
          *
          * @return This builder.
-         * @deprecated This will be removed in the next major release.
+         * @deprecated Use {@link #endpoint(Endpoint...)}. This will be removed in the next major release.
          */
         @Deprecated
         public Builder endpoint(Collection<Endpoint> endpoint) {
@@ -209,7 +266,8 @@ public class ConnectAction extends JsonableBaseObject implements Action {
          * specific states.
          * </ul>
          * <p>
-         * See the <a href="https://developer.vonage.com/voice/voice-api/ncco-reference#connect-with-fallback-ncco">Connect with fallback NCCO example.</a>
+         * See the <a href="https://developer.vonage.com/voice/voice-api/ncco-reference#connect-with-fallback-ncco">
+         * Connect with fallback NCCO example.</a>
          *
          * @param eventType The event type as an enum.
          *
@@ -227,8 +285,24 @@ public class ConnectAction extends JsonableBaseObject implements Action {
          * @param timeOut The call timeout in seconds.
          *
          * @return This builder.
+         *
+         * @deprecated Use {@link #timeOut(int)}. This will be removed in the next major release.
          */
+        @Deprecated
         public Builder timeOut(Integer timeOut) {
+            this.timeOut = timeOut;
+            return this;
+        }
+
+        /**
+         * If the call is unanswered, set the number in seconds before Vonage stops ringing endpoint.
+         * The default value is 60, minimum is 3 and maximum is 7200 (2 hours).
+         *
+         * @param timeOut The call timeout in seconds.
+         *
+         * @return This builder.
+         */
+        public Builder timeOut(int timeOut) {
             this.timeOut = timeOut;
             return this;
         }
@@ -239,8 +313,23 @@ public class ConnectAction extends JsonableBaseObject implements Action {
          * @param limit The maximum call length as an int.
          *
          * @return This builder.
+         *
+         * @deprecated Use {@link #limit(int)}. This will be removed in the next major release.
          */
+        @Deprecated
         public Builder limit(Integer limit) {
+            this.limit = limit;
+            return this;
+        }
+
+        /**
+         * Maximum length of the call in seconds. The default and maximum value is 7200 seconds (2 hours).
+         *
+         * @param limit The maximum call length as an int.
+         *
+         * @return This builder.
+         */
+        public Builder limit(int limit) {
             this.limit = limit;
             return this;
         }
@@ -248,12 +337,7 @@ public class ConnectAction extends JsonableBaseObject implements Action {
         /**
          * Configure the behavior when Vonage detects that a destination is an answerphone.
          *
-         * @param machineDetection
-         *                         Set to either:
-         *                         <ul>
-         *                         <li> {@link MachineDetection#CONTINUE} Vonage sends an HTTP request to event_url with the Call event machine
-         *                         <li> {@link MachineDetection#HANGUP} to end the Call
-         *                         </ul>
+         * @param machineDetection The machine detection mode as an enum.
          *
          * @return This builder.
          */
@@ -286,7 +370,10 @@ public class ConnectAction extends JsonableBaseObject implements Action {
          * @param eventUrl The event URLs.
          *
          * @return This builder.
+         *
+         * @deprecated Use {@link #eventUrl(String)}. This will be removed in the next major release.
          */
+        @Deprecated
         public Builder eventUrl(Collection<String> eventUrl) {
             this.eventUrl = eventUrl;
             return this;
@@ -301,9 +388,26 @@ public class ConnectAction extends JsonableBaseObject implements Action {
          * @param eventUrl The event URL(s).
          *
          * @return This builder.
+         *
+         * @deprecated Use {@link #eventUrl(String)}. This will be removed in the next major release.
          */
+        @Deprecated
         public Builder eventUrl(String... eventUrl) {
             return eventUrl(Arrays.asList(eventUrl));
+        }
+
+        /**
+         * Set the webhook endpoint that Vonage calls asynchronously on each of the possible
+         * <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flow#call-states">Call States</a>.
+         * If eventType is set to synchronous the eventUrl can return an NCCO that overrides the current
+         * NCCO when a timeout occurs.
+         *
+         * @param eventUrl The event URL as a string.
+         *
+         * @return This builder.
+         */
+        public Builder eventUrl(String eventUrl) {
+            return eventUrl(new String[]{eventUrl});
         }
 
         /**

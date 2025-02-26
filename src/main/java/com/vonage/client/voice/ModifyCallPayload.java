@@ -20,15 +20,29 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.Objects;
 
+/**
+ * Wrapper for call modification requests.
+ */
 class ModifyCallPayload extends JsonableBaseObject {
     @JsonIgnore final String uuid;
     private final ModifyCallAction action;
 
+    /**
+     * Create a new ModifyCallPayload.
+     *
+     * @param action The action to perform as an enum.
+     * @param uuid The call ID to modify.
+     */
     ModifyCallPayload(ModifyCallAction action, String uuid) {
         this.action = Objects.requireNonNull(action, "Action is required.");
         this.uuid = Objects.requireNonNull(uuid, "callId is required.");
     }
 
+    /**
+     * Call modification action.
+     *
+     * @return The action as an enum.
+     */
     @JsonProperty("action")
     public ModifyCallAction getAction() {
         return action;

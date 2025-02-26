@@ -19,10 +19,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
+/**
+ * Request wrapper used in {@linkplain VoiceClient#sendDtmf(String, String)}.
+ */
 class DtmfPayload extends JsonableBaseObject {
     @JsonIgnore final String uuid;
     private final String digits;
 
+    /**
+     * Create a new DtmfPayload object.
+     *
+     * @param digits DTMF digits to send to the call as a string.
+     * @param uuid TUUID of the call to play DTMF into.
+     */
     public DtmfPayload(String digits, String uuid) {
         if ((this.digits = digits) == null || digits.trim().isEmpty()) {
             throw new IllegalArgumentException("Must include at least one digit to send.");
@@ -30,6 +39,11 @@ class DtmfPayload extends JsonableBaseObject {
         this.uuid = uuid;
     }
 
+    /**
+     * DTMF digits to send to the call.
+     *
+     * @return The DTMF digits as a string.
+     */
     @JsonProperty("digits")
     public String getDigits() {
         return digits;

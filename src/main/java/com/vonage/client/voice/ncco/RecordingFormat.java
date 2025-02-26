@@ -18,6 +18,9 @@ package com.vonage.client.voice.ncco;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+/**
+ * Represents the audio recording file format in {@linkplain RecordAction}.
+ */
 public enum RecordingFormat {
     MP3, WAV, OGG, UNKNOWN;
 
@@ -27,6 +30,13 @@ public enum RecordingFormat {
         return name().toLowerCase();
     }
 
+    /**
+     * Convert a string value into a {@link RecordingFormat} enum.
+     *
+     * @param name The string value to convert.
+     *
+     * @return The recording format as an enum, or {@code UNKNOWN} if an invalid value is provided.
+     */
     @JsonCreator
     public static RecordingFormat fromString(String name) {
         try {

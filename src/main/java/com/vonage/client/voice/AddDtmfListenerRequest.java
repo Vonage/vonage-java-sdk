@@ -22,10 +22,21 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * Request wrapper for {@linkplain VoiceClient#addDtmfListener(String, String)}.
+ *
+ * @since 8.12.0
+ */
 class AddDtmfListenerRequest extends JsonableBaseObject {
     @JsonIgnore final String uuid;
     @JsonProperty("event_url") final Collection<URI> eventUrl;
 
+    /**
+     * Creates a new DTMF listener request.
+     *
+     * @param uuid ID of the call to add the DTMF listener to.
+     * @param eventUrl URL to send the DTMF events to.
+     */
     public AddDtmfListenerRequest(String uuid, URI eventUrl) {
         this.uuid = uuid;
         this.eventUrl = Collections.singletonList(eventUrl);
