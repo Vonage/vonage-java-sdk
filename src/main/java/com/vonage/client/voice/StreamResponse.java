@@ -26,6 +26,9 @@ import com.vonage.client.JsonableBaseObject;
 public class StreamResponse extends JsonableBaseObject {
     private String uuid, message;
 
+    @Deprecated
+    public StreamResponse() {}
+
     /**
      * UUID of the call to which the message was sent.
      *
@@ -52,7 +55,10 @@ public class StreamResponse extends JsonableBaseObject {
      * @param json The JSON string to parse.
      *
      * @return An instance of this class with the fields populated, if present.
+     *
+     * @deprecated This will be removed in a future release.
      */
+    @Deprecated
     public static StreamResponse fromJson(String json) {
         return Jsonable.fromJson(json);
     }

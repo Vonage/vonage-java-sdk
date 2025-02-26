@@ -21,82 +21,139 @@ import com.vonage.client.JsonableBaseObject;
 import java.util.Date;
 
 /**
- * CallInfo holds the information related to a call. It is obtained using {@link VoiceClient#listCalls()}.
+ * Holds the information related to a call. It is obtained using {@link VoiceClient#listCalls()}.
  */
 public class CallInfo extends JsonableBaseObject {
-    Endpoint from, to;
-    String conversationUuid, uuid, network, price, rate;
-    CallDirection direction;
-    Integer duration;
-    Date startTime, endTime;
-    CallStatus status;
+    private Endpoint from, to;
+    private String conversationUuid, uuid, network, price, rate;
+    private CallDirection direction;
+    private Integer duration;
+    private Date startTime, endTime;
+    private CallStatus status;
 
     CallInfo() {}
 
-    CallInfo(String to, String from) {
-        this(new PhoneEndpoint(to), new PhoneEndpoint(from));
-    }
-
-    CallInfo(Endpoint to, Endpoint from) {
-        this.to = to;
-        this.from = from;
-    }
-
+    /**
+     * Call destination.
+     *
+     * @return The call recipient endpoint.
+     */
     @JsonProperty("to")
     public Endpoint getTo() {
         return to;
     }
 
+    /**
+     * Call source.
+     *
+     * @return The caller endpoint.
+     */
     @JsonProperty("from")
     public Endpoint getFrom() {
         return from;
     }
 
+    /**
+     * ID of the call.
+     *
+     * @return The call ID as a string.
+     */
     @JsonProperty("uuid")
     public String getUuid() {
         return uuid;
     }
 
+    /**
+     * ID of the conversation.
+     *
+     * @return The conversation ID as a string.
+     */
     @JsonProperty("conversation_uuid")
     public String getConversationUuid() {
         return conversationUuid;
     }
 
+    /**
+     * Time elapsed for the call to take place in seconds.
+     * This is only present if {@linkplain #getStatus()} is {@linkplain CallStatus#COMPLETED}.
+     *
+     * @return The call duration in seconds as an integer, or {@code null} if unknown.
+     */
     @JsonProperty("duration")
     public Integer getDuration() {
         return duration;
     }
 
-    @JsonProperty("end_time")
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    @JsonProperty("price")
-    public String getPrice() {
-        return price;
-    }
-
-    @JsonProperty("rate")
-    public String getRate() {
-        return rate;
-    }
-
+    /**
+     * Start time of the call.
+     * This is only present if {@linkplain #getStatus()} is {@linkplain CallStatus#COMPLETED}.
+     *
+     * @return The start time of the call as a {@link Date} object, or {@code null} if unknown.
+     */
     @JsonProperty("start_time")
     public Date getStartTime() {
         return this.startTime;
     }
 
+    /**
+     * End time of the call.
+     * This is only present if {@linkplain #getStatus()} is {@linkplain CallStatus#COMPLETED}.
+     *
+     * @return The end time of the call as a {@link Date} object, or {@code null} if unknown.
+     */
+    @JsonProperty("end_time")
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    /**
+     * Total price charged for this call.
+     * This is only present if {@linkplain #getStatus()} is {@linkplain CallStatus#COMPLETED}.
+     *
+     * @return The call total cost as a string, or {@code null} if unknown.
+     */
+    @JsonProperty("price")
+    public String getPrice() {
+        return price;
+    }
+
+    /**
+     * Price per minute for this call.
+     * This is only present if {@linkplain #getStatus()} is {@linkplain CallStatus#COMPLETED}.
+     *
+     * @return The per-minute call rate as a string, or {@code null} if unknown.
+     */
+    @JsonProperty("rate")
+    public String getRate() {
+        return rate;
+    }
+
+    /**
+     * Status of the call.
+     *
+     * @return The call status as an enum.
+     */
     @JsonProperty("status")
     public CallStatus getStatus() {
         return status;
     }
 
+    /**
+     * Direction of the call: either inbound or outbound.
+     *
+     * @return The call direction as an enum.
+     */
     @JsonProperty("direction")
     public CallDirection getDirection() {
         return direction;
     }
 
+    /**
+     * The Mobile Country Code Mobile Network Code (MCCMNC) for the carrier network used to make this call.
+     * This is only present if {@linkplain #getStatus()} is {@linkplain CallStatus#COMPLETED}.
+     *
+     * @return The MCCMNC as a string, or {@code null} if unknown.
+     */
     @JsonProperty("network")
     public String getNetwork() {
         return network;
@@ -118,7 +175,10 @@ public class CallInfo extends JsonableBaseObject {
      * @param json The JSON string to parse.
      *
      * @return An instance of this class with the fields populated, if present.
+     *
+     * @deprecated Use {@link Jsonable#fromJson(String, Class)}. This will be removed in a future release.
      */
+    @Deprecated
     public static CallInfo fromJson(String json) {
         return Jsonable.fromJson(json);
     }

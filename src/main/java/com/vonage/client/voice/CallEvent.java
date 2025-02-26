@@ -27,6 +27,9 @@ public class CallEvent extends JsonableBaseObject {
     private CallStatus status;
     private CallDirection direction;
 
+    @Deprecated
+    public CallEvent() {}
+
     /**
      * The unique identifier for this call leg. The UUID is created when your call request is accepted by Vonage.
      * You use the UUID in all requests for individual live calls.
@@ -74,6 +77,7 @@ public class CallEvent extends JsonableBaseObject {
      * @param json The JSON string to parse.
      *
      * @return An instance of this class with the fields populated, if present.
+     *
      * @deprecated Use {@link Jsonable#fromJson(String, Class)}.
      */
     @Deprecated

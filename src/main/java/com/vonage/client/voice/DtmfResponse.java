@@ -26,6 +26,9 @@ import com.vonage.client.JsonableBaseObject;
 public class DtmfResponse extends JsonableBaseObject {
     private String uuid, message;
 
+    @Deprecated
+    public DtmfResponse() {}
+
     /**
      * Unique identifier for the call leg DTMF was sent to.
      *

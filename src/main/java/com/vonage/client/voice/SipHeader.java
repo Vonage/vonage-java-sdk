@@ -24,6 +24,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @since 8.9.0
  */
 public enum SipHeader {
+    /**
+     * Used to submit user-to-user information if supported by the vendor, as per
+     * <a href="https://datatracker.ietf.org/doc/html/rfc7433">RFC 7433</a>.
+     */
     USER_TO_USER;
 
     @JsonValue

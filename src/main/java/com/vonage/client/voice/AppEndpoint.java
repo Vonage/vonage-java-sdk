@@ -29,6 +29,11 @@ public class AppEndpoint extends JsonableBaseObject implements Endpoint {
     protected AppEndpoint() {
     }
 
+    /**
+     * Create an AppEndpoint with the given user.
+     *
+     * @param user The username.
+     */
     public AppEndpoint(String user) {
         this.user = user;
     }

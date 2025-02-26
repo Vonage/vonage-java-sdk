@@ -30,6 +30,11 @@ public enum CallOrder {
         this.callOrder = callOrder;
     }
 
+    /**
+     * Converts this enum into its string value.
+     *
+     * @return The call order as a string.
+     */
     public String getCallOrder() {
         return callOrder;
     }

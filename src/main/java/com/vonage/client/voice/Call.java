@@ -79,26 +79,74 @@ public class Call extends JsonableBaseObject {
 
     Call() {}
 
+    /**
+     * Create a new Call with {@linkplain PhoneEndpoint} as the recipient and caller.
+     *
+     * @param to The recipient phone number.
+     * @param from The caller phone number.
+     * @param answerUrl The URL to fetch the NCCO from.
+     */
     public Call(String to, String from, String answerUrl) {
         this(new PhoneEndpoint(to), new PhoneEndpoint(from), answerUrl);
     }
 
+    /**
+     * Create a new Call with the specified recipient and caller endpoints.
+     *
+     * @param to The recipient endpoint.
+     * @param from The caller endpoint.
+     * @param answerUrl The URL to fetch the NCCO from.
+     */
     public Call(Endpoint to, Endpoint from, String answerUrl) {
         this(new Endpoint[]{to}, from, answerUrl);
     }
 
+    /**
+     * Create a new Call with {@linkplain PhoneEndpoint} as the recipient and caller.
+     *
+     * @param to The recipient phone number.
+     * @param from The caller phone number.
+     * @param ncco The NCCO actions to take.
+     */
     public Call(String to, String from, Collection<? extends Action> ncco) {
         this(new PhoneEndpoint(to), new PhoneEndpoint(from), ncco);
     }
 
+    /**
+     * Create a new Call with the specified recipient and caller endpoints.
+     *
+     * @param to The recipient endpoint.
+     * @param from The caller endpoint.
+     * @param ncco The NCCO actions to take.
+     */
     public Call(Endpoint to, Endpoint from, Collection<? extends Action> ncco) {
         this(new Endpoint[]{to}, from, ncco);
     }
 
+    /**
+     * Create a new Call.
+     *
+     * @param to The recipient endpoint in an array.
+     * @param from The caller endpoint.
+     * @param answerUrl The URL to fetch the NCCO from.
+     *
+     * @deprecated This will be removed in the next major release.
+     */
+    @Deprecated
     public Call(Endpoint[] to, Endpoint from, String answerUrl) {
         this(builder().to(to).from(from).answerUrl(answerUrl));
     }
 
+    /**
+     * Create a new Call.
+     *
+     * @param to The recipient endpoint in an array.
+     * @param from The caller endpoint.
+     * @param ncco The NCCO actions to take.
+     *
+     * @deprecated This will be removed in the next major release.
+     */
+    @Deprecated
     public Call(Endpoint[] to, Endpoint from, Collection<? extends Action> ncco) {
         this(builder().to(to).from(from).ncco(ncco));
     }

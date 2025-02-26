@@ -18,6 +18,12 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
+/**
+ * Represents the link to a page in the response from the API.
+ *
+ * @deprecated {@link PageLinks} will be replaced with {@link com.vonage.client.common.HalLinks} in the future.
+ */
+@Deprecated
 public class PageLink extends JsonableBaseObject {
     private String href;
 

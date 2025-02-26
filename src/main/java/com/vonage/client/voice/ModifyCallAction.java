@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 /**
  * Enum representing call modification actions.
  */
-public enum ModifyCallAction {
+enum ModifyCallAction {
     HANGUP, MUTE, UNMUTE, EARMUFF, UNEARMUFF, TRANSFER, UNKNOWN;
 
     @JsonValue

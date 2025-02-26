@@ -262,7 +262,7 @@ public class CallsFilter extends HalFilterRequest {
          */
         @Deprecated
         public Builder order(CallOrder order) {
-            return order != null ? order(SortOrder.fromString(order.name())) : this;
+            return order != null ? order(SortOrder.fromString(order.getCallOrder())) : this;
         }
 
         /**

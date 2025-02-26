@@ -18,6 +18,7 @@ package com.vonage.client.voice.ncco;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.voice.EndpointType;
+import java.util.Objects;
 
 /**
  * Represents a phone endpoint used in a {@link ConnectAction}. See
@@ -29,9 +30,9 @@ public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
     private final OnAnswer onAnswer;
 
     private PhoneEndpoint(Builder builder) {
-        this.number = builder.number;
-        this.dtmfAnswer = builder.dtmfAnswer;
-        this.onAnswer = (builder.onAnswerUrl != null) ? new OnAnswer(builder.onAnswerUrl, builder.onAnswerRingback) : null;
+        number = builder.number;
+        dtmfAnswer = builder.dtmfAnswer;
+        onAnswer = (builder.onAnswerUrl != null) ? new OnAnswer(builder.onAnswerUrl, builder.onAnswerRingback) : null;
     }
 
     @Override
@@ -140,8 +141,8 @@ public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
          * will automatically stop playing when the call is fully connected. Please note, the key ringback is still
          * supported.
          *
-         * @param url The URL to an NCCO as a string.
-         * @param ringback The URL to a ringback tone as a string.
+         * @param url (REQUIRED) The URL to an NCCO as a string.
+         * @param ringback (OPTIONAL) The URL to a ringback tone as a string.
          *
          * @return This builder.
          */
@@ -162,7 +163,7 @@ public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
     }
 
     /**
-     * An object containing a required url key. The URL serves an NCCO to execute in the number being connected to,
+     * An object containing a required URL key. The URL serves an NCCO to execute in the number being connected to,
      * before that call is joined to your existing conversation. Optionally, the ringbackTone key can be specified
      * with a URL value that points to a ringbackTone to be played back on repeat to the caller, so they do not hear
      * just silence. The ringbackTone will automatically stop playing when the call is fully connected. Please note,
@@ -172,15 +173,25 @@ public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
         private final String url, ringback;
 
         private OnAnswer(String url, String ringback) {
-            this.url = url;
+            this.url = Objects.requireNonNull(url);
             this.ringback = ringback;
         }
 
+        /**
+         * URL of the NCCO to execute.
+         *
+         * @return The URL as a string.
+         */
         @JsonProperty("url")
         public String getUrl() {
             return url;
         }
 
+        /**
+         * URL of the ringback tone to play to the caller.
+         *
+         * @return The ringback tone URL as a string, or {@code null} if unspecified.
+         */
         @JsonProperty("ringback")
         public String getRingback() {
             return ringback;
