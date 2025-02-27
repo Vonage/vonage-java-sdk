@@ -141,6 +141,9 @@ public class SipEndpoint extends JsonableBaseObject implements Endpoint {
         return new Builder();
     }
 
+    /**
+     * Builder for a SIP endpoint.
+     */
     public static class Builder {
         private URI uri;
         private String domain, user;

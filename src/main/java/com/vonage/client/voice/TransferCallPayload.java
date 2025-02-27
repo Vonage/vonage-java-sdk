@@ -21,21 +21,37 @@ import java.util.Objects;
 
 /**
  * Extension of ModifyCallPayload which adds an NCCO destination to the serialized form.
- *
  */
 class TransferCallPayload extends ModifyCallPayload {
     private final TransferDestination destination;
 
+    /**
+     * Create a TransferCallPayload with an NCCO URL destination.
+     *
+     * @param nccoUrl URL of the NCCO to transfer the call to.
+     * @param uuid    ID of the call to transfer.
+     */
     public TransferCallPayload(String nccoUrl, String uuid) {
         super(ModifyCallAction.TRANSFER, uuid);
         destination = new TransferDestination(nccoUrl);
     }
 
+    /**
+     * Create a TransferCallPayload with an NCCO destination.
+     *
+     * @param ncco NCCO to transfer the call to.
+     * @param uuid ID of the call to transfer.
+     */
     public TransferCallPayload(Ncco ncco, String uuid) {
         super(ModifyCallAction.TRANSFER, uuid);
         destination = new TransferDestination(Objects.requireNonNull(ncco, "NCCO is required."));
     }
 
+    /**
+     * Call transfer destination.
+     *
+     * @return The destination of the transfer.
+     */
     @JsonProperty("destination")
     public TransferDestination getDestination() {
         return destination;

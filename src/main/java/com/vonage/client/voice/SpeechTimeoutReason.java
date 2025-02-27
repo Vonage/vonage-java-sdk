@@ -24,9 +24,24 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @since 8.2.0
  */
 public enum SpeechTimeoutReason {
+    /**
+     * Input ended when user stopped speaking.
+     */
     END_ON_SILENCE_TIMEOUT,
+
+    /**
+     * Maximum duration was reached.
+     */
     MAX_DURATION,
+
+    /**
+     * User didn't say anything.
+     */
     START_TIMEOUT,
+
+    /**
+     * Unknown reason.
+     */
     UNKNOWN;
 
     @JsonValue
@@ -35,6 +50,13 @@ public enum SpeechTimeoutReason {
         return name().toLowerCase();
     }
 
+    /**
+     * Convert a string to a SpeechTimeoutReason enum.
+     *
+     * @param name The speech timeout reason as a string.
+     *
+     * @return The speech timeout reason as an enum, or {@link #UNKNOWN} if an invalid value was provided.
+     */
     @JsonCreator
     public static SpeechTimeoutReason fromString(String name) {
         try {

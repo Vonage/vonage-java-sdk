@@ -15,17 +15,26 @@
  */
 package com.vonage.client.voice.ncco;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import org.junit.jupiter.api.*;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class NotifyActionTest {
 
     @Test
     public void testBuilderMultipleInstances() {
-        NotifyAction.Builder builder = NotifyAction.builder(new HashMap<>(), "http://example.com/webhooks/event");
+        var map = Collections.<String, Object> emptyMap();
+        var url = "http://example.com/webhooks/event";
+
+        NotifyAction.Builder builder = NotifyAction.builder();
         assertNotSame(builder.build(), builder.build());
+        assertNotSame(
+                NotifyAction.builder(map, new String[]{url}),
+                NotifyAction.builder(map, Collections.singleton(url))
+        );
     }
 
     @Test

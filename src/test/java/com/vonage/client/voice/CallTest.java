@@ -301,7 +301,7 @@ public class CallTest {
                     new AppEndpoint("nexmo"),
                     new SipEndpoint(sipUri, sipCustomHeaders),
                     new VbcEndpoint("7890"),
-                    new WebSocketEndpoint("wss://example.org", "audio/l16", Collections.emptyMap()),
+                    new WebSocketEndpoint("wss://example.org", null, null),
                     new SipEndpoint(sipUri, sipUser2User),
                     new SipEndpoint(sipUri, sipCustomHeaders, sipUser2User)
                 )

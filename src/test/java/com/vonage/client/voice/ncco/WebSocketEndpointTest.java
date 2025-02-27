@@ -15,6 +15,7 @@
  */
 package com.vonage.client.voice.ncco;
 
+import com.vonage.client.users.channels.Websocket;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.util.Collections;
@@ -25,13 +26,13 @@ public class WebSocketEndpointTest {
     public void testAllFields() {
         WebSocketEndpoint endpoint = WebSocketEndpoint.builder("wss://example.com", "some-content")
                 .uri("wss://example.net")
-                .contentType("some-content-type")
+                .contentType(Websocket.ContentType.AUDIO_L16_8K)
                 .headers(Collections.singletonMap("keyOne", Collections.singletonList(1)))
                 .build();
         ConnectAction connect = ConnectAction.builder(endpoint).build();
 
-        String expectedJson = "[{\"endpoint\":[{\"uri\":\"wss://example.net\",\"content-type\":\"some-content-type\"," +
-                "\"headers\":{\"keyOne\":[1]},\"type\":\"websocket\"}],\"action\":\"connect\"}]";
+        String expectedJson = "[{\"endpoint\":[{\"uri\":\"wss://example.net\",\"content-type\":\"" +
+                "audio/l16;rate=8000\",\"headers\":{\"keyOne\":[1]},\"type\":\"websocket\"}],\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
     }
 }

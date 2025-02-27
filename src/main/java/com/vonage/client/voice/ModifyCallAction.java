@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 /**
  * Enum representing call modification actions.
  */
-public enum ModifyCallAction {
+enum ModifyCallAction {
     HANGUP, MUTE, UNMUTE, EARMUFF, UNEARMUFF, TRANSFER, UNKNOWN;
 
     @JsonValue
@@ -30,6 +30,13 @@ public enum ModifyCallAction {
         return name().toLowerCase();
     }
 
+    /**
+     * Convert a string to a ModifyCallAction enum.
+     *
+     * @param name The call modification action as a string.
+     *
+     * @return The call modification action as an enum, or {@link #UNKNOWN} if an invalid value was passed in.
+     */
     @JsonCreator
     public static ModifyCallAction fromString(String name) {
         try {

@@ -34,12 +34,8 @@ class ListRoomsRequest extends HalFilterRequest {
 	@Override
 	public Map<String, String> makeParams() {
 		Map<String, String> params = super.makeParams();
-		if (startId != null) {
-			params.put("start_id", String.valueOf(startId));
-		}
-		if (endId != null) {
-			params.put("end_id", String.valueOf(endId));
-		}
+		conditionalAdd(params, "start_id", startId);
+		conditionalAdd(params, "end_id", endId);
 		return params;
 	}
 }

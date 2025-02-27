@@ -95,10 +95,20 @@ public enum TextToSpeechLanguage {
 
     private final String language;
 
+    /**
+     * Constructor for the TextToSpeechLanguage enum.
+     *
+     * @param language The language code.
+     */
     TextToSpeechLanguage(String language) {
         this.language = language;
     }
 
+    /**
+     * Gets the language code for this enum.
+     *
+     * @return The language code as a string.
+     */
     @JsonValue
     public String getLanguage() {
         return this.language;

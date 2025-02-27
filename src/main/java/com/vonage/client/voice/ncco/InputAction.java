@@ -23,8 +23,6 @@ import java.util.*;
  * An NCCO input action which allows for the collection of digits and automatic speech recognition from a person.
  */
 public class InputAction extends JsonableBaseObject implements Action {
-    private static final String ACTION = "input";
-
     @JsonProperty(required = true)
     private Collection<String> type;
     private DtmfSettings dtmf;
@@ -50,29 +48,55 @@ public class InputAction extends JsonableBaseObject implements Action {
 
     @Override
     public String getAction() {
-        return ACTION;
+        return "input";
     }
 
+    /**
+     * Input types that are acceptable for this action.
+     *
+     * @return The input types as a collection of strings. Valid values are ["dtmf"] for DTMF input only,
+     * ["speech"] for ASR only, or ["dtmf", "speech"] for both.
+     */
     @JsonProperty("type")
     public Collection<String> getType() {
         return type;
     }
 
+    /**
+     * DTMF settings for this action.
+     *
+     * @return The DTMF settings object, or {@code null} if unspecified.
+     */
     @JsonProperty("dtmf")
     public DtmfSettings getDtmf() {
         return dtmf;
     }
 
+    /**
+     * Event URL for this action.
+     *
+     * @return The event URL wrapped in a singleton string collection, or {@code null} if unspecified.
+     */
     @JsonProperty("eventUrl")
     public Collection<String> getEventUrl() {
         return eventUrl;
     }
 
+    /**
+     * Event method that will be used with the eventUrl, either {@code GET} or {@code POST}.
+     *
+     * @return The event HTTP method as an enum, or {@code null} if unspecified.
+     */
     @JsonProperty("eventMethod")
     public EventMethod getEventMethod() {
         return eventMethod;
     }
 
+    /**
+     * Speech settings for this action.
+     *
+     * @return The speech settings object, or {@code null} if unspecified.
+     */
     @JsonProperty("speech")
     public SpeechSettings getSpeech() {
         return speech;

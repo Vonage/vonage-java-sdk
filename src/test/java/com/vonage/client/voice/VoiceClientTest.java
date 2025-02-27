@@ -17,7 +17,6 @@ package com.vonage.client.voice;
 
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
-import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.voice.ncco.Ncco;
@@ -671,8 +670,7 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
             protected ModifyCallPayload sampleRequest() {
                 ModifyCallAction[] actions = ModifyCallAction.values();
                 action = actions[(int) (Math.random() * actions.length)];
-                ModifyCallPayload request = new ModifyCallPayload(action, SAMPLE_CALL_ID);
-                return request;
+                return new ModifyCallPayload(action, SAMPLE_CALL_ID);
             }
 
             @Override

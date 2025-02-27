@@ -36,18 +36,10 @@ public class ListEventsRequest extends AbstractConversationsFilterRequest {
 	@Override
 	public Map<String, String> makeParams() {
 		Map<String, String> params = super.makeParams();
-		if (excludeDeletedEvents != null) {
-            params.put("exclude_deleted_events", excludeDeletedEvents.toString());
-        }
-		if (startId != null) {
-            params.put("start_id", String.valueOf(startId));
-        }
-		if (endId != null) {
-            params.put("end_id", String.valueOf(endId));
-        }
-		if (eventType != null) {
-            params.put("event_type", eventType.toString());
-        }
+		conditionalAdd(params, "exclude_deleted_events", excludeDeletedEvents);
+		conditionalAdd(params, "start_id", startId);
+		conditionalAdd(params, "end_id", endId);
+		conditionalAdd(params, "event_type", eventType);
 		return params;
 	}
 

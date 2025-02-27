@@ -19,9 +19,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * An endpoint for a {@link ConnectAction} to connect to.
+ * Not to be confused with Call endpoints - see {@link com.vonage.client.voice.Endpoint}.
  */
 public interface Endpoint {
 
+    /**
+     * Gets the endpoint type name.
+     *
+     * @return The endpoint type as a string.
+     */
     @JsonProperty("type")
     String getType();
 }

@@ -17,6 +17,9 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
+/**
+ * Enum for declaring multichannel recordings in {@link RecordAction}.
+ */
 public enum SplitRecording {
     CONVERSATION;
 

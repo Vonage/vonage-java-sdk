@@ -15,6 +15,7 @@
  */
 package com.vonage.client.voice;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
@@ -193,9 +194,12 @@ public class CallInfoTest {
 
     @Test
     public void testToString() throws Exception {
-        CallInfo record = new CallInfo("447700900104", "447700900105");
-        record.uuid = "93137ee3-580e-45f7-a61a-e0b5716000ef";
-        record.status = CallStatus.COMPLETED;
+        CallInfo record = Jsonable.fromJson("{" +
+            "\"uuid\":\"93137ee3-580e-45f7-a61a-e0b5716000ef\"," +
+            "\"status\":\"completed\"," +
+            "\"from\":{\"type\":\"phone\",\"number\":\"447700900105\"}," +
+            "\"to\":{\"type\":\"phone\",\"number\":\"447700900104\"}" +
+        "}");
         assertEquals("<CallInfo ID: 93137ee3-580e-45f7-a61a-e0b5716000ef, From: 447700900105, To: 447700900104, Status: completed>", record.toString());
     }
 }

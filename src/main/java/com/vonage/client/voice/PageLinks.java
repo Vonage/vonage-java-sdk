@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
 /**
+ * Represents the {@code _links} section in a paginated response.
+ *
  * @deprecated Will be replaced by {@link com.vonage.client.common.HalLinks} in a future release.
  */
 @Deprecated
