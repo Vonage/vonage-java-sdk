@@ -84,7 +84,7 @@ public class NotifyAction extends JsonableBaseObject implements Action {
      */
     @Deprecated
     public static Builder builder(Map<String, ?> payload, Collection<String> eventUrl) {
-        return new Builder(payload, eventUrl);
+        return builder().payload(payload).eventUrl(eventUrl);
     }
 
     /**
@@ -111,7 +111,7 @@ public class NotifyAction extends JsonableBaseObject implements Action {
      * @return A new Builder.
      */
     public static Builder builder(Map<String, ?> payload, String eventUrl) {
-        return builder(payload, new String[]{eventUrl});
+        return builder().payload(payload).eventUrl(eventUrl);
     }
 
     /**
@@ -134,11 +134,6 @@ public class NotifyAction extends JsonableBaseObject implements Action {
         private EventMethod eventMethod;
 
         private Builder() {
-        }
-
-        private Builder(Map<String, ?> payload, Collection<String> eventUrl) {
-            this.payload = payload;
-            this.eventUrl = eventUrl;
         }
 
         /**

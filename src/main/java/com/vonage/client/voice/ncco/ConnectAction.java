@@ -303,8 +303,7 @@ public class ConnectAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder timeOut(int timeOut) {
-            this.timeOut = timeOut;
-            return this;
+            return timeOut(Integer.valueOf(timeOut));
         }
 
         /**
@@ -330,8 +329,7 @@ public class ConnectAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder limit(int limit) {
-            this.limit = limit;
-            return this;
+            return limit(Integer.valueOf(limit));
         }
 
         /**

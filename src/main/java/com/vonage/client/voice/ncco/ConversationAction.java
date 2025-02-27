@@ -279,8 +279,7 @@ public class ConversationAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder startOnEnter(boolean startOnEnter) {
-            this.startOnEnter = startOnEnter;
-            return this;
+            return startOnEnter(Boolean.valueOf(startOnEnter));
         }
 
         /**
@@ -310,8 +309,7 @@ public class ConversationAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder endOnExit(boolean endOnExit) {
-            this.endOnExit = endOnExit;
-            return this;
+            return endOnExit(Boolean.valueOf(endOnExit));
         }
 
         /**
@@ -345,8 +343,7 @@ public class ConversationAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder record(boolean record) {
-            this.record = record;
-            return this;
+            return record(Boolean.valueOf(record));
         }
 
         /**

@@ -99,7 +99,7 @@ public class StreamAction extends JsonableBaseObject implements Action {
      */
     @Deprecated
     public static Builder builder(Collection<String> streamUrl) {
-        return new Builder(streamUrl);
+        return builder().streamUrl(streamUrl);
     }
 
     /**
@@ -113,7 +113,7 @@ public class StreamAction extends JsonableBaseObject implements Action {
      */
     @Deprecated
     public static Builder builder(String... streamUrl) {
-        return builder(Arrays.asList(streamUrl));
+        return builder().streamUrl(streamUrl);
     }
 
     /**
@@ -124,7 +124,7 @@ public class StreamAction extends JsonableBaseObject implements Action {
      * @return A new Builder.
      */
     public static Builder builder(String streamUrl) {
-        return builder(new String[]{streamUrl});
+        return builder().streamUrl(streamUrl);
     }
 
     /**
@@ -147,10 +147,6 @@ public class StreamAction extends JsonableBaseObject implements Action {
         private Integer loop;
 
         Builder() {}
-
-        Builder(Collection<String> streamUrl) {
-            this.streamUrl = streamUrl;
-        }
 
         /**
          * URL to an MP3 or 16-bit WAV audio file to stream into the Call or Conversation.
@@ -217,8 +213,7 @@ public class StreamAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder level(double level) {
-            this.level = (float) level;
-            return this;
+            return level(Float.valueOf((float) level));
         }
 
         /**
@@ -250,8 +245,7 @@ public class StreamAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder bargeIn(boolean bargeIn) {
-            this.bargeIn = bargeIn;
-            return this;
+            return bargeIn(Boolean.valueOf(bargeIn));
         }
 
         /**
@@ -279,8 +273,7 @@ public class StreamAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder loop(int loop) {
-            this.loop = loop;
-            return this;
+            return loop(Integer.valueOf(loop));
         }
 
         /**

@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * An NCCO record action which allows for the call to be recorded.
@@ -238,8 +237,7 @@ public final class RecordAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder endOnKey(char endOnKey) {
-            this.endOnKey = endOnKey;
-            return this;
+            return endOnKey(Character.valueOf(endOnKey));
         }
 
         /**
@@ -267,8 +265,7 @@ public final class RecordAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder timeOut(int timeOut) {
-            this.timeOut = timeOut;
-            return this;
+            return timeOut(Integer.valueOf(timeOut));
         }
 
         /**
@@ -294,8 +291,7 @@ public final class RecordAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder beepStart(boolean beepStart) {
-            this.beepStart = beepStart;
-            return this;
+            return beepStart(Boolean.valueOf(beepStart));
         }
 
         /**
@@ -398,8 +394,7 @@ public final class RecordAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder channels(int channels) {
-            this.channels = channels;
-            return this;
+            return channels(Integer.valueOf(channels));
         }
 
         /**

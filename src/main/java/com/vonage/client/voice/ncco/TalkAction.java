@@ -131,7 +131,7 @@ public class TalkAction extends JsonableBaseObject implements Action {
      * @return A new {@linkplain Builder} with the text field initialised.
      */
     public static Builder builder(String text) {
-        return new Builder(text);
+        return builder().text(text);
     }
 
     /**
@@ -156,10 +156,6 @@ public class TalkAction extends JsonableBaseObject implements Action {
         private TextToSpeechLanguage language;
 
         Builder() {}
-
-        Builder(String text) {
-            this.text = text;
-        }
 
         /**
          * A string of up to 1,500 characters (excluding SSML tags) containing the message to be synthesized into the
@@ -205,13 +201,14 @@ public class TalkAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder bargeIn(boolean bargeIn) {
-            this.bargeIn = bargeIn;
-            return this;
+            return bargeIn(Boolean.valueOf(bargeIn));
         }
 
         /**
-         * @param loop The number of times text is repeated before the Call is closed.
-         *             The default value is 1. Set to 0 to loop infinitely.
+         * Number of times text is repeated before the Call is closed.
+         * The default value is 1. Set to 0 to loop infinitely.
+         *
+         * @param loop The loop count as an integer.
          *
          * @return This builder.
          */
@@ -243,8 +240,7 @@ public class TalkAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder level(double level) {
-            this.level = (float) level;
-            return this;
+            return level(Float.valueOf((float) level));
         }
 
         /**
@@ -286,8 +282,7 @@ public class TalkAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder style(int style) {
-            this.style = style;
-            return this;
+            return style(Integer.valueOf(style));
         }
 
         /**
@@ -319,8 +314,7 @@ public class TalkAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder premium(boolean premium) {
-            this.premium = premium;
-            return this;
+            return premium(Boolean.valueOf(premium));
         }
 
         /**
