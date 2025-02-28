@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   - Deprecated `java.util.Date`-based methods
   - `getOrder()` returns a `com.vonage.client.common.SortOrder` instead of `CallOrder`
 - Made constructors for response objects in Voice API package-private
+- Basic auth header in Number Insight v1 requests instead of query parameters
 
 # [8.16.2] - 2025-02-05
 - Added `disconnected_by` enum to `com.vonage.client.voice.EventWebhook`
