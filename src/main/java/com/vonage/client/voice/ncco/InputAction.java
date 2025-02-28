@@ -31,6 +31,9 @@ public class InputAction extends JsonableBaseObject implements Action {
     private EventMethod eventMethod;
     private InputMode mode;
 
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
     InputAction() {}
 
     private InputAction(Builder builder) {

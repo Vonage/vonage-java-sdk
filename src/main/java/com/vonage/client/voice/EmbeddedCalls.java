@@ -25,6 +25,11 @@ public class EmbeddedCalls extends JsonableBaseObject {
     @JsonProperty("calls") private CallInfo[] callInfos;
 
     /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
+    EmbeddedCalls() {}
+
+    /**
      * Gets the call details.
      *
      * @return The CallInfos as an array.

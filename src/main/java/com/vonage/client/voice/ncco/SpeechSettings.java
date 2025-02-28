@@ -32,12 +32,9 @@ public class SpeechSettings extends JsonableBaseObject {
     private Boolean saveAudio;
 
     /**
-     * Constructor.
-     *
-     * @deprecated This will be made private in a future release. Use {@link #builder()}.
+     * Constructor used reflectively by Jackson for instantiation.
      */
-    @Deprecated
-    public SpeechSettings() {}
+    SpeechSettings() {}
 
     private SpeechSettings(Builder builder) {
         if (builder.uuid != null) {

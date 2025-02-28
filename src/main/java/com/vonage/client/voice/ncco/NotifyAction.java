@@ -29,6 +29,9 @@ public class NotifyAction extends JsonableBaseObject implements Action {
     private Collection<String> eventUrl;
     private EventMethod eventMethod;
 
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
     NotifyAction() {}
 
     private NotifyAction(Builder builder) {

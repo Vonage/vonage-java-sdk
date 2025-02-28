@@ -26,8 +26,10 @@ import com.vonage.client.JsonableBaseObject;
 public class TalkResponse extends JsonableBaseObject {
     private String uuid, message;
 
-    @Deprecated
-    public TalkResponse() {}
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
+    TalkResponse() {}
 
     /**
      * UUID of the call to which the message was sent.

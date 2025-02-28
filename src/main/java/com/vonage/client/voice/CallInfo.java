@@ -31,6 +31,9 @@ public class CallInfo extends JsonableBaseObject {
     private Date startTime, endTime;
     private CallStatus status;
 
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
     CallInfo() {}
 
     /**

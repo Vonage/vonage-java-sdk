@@ -27,6 +27,9 @@ public class WebSocketEndpoint extends JsonableBaseObject implements Endpoint {
     private String uri, contentType;
     @JsonProperty("headers") private Map<String, Object> headers;
 
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
     protected WebSocketEndpoint() {
     }
 

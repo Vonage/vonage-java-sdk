@@ -30,8 +30,10 @@ public class CallInfoPage extends JsonableBaseObject implements Iterable<CallInf
     private PageLinks links;
     private EmbeddedCalls embedded;
 
-    @Deprecated
-    public CallInfoPage() {}
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
+    CallInfoPage() {}
 
     /**
      * Total number of results.

@@ -29,6 +29,9 @@ public class StreamAction extends JsonableBaseObject implements Action {
     private Boolean bargeIn;
     private Integer loop;
 
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
     StreamAction() {}
 
     private StreamAction(Builder builder) {

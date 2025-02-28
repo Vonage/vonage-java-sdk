@@ -30,6 +30,9 @@ public class TalkAction extends JsonableBaseObject implements Action {
     private TextToSpeechLanguage language;
     private Boolean premium;
 
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
     TalkAction() {}
 
     private TalkAction(Builder builder) {

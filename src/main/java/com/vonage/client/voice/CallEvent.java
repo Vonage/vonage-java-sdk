@@ -27,8 +27,10 @@ public class CallEvent extends JsonableBaseObject {
     private CallStatus status;
     private CallDirection direction;
 
-    @Deprecated
-    public CallEvent() {}
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
+    CallEvent() {}
 
     /**
      * The unique identifier for this call leg. The UUID is created when your call request is accepted by Vonage.

@@ -17,10 +17,8 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
-import com.vonage.client.users.channels.Sip;
 import static com.vonage.client.voice.SipHeader.USER_TO_USER;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -31,8 +29,10 @@ public class SipEndpoint extends JsonableBaseObject implements Endpoint {
     private Map<String, ?> headers;
     private Map<SipHeader, String> standardHeaders;
 
-    protected SipEndpoint() {
-    }
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
+    protected SipEndpoint() {}
 
     /**
      * Creates a new SIP endpoint request.

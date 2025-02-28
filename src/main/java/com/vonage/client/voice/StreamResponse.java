@@ -26,8 +26,10 @@ import com.vonage.client.JsonableBaseObject;
 public class StreamResponse extends JsonableBaseObject {
     private String uuid, message;
 
-    @Deprecated
-    public StreamResponse() {}
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
+    StreamResponse() {}
 
     /**
      * UUID of the call to which the message was sent.

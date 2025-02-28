@@ -38,6 +38,9 @@ public final class RecordAction extends JsonableBaseObject implements Action {
     private SplitRecording split;
     private TranscriptionSettings transcription;
 
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
     RecordAction() {}
 
     private RecordAction(Builder builder) {

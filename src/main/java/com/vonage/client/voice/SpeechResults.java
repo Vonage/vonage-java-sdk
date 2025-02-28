@@ -32,6 +32,11 @@ public class SpeechResults extends JsonableBaseObject {
     private URI recordingUrl;
 
     /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
+    SpeechResults() {}
+
+    /**
      * Speech recording URL. Included if the {@code saveAudio} flag is set to {@code true} in
      * the input action. Requires JWT authorization for downloading see <a
      * href=https://developer.vonage.com/en/voice/voice-api/code-snippets/recording-calls/download-a-recording>

@@ -28,6 +28,11 @@ public class SpeechTranscript extends JsonableBaseObject {
     private Double confidence;
 
     /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
+    SpeechTranscript() {}
+
+    /**
      * Transcript text representing the words that the user spoke.
      *
      * @return The transcript text.
@@ -43,6 +48,7 @@ public class SpeechTranscript extends JsonableBaseObject {
      *
      * @return The confidence estimate between 0.0 and 1.0 as a Double.
      */
+    @JsonProperty("confidence")
     public Double getConfidence() {
         return confidence;
     }

@@ -38,6 +38,9 @@ public class ConnectAction extends JsonableBaseObject implements Action {
     private Boolean randomFromNumber;
     private URI ringbackTone;
 
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
     ConnectAction() {}
 
     private ConnectAction(Builder builder) {

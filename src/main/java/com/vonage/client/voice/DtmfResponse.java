@@ -26,8 +26,10 @@ import com.vonage.client.JsonableBaseObject;
 public class DtmfResponse extends JsonableBaseObject {
     private String uuid, message;
 
-    @Deprecated
-    public DtmfResponse() {}
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
+    DtmfResponse() {}
 
     /**
      * Unique identifier for the call leg DTMF was sent to.

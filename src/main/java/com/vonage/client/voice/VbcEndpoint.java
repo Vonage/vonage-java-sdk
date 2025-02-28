@@ -26,6 +26,9 @@ import com.vonage.client.JsonableBaseObject;
 public class VbcEndpoint extends JsonableBaseObject implements Endpoint {
     private String extension;
 
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
     protected VbcEndpoint() {
     }
 

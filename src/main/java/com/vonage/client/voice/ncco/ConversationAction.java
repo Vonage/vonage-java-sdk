@@ -30,6 +30,9 @@ public class ConversationAction extends JsonableBaseObject implements Action {
     private Collection<String> musicOnHoldUrl, eventUrl, canSpeak, canHear;
     private TranscriptionSettings transcription;
 
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
     ConversationAction() {}
 
     private ConversationAction(Builder builder) {
