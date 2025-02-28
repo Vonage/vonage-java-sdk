@@ -26,9 +26,16 @@ import com.vonage.client.JsonableBaseObject;
 public class AppEndpoint extends JsonableBaseObject implements Endpoint {
     private String user;
 
-    protected AppEndpoint() {
-    }
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
+    protected AppEndpoint() {}
 
+    /**
+     * Create an AppEndpoint with the given user.
+     *
+     * @param user The username.
+     */
     public AppEndpoint(String user) {
         this.user = user;
     }

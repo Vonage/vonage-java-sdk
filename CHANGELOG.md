@@ -2,8 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.17.0] - 2025-02-2?
+# [8.17.0] - 2025-02-28
 - Added user/domain name support to `com.vonage.client.voice.ncco.SipEndpoint`
+- Improved Voice API documentation
+- Deprecated primitive wrapper methods in NCCO action builders
+- Deprecated singleton URL / Endpoint array/collection methods in Voice API
+- Refactored `com.vonage.client.voice.CallsFilter` to extend `HalFilterRequest`
+  - Deprecated `java.util.Date`-based methods
+  - `getOrder()` returns a `com.vonage.client.common.SortOrder` instead of `CallOrder`
+- Made constructors for response objects in Voice API package-private
 
 # [8.16.2] - 2025-02-05
 - Added `disconnected_by` enum to `com.vonage.client.voice.EventWebhook`

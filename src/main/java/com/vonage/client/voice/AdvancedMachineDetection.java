@@ -70,6 +70,9 @@ public class AdvancedMachineDetection extends JsonableBaseObject {
 	private Mode mode;
 	private Integer beepTimeout;
 
+	/**
+	 * Constructor used reflectively by Jackson for instantiation.
+	 */
 	AdvancedMachineDetection() {}
 
 	AdvancedMachineDetection(Builder builder) {

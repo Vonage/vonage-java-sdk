@@ -32,9 +32,9 @@ public class RecordActionTest {
     public void testAllFields() {
         RecordAction record = RecordAction.builder()
                 .transcription(TranscriptionSettings.builder().sentimentAnalysis(false).build())
-                .format(RecordingFormat.MP3).split(SplitRecording.CONVERSATION)
-                .eventMethod(EventMethod.POST).eventUrl("https://example.com").channels(10)
-                .endOnSilence(3).endOnKey('#').timeOut(5).beepStart(true).build();
+                .format(RecordingFormat.MP3).eventMethod(EventMethod.POST)
+                .eventUrl("https://example.com").channels(10).endOnSilence(3)
+                .endOnKey('#').timeOut(5).beepStart(true).build();
 
         TestUtils.testJsonableBaseObject(record);
         String expectedJson = "[{\"format\":\"mp3\",\"endOnSilence\":3,\"timeOut\":5," +
@@ -70,7 +70,7 @@ public class RecordActionTest {
     @Test
     public void testSplit() {
         RecordAction record = RecordAction.builder().split(SplitRecording.CONVERSATION).build();
-        assertEquals("[{\"split\":\"conversation\",\"action\":\"record\"}]", new Ncco(record).toJson());
+        assertEquals("[{\"action\":\"record\"}]", new Ncco(record).toJson());
     }
 
     @Test

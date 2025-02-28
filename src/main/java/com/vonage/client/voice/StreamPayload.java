@@ -18,12 +18,10 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
+import java.util.Objects;
 
 /**
- * The JSON payload that will be sent in {@link VoiceClient#startStream}.
- * <p>
- * {@code streamUrl}: An array containing a single URL to an mp3 or wav (16-bit) audio file.
- * {@code loop}: The number of times the audio file at {@code streamUrl} is repeated before the stream ends. Set to 0 to loop infinitely
+ * Represents the JSON payload that will be sent in {@link VoiceClient#startStream}.
  */
 class StreamPayload extends JsonableBaseObject {
     @JsonIgnore final String uuid;
@@ -31,23 +29,46 @@ class StreamPayload extends JsonableBaseObject {
     private final Integer loop;
     private final Double level;
 
+    /**
+     * Creates a new StreamPayload.
+     *
+     * @param streamUrl URL to an MP3 or wav (16-bit) audio file.
+     * @param loop Number of times the audio is repeated before the stream ends (0 means infinite).
+     * @param level The volume the audio is played at (-1.0 to 1.0).
+     * @param uuid UUID of the call to stream audio into.
+     */
     public StreamPayload(String streamUrl, Integer loop, Double level, String uuid) {
-        this.streamUrl = new String[]{streamUrl};
+        this.streamUrl = new String[]{Objects.requireNonNull(streamUrl, "Stream URL is required.")};
         this.loop = loop;
         this.level = level;
         this.uuid = uuid;
     }
 
+    /**
+     * An array containing a single URL to an MP3 or wav (16-bit) audio file.
+     *
+     * @return The stream URL wrapped in an array.
+     */
     @JsonProperty("stream_url")
     public String[] getStreamUrl() {
         return streamUrl;
     }
 
+    /**
+     * Number of times the audio file at {@code streamUrl} is repeated before the stream ends.
+     *
+     * @return The number of times the audio file is repeated, or {@code null} if unspecified.
+     */
     @JsonProperty("loop")
     public Integer getLoop() {
         return loop;
     }
 
+    /**
+     * Volume which the audio is played at.
+     *
+     * @return The stream volume between -1.0 and 1.0, or {@code null} if unspecified.
+     */
     @JsonProperty("level")
     public Double getLevel() {
         return level;

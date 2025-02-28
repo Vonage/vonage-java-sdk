@@ -24,13 +24,14 @@ import java.util.Collection;
  * An NCCO stream action which allows for media to be streamed to a call.
  */
 public class StreamAction extends JsonableBaseObject implements Action {
-    private static final String ACTION = "stream";
-
     private Collection<String> streamUrl;
     private Float level;
     private Boolean bargeIn;
     private Integer loop;
 
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
     StreamAction() {}
 
     private StreamAction(Builder builder) {
@@ -42,117 +43,246 @@ public class StreamAction extends JsonableBaseObject implements Action {
 
     @Override
     public String getAction() {
-        return ACTION;
+        return "stream";
     }
 
+    /**
+     * Publicly accessible URL to an MP3 or 16-bit WAV audio file to stream into the Call or Conversation.
+     *
+     * @return The stream URL wrapped in a collection.
+     */
     @JsonProperty("streamUrl")
     public Collection<String> getStreamUrl() {
         return streamUrl;
     }
 
+    /**
+     * Set the audio level of the stream in the range between -1 and 1 inclusively with a precision of 0.1.
+     * The default value is 0.
+     *
+     * @return The volume level that the audio is played at, or {@code null} if unspecified.
+     */
     @JsonProperty("level")
     public Float getLevel() {
         return level;
     }
 
+    /**
+     * Determines whether this action is terminated when the user presses a button on the keypad. Use this
+     * feature to enable users to choose an option without having to listen to the whole message in your
+     * Interactive Voice Response (IVR). If you set bargeIn to true on one more Stream actions then the next
+     * action in the NCCO stack must be an input action. The default value is {@code false}.
+     *
+     * @return Whether user input can terminate this action, or {@code null} if unspecified.
+     */
     @JsonProperty("bargeIn")
     public Boolean getBargeIn() {
         return bargeIn;
     }
 
+    /**
+     * Number of times audio is repeated before the Call is closed. The default value is 1.
+     * Set to 0 to loop infinitely.
+     *
+     * @return The number of times the audio stream is repeated, or {@code null} if unspecified.
+     */
     @JsonProperty("loop")
     public Integer getLoop() {
         return loop;
     }
 
     /**
-     * @param streamUrl An array containing a single URL to an mp3 or wav (16-bit) audio file to stream to the
-     *                  Call or Conversation.
-     * @return A {@link Builder}.
+     * Entrypoint for constructing an instance of this class.
+     *
+     * @param streamUrl A collection containing a single URL to an MP3 or 16-bit WAV audio file to stream to the call.
+     *
+     * @return A new Builder.
+     *
+     * @deprecated Use {@link #builder(String)}. This method will be removed in the next major release.
      */
+    @Deprecated
     public static Builder builder(Collection<String> streamUrl) {
-        return new Builder(streamUrl);
+        return builder().streamUrl(streamUrl);
     }
 
     /**
-     * @param streamUrl An array containing a single URL to an mp3 or wav (16-bit) audio file to stream to the
-     *                  Call or Conversation.
-     * @return A {@link Builder}.
+     * Entrypoint for constructing an instance of this class.
+     *
+     * @param streamUrl An array containing a single URL to an MP3 or 16-bit WAV audio file to stream to the call.
+     *
+     * @return A new Builder.
+     *
+     * @deprecated Use {@link #builder(String)}. This method will be removed in the next major release.
      */
+    @Deprecated
     public static Builder builder(String... streamUrl) {
-        return builder(Arrays.asList(streamUrl));
+        return builder().streamUrl(streamUrl);
     }
 
+    /**
+     * Entrypoint for constructing an instance of this class.
+     *
+     * @param streamUrl URL to an MP3 or 16-bit WAV audio file to stream into the Call or Conversation.
+     *
+     * @return A new Builder.
+     */
+    public static Builder builder(String streamUrl) {
+        return builder().streamUrl(streamUrl);
+    }
+
+    /**
+     * Entrypoint for constructing an instance of this class.
+     * You must provide the stream URL by calling the {@linkplain Builder#streamUrl(String)} method.
+     *
+     * @return A new Builder.
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Builder to create a StreamAction. The stream URL is mandatory.
+     */
     public static class Builder {
         private Collection<String> streamUrl;
         private Float level;
         private Boolean bargeIn;
         private Integer loop;
 
-        Builder(Collection<String> streamUrl) {
-            this.streamUrl = streamUrl;
-        }
+        Builder() {}
 
         /**
-         * @param streamUrl An array containing a single URL to an mp3 or wav (16-bit) audio file to stream to the
-         *                  Call or Conversation.
+         * URL to an MP3 or 16-bit WAV audio file to stream into the Call or Conversation.
+         *
+         * @param streamUrl The publicly accessible URL to the audio file to stream.
          *
          * @return This builder.
          */
+        public Builder streamUrl(String streamUrl) {
+            return streamUrl(new String[]{streamUrl});
+        }
+
+        /**
+         * URL to an MP3 or 16-bit WAV audio file to stream into the Call or Conversation.
+         *
+         * @param streamUrl The publicly accessible URL to the audio file to stream wrapped in a collection.
+         *
+         * @return This builder.
+         *
+         * @deprecated Use {@link #streamUrl(String)}. This method will be removed in the next major release.
+         */
+        @Deprecated
         public Builder streamUrl(Collection<String> streamUrl) {
             this.streamUrl = streamUrl;
             return this;
         }
 
         /**
-         * @param streamUrl An array containing a single URL to an mp3 or wav (16-bit) audio file to stream to the
-         *                  Call or Conversation.
+         * URL to an MP3 or 16-bit WAV audio file to stream into the Call or Conversation.
+         *
+         * @param streamUrl The publicly accessible URL to the audio file to stream wrapped in an array.
          *
          * @return This builder.
+         *
+         * @deprecated Use {@link #streamUrl(String)}. This method will be removed in the next major release.
          */
+        @Deprecated
         public Builder streamUrl(String... streamUrl) {
             return streamUrl(Arrays.asList(streamUrl));
         }
 
         /**
-         * @param level Set the audio level of the stream in the range between -1 and 1 inclusively with a precision
-         *              of 0.1. The default value is 0.
+         * Set the audio level of the stream in the range between -1 and 1 inclusively with a precision of 0.1.
+         * The default value is 0.
+         *
+         * @param level The volume level that the audio is played at as a Float, between -1.0 and 1.0 (inclusive).
          *
          * @return This builder.
+         *
+         * @deprecated Use {@link #level(double)}. This method will be removed in the next major release.
          */
+        @Deprecated
         public Builder level(Float level) {
             this.level = level;
             return this;
         }
 
         /**
-         * @param bargeIn Set to true so this action is terminated when the user presses a button on the keypad.
-         *                Use this feature to enable users to choose an option without having to listen to the whole
-         *                message in your Interactive Voice Response (IVR ). If you set bargeIn to true on one more
-         *                Stream actions then the next action in the NCCO stack must be an input action.
-         *                <p>
-         *                The default value is false.
+         * Set the audio level of the stream in the range between -1 and 1 inclusively with a precision of 0.1.
+         * The default value is 0.
+         *
+         * @param level The volume level that the audio is played at, between -1.0 and 1.0 (inclusive).
          *
          * @return This builder.
          */
+        public Builder level(double level) {
+            return level(Float.valueOf((float) level));
+        }
+
+        /**
+         * Set to {@code true} so this action is terminated when the user presses a button on the keypad. Use this
+         * feature to enable users to choose an option without having to listen to the whole message in your
+         * Interactive Voice Response (IVR). If you set bargeIn to true on one more Stream actions then the next
+         * action in the NCCO stack must be an input action. The default value is {@code false}.
+         *
+         * @param bargeIn Whether to allow user input to terminate this action.
+         *
+         * @return This builder.
+         *
+         * @deprecated Use {@link #bargeIn(boolean)}. This method will be removed in the next major release.
+         */
+        @Deprecated
         public Builder bargeIn(Boolean bargeIn) {
             this.bargeIn = bargeIn;
             return this;
         }
 
         /**
-         * @param loop The number of times audio is repeated before the Call is closed.
-         *             The default value is 1. Set to 0 to loop infinitely.
+         * Set to {@code true} so this action is terminated when the user presses a button on the keypad. Use this
+         * feature to enable users to choose an option without having to listen to the whole message in your
+         * Interactive Voice Response (IVR). If you set bargeIn to true on one more Stream actions then the next
+         * action in the NCCO stack must be an input action. The default value is {@code false}.
+         *
+         * @param bargeIn Whether to allow user input to terminate this action.
          *
          * @return This builder.
          */
+        public Builder bargeIn(boolean bargeIn) {
+            return bargeIn(Boolean.valueOf(bargeIn));
+        }
+
+        /**
+         * Number of times audio is repeated before the Call is closed. The default value is 1.
+         * Set to 0 to loop infinitely.
+         *
+         * @param loop The number of times the audio stream is repeated (0 meaning infinite).
+         *
+         * @return This builder.
+         *
+         * @deprecated Use {@link #loop(int)}. This method will be removed in the next major release.
+         */
+        @Deprecated
         public Builder loop(Integer loop) {
             this.loop = loop;
             return this;
         }
 
         /**
-         * @return A new {@link StreamAction} object from the stored builder options.
+         * Number of times audio is repeated before the Call is closed. The default value is 1.
+         * Set to 0 to loop infinitely.
+         *
+         * @param loop The number of times the audio stream is repeated (0 meaning infinite).
+         *
+         * @return This builder.
+         */
+        public Builder loop(int loop) {
+            return loop(Integer.valueOf(loop));
+        }
+
+        /**
+         * Builds the StreamAction.
+         *
+         * @return A new SteamAction object from the stored builder options.
          */
         public StreamAction build() {
             return new StreamAction(this);

@@ -26,6 +26,11 @@ public class DtmfResult extends JsonableBaseObject {
     private boolean timedOut;
 
     /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
+    DtmfResult() {}
+
+    /**
      * The button sequence pressed by the user.
      *
      * @return The buttons pressed as a String.

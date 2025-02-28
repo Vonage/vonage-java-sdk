@@ -24,14 +24,15 @@ import java.util.stream.Collectors;
  * An NCCO conversation action which enables the ability to host conference calls.
  */
 public class ConversationAction extends JsonableBaseObject implements Action {
-    private static final String ACTION = "conversation";
-
     private String name;
     private Boolean startOnEnter, endOnExit, record, mute;
     private EventMethod eventMethod;
     private Collection<String> musicOnHoldUrl, eventUrl, canSpeak, canHear;
     private TranscriptionSettings transcription;
 
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
     ConversationAction() {}
 
     private ConversationAction(Builder builder) {
@@ -52,59 +53,119 @@ public class ConversationAction extends JsonableBaseObject implements Action {
 
     @Override
     public String getAction() {
-        return ACTION;
+        return "conversation";
     }
 
+    /**
+     * Name of the Conversation room.
+     *
+     * @return The conversation name as a string.
+     */
     @JsonProperty("name")
     public String getName() {
         return name;
     }
 
+    /**
+     * A URL to the MP3 file to stream to participants until the conversation starts. By default, the conversation
+     * starts when the first person calls the virtual number associated with your Voice app.
+     *
+     * @return The music on hold URL wrapped in a collection.
+     */
     @JsonProperty("musicOnHoldUrl")
     public Collection<String> getMusicOnHoldUrl() {
         return musicOnHoldUrl;
     }
 
+    /**
+     * The default value of true ensures that the conversation starts when this caller joins conversation name.
+     *
+     * @return Whether to start the conversation when joining, or {@code null} if unspecified.
+     */
     @JsonProperty("startOnEnter")
     public Boolean getStartOnEnter() {
         return startOnEnter;
     }
 
+    /**
+     * Specifies whether a moderated conversation ends when the moderator hangs up. This is set to false by default,
+     * which means that the conversation only ends when the last remaining participant hangs up, regardless of whether
+     * the moderator is still on the call. or hangs up.
+     *
+     * @return Whether to end the conversation on hangup, or {@code null} if unspecified.
+     */
     @JsonProperty("endOnExit")
     public Boolean getEndOnExit() {
         return endOnExit;
     }
 
+    /**
+     * Determines if the audio from the participant will be played to the conversation and recorded.
+     * When using {@code canSpeak}, the mute parameter is not supported.
+     *
+     * @return Whether the participant will be muted, or {@code null} if unspecified.
+     */
     @JsonProperty("mute")
     public Boolean getMute() {
         return mute;
     }
 
+    /**
+     * Determines if this conversation is recorded. For standard conversations, recordings start when one or more
+     * attendees connect to the conversation. For moderated conversations, recordings start when the moderator joins.
+     *
+     * @return Whether recording is enabled, or {@code null} if unspecified.
+     */
     @JsonProperty("record")
     public Boolean getRecord() {
         return record;
     }
 
+    /**
+     * URL to the webhook endpoint Vonage calls asynchronously on each of the Call States.
+     *
+     * @return The event URL wrapped in a collection, or {@code null} if unspecified.
+     */
     @JsonProperty("eventUrl")
     public Collection<String> getEventUrl() {
         return eventUrl;
     }
 
+    /**
+     * HTTP method used to make the request to eventUrl. The default value is POST.
+     *
+     * @return The event method as an enum, or {@code null} if unspecified.
+     */
     @JsonProperty("eventMethod")
     public EventMethod getEventMethod() {
         return eventMethod;
     }
 
+    /**
+     * Call leg IDs that can hear this participant speak.
+     *
+     * @return The leg UUIDs that can hear this participant speak, or {@code null} if unspecified.
+     */
     @JsonProperty("canSpeak")
     public Collection<String> getCanSpeak() {
         return canSpeak;
     }
 
+    /**
+     * Call leg IDs that this participant can hear.
+     *
+     * @return The leg UUIDs that this participant can hear, or {@code null} if unspecified.
+     */
     @JsonProperty("canHear")
     public Collection<String> getCanHear() {
         return canHear;
     }
 
+    /**
+     * Transcription settings. If present (even if all settings are default), transcription is activated.
+     *
+     * @return The transcription settings, or {@code null} if unspecified.
+     */
     @JsonProperty("transcription")
     public TranscriptionSettings getTranscription() {
         return transcription;
@@ -148,13 +209,16 @@ public class ConversationAction extends JsonableBaseObject implements Action {
         }
 
         /**
-         * @param musicOnHoldUrl A URL to the mp3 file to stream to participants until the conversation starts.
-         *                       By default, the conversation starts when the first person calls the virtual number
-         *                       associated with your Voice app. To stream this mp3 before the moderator joins the
-         *                       conversation, set startOnEnter to false for all users other than the moderator.
+         * A URL to the MP3 file to stream to participants until the conversation starts. By default, the
+         * conversation starts when the first person calls the virtual number associated with your Voice app. To
+         * stream this MP3 before the moderator joins the conversation, set {@linkplain #startOnEnter(boolean)}
+         * to {@code false} for all users other than the moderator.
+         *
+         * @param musicOnHoldUrl Absolute URL to the hold music in MP3 format, wrapped in a string collection.
          *
          * @return This builder.
-         * @deprecated This will be removed in the next major release.
+         *
+         * @deprecated Use {@linkplain #musicOnHoldUrl(String)}. This will be removed in the next major release.
          */
         @Deprecated
         public Builder musicOnHoldUrl(Collection<String> musicOnHoldUrl) {
@@ -163,17 +227,50 @@ public class ConversationAction extends JsonableBaseObject implements Action {
         }
 
         /**
-         * A URL to the mp3 file to stream to participants until the conversation starts.
-         * By default, the conversation starts when the first person calls the virtual number
-         * associated with your Voice app. To stream this mp3 before the moderator joins the
-         * conversation, set startOnEnter to false for all users other than the moderator.
+         * A URL to the MP3 file to stream to participants until the conversation starts. By default, the
+         * conversation starts when the first person calls the virtual number associated with your Voice app. To
+         * stream this MP3 before the moderator joins the conversation, set {@linkplain #startOnEnter(boolean)}
+         * to {@code false} for all users other than the moderator.
+         *
+         * @param musicOnHoldUrl Absolute URL to the hold music in MP3 format, as a string.
+         *
+         * @return This builder.
+         *
+         * @deprecated Use {@link #musicOnHoldUrl(Collection)}. This will be removed in the next major release.
+         */
+        @Deprecated
+        public Builder musicOnHoldUrl(String... musicOnHoldUrl) {
+            return musicOnHoldUrl(Arrays.asList(musicOnHoldUrl));
+        }
+
+        /**
+         * A URL to the MP3 file to stream to participants until the conversation starts. By default, the
+         * conversation starts when the first person calls the virtual number associated with your Voice app. To
+         * stream this MP3 before the moderator joins the conversation, set {@linkplain #startOnEnter(boolean)}
+         * to {@code false} for all users other than the moderator.
          *
          * @param musicOnHoldUrl Absolute URL to the hold music in MP3 format, as a string.
          *
          * @return This builder.
          */
-        public Builder musicOnHoldUrl(String... musicOnHoldUrl) {
-            return musicOnHoldUrl(Arrays.asList(musicOnHoldUrl));
+        public Builder musicOnHoldUrl(String musicOnHoldUrl) {
+            return musicOnHoldUrl(new String[]{musicOnHoldUrl});
+        }
+
+        /**
+         * The default value of {@code true} ensures that the conversation starts when this caller joins
+         * the conversation. Set to false for attendees in a moderated conversation.
+         *
+         * @param startOnEnter Whether to start the conversation when joining.
+         *
+         * @return This builder.
+         *
+         * @deprecated Use {@link #startOnEnter(boolean)}. This will be removed in the next major release.
+         */
+        @Deprecated
+        public Builder startOnEnter(Boolean startOnEnter) {
+            this.startOnEnter = startOnEnter;
+            return this;
         }
 
         /**
@@ -184,8 +281,24 @@ public class ConversationAction extends JsonableBaseObject implements Action {
          *
          * @return This builder.
          */
-        public Builder startOnEnter(Boolean startOnEnter) {
-            this.startOnEnter = startOnEnter;
+        public Builder startOnEnter(boolean startOnEnter) {
+            return startOnEnter(Boolean.valueOf(startOnEnter));
+        }
+
+        /**
+         * For moderated conversations, set to {@code true} in the moderator NCCO so the conversation is ended
+         * when the moderator hangs up. The default value of false means the conversation is not terminated
+         * when a caller hangs up; the conversation ends when the last caller hangs up.
+         *
+         * @param endOnExit Whether to end the conversation when the moderator hangs up.
+         *
+         * @return This builder.
+         *
+         * @deprecated Use {@link #endOnExit(boolean)}. This will be removed in the next major release.
+         */
+        @Deprecated
+        public Builder endOnExit(Boolean endOnExit) {
+            this.endOnExit = endOnExit;
             return this;
         }
 
@@ -198,8 +311,26 @@ public class ConversationAction extends JsonableBaseObject implements Action {
          *
          * @return This builder.
          */
-        public Builder endOnExit(Boolean endOnExit) {
-            this.endOnExit = endOnExit;
+        public Builder endOnExit(boolean endOnExit) {
+            return endOnExit(Boolean.valueOf(endOnExit));
+        }
+
+        /**
+         * Set to {@code true} to record this conversation. For standard conversations, recordings start
+         * when one or more attendees connects to the conversation. For moderated conversations, recordings
+         * start when the moderator joins. That is, when an NCCO is executed for the named conversation where
+         * startOnEnter is set to true. When the recording is terminated, the URL you download the recording
+         * from is sent to the event URL. By default, audio is recorded in MP3 format.
+         *
+         * @param record Whether to enable recording.
+         *
+         * @return This builder.
+         *
+         * @deprecated Use {@link #record(boolean)}. This will be removed in the next major release.
+         */
+        @Deprecated
+        public Builder record(Boolean record) {
+            this.record = record;
             return this;
         }
 
@@ -208,27 +339,24 @@ public class ConversationAction extends JsonableBaseObject implements Action {
          * when one or more attendees connects to the conversation. For moderated conversations, recordings
          * start when the moderator joins. That is, when an NCCO is executed for the named conversation where
          * startOnEnter is set to true. When the recording is terminated, the URL you download the recording
-         * from is sent to the event URL.
-         * <p>
-         * By default, audio is recorded in MP3 format. See the
-         * <a href="https://developer.nexmo.com/voice/voice-api/guides/recordingfile-formats">recording guide</a>
-         * for more details.
+         * from is sent to the event URL. By default, audio is recorded in MP3 format.
          *
          * @param record Whether to enable recording.
          *
          * @return This builder.
          */
-        public Builder record(Boolean record) {
-            this.record = record;
-            return this;
+        public Builder record(boolean record) {
+            return record(Boolean.valueOf(record));
         }
 
         /**
-         * @param eventUrl Set the URL to the webhook endpoint Vonage calls asynchronously on each of the
-         *                 <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flowcall-states">Call States</a>.
+         * Set the URL to the webhook endpoint Vonage calls asynchronously on each of the Call States.
+         *
+         * @param eventUrl The event URL wrapped in a string collection.
          *
          * @return This builder.
-         * @deprecated This will be removed in the next major release.
+         *
+         * @deprecated Use {@linkplain #eventUrl(String)}. This will be removed in the next major release.
          */
         @Deprecated
         public Builder eventUrl(Collection<String> eventUrl) {
@@ -237,15 +365,28 @@ public class ConversationAction extends JsonableBaseObject implements Action {
         }
 
         /**
-         * Set the URL to the webhook endpoint Vonage calls asynchronously on each of the
-         * <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flowcall-states">Call States</a>.
+         * Set the URL to the webhook endpoint Vonage calls asynchronously on each of the Call States.
+         *
+         * @param eventUrl The event URL as a string array.
+         *
+         * @return This builder.
+         *
+         * @deprecated Use {@linkplain #eventUrl(String)}. This will be removed in the next major release.
+         */
+        @Deprecated
+        public Builder eventUrl(String... eventUrl) {
+            return eventUrl(Arrays.asList(eventUrl));
+        }
+
+        /**
+         * Set the URL to the webhook endpoint Vonage calls asynchronously on each of the Call States.
          *
          * @param eventUrl The event URL as a string.
          *
          * @return This builder.
          */
-        public Builder eventUrl(String... eventUrl) {
-            return eventUrl(Arrays.asList(eventUrl));
+        public Builder eventUrl(String eventUrl) {
+            return eventUrl(new String[]{eventUrl});
         }
 
         /**

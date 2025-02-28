@@ -36,15 +36,9 @@ public final class ListUserConversationsRequest extends AbstractListUserRequest 
 	@Override
 	public Map<String, String> makeParams() {
 		Map<String, String> params = super.makeParams();
-		if (state != null) {
-            params.put("state", state.toString());
-        }
-		if (orderBy != null) {
-            params.put("order_by", orderBy.toString());
-        }
-		if (includeCustomData != null) {
-            params.put("include_custom_data", includeCustomData.toString());
-        }
+		conditionalAdd(params, "state", state);
+		conditionalAdd(params, "order_by", orderBy);
+		conditionalAdd(params, "include_custom_data", includeCustomData);
 		return params;
 	}
 

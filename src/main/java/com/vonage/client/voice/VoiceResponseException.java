@@ -25,6 +25,11 @@ import com.vonage.client.VonageApiResponseException;
  */
 public final class VoiceResponseException extends VonageApiResponseException {
 
+	/**
+	 * Sets the HTTP status code of the response. Intended to be called reflectively.
+	 *
+	 * @param statusCode The status code as an integer (typically in the 4xx range).
+	 */
 	void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
 	}

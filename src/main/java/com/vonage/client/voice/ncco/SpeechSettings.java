@@ -32,10 +32,9 @@ public class SpeechSettings extends JsonableBaseObject {
     private Boolean saveAudio;
 
     /**
-     * @deprecated This will be made private in a future release. Use {@link #builder()}.
+     * Constructor used reflectively by Jackson for instantiation.
      */
-    @Deprecated
-    public SpeechSettings() {}
+    SpeechSettings() {}
 
     private SpeechSettings(Builder builder) {
         if (builder.uuid != null) {
@@ -58,49 +57,91 @@ public class SpeechSettings extends JsonableBaseObject {
         saveAudio = builder.saveAudio;
     }
 
+    /**
+     * Unique ID of the Call leg for the user to capture the speech of. The first joined leg of the call by default.
+     *
+     * @return The call ID wrapped in a string collection, or {@code null} if unspecified.
+     */
     @JsonProperty("uuid")
     public Collection<String> getUuid() {
         return uuid;
     }
 
+    /**
+     * Expected language of the user's speech.
+     *
+     * @return The language as an enum, or {@code null} if unspecified.
+     */
     @JsonProperty("language")
     public Language getLanguage() {
         return language;
     }
 
+    /**
+     * List of hints to improve recognition quality of certain words are expected from the user.
+     *
+     * @return The collection of hint strings, or {@code null} if unspecified.
+     */
     @JsonProperty("context")
     public Collection<String> getContext() {
         return context;
     }
 
+    /**
+     * Controls how long the system will wait after user stops speaking to decide the input is completed.
+     *
+     * @return The input completion wait time in seconds as a double, or {@code null} if unspecified.
+     */
     @JsonProperty("endOnSilence")
     public Double getEndOnSilence() {
         return endOnSilence;
     }
 
+    /**
+     * Controls how long the system will wait for the user to start speaking.
+     *
+     * @return The initial speech timeout in seconds as an integer, or {@code null} if unspecified.
+     */
     @JsonProperty("startTimeout")
     public Integer getStartTimeout() {
         return startTimeout;
     }
 
+    /**
+     * Controls maximum speech duration from the moment user starts speaking.
+     *
+     * @return The maximum speech duration in seconds as an integer, or {@code null} if unspecified.
+     */
     @JsonProperty("maxDuration")
     public Integer getMaxDuration() {
         return maxDuration;
     }
 
+    /**
+     * Audio sensitivity used to differentiate noise from speech.
+     *
+     * @return The audio sensitivity as an integer, or {@code null} if unspecified.
+     */
     @JsonProperty("sensitivity")
     public Integer getSensitivity() {
         return sensitivity;
     }
 
+    /**
+     * Controls whether the speech input recording is sent to your webhook endpoint at eventUrl.
+     *
+     * @return Whether to send the speech input to the event webhook, or {@code null} if unspecified.
+     */
     @JsonProperty("saveAudio")
     public Boolean getSaveAudio() {
         return saveAudio;
     }
 
-
     /**
-     * @param language expected language of the user's speech. If empty, default value is en-US.
+     * Sets the expected language of the user's speech.
+     *
+     * @param language The language of the user's speech as an enum.
+     *
      * @deprecated Use {@link Builder#language(Language)}. This will be removed in a future release.
      */
     @Deprecated
@@ -109,8 +150,10 @@ public class SpeechSettings extends JsonableBaseObject {
     }
 
     /**
+     * Sets the unique ID of the call leg for the user to capture the speech of.
      *
-     * @param uuid The unique ID of the Call leg for the user to capture the speech of, wrapped in a collection.
+     * @param uuid The unique ID of the call leg for the user to capture the speech of, wrapped in a collection.
+     *
      * @deprecated Use {@link Builder#uuid(String)}. This will be removed in a future release.
      */
     @Deprecated
@@ -121,7 +164,8 @@ public class SpeechSettings extends JsonableBaseObject {
     /**
      * List of hints to improve recognition quality if certain words are expected from the user.
      *
-     * @param context list of hints
+     * @param context The collection of hints.
+     *
      * @deprecated Use {@link Builder#context(Collection)}. This will be removed in a future release.
      */
     @Deprecated
@@ -131,9 +175,10 @@ public class SpeechSettings extends JsonableBaseObject {
 
     /**
      * Controls how long the system will wait after user stops speaking to decide the input is completed.
-     * Timeout range 1-10 seconds. If empty,Default value is 2
+     * Timeout range 1-10 seconds. If empty, default value is 2.
      *
-     * @param endOnSilence wait time for voice input to complete
+     * @param endOnSilence Wait time for voice input to complete.
+     *
      * @deprecated Use {@link Builder#endOnSilence(double)}. This will be removed in a future release.
      */
     @Deprecated
@@ -142,10 +187,10 @@ public class SpeechSettings extends JsonableBaseObject {
     }
 
     /**
-     * Controls how long the system will wait for the user to start speaking.
-     * Timeout range 1-10 seconds.
+     * Controls how long the system will wait for the user to start speaking. Timeout range 1-10 seconds.
      *
-     * @param startTimeout timeout for voice input initiation
+     * @param startTimeout Timeout for voice input initiation.
+     *
      * @deprecated Use {@link Builder#startTimeout(int)}. This will be removed in a future release.
      */
     @Deprecated
@@ -154,9 +199,10 @@ public class SpeechSettings extends JsonableBaseObject {
     }
 
     /**
-     * Controls maximum speech duration from the moment user starts speaking. Default value is 60
+     * Controls maximum speech duration from the moment user starts speaking. Default value is 60.
      *
-     * @param maxDuration speech duration starting from user's initiation of speech
+     * @param maxDuration Speech duration starting from user's initiation of speech.
+     *
      * @deprecated Use {@link Builder#maxDuration(int)}. This will be removed in a future release.
      */
     @Deprecated
@@ -202,10 +248,11 @@ public class SpeechSettings extends JsonableBaseObject {
         }
 
         /**
-         * Hints to improve recognition quality if certain words are expected from the user.
+         * Hints to improve recognition quality of certain words are expected from the user.
          *
          * @param context The collection of hint strings.
          * @return This builder.
+         *
          * @see #context(String...)
          */
         public Builder context(Collection<String> context) {
@@ -214,7 +261,7 @@ public class SpeechSettings extends JsonableBaseObject {
         }
 
         /**
-         * Hints to improve recognition quality if certain words are expected from the user.
+         * Hints to improve recognition quality of certain words are expected from the user.
          *
          * @param context The hint strings.
          * @return This builder.
@@ -305,6 +352,9 @@ public class SpeechSettings extends JsonableBaseObject {
         }
     }
 
+    /**
+     * Represents the languages supported by the ASR (Automatic Speech Recognition) feature.
+     */
     public enum Language {
         AFRIKAANS("af-ZA"),
         ALBANIAN("sq-AL"),
@@ -392,6 +442,11 @@ public class SpeechSettings extends JsonableBaseObject {
             this.language = language;
         }
 
+        /**
+         * Retrieve the language code associated with this enum.
+         *
+         * @return The language code as a string.
+         */
         @JsonValue
         public String getLanguage() {
             return language;

@@ -21,6 +21,9 @@ import com.vonage.client.JsonableBaseObject;
 public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
     private String number, dtmfAnswer;
 
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
     PhoneEndpoint() {}
 
     /**

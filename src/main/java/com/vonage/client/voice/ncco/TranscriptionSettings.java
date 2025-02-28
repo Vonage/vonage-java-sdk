@@ -32,6 +32,9 @@ public final class TranscriptionSettings extends JsonableBaseObject {
     private EventMethod eventMethod;
     private Boolean sentimentAnalysis;
 
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
     TranscriptionSettings() {}
 
     private TranscriptionSettings(Builder builder) {

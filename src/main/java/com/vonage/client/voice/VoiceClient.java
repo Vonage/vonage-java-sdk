@@ -430,8 +430,8 @@ public class VoiceClient {
      * @param text      The message to be spoken to the call participants.
      * @param language  The language to use for the text-to-speech.
      * @param style     The language style to use for the text-to-speech.
-     * @param loop      The number of times to repeat the message. The default value is {@code 1}, or you can use {@code
-     *                  0} to indicate that the message should be repeated indefinitely.
+     * @param loop      The number of times to repeat the message. The default value is {@code 1}, or you can use
+     *                  {@code 0} to indicate that the message should be repeated indefinitely.
      *
      * @return The data returned from the Voice API.
      *

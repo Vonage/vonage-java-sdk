@@ -41,6 +41,13 @@ public enum InputMode {
         return name().toLowerCase();
     }
 
+    /**
+     * Convert a string into an {@link InputMode} enum.
+     *
+     * @param name The input mode name as a string.
+     *
+     * @return The {@link InputMode} enum, or {@code null} if invalid / unknown.
+     */
     @JsonCreator
     public static InputMode fromString(String name) {
         if (name == null) return null;

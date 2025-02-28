@@ -17,12 +17,24 @@ package com.vonage.client.voice.ncco;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.Collections;
 
 public class StreamActionTest {
+
     @Test
     public void testBuilderMultipleInstances() {
-        StreamAction.Builder builder = StreamAction.builder("http://example.com");
+        var url = "http://example.com/stream/audio/mp3";
+        var builder = StreamAction.builder().streamUrl(url);
         assertNotSame(builder.build(), builder.build());
+
+        assertNotSame(
+                StreamAction.builder(url),
+                StreamAction.builder(url, url)
+        );
+        assertNotSame(
+                StreamAction.builder(Collections.singletonList(url)),
+                StreamAction.builder(new String[]{url})
+        );
     }
 
     @Test

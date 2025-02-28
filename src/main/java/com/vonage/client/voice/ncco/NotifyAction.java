@@ -25,12 +25,13 @@ import java.util.Map;
  * An NCCO notify action which allows for custom events to be sent to a configured webhook.
  */
 public class NotifyAction extends JsonableBaseObject implements Action {
-    private static final String ACTION = "notify";
-
     private Map<String, ?> payload;
     private Collection<String> eventUrl;
     private EventMethod eventMethod;
 
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
     NotifyAction() {}
 
     private NotifyAction(Builder builder) {
@@ -41,48 +42,107 @@ public class NotifyAction extends JsonableBaseObject implements Action {
 
     @Override
     public String getAction() {
-        return ACTION;
+        return "notify";
     }
 
+    /**
+     * Map of custom keys and values that will be converted to JSON and sent to your event URL.
+     *
+     * @return The payload as a Map.
+     */
     @JsonProperty("payload")
     public Map<String, ?> getPayload() {
         return payload;
     }
 
+    /**
+     * Webhook URL to send events to.
+     *
+     * @return The event URL wrapped as a singleton string collection.
+     */
     @JsonProperty("eventUrl")
     public Collection<String> getEventUrl() {
         return eventUrl;
     }
 
+    /**
+     * HTTP method to use when sending the payload to your event URL.
+     *
+     * @return The event HTTP method as an enum, or {@code null} if unspecified.
+     */
     @JsonProperty("eventMethod")
     public EventMethod getEventMethod() {
         return eventMethod;
     }
 
+    /**
+     * Entrypoint for constructing an instance of this class.
+     *
+     * @param payload The payload to send to the event URL as a Map.
+     * @param eventUrl The event URL to send the payload wrapped in a singleton string collection.
+     *
+     * @return A new Builder.
+     *
+     * @deprecated Use {@link #builder(Map, String)} instead.
+     */
+    @Deprecated
     public static Builder builder(Map<String, ?> payload, Collection<String> eventUrl) {
-        return new Builder(payload, eventUrl);
+        return builder().payload(payload).eventUrl(eventUrl);
     }
 
+    /**
+     * Entrypoint for constructing an instance of this class.
+     *
+     * @param payload The payload to send to the event URL as a Map.
+     * @param eventUrl The event URL to send the payload to as a string array.
+     *
+     * @return A new Builder.
+     *
+     * @deprecated Use {@link #builder(Map, String)} instead.
+     */
+    @Deprecated
     public static Builder builder(Map<String, ?> payload, String... eventUrl) {
         return builder(payload, Arrays.asList(eventUrl));
     }
 
+    /**
+     * Entrypoint for constructing an instance of this class.
+     *
+     * @param payload The payload to send to the event URL as a Map.
+     * @param eventUrl The event URL to send the payload to.
+     *
+     * @return A new Builder.
+     */
+    public static Builder builder(Map<String, ?> payload, String eventUrl) {
+        return builder().payload(payload).eventUrl(eventUrl);
+    }
+
+    /**
+     * Entrypoint for constructing an instance of this class.
+     * You must specify the payload and eventUrl fields using the builder's methods.
+     *
+     * @return A new Builder.
+     * @since 8.17.0
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Builder to create a NotifyAction. The payload and eventUrl fields are mandatory.
+     */
     public static class Builder {
         private Map<String, ?> payload;
         private Collection<String> eventUrl;
         private EventMethod eventMethod;
 
-        /**
-         * @param payload  A Map of String keys and ? values that will be converted to JSON and sent to your event URL.
-         * @param eventUrl The URL to send events to.
-         */
-        private Builder(Map<String, ?> payload, Collection<String> eventUrl) {
-            this.payload = payload;
-            this.eventUrl = eventUrl;
+        private Builder() {
         }
 
         /**
-         * @param payload A Map of String keys and ? values that will be converted to JSON and sent to your event URL.
+         * Map of custom keys and values that will be converted to JSON and sent to your event URL.
+         *
+         * @param payload The action payload as a Map.
          *
          * @return This builder.
          */
@@ -92,26 +152,49 @@ public class NotifyAction extends JsonableBaseObject implements Action {
         }
 
         /**
-         * @param eventUrl The URL to send events to.
+         * Webhook URL to send events to.
+         *
+         * @param eventUrl The event webhook URL wrapped in a collection.
          *
          * @return This builder.
+         *
+         * @deprecated Use {@link #eventUrl(String)} instead.
          */
+        @Deprecated
         public Builder eventUrl(Collection<String> eventUrl) {
             this.eventUrl = eventUrl;
             return this;
         }
 
         /**
-         * @param eventUrl The URL to send events to.
+         * Webhook URL to send events to.
+         *
+         * @param eventUrl The event webhook URL as a string array.
          *
          * @return This builder.
+         *
+         * @deprecated Use {@link #eventUrl(String)} instead.
          */
+        @Deprecated
         public Builder eventUrl(String... eventUrl) {
             return eventUrl(Arrays.asList(eventUrl));
         }
 
         /**
-         * @param eventMethod The HTTP method to use when sending the payload to your event url.
+         * Webhook URL to send events to.
+         *
+         * @param eventUrl The event webhook URL as a string.
+         *
+         * @return This builder.
+         */
+        public Builder eventUrl(String eventUrl) {
+            return eventUrl(new String[]{eventUrl});
+        }
+
+        /**
+         * HTTP method to use when sending the payload to your event URL; either {@code GET} or {@code POST}.
+         *
+         * @param eventMethod The event HTTP method as an enum.
          *
          * @return This builder.
          */

@@ -33,12 +33,29 @@ public class Ncco implements Jsonable {
     private Collection<? extends Action> actions;
     private ObjectWriter writer;
 
+    /**
+     * Creates an empty NCCO object.
+     */
     public Ncco() {
         this(new ObjectMapper().writer(), Collections.emptyList());
     }
 
+    /**
+     * Creates an NCCO object with the given actions.
+     *
+     * @param actions The actions to take in execution order.
+     */
     public Ncco(Collection<Action> actions) {
         this(Jsonable.createDefaultObjectMapper().writer(), actions);
+    }
+
+    /**
+     * Creates an NCCO object with the given actions.
+     *
+     * @param action The actions to take in execution order.
+     */
+    public Ncco(Action... action) {
+        this(Arrays.asList(action));
     }
 
     @Deprecated
@@ -57,10 +74,11 @@ public class Ncco implements Jsonable {
         this(writer, Arrays.asList(action));
     }
 
-    public Ncco(Action... action) {
-        this(Arrays.asList(action));
-    }
-
+    /**
+     * Gets the NCCO actions as an ordered collection.
+     *
+     * @return The call actions to take in execution order.
+     */
     public Collection<? extends Action> getActions() {
         return this.actions;
     }

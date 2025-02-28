@@ -36,6 +36,13 @@ public enum EndpointType {
         return name().toLowerCase();
     }
 
+    /**
+     * Convert a string to an EndpointType enum.
+     *
+     * @param name The endpoint type as a string.
+     *
+     * @return The endpoint type as an enum, or {@code null} if the string is null.
+     */
     @JsonCreator
     public static EndpointType fromString(String name) {
         if (name == null) return null;
