@@ -5,7 +5,7 @@
 
   <groupId>com.vonage</groupId>
   <artifactId>server-sdk</artifactId>
-  <version>8.17.0</version>
+  <version>8.18.0</version>
 
   <name>Vonage Java Server SDK</name>
   <description>Java client for Vonage APIs</description>
@@ -92,7 +92,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>5.15.2</version>
+      <version>5.16.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
