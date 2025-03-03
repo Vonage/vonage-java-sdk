@@ -13,25 +13,20 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.rcs;
+package com.vonage.client.messages.mms;
 
 import com.vonage.client.messages.MessageType;
 import com.vonage.client.messages.TextMessageRequest;
 
 /**
- * {@link com.vonage.client.messages.Channel#RCS}, {@link MessageType#TEXT} request.
+ * Represents an MMS request that sends a text message.
  *
- * @since 8.11.0
+ * @since 8.18.0
  */
-public final class RcsTextRequest extends RcsRequest implements TextMessageRequest {
+public final class MmsTextRequest extends MmsRequest implements TextMessageRequest {
 
-	RcsTextRequest(Builder builder) {
+	MmsTextRequest(Builder builder) {
 		super(builder, MessageType.TEXT);
-	}
-
-	@Override
-	protected int maxTextLength() {
-		return 3072;
 	}
 
 	@Override
@@ -43,14 +38,14 @@ public final class RcsTextRequest extends RcsRequest implements TextMessageReque
 		return new Builder();
 	}
 
-	public static final class Builder extends RcsRequest.Builder<RcsTextRequest, Builder> implements TextMessageRequest.Builder<Builder> {
+	public static final class Builder extends MmsRequest.Builder<MmsTextRequest, Builder> implements TextMessageRequest.Builder<Builder> {
 		Builder() {}
 
 		/**
 		 * (REQUIRED)
-		 * The text of the message to send. Limited to 3072 characters, including unicode.
+		 * The text of the message to send.
 		 *
-		 * @param text The text string.
+		 * @param text The message text, may include Unicode.
 		 * @return This builder.
 		 */
 		@Override
@@ -59,8 +54,8 @@ public final class RcsTextRequest extends RcsRequest implements TextMessageReque
 		}
 
 		@Override
-		public RcsTextRequest build() {
-			return new RcsTextRequest(this);
+		public MmsTextRequest build() {
+			return new MmsTextRequest(this);
 		}
 	}
 }

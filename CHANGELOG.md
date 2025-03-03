@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.18.0] - 2025-03-??
+- Added MMS Text, File and Content outbound message types
+- Added `getFileName` and `getFileCaption` to `com.vonage.client.messages.InboundMessage`
+
 # [8.17.0] - 2025-02-28
 - Added user/domain name support to `com.vonage.client.voice.ncco.SipEndpoint`
 - Improved Voice API documentation

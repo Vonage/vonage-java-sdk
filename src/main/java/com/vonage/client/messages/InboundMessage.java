@@ -42,9 +42,6 @@ public class InboundMessage extends JsonableBaseObject {
 	protected static class UrlWrapper extends JsonableBaseObject {
 		@JsonProperty("url") protected URI url;
 		@JsonProperty("name") protected String name;
-	}
-
-	protected static class UrlWrapperWithCaption extends UrlWrapper {
 		@JsonProperty("caption") protected String caption;
 	}
 
@@ -71,7 +68,7 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonProperty("_self") UrlContainer self;
 
 	@JsonProperty("text") protected String text;
-	@JsonProperty("image") protected UrlWrapperWithCaption image;
+	@JsonProperty("image") protected UrlWrapper image;
 	@JsonProperty("audio") protected UrlWrapper audio;
 	@JsonProperty("video") protected UrlWrapper video;
 	@JsonProperty("file") protected UrlWrapper file;
@@ -199,7 +196,6 @@ public class InboundMessage extends JsonableBaseObject {
 	 * Additional text accompanying the image. Applicable to MMS image messages only.
 	 *
 	 * @return The image caption if present, or {@code null} if not applicable.
-	 *
 	 * @since 8.1.0
 	 */
 	@JsonIgnore
@@ -235,6 +231,28 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonIgnore
 	public URI getFileUrl() {
 		return file != null ? file.url : null;
+	}
+
+	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#FILE}, returns the name of the file if available.
+	 *
+	 * @return The file name, or {@code null} if not applicable.
+	 * @since 8.18.0
+	 */
+	@JsonIgnore
+	public String getFileName() {
+		return file != null ? file.name : null;
+	}
+
+	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#FILE}, returns the caption of the file if available.
+	 *
+	 * @return The file caption, or {@code null} if not applicable.
+	 * @since 8.18.0
+	 */
+	@JsonIgnore
+	public String getFileCaption() {
+		return file != null ? file.caption : null;
 	}
 
 	/**

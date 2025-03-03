@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 @Deprecated
 public enum MessageType {
 	TEXT, IMAGE, AUDIO, VIDEO, FILE, VCARD, TEMPLATE, CUSTOM, LOCATION,
-	STICKER, UNSUPPORTED, REPLY, ORDER, CONTACT, BUTTON, REACTION;
+	STICKER, UNSUPPORTED, REPLY, ORDER, CONTACT, BUTTON, REACTION, CONTENT;
 
 	@JsonCreator
 	public static MessageType fromString(String value) {
