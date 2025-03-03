@@ -44,7 +44,10 @@ public class Content extends JsonableBaseObject {
      * @since 8.18.0
      */
     public Content(MessageType type, URI url, String caption) {
-        this.type = Objects.requireNonNull(type, "Media type is required.");
+        switch (this.type = Objects.requireNonNull(type, "Media type is required.")) {
+            case AUDIO: case VIDEO: case FILE: case IMAGE: case VCARD: break;
+            default: throw new IllegalArgumentException("Unsupported media type: " + type);
+        }
         this.url = Objects.requireNonNull(url, "URL is required.");
         this.caption = caption;
     }

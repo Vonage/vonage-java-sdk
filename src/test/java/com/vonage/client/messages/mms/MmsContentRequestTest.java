@@ -102,4 +102,12 @@ public class MmsContentRequestTest {
 				.addContent(new Content(MessageType.IMAGE, URI.create(imageUrl), caption)).build()
 		);
 	}
+
+	@Test
+	public void testInvalidMediaType() {
+		assertThrows(IllegalArgumentException.class, () -> MmsContentRequest.builder()
+				.addContent(new Content(MessageType.TEXT, videoUrl, caption))
+				.from(from).to(to).build()
+		);
+	}
 }
