@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.18.0] - 2025-03-??
+# [8.18.0] - 2025-03-05
 - Added MMS Text, File and Content outbound message types
 - Added `getFileName` and `getFileCaption` to `com.vonage.client.messages.InboundMessage`
 
