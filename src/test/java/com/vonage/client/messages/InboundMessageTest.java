@@ -151,6 +151,8 @@ public class InboundMessageTest {
 		assertNull(im.getVcardUrl());
 		assertNull(im.getVideoUrl());
 		assertNull(im.getFileUrl());
+		assertNull(im.getFileCaption());
+		assertNull(im.getFileName());
 		assertNull(im.getImageUrl());
 		assertNull(im.getReaction());
 		assertNull(im.getButton());
@@ -271,10 +273,13 @@ public class InboundMessageTest {
 
 	@Test
 	public void testFileOnly() {
-		URI file = URI.create("https://www.example.org/path/to/file.zip");
-		String json = "{\"file\": {\"url\":\""+file+"\"}}";
+		String name = "attachment.zip", caption = "Here's your archive";
+		URI file = URI.create("https://www.example.org/path/to/"+name);
+		String json = "{\"file\": {\"name\":\""+name+"\",\"url\":\""+file+"\",\"caption\":\""+caption+"\"}}";
 		InboundMessage im = InboundMessage.fromJson(json);
 		assertEquals(file, im.getFileUrl());
+		assertEquals(name, im.getFileName());
+		assertEquals(caption, im.getFileCaption());
 	}
 
 	@Test
@@ -507,11 +512,12 @@ public class InboundMessageTest {
 
 	@Test
 	public void testContentOnly() {
-		String url = "https://example.com/image.jpg",
+		String caption = "Alt text", url = "https://example.com/file.zip",
 				json = "{\n" +
 				"  \"content\": [{},{\n" +
-				"    \"type\": \"image\",\n" +
-				"    \"url\": \""+url+"\"\n" +
+				"    \"type\": \"file\",\n" +
+				"    \"url\": \""+url+"\",\n" +
+				"    \"caption\": \""+caption+"\"\n" +
 				"   }]\n" +
 				"}";
 		var im = InboundMessage.fromJson(json);
@@ -523,10 +529,11 @@ public class InboundMessageTest {
 		assertNotNull(empty);
 		assertNull(empty.getType());
 		assertNull(empty.getUrl());
-		var image = content.getLast();
-		assertNotNull(image);
-		assertEquals(MessageType.IMAGE, image.getType());
-		assertEquals(URI.create(url), image.getUrl());
+		var file = content.getLast();
+		assertNotNull(file);
+		assertEquals(MessageType.FILE, file.getType());
+		assertEquals(URI.create(url), file.getUrl());
+		assertEquals(caption, file.getCaption());
 	}
 
 	@Test
@@ -551,6 +558,13 @@ public class InboundMessageTest {
 		assertEquals(MessageType.STICKER, MessageType.fromString("sticker"));
 		assertEquals(MessageType.REACTION, MessageType.fromString("reaction"));
 		assertEquals(MessageType.BUTTON, MessageType.fromString("button"));
+		assertEquals(MessageType.LOCATION, MessageType.fromString("location"));
+		assertEquals(MessageType.REPLY, MessageType.fromString("reply"));
+		assertEquals(MessageType.ORDER, MessageType.fromString("order"));
+		assertEquals(MessageType.CONTACT, MessageType.fromString("CONTACT"));
+		assertEquals(MessageType.CONTENT, MessageType.fromString("content"));
+		assertEquals(MessageType.CUSTOM, MessageType.fromString("custom"));
+		assertEquals(MessageType.UNSUPPORTED, MessageType.fromString("unsupported"));
 		assertNull(MessageType.fromString(null));
 	}
 

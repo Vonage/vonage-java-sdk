@@ -24,9 +24,17 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @since 8.4.0
  */
 public enum MessageType {
-	TEXT, IMAGE, AUDIO, VIDEO, FILE, VCARD, TEMPLATE, CUSTOM, LOCATION,
-	STICKER, UNSUPPORTED, REPLY, ORDER, RANDOM, BUTTON, REACTION, CONTACT;
+	TEXT, IMAGE, AUDIO, VIDEO, FILE, VCARD, TEMPLATE, CUSTOM, LOCATION, STICKER,
+	UNSUPPORTED, REPLY, ORDER, RANDOM, BUTTON, REACTION, CONTACT, CONTENT;
 
+	/**
+	 * Parse a message type from a string.
+	 *
+	 * @param value The message type as a string.
+	 *
+	 * @return The message type as an enum, or {@code null} if the string is null.
+	 * @throws IllegalArgumentException If the string does not match a known message type.
+	 */
 	@JsonCreator
 	public static MessageType fromString(String value) {
 		if (value == null) return null;

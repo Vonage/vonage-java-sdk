@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 public enum Channel {
 	SMS (TEXT),
-	MMS (TEXT, IMAGE, VCARD, AUDIO, VIDEO),
+	MMS (TEXT, IMAGE, VCARD, AUDIO, VIDEO, FILE, CONTENT),
 	RCS (TEXT, IMAGE, VIDEO, FILE, CUSTOM, AUDIO, LOCATION, VCARD, REPLY, BUTTON),
 	WHATSAPP (TEXT, IMAGE, AUDIO, VIDEO, FILE, TEMPLATE, CUSTOM, LOCATION,
 			STICKER, ORDER, REPLY, REACTION, CONTACT, BUTTON, UNSUPPORTED),
@@ -59,13 +59,19 @@ public enum Channel {
 		return getSupportedMessageTypes().stream().filter(mt -> mt != MessageType.UNSUPPORTED &&
 				mt != MessageType.REPLY && mt != MessageType.ORDER &&
 				mt != MessageType.CONTACT && mt != MessageType.BUTTON &&
-				(this != Channel.MMS || mt != MessageType.TEXT) &&
-				(this != Channel.RCS || (
-					mt != AUDIO && mt != LOCATION && mt != VCARD
-				))
+				(this != Channel.RCS || (mt != AUDIO && mt != LOCATION && mt != VCARD))
 		).collect(Collectors.toSet());
 	}
 
+	/**
+	 * Creates a Channel enum from its string representation.
+	 *
+	 * @param value The string value to convert.
+	 *
+	 * @return The Channel enum that corresponds to the given string, or {@code null} if the string is {@code null}.
+	 *
+	 * @throws IllegalArgumentException If the provided value does not correspond to a known Channel enum.
+	 */
 	@JsonCreator
 	public static Channel fromString(String value) {
 		if (value == null) return null;

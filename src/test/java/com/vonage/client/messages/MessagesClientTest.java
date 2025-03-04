@@ -16,15 +16,12 @@
 package com.vonage.client.messages;
 
 import com.vonage.client.*;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
-import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.messages.messenger.*;
-import com.vonage.client.messages.mms.MmsAudioRequest;
-import com.vonage.client.messages.mms.MmsImageRequest;
-import com.vonage.client.messages.mms.MmsVcardRequest;
-import com.vonage.client.messages.mms.MmsVideoRequest;
+import com.vonage.client.messages.mms.*;
 import com.vonage.client.messages.rcs.*;
 import com.vonage.client.messages.sms.SmsTextRequest;
 import com.vonage.client.messages.viber.ViberFileRequest;
@@ -32,7 +29,6 @@ import com.vonage.client.messages.viber.ViberImageRequest;
 import com.vonage.client.messages.viber.ViberTextRequest;
 import com.vonage.client.messages.viber.ViberVideoRequest;
 import com.vonage.client.messages.whatsapp.*;
-import com.vonage.client.users.channels.Sms;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.util.*;
@@ -154,10 +150,13 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 
 	@Test
 	public void testSendMmsSuccess() throws Exception {
+		assertResponse(MmsTextRequest.builder().text(TEXT));
 		assertResponse(MmsVcardRequest.builder().url(VCARD));
 		assertResponse(MmsImageRequest.builder().url(IMAGE));
 		assertResponse(MmsAudioRequest.builder().url(AUDIO));
 		assertResponse(MmsVideoRequest.builder().url(VIDEO));
+		assertResponse(MmsFileRequest.builder().url(FILE));
+		assertResponse(MmsContentRequest.builder().addVcard(VCARD));
 	}
 
 	@Test
