@@ -32,7 +32,10 @@ public class MessagePayload extends JsonableBaseObject {
 	protected String caption, name;
 
 	public MessagePayload(String url) {
-		this.url = URI.create(Objects.requireNonNull(url, "URL is required."));
+		if (Objects.requireNonNull(url, "URL is required.").trim().isEmpty()) {
+			throw new IllegalArgumentException("URL cannot be blank.");
+		}
+		this.url = URI.create(url);
 	}
 
 	public MessagePayload(String url, String caption) {

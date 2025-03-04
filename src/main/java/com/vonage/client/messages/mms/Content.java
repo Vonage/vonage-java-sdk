@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.messages.InboundMessage;
 import com.vonage.client.messages.MessageType;
+import com.vonage.client.messages.internal.MessagePayload;
 import java.net.URI;
 import java.util.Objects;
 
@@ -43,38 +44,15 @@ public class Content extends JsonableBaseObject {
      *
      * @since 8.18.0
      */
-    public Content(MessageType type, URI url, String caption) {
+    public Content(MessageType type, String url, String caption) {
         switch (this.type = Objects.requireNonNull(type, "Media type is required.")) {
             case AUDIO: case VIDEO: case FILE: case IMAGE: case VCARD: break;
             default: throw new IllegalArgumentException("Unsupported media type: " + type);
         }
-        this.url = Objects.requireNonNull(url, "URL is required.");
-        this.caption = caption;
-    }
-
-    /**
-     * Creates a new Content object.
-     *
-     * @param type    The type of attachment.
-     * @param url     URL of the attachment.
-     * @param caption Additional text to accompany the attachment.
-     *
-     * @since 8.18.0
-     */
-    public Content(MessageType type, String url, String caption) {
-        this(type, URI.create(Objects.requireNonNull(url, "URL is required.")), caption);
-    }
-
-    /**
-     * Creates a new Content object.
-     *
-     * @param type    The type of attachment.
-     * @param url     URL of the attachment.
-     *
-     * @since 8.18.0
-     */
-    public Content(MessageType type, URI url) {
-        this(type, url, null);
+        MessagePayload payload = new MessagePayload(url, caption);
+        payload.validateCaptionLength(2000);
+        this.url = payload.getUrl();
+        this.caption = payload.getCaption();
     }
 
     /**

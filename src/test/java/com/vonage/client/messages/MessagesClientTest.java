@@ -31,7 +31,6 @@ import com.vonage.client.messages.viber.ViberVideoRequest;
 import com.vonage.client.messages.whatsapp.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
-import java.net.URI;
 import java.util.*;
 
 public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
@@ -157,7 +156,7 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 		assertResponse(MmsAudioRequest.builder().url(AUDIO));
 		assertResponse(MmsVideoRequest.builder().url(VIDEO));
 		assertResponse(MmsFileRequest.builder().url(FILE));
-		assertResponse(MmsContentRequest.builder().addContent(MessageType.IMAGE, URI.create(IMAGE), null));
+		assertResponse(MmsContentRequest.builder().addVcard(VCARD));
 	}
 
 	@Test

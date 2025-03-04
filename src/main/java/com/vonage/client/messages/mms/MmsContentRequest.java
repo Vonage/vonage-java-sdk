@@ -18,7 +18,6 @@ package com.vonage.client.messages.mms;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.CaptionMediaMessageRequest;
 import com.vonage.client.messages.MessageType;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,16 +53,123 @@ public final class MmsContentRequest extends MmsRequest implements CaptionMediaM
 		Builder() {}
 
 		/**
-		 * Adds a content item to the request.
+		 * Adds a vCard attachment to the request.
 		 *
-		 * @param type (REQUIRED) Type of content to include in the message.
-		 * @param url (REQUIRED) URL of the content.
-		 * @param caption (OPTIONAL) Caption for the content.
+		 * @param url (REQUIRED) Publicly accessible URL of the vCard attachment.
+		 * @param caption (OPTIONAL) Additional text to accompany the vCard (maximum 2000 characters).
 		 *
 		 * @return This builder.
 		 */
-		public Builder addContent(MessageType type, URI url, String caption) {
-			return addContent(new Content(type, url, caption));
+		public Builder addVcard(String url, String caption) {
+			content.add(new Content(MessageType.VCARD, url, caption));
+			return this;
+		}
+
+		/**
+		 * Adds a vCard attachment to the request.
+		 *
+		 * @param url Publicly accessible URL of the vCard attachment.
+		 *
+		 * @return This builder.
+		 */
+		public Builder addVcard(String url) {
+			return addVcard(url, null);
+		}
+
+		/**
+		 * Adds an audio attachment to the request.
+		 *
+		 * @param url (REQUIRED) Publicly accessible URL of the audio attachment.
+		 * @param caption (OPTIONAL) Additional text to accompany the audio (maximum 2000 characters).
+		 *
+		 * @return This builder.
+		 */
+		public Builder addAudio(String url, String caption) {
+			content.add(new Content(MessageType.AUDIO, url, caption));
+			return this;
+		}
+
+		/**
+		 * Adds an audio attachment to the request.
+		 *
+		 * @param url Publicly accessible URL of the audio attachment.
+		 *
+		 * @return This builder.
+		 */
+		public Builder addAudio(String url) {
+			return addAudio(url, null);
+		}
+
+		/**
+		 * Adds a video attachment to the request.
+		 *
+		 * @param url (REQUIRED) Publicly accessible URL of the video attachment.
+		 * @param caption (OPTIONAL) Additional text to accompany the video (maximum 2000 characters).
+		 *
+		 * @return This builder.
+		 */
+		public Builder addVideo(String url, String caption) {
+			content.add(new Content(MessageType.VIDEO, url, caption));
+			return this;
+		}
+
+		/**
+		 * Adds a video attachment to the request.
+		 *
+		 * @param url Publicly accessible URL of the video attachment.
+		 *
+		 * @return This builder.
+		 */
+		public Builder addVideo(String url) {
+			return addVideo(url, null);
+		}
+
+		/**
+		 * Adds an image attachment to the request.
+		 *
+		 * @param url (REQUIRED) Publicly accessible URL of the image attachment.
+		 * @param caption (OPTIONAL) Additional text to accompany the image (maximum 2000 characters).
+		 *
+		 * @return This builder.
+		 */
+		public Builder addImage(String url, String caption) {
+			content.add(new Content(MessageType.IMAGE, url, caption));
+			return this;
+		}
+
+		/**
+		 * Adds an image attachment to the request.
+		 *
+		 * @param url Publicly accessible URL of the image attachment.
+		 *
+		 * @return This builder.
+		 */
+		public Builder addImage(String url) {
+			return addImage(url, null);
+		}
+
+		/**
+		 * Adds a file attachment to the request.
+		 *
+		 * @param url (REQUIRED) Publicly accessible URL of the file attachment.
+		 * @param caption (OPTIONAL) Additional text to accompany the file (maximum 2000 characters).
+		 *
+		 * @return This builder.
+		 */
+		public Builder addFile(String url, String caption) {
+			content.add(new Content(MessageType.FILE, url, caption));
+			return this;
+		}
+
+		/**
+		 * Adds a file attachment to the request.
+		 *
+		 * @param url Publicly accessible URL of the file attachment.
+		 *
+		 * @return This builder.
+		 */
+		public Builder addFile(String url) {
+			return addFile(url, null);
 		}
 
 		/**

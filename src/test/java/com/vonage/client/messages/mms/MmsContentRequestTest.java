@@ -16,10 +16,9 @@
 package com.vonage.client.messages.mms;
 
 import com.vonage.client.messages.MessageType;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.*;
-import java.net.URI;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 
 public class MmsContentRequestTest {
@@ -34,14 +33,12 @@ public class MmsContentRequestTest {
 	@Test
 	public void testSerializeAllMessageTypes() {
 		var mms = MmsContentRequest.builder()
-				.from(from).to(to).addContent(
-						new Content(MessageType.FILE, fileUrl, caption + "file."),
-						new Content(MessageType.IMAGE, imageUrl, caption + "image."),
-						new Content(MessageType.VIDEO, videoUrl, caption + "video."),
-						new Content(MessageType.AUDIO, audioUrl, caption + "audio."),
-						new Content(MessageType.VCARD, vcardUrl)
-				)
-				.build();
+				.from(from).to(to)
+				.addFile(fileUrl, caption + "file.")
+				.addImage(imageUrl, caption + "image.")
+				.addVideo(videoUrl, caption + "video.")
+				.addAudio(audioUrl, caption + "audio.")
+				.addVcard(vcardUrl, caption + "vCard.").build();
 
 		String json = mms.toJson();
 		assertTrue(json.contains("\"from\":\""+from+"\""));
@@ -53,20 +50,21 @@ public class MmsContentRequestTest {
 				"{\"type\":\"image\",\"url\":\""+imageUrl+"\",\"caption\":\""+caption+"image.\"}," +
 				"{\"type\":\"video\",\"url\":\""+videoUrl+"\",\"caption\":\""+caption+"video.\"}," +
 				"{\"type\":\"audio\",\"url\":\""+audioUrl+"\",\"caption\":\""+caption+"audio.\"}," +
-				"{\"type\":\"vcard\",\"url\":\""+vcardUrl+"\"}]"
+				"{\"type\":\"vcard\",\"url\":\""+vcardUrl+"\",\"caption\":\""+caption+"vCard.\"}]"
 		));
 	}
 
 	@Test
 	public void testContentsReplacedIfListIsProvided() {
 		var mms = MmsContentRequest.builder()
-				.from(from).to(to).addContent(
-						new Content(MessageType.FILE, fileUrl, caption + "file."),
-						new Content(MessageType.IMAGE, imageUrl, caption + "image.")
-				)
+				.from(from).to(to)
+				.addImage(imageUrl)
+				.addFile(fileUrl)
+				.addVideo(videoUrl)
+				.addAudio(audioUrl)
 				.contents(List.of(
-						new Content(MessageType.VIDEO, videoUrl, caption + "video."),
-						new Content(MessageType.AUDIO, audioUrl, caption + "audio."),
+						new Content(MessageType.VIDEO, videoUrl),
+						new Content(MessageType.AUDIO, audioUrl),
 						new Content(MessageType.VCARD, vcardUrl)
 				))
 				.build();
@@ -77,8 +75,8 @@ public class MmsContentRequestTest {
 		assertTrue(json.contains("\"message_type\":\"content\""));
 		assertTrue(json.contains("\"channel\":\"mms\""));
 		assertTrue(json.contains("\"content\":[" +
-				"{\"type\":\"video\",\"url\":\""+videoUrl+"\",\"caption\":\""+caption+"video.\"}," +
-				"{\"type\":\"audio\",\"url\":\""+audioUrl+"\",\"caption\":\""+caption+"audio.\"}," +
+				"{\"type\":\"video\",\"url\":\""+videoUrl+"\"}," +
+				"{\"type\":\"audio\",\"url\":\""+audioUrl+"\"}," +
 				"{\"type\":\"vcard\",\"url\":\""+vcardUrl+"\"}]"
 		));
 	}
@@ -98,8 +96,8 @@ public class MmsContentRequestTest {
 	public void testBuilderListReferenceIsReplace() {
 		assertThrows(UnsupportedOperationException.class, () -> MmsContentRequest.builder()
 				.from(from).to(to)
-				.contents(List.of(new Content(MessageType.VCARD, URI.create(vcardUrl))))
-				.addContent(new Content(MessageType.IMAGE, URI.create(imageUrl), caption)).build()
+				.contents(List.of(new Content(MessageType.VCARD, vcardUrl)))
+				.addContent(new Content(MessageType.IMAGE, imageUrl, caption)).build()
 		);
 	}
 
@@ -109,5 +107,36 @@ public class MmsContentRequestTest {
 				.addContent(new Content(MessageType.TEXT, videoUrl, caption))
 				.from(from).to(to).build()
 		);
+	}
+
+	@Test
+	public void testContentInvalidUrl() {
+		assertThrows(IllegalArgumentException.class, () -> new Content(MessageType.VIDEO, "", caption));
+		assertThrows(IllegalArgumentException.class, () ->
+				new Content(MessageType.VCARD, "foo://-==;]{=.tld/contact.vcf", caption)
+		);
+		assertThrows(NullPointerException.class, () -> new Content(MessageType.IMAGE, null));
+		assertThrows(NullPointerException.class, () -> new Content(MessageType.FILE, null, caption));
+	}
+
+	@Test
+	public void testContentCaptionLength() {
+		var content = new Content(MessageType.IMAGE, imageUrl, caption);
+		assertEquals(caption, content.getCaption());
+		assertThrows(IllegalArgumentException.class, () -> new Content(MessageType.IMAGE, imageUrl, ""));
+
+		StringBuilder sb = new StringBuilder(2001);
+		sb.append("*".repeat(1999));
+		assertEquals(1999, sb.length());
+
+		var sbStr = sb.toString();
+		assertEquals(sbStr, new Content(MessageType.IMAGE, imageUrl, sbStr).getCaption());
+		try {
+			new Content(MessageType.IMAGE, imageUrl, sb.append("xy").toString());
+			fail("Expected exception for caption length");
+		}
+		catch (IllegalArgumentException ex) {
+			assertEquals(2001, sb.length());
+		}
 	}
 }
