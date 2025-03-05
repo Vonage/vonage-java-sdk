@@ -21,10 +21,12 @@ import com.vonage.client.JsonableBaseObject;
 import java.util.Objects;
 
 public final class Whatsapp extends JsonableBaseObject {
-	private final Policy policy;
-	private final Locale locale;
+	private Policy policy;
+	private Locale locale;
 
-	Whatsapp(Policy policy, Locale locale) {
+	Whatsapp() {}
+
+	public Whatsapp(Policy policy, Locale locale) {
 		this.policy = policy;
 		this.locale = Objects.requireNonNull(locale, "Locale is required");
 	}

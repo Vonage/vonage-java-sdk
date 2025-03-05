@@ -33,10 +33,22 @@ import java.util.Objects;
  */
 @JsonDeserialize(using = MemberChannel.Deserializer.class)
 public class MemberChannel extends JsonableBaseObject {
+	String id;
 	ChannelType type;
 	Channel from, to;
 
 	protected MemberChannel() {
+	}
+
+	/**
+	 * ID field for this channel.
+	 *
+	 * @return The channel ID, or {@code null} if unknown / not applicable.
+	 * @since 8.19.0
+	 */
+	@JsonProperty
+	public String getId() {
+		return id;
 	}
 
 	/**
@@ -84,9 +96,12 @@ public class MemberChannel extends JsonableBaseObject {
 		@Override
 		public MemberChannel deserialize(JsonParser p, DeserializationContext ctxt, MemberChannel intoValue) throws IOException {
 			mc = Objects.requireNonNull(intoValue);
-			JsonNode rootNode = p.readValueAsTree(), typeNode = rootNode.get("type");
+			JsonNode rootNode = p.readValueAsTree(), typeNode = rootNode.get("type"), idNode = rootNode.get("id");
 			if (typeNode != null) {
 				mc.type = ChannelType.fromString(typeNode.asText());
+			}
+			if (idNode != null) {
+				mc.id = idNode.asText();
 			}
 			mc.from = inferConcreteChannel(rootNode.get("from"));
 			mc.to = inferConcreteChannel(rootNode.get("to"));

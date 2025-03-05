@@ -16,7 +16,7 @@
 package com.vonage.client.conversations;
 
 /**
- * Represents an Ephemeral event.
+ * Represents an {@linkplain EventType#EPHEMERAL} event.
  */
 public final class EphemeralEvent extends GenericEvent {
 
