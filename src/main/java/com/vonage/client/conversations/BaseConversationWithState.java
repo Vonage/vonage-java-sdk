@@ -18,19 +18,22 @@ package com.vonage.client.conversations;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Represents a {@link EventType#CONVERSATION_UPDATED} event.
+ * Represents the response body in {@linkplain ConversationUpdatedEvent#getConversation()}.
+ *
+ * @since 8.19.0
  */
-public final class ConversationUpdatedEvent extends EventWithBody<BaseConversationWithState> {
+public class BaseConversationWithState extends BaseConversation {
+	private ConversationStatus state;
 
-    ConversationUpdatedEvent() {}
+	protected BaseConversationWithState() {}
 
-    /**
-     * Basic details of the updated conversation.
-     *
-     * @return The main Conversation object properties.
-     */
-    @JsonProperty("body")
-    public BaseConversationWithState getConversation() {
-        return body;
-    }
+	/**
+	 * The state the conversation is in.
+	 *
+	 * @return The conversation state as an enum, or {@code null} if unknown.
+	 */
+	@JsonProperty("state")
+	public ConversationStatus getState() {
+		return state;
+	}
 }

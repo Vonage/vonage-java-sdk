@@ -18,6 +18,7 @@ package com.vonage.client.conversations;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vonage.client.common.MessageType;
 import java.net.URI;
+import java.util.Map;
 
 /**
  * Represents a {@link EventType#MESSAGE} event. All possible fields are presented and accessible,
@@ -81,6 +82,28 @@ public final class MessageEvent extends EventWithBody<MessageEventBody> {
     }
 
     /**
+     * If {@linkplain #getMessageType()} is {@linkplain MessageType#TEMPLATE}, returns the template.
+     *
+     * @return The WhatsApp template details, or {@code null} if not applicable.
+     * @since 8.19.0
+     */
+    @JsonIgnore
+    public WhatsappTemplate getTemplate() {
+        return body.template;
+    }
+
+    /**
+     * If {@linkplain #getMessageType()} is {@linkplain MessageType#CUSTOM}, returns the custom data.
+     *
+     * @return The custom message body as a serializable Map, or {@code null} if not applicable.
+     * @since 8.19.0
+     */
+    @JsonIgnore
+    public Map<String, ?> getCustom() {
+        return body.custom;
+    }
+
+    /**
      * Entry point for constructing an instance of this class.
      *
      * @param messageType The type of message for this event.
@@ -99,6 +122,8 @@ public final class MessageEvent extends EventWithBody<MessageEventBody> {
         String text;
         URI url;
         Location location;
+        WhatsappTemplate template;
+        Map<String, ?> custom;
 
         Builder(MessageType messageType) {
             super(EventType.MESSAGE);
@@ -138,6 +163,32 @@ public final class MessageEvent extends EventWithBody<MessageEventBody> {
          */
         public Builder location(Location location) {
             this.location = location;
+            return this;
+        }
+
+        /**
+         * Sets the template, if the type is {@linkplain MessageType#TEMPLATE}.
+         *
+         * @param template The WhatsApp template details.
+         *
+         * @return This builder.
+         * @since 8.19.0
+         */
+        public Builder template(WhatsappTemplate template) {
+            this.template = template;
+            return this;
+        }
+
+        /**
+         * Sets the custom data, if the type is {@linkplain MessageType#CUSTOM}.
+         *
+         * @param custom The custom message body as a serializable Map.
+         *
+         * @return This builder.
+         * @since 8.19.0
+         */
+        public Builder custom(Map<String, ?> custom) {
+            this.custom = custom;
             return this;
         }
 

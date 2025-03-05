@@ -16,6 +16,7 @@
 package com.vonage.client.conversations;
 
 import com.vonage.client.TestUtils;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.*;
 
@@ -39,13 +40,13 @@ public class ConversationUpdatedEventTest extends AbstractEventTest {
             "  }\n" +
             "}"
         );
-        BaseConversation conversation = event.getConversation();
+        BaseConversationWithState conversation = event.getConversation();
         TestUtils.testJsonableBaseObject(conversation);
         assertNotNull(conversation.getName());
         assertNotNull(conversation.getId());
         assertNotNull(conversation.getDisplayName());
         assertNotNull(conversation.getImageUrl());
-        //assertNotNull(conversation.getState());
+        assertEquals(ConversationStatus.ACTIVE, conversation.getState());
         var timestamp = conversation.getTimestamp();
         assertNotNull(timestamp);
         assertNotNull(timestamp.getCreated());

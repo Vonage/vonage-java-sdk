@@ -15,12 +15,54 @@
  */
 package com.vonage.client.conversations;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.Jsonable;
 import com.vonage.client.common.ChannelType;
+import com.vonage.client.users.channels.Mms;
+import com.vonage.client.users.channels.Pstn;
+import com.vonage.client.users.channels.Sip;
+import com.vonage.client.users.channels.Vbc;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MemberChannelTest {
+    final Map<String, ?> headers = Map.of(
+            "Key", "Value",
+            "Key2", 2,
+            "k3", true,
+            "k4", List.of("Aa", 'B', 0, false, Math.PI)
+    );
+
+    @Test
+    public void testBuilderAllFields() {
+        String id = "abc123";
+        var from = new Mms("447900000001");
+        var to = new Vbc(789);
+        var channel = MemberChannel.builder()
+                .id(id).from(from).to(to)
+                .type(ChannelType.APP)
+                .headers(headers)
+                .build();
+
+        assertEquals(id, channel.getId());
+        assertEquals(from, channel.getFrom());
+        assertEquals(to, channel.getTo());
+        assertEquals(ChannelType.APP, channel.getType());
+        assertEquals(headers, channel.getHeaders());
+    }
+
+    @Test
+    public void testBuilderRequiredFields() {
+        var channel = MemberChannel.builder().build();
+        assertNull(channel.getId());
+        assertNull(channel.getFrom());
+        assertNull(channel.getTo());
+        assertNull(channel.getType());
+        assertNull(channel.getHeaders());
+    }
 
     @Test
     public void testFromEmptyJson() {
@@ -28,6 +70,8 @@ public class MemberChannelTest {
         assertNull(channel.getType());
         assertNull(channel.getFrom());
         assertNull(channel.getTo());
+        assertNull(channel.getId());
+        assertNull(channel.getHeaders());
     }
 
     @Test
@@ -36,6 +80,51 @@ public class MemberChannelTest {
         assertEquals(ChannelType.APP, channel.getType());
         assertNull(channel.getFrom());
         assertNull(channel.getTo());
+        assertNull(channel.getId());
+        assertNull(channel.getHeaders());
+    }
+
+    @Test
+    public void testFromJsonIdOnly() {
+        String id = "abc123";
+        var channel = Jsonable.fromJson("{\"id\":\""+id+"\"}", MemberChannel.class);
+        assertEquals(id, channel.getId());
+        assertNull(channel.getFrom());
+        assertNull(channel.getTo());
+        assertNull(channel.getType());
+        assertNull(channel.getHeaders());
+    }
+
+    @Test
+    public void testFromJsonFromAndToOnly() {
+        var from = new Pstn("447900000001");
+        var to = new Sip("sip:user@example.org");
+        var channel = Jsonable.fromJson(
+                "{\"from\":{\"type\":\"phone\",\"number\":\"447900000001\"}," +
+                "\"to\":{\"type\":\"sip\",\"uri\":\"sip:user@example.org\"}}",
+                MemberChannel.class
+        );
+
+        from.setTypeField();
+        to.setTypeField();
+
+        assertEquals(from, channel.getFrom());
+        assertEquals(to, channel.getTo());
+        assertNull(channel.getType());
+        assertNull(channel.getId());
+        assertNull(channel.getHeaders());
+    }
+
+
+    @Test
+    public  void testFromJsonHeadersOnly() throws Exception {
+        var headersJson = new ObjectMapper().writeValueAsString(headers);
+        var channel = Jsonable.fromJson("{\"headers\":"+headersJson+"}", MemberChannel.class);
+        assertEquals(new HashMap<>(headers).toString(), new HashMap<>(channel.getHeaders()).toString());
+        assertNull(channel.getType());
+        assertNull(channel.getFrom());
+        assertNull(channel.getTo());
+        assertNull(channel.getId());
     }
 
     @Test
@@ -47,5 +136,8 @@ public class MemberChannelTest {
         channel = Jsonable.fromJson("{\"to\":2}", MemberChannel.class);
         assertNotNull(channel);
         assertNull(channel.getTo());
+        assertNull(channel.getType());
+        assertNull(channel.getId());
+        assertNull(channel.getHeaders());
     }
 }

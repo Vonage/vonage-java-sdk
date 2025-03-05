@@ -145,13 +145,17 @@ public class AudioOutEventTest extends AbstractEventTest {
     }
 
     @Test
-    public void testAudioSayEmptyJson() {
-        var event = Jsonable.fromJson("{}", AudioSayEvent.class);
-        assertNotNull(event);
+    public void testParseEmptyAudioSayEvent() {
+        var event = parseEvent(EventType.AUDIO_SAY, AudioSayEvent.class, "{\"type\":\"audio:say\"}");
+        assertNull(event.getText());
         assertNull(event.getSayId());
         assertNull(event.getQueue());
         assertNull(event.getLevel());
         assertNull(event.getLoop());
+        assertNull(event.getStyle());
+        assertNull(event.getLanguage());
+        assertNull(event.getPremium());
+        assertNull(event.getSsml());
     }
 
     @Test

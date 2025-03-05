@@ -15,22 +15,11 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
- * Represents a {@link EventType#CONVERSATION_UPDATED} event.
+ * Base class for Audio Speaking events.
+ *
+ * @since 8.19.0
  */
-public final class ConversationUpdatedEvent extends EventWithBody<BaseConversationWithState> {
-
-    ConversationUpdatedEvent() {}
-
-    /**
-     * Basic details of the updated conversation.
-     *
-     * @return The main Conversation object properties.
-     */
-    @JsonProperty("body")
-    public BaseConversationWithState getConversation() {
-        return body;
-    }
+abstract class AbstractAudioSpeakingEvent extends AbstractChannelEvent<AbstractChannelEvent.Body> {
+	AbstractAudioSpeakingEvent() {}
 }

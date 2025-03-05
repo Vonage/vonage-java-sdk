@@ -48,7 +48,7 @@ public final class AudioSayEvent extends AudioOutEvent<AudioSayEventBody> {
      */
     @JsonIgnore
     public String getText() {
-        return body.text;
+        return body != null ? body.text : null;
     }
 
     /**
@@ -60,7 +60,7 @@ public final class AudioSayEvent extends AudioOutEvent<AudioSayEventBody> {
      */
     @JsonIgnore
     public Integer getStyle() {
-        return body.style;
+        return body != null ? body.style : null;
     }
 
     /**
@@ -70,7 +70,7 @@ public final class AudioSayEvent extends AudioOutEvent<AudioSayEventBody> {
      */
     @JsonIgnore
     public TextToSpeechLanguage getLanguage() {
-        return body.language;
+        return body != null ? body.language : null;
     }
 
     /**
@@ -80,7 +80,7 @@ public final class AudioSayEvent extends AudioOutEvent<AudioSayEventBody> {
      */
     @JsonIgnore
     public Boolean getPremium() {
-        return body.premium;
+        return body != null ? body.premium : null;
     }
 
     /**
@@ -90,7 +90,7 @@ public final class AudioSayEvent extends AudioOutEvent<AudioSayEventBody> {
      */
     @JsonIgnore
     public Boolean getSsml() {
-        return body.ssml;
+        return body != null ? body.ssml : null;
     }
 
     /**

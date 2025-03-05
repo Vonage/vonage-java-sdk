@@ -16,21 +16,22 @@
 package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.whatsapp.Template;
+import com.vonage.client.messages.whatsapp.Whatsapp;
+import java.util.List;
 
-/**
- * Represents a {@link EventType#CONVERSATION_UPDATED} event.
- */
-public final class ConversationUpdatedEvent extends EventWithBody<BaseConversationWithState> {
+public class WhatsappTemplate extends Template {
+    private Whatsapp whatsapp;
 
-    ConversationUpdatedEvent() {}
+    WhatsappTemplate() {}
 
-    /**
-     * Basic details of the updated conversation.
-     *
-     * @return The main Conversation object properties.
-     */
-    @JsonProperty("body")
-    public BaseConversationWithState getConversation() {
-        return body;
+    WhatsappTemplate(String name, List<String> parameters, Whatsapp whatsapp) {
+        super(name, parameters);
+        this.whatsapp = whatsapp;
+    }
+
+    @JsonProperty("whatsapp")
+    public Whatsapp getWhatsapp() {
+        return whatsapp;
     }
 }

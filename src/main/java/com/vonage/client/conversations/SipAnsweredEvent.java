@@ -15,22 +15,11 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
- * Represents a {@link EventType#CONVERSATION_UPDATED} event.
+ * Represents a {@linkplain EventType#SIP_ANSWERED} event.
+ *
+ * @since 8.19.0
  */
-public final class ConversationUpdatedEvent extends EventWithBody<BaseConversationWithState> {
-
-    ConversationUpdatedEvent() {}
-
-    /**
-     * Basic details of the updated conversation.
-     *
-     * @return The main Conversation object properties.
-     */
-    @JsonProperty("body")
-    public BaseConversationWithState getConversation() {
-        return body;
-    }
+public final class SipAnsweredEvent extends AbstractCallEvent {
+	SipAnsweredEvent() {}
 }

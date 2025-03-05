@@ -15,34 +15,23 @@
  */
 package com.vonage.client.conversations;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
- * Represents an {@linkplain EventType#EPHEMERAL} event.
+ * Main body container for {@link AudioDtmfEvent}.
+ *
+ * @since 8.19.0
  */
-public final class EphemeralEvent extends GenericEvent {
+class AudioDtmfEventBody extends AbstractChannelEvent.Body {
+    @JsonAlias({"digit"}) @JsonProperty("digits") String digits;
+    @JsonProperty("dtmf_seq") Integer dtmfSeq;
 
-    private EphemeralEvent() {}
+    AudioDtmfEventBody() {}
 
-    private EphemeralEvent(Builder builder) {
+    AudioDtmfEventBody(AudioDtmfEvent.Builder builder) {
         super(builder);
-    }
-
-    /**
-     * Entry point for constructing an instance of this class.
-     *
-     * @return A new Builder.
-     */
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static final class Builder extends GenericEvent.Builder<EphemeralEvent, Builder> {
-        Builder() {
-            super(EventType.EPHEMERAL);
-        }
-
-        @Override
-        public EphemeralEvent build() {
-            return new EphemeralEvent(this);
-        }
+        digits = builder.digits;
+        dtmfSeq = builder.dtmfSeq;
     }
 }
