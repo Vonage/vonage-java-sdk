@@ -15,15 +15,13 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
 /**
  * Defines the text-to-speech properties.
  */
-public final class TalkPayload extends JsonableBaseObject {
-    @JsonIgnore String uuid;
+public final class TalkPayload extends UuidRequestWrapper {
     private final String text;
     private final Integer loop, style;
     private final Double level;

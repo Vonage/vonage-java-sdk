@@ -220,7 +220,12 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
         assertEquals("Stream started", response.getMessage());
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
         assertThrows(NullPointerException.class, () -> client.startStream(null, url));
-        assertThrows(IllegalArgumentException.class, () -> client.startStream("944dd293-ca13-4a58-bc37-6252e11474be", null));
+        assertThrows(NullPointerException.class, () ->
+                client.startStream("944dd293-ca13-4a58-bc37-6252e11474be", (StreamPayload) null)
+        );
+        assertThrows(IllegalArgumentException.class, () ->
+                client.startStream("944dd293-ca13-4a58-bc37-6252e11474be", (String) null)
+        );
         assert401Response(() -> client.startStream(SAMPLE_CALL_ID, url));
     }
 
@@ -234,6 +239,22 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
                 "944dd293-ca13-4a58-bc37-6252e11474be",
                 "https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3",
                 5
+        );
+        assertEquals("Stream started", response.getMessage());
+        assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
+    }
+
+    @Test
+    public void testStartStreamLoopingWithLevel() throws Exception {
+        stubResponse(200,
+                "{\n" + "  \"message\": \"Stream started\",\n"
+                        + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n" + "}"
+        );
+        StreamResponse response = client.startStream(
+                "944dd293-ca13-4a58-bc37-6252e11474be",
+                "https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3",
+                7,
+                0.2
         );
         assertEquals("Stream started", response.getMessage());
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
@@ -663,7 +684,7 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
 
             @Override
             protected String expectedEndpointUri(ModifyCallPayload request) {
-                return "/v1/calls/" + request.uuid;
+                return "/v1/calls/" + request.getUuid();
             }
 
             @Override
@@ -697,7 +718,7 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
 
             @Override
             protected String expectedEndpointUri(DtmfPayload request) {
-                return "/v1/calls/"+request.uuid+"/dtmf";
+                return "/v1/calls/"+request.getUuid()+"/dtmf";
             }
 
             @Override
@@ -729,12 +750,15 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
 
             @Override
             protected String expectedEndpointUri(StreamPayload request) {
-                return "/v1/calls/"+request.uuid+"/stream";
+                return "/v1/calls/"+request.getUuid()+"/stream";
             }
 
             @Override
             protected StreamPayload sampleRequest() {
-                return new StreamPayload("https://example.com/waiting.mp3", 1, 0.4, SAMPLE_CALL_ID);
+                var payload = StreamPayload.builder()
+                        .streamUrl("https://example.com/waiting.mp3").loop(1).level(0.3).build();
+                payload.setUuid(SAMPLE_CALL_ID);
+                return payload;
             }
 
             @Override
@@ -763,13 +787,13 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
 
             @Override
             protected String expectedEndpointUri(TalkPayload request) {
-                return "/v1/calls/"+request.uuid+"/talk";
+                return "/v1/calls/"+request.getUuid()+"/talk";
             }
 
             @Override
             protected TalkPayload sampleRequest() {
                 TalkPayload request = TalkPayload.builder("Sample text").build();
-                request.uuid = SAMPLE_CALL_ID;
+                request.setUuid(SAMPLE_CALL_ID);
                 return request;
             }
         }

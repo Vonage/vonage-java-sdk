@@ -15,33 +15,35 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vonage.client.JsonableBaseObject;
 import java.util.Objects;
 
 /**
- * Wrapper for call modification requests.
+ * Base class for request payloads that use a UUID in their path, but not the body.
+ *
+ * @since 8.19.0
  */
-class ModifyCallPayload extends UuidRequestWrapper {
-    private final ModifyCallAction action;
+class UuidRequestWrapper extends JsonableBaseObject {
+    @JsonIgnore private String uuid;
 
     /**
-     * Create a new ModifyCallPayload.
+     * Sets the UUID for the request.
      *
-     * @param action The action to perform as an enum.
-     * @param uuid The call ID to modify.
+     * @param uuid The resource UUID as a string.
      */
-    ModifyCallPayload(ModifyCallAction action, String uuid) {
-        this.action = Objects.requireNonNull(action, "Action is required.");
-        setUuid(uuid);
+    @JsonIgnore
+    protected void setUuid(String uuid) {
+        this.uuid = Objects.requireNonNull(uuid, "UUID is required.");
     }
 
     /**
-     * Call modification action.
+     * Retrieves the UUID for the request.
      *
-     * @return The action as an enum.
+     * @return The resource UUID as a string, or {@code null} if not set.
      */
-    @JsonProperty("action")
-    public ModifyCallAction getAction() {
-        return action;
+    @JsonIgnore
+    protected String getUuid() {
+        return uuid;
     }
 }

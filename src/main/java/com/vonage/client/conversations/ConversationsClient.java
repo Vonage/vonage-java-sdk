@@ -45,6 +45,10 @@ public class ConversationsClient {
 	final RestEndpoint<ConversationResourceRequestWrapper, Event> getEvent;
 	final RestEndpoint<ListEventsRequest, ListEventsResponse> listEvents;
 	final RestEndpoint<Event, Event> createEvent;
+	//final RestEndpoint<StreamPayload, StreamResponse> startStream;
+	//final RestEndpoint<String, StreamResponse> stopStream;
+	//final RestEndpoint<TalkPayload, TalkResponse> startTalk;
+	//final RestEndpoint<String, TalkResponse> stopTalk;
 
 	/**
 	 * Constructor.
