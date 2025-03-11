@@ -21,6 +21,10 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageClient;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import com.vonage.client.voice.StreamPayload;
+import com.vonage.client.voice.StreamResponse;
+import com.vonage.client.voice.TalkPayload;
+import com.vonage.client.voice.TalkResponse;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -45,10 +49,10 @@ public class ConversationsClient {
 	final RestEndpoint<ConversationResourceRequestWrapper, Event> getEvent;
 	final RestEndpoint<ListEventsRequest, ListEventsResponse> listEvents;
 	final RestEndpoint<Event, Event> createEvent;
-	//final RestEndpoint<StreamPayload, StreamResponse> startStream;
-	//final RestEndpoint<String, StreamResponse> stopStream;
-	//final RestEndpoint<TalkPayload, TalkResponse> startTalk;
-	//final RestEndpoint<String, TalkResponse> stopTalk;
+	final RestEndpoint<StreamPayload, StreamResponse> startStream;
+	final RestEndpoint<String, StreamResponse> stopStream;
+	final RestEndpoint<TalkPayload, TalkResponse> startTalk;
+	final RestEndpoint<String, TalkResponse> stopTalk;
 
 	/**
 	 * Constructor.
@@ -57,7 +61,8 @@ public class ConversationsClient {
 	 */
 	@SuppressWarnings("unchecked")
 	public ConversationsClient(HttpWrapper wrapper) {
-		final String v1c = "/v1/conversations/", v1u = "/v1/users/", mems = "/members/", events = "/events/";
+		final String v1c = "/v1/conversations/", v1u = "/v1/users/", mems = "/members/",
+				events = "/events/", stream = "/stream", talk = "/talk";
 
 		class Endpoint<T, R> extends DynamicEndpoint<T, R> {
 			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
@@ -86,6 +91,10 @@ public class ConversationsClient {
 		getEvent = new Endpoint<>(req -> v1c+req.conversationId+events+req.resourceId, HttpMethod.GET);
 		listEvents = new Endpoint<>(req -> v1c+req.conversationId+events, HttpMethod.GET);
 		createEvent = new Endpoint<>(req -> v1c+req.conversationId+events, HttpMethod.POST);
+		startStream = new Endpoint<>(req -> v1c+req.getUuid()+stream, HttpMethod.PUT);
+		stopStream = new Endpoint<>(req -> v1c+req+stream, HttpMethod.DELETE);
+		startTalk = new Endpoint<>(req -> v1c+req.getUuid()+talk, HttpMethod.PUT);
+		stopTalk = new Endpoint<>(req -> v1c+req+talk, HttpMethod.DELETE);
 	}
 
 	// VALIDATION
@@ -412,5 +421,73 @@ public class ConversationsClient {
 		deleteEvent.execute(new ConversationResourceRequestWrapper(
 				validateConversationId(conversationId), validateEventId(eventId)
 		));
+	}
+
+	/**
+	 * Start streaming audio to a conversation.
+	 *
+	 * @param conversationId Unique conversation identifier.
+	 * @param request Details of the stream to start.
+	 *
+	 * @return The response from the API.
+	 *
+	 * @throws ConversationsResponseException If the conversation was not found (404),
+	 * the stream could not be started, or any other API error.
+	 *
+	 * @since 8.19.0
+	 */
+	public StreamResponse startStream(String conversationId, StreamPayload request) {
+		validateRequest(request).setUuid(validateConversationId(conversationId));
+		return startStream.execute(request);
+	}
+
+	/**
+	 * Stop streaming audio to a conversation.
+	 *
+	 * @param conversationId Unique conversation identifier.
+	 *
+	 * @return The response from the API.
+	 *
+	 * @throws ConversationsResponseException If the conversation was not found (404),
+	 * the stream could not be stopped, or any other API error.
+	 *
+	 * @since 8.19.0
+	 */
+	public StreamResponse stopStream(String conversationId) {
+		return stopStream.execute(validateConversationId(conversationId));
+	}
+
+	/**
+	 * Play text-to-speech into a conversation.
+	 *
+	 * @param conversationId Unique conversation identifier.
+	 * @param request Details of the talk to start.
+	 *
+	 * @return The response from the API.
+	 *
+	 * @throws ConversationsResponseException If the conversation was not found (404),
+	 * the speech could not be started, or any other API error.
+	 *
+	 * @since 8.19.0
+	 */
+	public TalkResponse startTalk(String conversationId, TalkPayload request) {
+		validateRequest(request).setUuid(validateConversationId(conversationId));
+		return startTalk.execute(request);
+	}
+
+	/**
+	 * Stop playing text-to-speech into a conversation.
+	 *
+	 * @param conversationId Unique conversation identifier.
+	 *
+	 * @return The response from the API.
+	 *
+	 * @throws ConversationsResponseException If the conversation was not found (404),
+	 * the speech could not be stopped, or any other API error.
+	 *
+	 * @since 8.19.0
+	 */
+	public TalkResponse stopTalk(String conversationId) {
+		return stopTalk.execute(validateConversationId(conversationId));
 	}
 }

@@ -22,7 +22,7 @@ import java.util.Objects;
 /**
  * Represents the JSON payload that will be sent in {@link VoiceClient#startStream}.
  */
-public class StreamPayload extends UuidRequestWrapper {
+public final class StreamPayload extends UuidRequestWrapper {
     private final URI[] streamUrl;
     private final Integer loop;
     private final Double level;

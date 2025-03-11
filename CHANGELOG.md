@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 # [8.19.0] - 2025-03-??
+- Added start / stop text-to-speech and audio stream endpoints to Conversation API
 - Exposed `StreamPayload` in Voice API and added Builder
 - Added builder and custom headers for `MemberChannel` in Conversation API
 - Added support for the following event types in Conversation API:

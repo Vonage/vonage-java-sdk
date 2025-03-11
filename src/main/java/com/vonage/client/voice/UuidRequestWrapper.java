@@ -33,7 +33,7 @@ class UuidRequestWrapper extends JsonableBaseObject {
      * @param uuid The resource UUID as a string.
      */
     @JsonIgnore
-    protected void setUuid(String uuid) {
+    public void setUuid(String uuid) {
         this.uuid = Objects.requireNonNull(uuid, "UUID is required.");
     }
 
@@ -43,7 +43,7 @@ class UuidRequestWrapper extends JsonableBaseObject {
      * @return The resource UUID as a string, or {@code null} if not set.
      */
     @JsonIgnore
-    protected String getUuid() {
+    public String getUuid() {
         return uuid;
     }
 }

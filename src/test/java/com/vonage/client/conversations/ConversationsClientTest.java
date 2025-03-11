@@ -17,8 +17,11 @@ package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.*;
+import com.vonage.client.AbstractClientTest;
+import com.vonage.client.RestEndpoint;
+import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.common.ChannelType;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.SortOrder;
@@ -26,6 +29,7 @@ import com.vonage.client.users.BaseUser;
 import com.vonage.client.users.channels.Channel;
 import com.vonage.client.users.channels.Mms;
 import com.vonage.client.users.channels.Sms;
+import com.vonage.client.voice.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
@@ -62,6 +66,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 	);
 
 	static final String
+			STREAM_URL = "https://example.com/waiting.mp3",
 			KNOCKING_ID_STR = "ccc86f37-0a18-4f2e-9bee-da5dce04f601",
 			INVALID_UUID_STR = "12345678-9abc-defg-hijk-lmnopqrstuvw",
 			INVITED_BY = "MEM-7bda03b5-5d1b-4734-bf7b-bc83e37f2420",
@@ -1741,6 +1746,190 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 				var request = sampleRequest();
 				return "{\"type\":\"" + request.getType() + "\",\"from\":\"" + request.getFrom() +
 						"\",\"body\":{\"play_id\":\"" + request.getPlayId() + "\"}}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testStartStream() throws Exception {
+		var request = StreamPayload.builder().streamUrl(STREAM_URL).build();
+		stubResponseAndRun(200, () -> client.startStream(CONVERSATION_ID, request));
+		stubResponseAndAssertThrows(200,
+				() -> client.startStream(null, request),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200,
+				() -> client.startStream(MEMBER_ID, request),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200,
+				() -> client.startStream(CONVERSATION_ID, null),
+				NullPointerException.class
+		);
+		assert401ResponseException(() -> client.startStream(CONVERSATION_ID, request));
+	}
+
+	@Test
+	public void testStartStreamEndpoint() throws Exception {
+		new ConversationsEndpointTestSpec<StreamPayload, StreamResponse>() {
+
+			@Override
+			protected RestEndpoint<StreamPayload, StreamResponse> endpoint() {
+				return client.startStream;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.PUT;
+			}
+
+			@Override
+			protected String expectedEndpointUri(StreamPayload request) {
+				return "/v1/conversations/"+request.getUuid()+"/stream";
+			}
+
+			@Override
+			protected StreamPayload sampleRequest() {
+				var request = StreamPayload.builder().streamUrl(STREAM_URL).build();
+				request.setUuid(CONVERSATION_ID);
+				return request;
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				var request = sampleRequest();
+				return "{\"stream_url\":[\"" + request.getStreamUrl()[0] + "\"]}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testStopStream() throws Exception {
+		stubResponseAndRun(200, () -> client.stopStream(CONVERSATION_ID));
+		stubResponseAndAssertThrows(200,
+				() -> client.stopStream(null),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200,
+				() -> client.stopStream(MEMBER_ID),
+				IllegalArgumentException.class
+		);
+		assert401ResponseException(() -> client.stopStream(CONVERSATION_ID));
+	}
+
+	@Test
+	public void testStopStreamEndpoint() throws Exception {
+		new ConversationsEndpointTestSpec<String, StreamResponse>() {
+
+			@Override
+			protected RestEndpoint<String, StreamResponse> endpoint() {
+				return client.stopStream;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.DELETE;
+			}
+
+			@Override
+			protected String expectedEndpointUri(String request) {
+				return "/v1/conversations/"+request+"/stream";
+			}
+
+			@Override
+			protected String sampleRequest() {
+				return CONVERSATION_ID;
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testStartTalk() throws Exception {
+		var request = TalkPayload.builder("Hallo! Wie geht es dir?").language(TextToSpeechLanguage.GERMAN).build();
+		stubResponseAndRun(200, () -> client.startTalk(CONVERSATION_ID, request));
+		stubResponseAndAssertThrows(200,
+				() -> client.startTalk(null, request),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200,
+				() -> client.startTalk(MEMBER_ID, request),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200,
+				() -> client.startTalk(CONVERSATION_ID, null),
+				NullPointerException.class
+		);
+		assert401ResponseException(() -> client.startTalk(CONVERSATION_ID, request));
+	}
+
+	@Test
+	public void testStartTalkEndpoint() throws Exception {
+		new ConversationsEndpointTestSpec<TalkPayload, TalkResponse>() {
+
+			@Override
+			protected RestEndpoint<TalkPayload, TalkResponse> endpoint() {
+				return client.startTalk;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.PUT;
+			}
+
+			@Override
+			protected String expectedEndpointUri(TalkPayload request) {
+				return "/v1/conversations/"+request.getUuid()+"/talk";
+			}
+
+			@Override
+			protected TalkPayload sampleRequest() {
+				TalkPayload request = TalkPayload.builder("Hello. How are you today?").build();
+				request.setUuid(CONVERSATION_ID);
+				return request;
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testStopTalk() throws Exception {
+		stubResponseAndRun(200, () -> client.stopTalk(CONVERSATION_ID));
+		stubResponseAndAssertThrows(200,
+				() -> client.stopTalk(null),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200,
+				() -> client.stopTalk(MEMBER_ID),
+				IllegalArgumentException.class
+		);
+		assert401ResponseException(() -> client.stopTalk(CONVERSATION_ID));
+	}
+
+	@Test
+	public void testStopTalkEndpoint() throws Exception {
+		new ConversationsEndpointTestSpec<String, TalkResponse>() {
+
+			@Override
+			protected RestEndpoint<String, TalkResponse> endpoint() {
+				return client.stopTalk;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.DELETE;
+			}
+
+			@Override
+			protected String expectedEndpointUri(String request) {
+				return "/v1/conversations/"+request+"/talk";
+			}
+
+			@Override
+			protected String sampleRequest() {
+				return CONVERSATION_ID;
 			}
 		}
 		.runTests();
