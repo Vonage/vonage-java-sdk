@@ -16,6 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   - `rtc:answer`
   - `rtc:answered`
   - `rtc:ringing`
+  - `rtc:status`
   - `rtc:transfer`
   - `sip:amd_machine`
   - `sip:answered`
