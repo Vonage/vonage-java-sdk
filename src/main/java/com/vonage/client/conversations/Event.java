@@ -58,6 +58,7 @@ import java.util.Objects;
 		@JsonSubTypes.Type(value = AudioSayDoneEvent.class, name = "audio:say:done"),
 		@JsonSubTypes.Type(value = AudioDtmfEvent.class, name = "audio:dtmf"),
 		@JsonSubTypes.Type(value = AudioRecordEvent.class, name = "audio:record"),
+		@JsonSubTypes.Type(value = AudioRecordDoneEvent.class, name = "audio:record:done"),
 		@JsonSubTypes.Type(value = AudioRecordStopEvent.class, name = "audio:record:stop"),
 		@JsonSubTypes.Type(value = AudioMuteOnEvent.class, name = "audio:mute:on"),
 		@JsonSubTypes.Type(value = AudioMuteOffEvent.class, name = "audio:mute:off"),

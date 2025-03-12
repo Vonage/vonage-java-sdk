@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added builder and custom headers for `MemberChannel` in Conversation API
 - Added support for the following event types in Conversation API:
   - `audio:dtmf`
+  - `audio:record:done`
   - `audio:speaking:off`
   - `audio:speaking:on`
   - `member:media`
