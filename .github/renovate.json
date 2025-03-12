@@ -2,13 +2,10 @@
   "extends": ["config:base"],
   "packageRules": [
     {
-      "matchUpdateTypes": ["patch", "pin", "digest"],
-      "automerge": true
-    },
-    {
       "matchPackagePatterns": [".*"],
-      "dependencyDashboardApproval": true,
-      "automerge": false
+      "matchUpdateTypes": ["patch", "pin", "digest"],
+      "automerge": true,
+      "dependencyDashboardApproval": true
     }
   ]
 }
