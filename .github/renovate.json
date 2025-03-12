@@ -5,7 +5,10 @@
     {
       "matchPackagePatterns": [".*"],
       "matchUpdateTypes": ["patch", "pin", "digest"],
-      "automerge": true,
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": [".*"],
       "dependencyDashboardApproval": true
     }
   ]
