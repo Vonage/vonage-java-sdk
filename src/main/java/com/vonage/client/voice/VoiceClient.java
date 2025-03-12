@@ -73,7 +73,7 @@ public class VoiceClient {
         createCall = new Endpoint<>(req -> "", HttpMethod.POST);
         getCall = new Endpoint<>(Function.identity(), HttpMethod.GET);
         listCalls = new Endpoint<>(req -> "", HttpMethod.GET);
-        modifyCall = new Endpoint<>(req -> req.getUuid(), HttpMethod.PUT);
+        modifyCall = new Endpoint<>(UuidRequestWrapper::getUuid, HttpMethod.PUT);
         startStream = new Endpoint<>(req -> req.getUuid() + "/stream", HttpMethod.PUT);
         stopStream = new Endpoint<>(uuid -> uuid + "/stream", HttpMethod.DELETE);
         startTalk = new Endpoint<>(req -> req.getUuid() + "/talk", HttpMethod.PUT);
@@ -283,10 +283,7 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated Use {@link #startStream(String, StreamPayload)}.
      */
-    @Deprecated
     public StreamResponse startStream(String uuid, String streamUrl, int loop) throws VonageResponseParseException, VonageClientException {
         return startStream(uuid, StreamPayload.builder().streamUrl(validateUrl(streamUrl)).loop(loop).build());
     }
@@ -307,9 +304,7 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      *
      * @since 7.3.0
-     * @deprecated Use {@link #startStream(String, StreamPayload)}.
      */
-    @Deprecated
     public StreamResponse startStream(String uuid, String streamUrl, int loop, double level) throws VonageResponseParseException, VonageClientException {
         return startStream(uuid, StreamPayload.builder()
                 .streamUrl(validateUrl(streamUrl))
@@ -347,10 +342,7 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated Use {@link #startStream(String, StreamPayload)}.
      */
-    @Deprecated
     public StreamResponse startStream(String uuid, String streamUrl) throws VonageResponseParseException, VonageClientException {
         return startStream(uuid, StreamPayload.builder().streamUrl(validateUrl(streamUrl)).build());
     }
@@ -402,29 +394,25 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated Use {@link #startTalk(String, TalkPayload)}.
      */
-    @Deprecated
     public TalkResponse startTalk(String uuid, String text) throws VonageResponseParseException, VonageClientException {
         return startTalk(uuid, TalkPayload.builder(text).build());
     }
 
     /**
-     * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
-     *                   can be obtained with {@link CallEvent#getUuid()}
+     * Send a synthesized speech message to an ongoing call.
+     *
+     * @param uuid   The UUID of the call, obtained from the result of {@link #createCall(Call)}.
+     *               This value can be obtained with {@link CallEvent#getUuid()}
      * @param text       The message to be spoken to the call participants.
      *
-     * @param language  The Language to use when converting text-to-speech.
+     * @param language  The language to use when converting text-to-speech.
      *
      * @return The data returned from the Voice API.
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated Use {@link #startTalk(String, TalkPayload)}.
      */
-    @Deprecated
     public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language) throws VonageResponseParseException, VonageClientException {
         return startTalk(uuid, TalkPayload.builder(text).language(language).build());
     }
@@ -444,10 +432,7 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated Use {@link #startTalk(String, TalkPayload)}.
      */
-    @Deprecated
     public TalkResponse startTalk(String uuid, String text, int loop) throws VonageResponseParseException, VonageClientException {
         return startTalk(uuid, TalkPayload.builder(text).loop(loop).build());
     }
@@ -467,10 +452,7 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated Use {@link #startTalk(String, TalkPayload)}.
      */
-    @Deprecated
     public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language, int style, int loop) throws VonageResponseParseException, VonageClientException {
         return startTalk(uuid, TalkPayload.builder(text).loop(loop).language(language).style(style).build());
     }
@@ -488,10 +470,7 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated Use {@link #startTalk(String, TalkPayload)}.
      */
-    @Deprecated
     public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language, int style) throws VonageResponseParseException, VonageClientException {
         return startTalk(uuid, TalkPayload.builder(text).language(language).style(style).build());
     }
