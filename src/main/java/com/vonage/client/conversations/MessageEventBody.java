@@ -15,10 +15,11 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.MessageType;
 import java.net.URI;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -33,6 +34,8 @@ class MessageEventBody extends JsonableBaseObject {
     @JsonProperty("file") UrlContainer file;
     @JsonProperty("vcard") UrlContainer vcard;
     @JsonProperty("location") Location location;
+    @JsonProperty("template") WhatsappTemplate template;
+    @JsonProperty("custom") Map<String, ?> custom;
 
     static class UrlContainer extends JsonableBaseObject {
         @JsonProperty("url") URI url;
@@ -42,6 +45,12 @@ class MessageEventBody extends JsonableBaseObject {
 
     MessageEventBody(MessageEvent.Builder builder) {
         messageType = Objects.requireNonNull(builder.messageType, "Message type is required.");
+        if ((template = builder.template) != null && messageType != MessageType.TEMPLATE) {
+            throw new IllegalStateException("Template is not applicable to '"+messageType+"'.");
+        }
+        if ((custom = builder.custom) != null && messageType != MessageType.CUSTOM) {
+            throw new IllegalStateException("Custom is not applicable to '"+messageType+"'.");
+        }
         if ((text = builder.text) != null && messageType != MessageType.TEXT) {
             throw new IllegalStateException("Text is not applicable to '"+messageType+"'.");
         }

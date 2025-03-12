@@ -73,12 +73,12 @@ public class VoiceClient {
         createCall = new Endpoint<>(req -> "", HttpMethod.POST);
         getCall = new Endpoint<>(Function.identity(), HttpMethod.GET);
         listCalls = new Endpoint<>(req -> "", HttpMethod.GET);
-        modifyCall = new Endpoint<>(req -> req.uuid, HttpMethod.PUT);
-        startStream = new Endpoint<>(req -> req.uuid + "/stream", HttpMethod.PUT);
+        modifyCall = new Endpoint<>(UuidRequestWrapper::getUuid, HttpMethod.PUT);
+        startStream = new Endpoint<>(req -> req.getUuid() + "/stream", HttpMethod.PUT);
         stopStream = new Endpoint<>(uuid -> uuid + "/stream", HttpMethod.DELETE);
-        startTalk = new Endpoint<>(req -> req.uuid + "/talk", HttpMethod.PUT);
+        startTalk = new Endpoint<>(req -> req.getUuid() + "/talk", HttpMethod.PUT);
         stopTalk = new Endpoint<>(uuid -> uuid + "/talk", HttpMethod.DELETE);
-        sendDtmf = new Endpoint<>(req -> req.uuid + "/dtmf", HttpMethod.PUT);
+        sendDtmf = new Endpoint<>(req -> req.getUuid() + "/dtmf", HttpMethod.PUT);
         addDtmfListener = new Endpoint<>(req -> req.uuid + "/input/dtmf", HttpMethod.PUT);
         removeDtmfListener = new Endpoint<>(uuid -> uuid + "/input/dtmf", HttpMethod.DELETE);
         downloadRecording = new Endpoint<>(Function.identity(), HttpMethod.GET);
@@ -285,7 +285,7 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public StreamResponse startStream(String uuid, String streamUrl, int loop) throws VonageResponseParseException, VonageClientException {
-        return startStream(uuid, streamUrl, loop, 0d);
+        return startStream(uuid, StreamPayload.builder().streamUrl(validateUrl(streamUrl)).loop(loop).build());
     }
 
     /**
@@ -306,7 +306,29 @@ public class VoiceClient {
      * @since 7.3.0
      */
     public StreamResponse startStream(String uuid, String streamUrl, int loop, double level) throws VonageResponseParseException, VonageClientException {
-        return startStream.execute(new StreamPayload(validateUrl(streamUrl), loop, level, validateUuid(uuid)));
+        return startStream(uuid, StreamPayload.builder()
+                .streamUrl(validateUrl(streamUrl))
+                .loop(loop).level(level).build()
+        );
+    }
+
+    /**
+     * Stream audio to an ongoing call.
+     *
+     * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
+     *                  can be obtained with {@link CallEvent#getUuid()}.
+     * @param properties Properties of the stream request (construct using {@linkplain StreamPayload#builder()}.
+     *
+     * @return The data returned from the Voice API.
+     *
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     *
+     * @since 8.19.0
+     */
+    public StreamResponse startStream(String uuid, StreamPayload properties) throws VonageResponseParseException, VonageClientException {
+        Objects.requireNonNull(properties, "StreamPayload is required").setUuid(validateUuid(uuid));
+        return startStream.execute(properties);
     }
 
     /**
@@ -322,7 +344,7 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public StreamResponse startStream(String uuid, String streamUrl) throws VonageResponseParseException, VonageClientException {
-        return startStream(uuid, streamUrl, 1);
+        return startStream(uuid, StreamPayload.builder().streamUrl(validateUrl(streamUrl)).build());
     }
 
     /**
@@ -355,7 +377,7 @@ public class VoiceClient {
      * @since 7.3.0
      */
     public TalkResponse startTalk(String uuid, TalkPayload properties) {
-        Objects.requireNonNull(properties, "TalkPayload is required").uuid = validateUuid(uuid);
+        Objects.requireNonNull(properties, "TalkPayload is required").setUuid(validateUuid(uuid));
         return startTalk.execute(properties);
     }
 
@@ -372,29 +394,25 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated Use {@link #startTalk(String, TalkPayload)}.
      */
-    @Deprecated
     public TalkResponse startTalk(String uuid, String text) throws VonageResponseParseException, VonageClientException {
         return startTalk(uuid, TalkPayload.builder(text).build());
     }
 
     /**
-     * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
-     *                   can be obtained with {@link CallEvent#getUuid()}
+     * Send a synthesized speech message to an ongoing call.
+     *
+     * @param uuid   The UUID of the call, obtained from the result of {@link #createCall(Call)}.
+     *               This value can be obtained with {@link CallEvent#getUuid()}
      * @param text       The message to be spoken to the call participants.
      *
-     * @param language  The Language to use when converting text-to-speech.
+     * @param language  The language to use when converting text-to-speech.
      *
      * @return The data returned from the Voice API.
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated Use {@link #startTalk(String, TalkPayload)}.
      */
-    @Deprecated
     public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language) throws VonageResponseParseException, VonageClientException {
         return startTalk(uuid, TalkPayload.builder(text).language(language).build());
     }
@@ -414,10 +432,7 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated Use {@link #startTalk(String, TalkPayload)}.
      */
-    @Deprecated
     public TalkResponse startTalk(String uuid, String text, int loop) throws VonageResponseParseException, VonageClientException {
         return startTalk(uuid, TalkPayload.builder(text).loop(loop).build());
     }
@@ -437,10 +452,7 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated Use {@link #startTalk(String, TalkPayload)}.
      */
-    @Deprecated
     public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language, int style, int loop) throws VonageResponseParseException, VonageClientException {
         return startTalk(uuid, TalkPayload.builder(text).loop(loop).language(language).style(style).build());
     }
@@ -458,10 +470,7 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated Use {@link #startTalk(String, TalkPayload)}.
      */
-    @Deprecated
     public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language, int style) throws VonageResponseParseException, VonageClientException {
         return startTalk(uuid, TalkPayload.builder(text).language(language).style(style).build());
     }

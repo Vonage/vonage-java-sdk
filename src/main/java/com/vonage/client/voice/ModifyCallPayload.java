@@ -15,16 +15,13 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.JsonableBaseObject;
 import java.util.Objects;
 
 /**
  * Wrapper for call modification requests.
  */
-class ModifyCallPayload extends JsonableBaseObject {
-    @JsonIgnore final String uuid;
+class ModifyCallPayload extends UuidRequestWrapper {
     private final ModifyCallAction action;
 
     /**
@@ -35,7 +32,7 @@ class ModifyCallPayload extends JsonableBaseObject {
      */
     ModifyCallPayload(ModifyCallAction action, String uuid) {
         this.action = Objects.requireNonNull(action, "Action is required.");
-        this.uuid = Objects.requireNonNull(uuid, "callId is required.");
+        setUuid(uuid);
     }
 
     /**

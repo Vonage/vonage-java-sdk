@@ -37,7 +37,7 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
      */
     @JsonIgnore
     public TextToSpeechLanguage getLanguage() {
-        return body.transcription != null ? body.transcription.language : null;
+        return body != null ? (body.transcription != null ? body.transcription.language : null) : null;
     }
 
     /**
@@ -48,7 +48,7 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
      */
     @JsonIgnore
     public Boolean getSentimentAnalysis() {
-        return body.transcription != null ? body.transcription.sentimentAnalysis : null;
+        return body != null ? (body.transcription != null ? body.transcription.sentimentAnalysis : null) : null;
     }
 
     /**
@@ -58,7 +58,7 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
      */
     @JsonIgnore
     public String getFormat() {
-        return body.format;
+        return body != null ? body.format : null;
     }
 
     /**
@@ -68,7 +68,7 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
      */
     @JsonIgnore
     public Integer getValidity() {
-        return body.validity;
+        return body != null ? body.validity : null;
     }
 
     /**
@@ -78,7 +78,7 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
      */
     @JsonIgnore
     public Integer getChannels() {
-        return body.channels;
+        return body != null ? body.channels : null;
     }
 
     /**
@@ -88,7 +88,7 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
      */
     @JsonIgnore
     public Boolean getStreamed() {
-        return body.streamed;
+        return body != null ? body.streamed : null;
     }
 
     /**
@@ -98,7 +98,7 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
      */
     @JsonIgnore
     public Boolean getSplit() {
-        return body.split;
+        return body != null ? body.split : null;
     }
 
     /**
@@ -108,7 +108,7 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
      */
     @JsonIgnore
     public Boolean getMultitrack() {
-        return body.multitrack;
+        return body != null ? body.multitrack : null;
     }
 
     /**
@@ -118,7 +118,7 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
      */
     @JsonIgnore
     public Boolean getDetectSpeech() {
-        return body.detectSpeech;
+        return body != null ? body.detectSpeech : null;
     }
 
     /**
@@ -128,7 +128,7 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
      */
     @JsonIgnore
     public Boolean getBeepStart() {
-        return body.beepStart;
+        return body != null ? body.beepStart : null;
     }
 
     /**
@@ -138,7 +138,7 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
      */
     @JsonIgnore
     public Boolean getBeepStop() {
-        return body.beepStop;
+        return body != null ? body.beepStop : null;
     }
 
     /**

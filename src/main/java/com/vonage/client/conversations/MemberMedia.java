@@ -53,7 +53,6 @@ public final class MemberMedia extends JsonableBaseObject {
 		return audioSettings;
 	}
 
-
 	/**
 	 * Entry point for constructing an instance of this class.
 	 *
@@ -80,8 +79,9 @@ public final class MemberMedia extends JsonableBaseObject {
 		}
 
 		/**
+		 * Sets the audio property.
 		 *
-		 * @param audio
+		 * @param audio Whether the event is audio.
 		 *
 		 * @return This builder.
 		 */
@@ -91,8 +91,9 @@ public final class MemberMedia extends JsonableBaseObject {
 		}
 
 		/**
+		 * Sets the media audio enabled property.
 		 *
-		 * @param enabled
+		 * @param enabled Whether the media audio is enabled.
 		 *
 		 * @return This builder.
 		 */
@@ -102,8 +103,9 @@ public final class MemberMedia extends JsonableBaseObject {
 		}
 
 		/**
+		 * Sets the media audio earmuffed property.
 		 *
-		 * @param earmuffed
+		 * @param earmuffed Whether the media audio is earmuffed.
 		 *
 		 * @return This builder.
 		 */
@@ -113,8 +115,9 @@ public final class MemberMedia extends JsonableBaseObject {
 		}
 
 		/**
+		 * Sets the media audio muted property.
 		 *
-		 * @param muted
+		 * @param muted Whether the media audio is muted.
 		 *
 		 * @return This builder.
 		 */

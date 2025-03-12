@@ -15,28 +15,25 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.JsonableBaseObject;
 
 /**
  * Request wrapper used in {@linkplain VoiceClient#sendDtmf(String, String)}.
  */
-class DtmfPayload extends JsonableBaseObject {
-    @JsonIgnore final String uuid;
+class DtmfPayload extends UuidRequestWrapper {
     private final String digits;
 
     /**
      * Create a new DtmfPayload object.
      *
      * @param digits DTMF digits to send to the call as a string.
-     * @param uuid TUUID of the call to play DTMF into.
+     * @param uuid UUID of the call to play DTMF into.
      */
     public DtmfPayload(String digits, String uuid) {
         if ((this.digits = digits) == null || digits.trim().isEmpty()) {
             throw new IllegalArgumentException("Must include at least one digit to send.");
         }
-        this.uuid = uuid;
+        setUuid(uuid);
     }
 
     /**

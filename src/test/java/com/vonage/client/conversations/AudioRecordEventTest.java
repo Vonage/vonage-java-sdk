@@ -24,17 +24,17 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.util.Map;
 
 public class AudioRecordEventTest extends AbstractEventTest {
-
-    private final String format = "ogg";
-    private final boolean
-            beepStart = true, beepStop = true,
-            detectSpeech = false, multitrack = false, split = true,
-            sentimentAnalysis = false, streamed = true;
-    private final int channels = 2, validity = 79;
     private final TextToSpeechLanguage language = TextToSpeechLanguage.GREEK;
+    private final boolean sentimentAnalysis = false;
 
     @Test
     public void testAllFields() {
+        final String format = "ogg";
+        final boolean
+                beepStart = true, beepStop = true,
+                detectSpeech = false, multitrack = false, split = true, streamed = true;
+        final int channels = 2, validity = 79;
+
         var event = testBaseEvent(EventType.AUDIO_RECORD,
                 AudioRecordEvent.builder()
                     .beepStart(beepStart).beepStop(beepStop).split(split)
@@ -69,6 +69,22 @@ public class AudioRecordEventTest extends AbstractEventTest {
         assertEquals(detectSpeech, event.getDetectSpeech());
         assertEquals(beepStart, event.getBeepStart());
         assertEquals(beepStop, event.getBeepStop());
+    }
+
+    @Test
+    public void testParseEmpty() {
+        var event = parseEvent(EventType.AUDIO_RECORD, AudioRecordEvent.class, "{\"type\":\"audio:record\"}");
+        assertNull(event.getLanguage());
+        assertNull(event.getSentimentAnalysis());
+        assertNull(event.getFormat());
+        assertNull(event.getValidity());
+        assertNull(event.getChannels());
+        assertNull(event.getStreamed());
+        assertNull(event.getSplit());
+        assertNull(event.getMultitrack());
+        assertNull(event.getDetectSpeech());
+        assertNull(event.getBeepStart());
+        assertNull(event.getBeepStop());
     }
 
     @Test

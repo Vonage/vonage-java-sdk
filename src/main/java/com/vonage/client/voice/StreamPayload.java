@@ -15,33 +15,28 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.JsonableBaseObject;
+import java.net.URI;
 import java.util.Objects;
 
 /**
  * Represents the JSON payload that will be sent in {@link VoiceClient#startStream}.
  */
-class StreamPayload extends JsonableBaseObject {
-    @JsonIgnore final String uuid;
-    private final String[] streamUrl;
+public final class StreamPayload extends UuidRequestWrapper {
+    private final URI[] streamUrl;
     private final Integer loop;
     private final Double level;
 
     /**
      * Creates a new StreamPayload.
      *
-     * @param streamUrl URL to an MP3 or wav (16-bit) audio file.
-     * @param loop Number of times the audio is repeated before the stream ends (0 means infinite).
-     * @param level The volume the audio is played at (-1.0 to 1.0).
-     * @param uuid UUID of the call to stream audio into.
+     * @param builder The builder to construct this object from.
+     * @since 8.19.0
      */
-    public StreamPayload(String streamUrl, Integer loop, Double level, String uuid) {
-        this.streamUrl = new String[]{Objects.requireNonNull(streamUrl, "Stream URL is required.")};
-        this.loop = loop;
-        this.level = level;
-        this.uuid = uuid;
+    StreamPayload(Builder builder) {
+        streamUrl = new URI[]{Objects.requireNonNull(builder.streamUrl, "Stream URL is required.")};
+        loop = builder.loop;
+        level = builder.level;
     }
 
     /**
@@ -50,7 +45,7 @@ class StreamPayload extends JsonableBaseObject {
      * @return The stream URL wrapped in an array.
      */
     @JsonProperty("stream_url")
-    public String[] getStreamUrl() {
+    public URI[] getStreamUrl() {
         return streamUrl;
     }
 
@@ -72,5 +67,80 @@ class StreamPayload extends JsonableBaseObject {
     @JsonProperty("level")
     public Double getLevel() {
         return level;
+    }
+
+    /**
+     * Entrypoint for constructing an instance of this class.
+     *
+     * @return A new Builder.
+     * @since 8.19.0
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Builder for specifying the properties of a StreamPayload. The URL is mandatory.
+     *
+     * @since 8.19.0
+     */
+    public static class Builder {
+        private URI streamUrl;
+        private Integer loop;
+        private Double level;
+
+        Builder() {}
+
+        /**
+         * Sets the stream URL.
+         *
+         * @param streamUrl URL to an MP3 or wav (16-bit) audio file.
+         * @return This builder.
+         */
+        public Builder streamUrl(String streamUrl) {
+            return streamUrl(URI.create(streamUrl));
+        }
+
+        /**
+         * Sets the stream URL.
+         *
+         * @param streamUrl URL to an MP3 or wav (16-bit) audio file.
+         * @return This builder.
+         */
+        public Builder streamUrl(URI streamUrl) {
+            this.streamUrl = streamUrl;
+            return this;
+        }
+
+        /**
+         * Sets the number of times the audio is repeated before the stream ends.
+         *
+         * @param loop Number of times the audio is repeated before the stream ends (0 means infinite).
+         * @return This builder.
+         */
+        public Builder loop(int loop) {
+            this.loop = loop;
+            return this;
+        }
+
+        /**
+         * Sets the volume the audio is played at.
+         *
+         * @param level The volume the audio is played at (-1.0 to 1.0).
+         * @return This builder.
+         */
+        public Builder level(double level) {
+            this.level = level;
+            return this;
+        }
+
+        /**
+         * Builds the StreamPayload object.
+         *
+         * @return A new {@linkplain StreamPayload} instance with this builder's properties.
+         */
+        public StreamPayload build() {
+            return new StreamPayload(this);
+        }
     }
 }

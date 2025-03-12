@@ -26,8 +26,7 @@ import java.util.Collection;
 /**
  * Represents a Conversation (request and response).
  */
-public class Conversation extends BaseConversation {
-	private ConversationStatus state;
+public class Conversation extends BaseConversationWithState {
 	private Integer sequenceNumber;
 	private ConversationProperties properties;
 	private Collection<? extends Channel> numbers;
@@ -49,16 +48,6 @@ public class Conversation extends BaseConversation {
 		if ((numbers = builder.numbers) != null) {
 			numbers.forEach(Channel::setTypeField);
 		}
-	}
-
-	/**
-	 * The state the conversation is in.
-	 *
-	 * @return The conversation state as an enum, or {@code null} if unknown.
-	 */
-	@JsonProperty("state")
-	public ConversationStatus getState() {
-		return state;
 	}
 
 	/**

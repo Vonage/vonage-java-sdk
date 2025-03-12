@@ -2,6 +2,27 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.19.0] - 2025-03-12
+- Increased maximum call length validation in Voice API
+- Added start / stop text-to-speech and audio stream endpoints to Conversation API
+- Exposed `StreamPayload` in Voice API and added Builder
+- Added builder and custom headers for `MemberChannel` in Conversation API
+- Added support for the following event types in Conversation API:
+  - `audio:dtmf`
+  - `audio:record:done`
+  - `audio:speaking:off`
+  - `audio:speaking:on`
+  - `member:media`
+  - `rtc:answer`
+  - `rtc:answered`
+  - `rtc:ringing`
+  - `rtc:status`
+  - `rtc:transfer`
+  - `sip:amd_machine`
+  - `sip:answered`
+  - `sip:machine`
+  - `sip:ringing`
+
 # [8.18.0] - 2025-03-05
 - Added MMS Text, File and Content outbound message types
 - Added `getFileName` and `getFileCaption` to `com.vonage.client.messages.InboundMessage`

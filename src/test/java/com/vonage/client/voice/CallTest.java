@@ -412,7 +412,7 @@ public class CallTest {
     @Test
     public void testLengthTimerBounds() {
         Call.Builder builder = Call.builder().to(new VbcEndpoint("789"));
-        int min = 1, max = 7200;
+        int min = 1, max = 86400;
         assertEquals(min, builder.lengthTimer(min).build().getLengthTimer().intValue());
         assertEquals(max, builder.lengthTimer(max).build().getLengthTimer().intValue());
         assertThrows(IllegalArgumentException.class, () -> builder.lengthTimer(max+1).build());

@@ -28,6 +28,8 @@ abstract class AbstractEventTest {
     final UUID randomId = UUID.randomUUID();
     final String randomIdStr = randomId.toString(), from = "MEM-"+UUID.randomUUID();
 
+    record ParseEventTuple(Class<? extends EventWithBody<?>> clazz, EventType eventTypeEnum, String eventTypeStr) {}
+
     <E extends EventWithBody<?>, B extends EventWithBody.Builder<? extends E, B>> B applyBaseFields(B builder) {
         return builder.from(from);
     }

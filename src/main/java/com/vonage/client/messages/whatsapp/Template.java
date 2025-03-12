@@ -20,11 +20,13 @@ import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 import java.util.Objects;
 
-public final class Template extends JsonableBaseObject {
-	private final String name;
-	private final List<String> parameters;
+public class Template extends JsonableBaseObject {
+	private String name;
+	private List<String> parameters;
 
-	Template(String name, List<String> parameters) {
+	protected Template() {}
+
+	protected Template(String name, List<String> parameters) {
 		this.name = Objects.requireNonNull(name, "Name cannot be null");
 		this.parameters = parameters;
 	}

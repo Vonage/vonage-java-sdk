@@ -15,10 +15,12 @@
  */
 package com.vonage.client.conversations;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Represents a {@link EventType#CONVERSATION_UPDATED} event.
  */
-public final class ConversationUpdatedEvent extends EventWithBody<Conversation> {
+public final class ConversationUpdatedEvent extends EventWithBody<BaseConversationWithState> {
 
     ConversationUpdatedEvent() {}
 
@@ -27,7 +29,8 @@ public final class ConversationUpdatedEvent extends EventWithBody<Conversation> 
      *
      * @return The main Conversation object properties.
      */
-    public BaseConversation getConversation() {
+    @JsonProperty("body")
+    public BaseConversationWithState getConversation() {
         return body;
     }
 }

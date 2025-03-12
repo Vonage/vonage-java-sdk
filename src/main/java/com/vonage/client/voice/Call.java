@@ -48,8 +48,8 @@ public class Call extends JsonableBaseObject {
         if ((to = builder.to) == null || to.length == 0 || to[0] == null) {
             throw new IllegalStateException("At least one recipient should be specified.");
         }
-        if ((lengthTimer = builder.lengthTimer) != null && (lengthTimer > 7200 || lengthTimer < 1)) {
-            throw new IllegalArgumentException("Length timer must be between 1 and 7200.");
+        if ((lengthTimer = builder.lengthTimer) != null && (lengthTimer > 86400 || lengthTimer < 1)) {
+            throw new IllegalArgumentException("Length timer must be between 1 and 86400.");
         }
         if ((ringingTimer = builder.ringingTimer) != null && (ringingTimer > 120 || ringingTimer < 1)) {
             throw new IllegalArgumentException("Ringing timer must be between 1 and 120.");
@@ -435,7 +435,7 @@ public class Call extends JsonableBaseObject {
         /**
          * Sets the number of seconds that elapse before Vonage hangs up after the call is answered.
          *
-         * @param lengthTimer The call length in seconds. The default and maximum is 7200.
+         * @param lengthTimer The call length in seconds. The default is 7200 (2 hours).
          *
          * @return This builder.
          */
