@@ -19,7 +19,6 @@ import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.application.capabilities.*;
 import com.vonage.client.application.capabilities.Capability.Type;
 import com.vonage.client.common.HttpMethod;
-import com.vonage.client.common.Webhook;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.util.UUID;

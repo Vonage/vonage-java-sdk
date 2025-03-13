@@ -18,7 +18,7 @@ package com.vonage.client.messages.whatsapp;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.CaptionMediaMessageRequest;
 import com.vonage.client.messages.internal.MessagePayload;
-import com.vonage.client.messages.MessageType;
+import com.vonage.client.common.MessageType;
 
 public final class WhatsappVideoRequest extends WhatsappRequest implements CaptionMediaMessageRequest {
 

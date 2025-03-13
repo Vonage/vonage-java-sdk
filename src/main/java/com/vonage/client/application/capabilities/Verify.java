@@ -15,8 +15,6 @@
  */
 package com.vonage.client.application.capabilities;
 
-import com.vonage.client.common.Webhook;
-
 /**
  * Verify capability configuration settings.
  *

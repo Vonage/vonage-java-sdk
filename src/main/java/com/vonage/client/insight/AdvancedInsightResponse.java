@@ -16,7 +16,6 @@
 package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 
 /**
  * Response object constructed from the JSON payload returned for Advanced number insight requests.
@@ -27,13 +26,9 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     private LookupOutcome lookupOutcome;
     private String lookupOutcomeMessage;
     private RoamingDetails roaming;
-    private RealTimeData realTimeData;
     private String errorText;
 
-    @Deprecated
-    public static AdvancedInsightResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
-    }
+    AdvancedInsightResponse() {}
 
     /**
      * @return Whether the number exists, as an enum.
@@ -73,17 +68,6 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     @JsonProperty("roaming")
     public RoamingDetails getRoaming() {
         return roaming;
-    }
-
-    /**
-     * @return Real-time data about the number if it was requested, {@code null} otherwise.
-     *
-     * @deprecated This feature will be removed in the next major release.
-     */
-    @Deprecated
-    @JsonProperty("real_time_data")
-    public RealTimeData getRealTimeData() {
-        return realTimeData;
     }
 
     /**

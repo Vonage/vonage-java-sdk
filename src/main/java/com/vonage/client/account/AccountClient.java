@@ -16,10 +16,9 @@
 package com.vonage.client.account;
 
 import com.vonage.client.*;
-import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
+import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.common.HttpMethod;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -32,9 +31,6 @@ public class AccountClient {
     final Supplier<String> apiKeyGetter;
 
     final RestEndpoint<Void, BalanceResponse> balance;
-    final RestEndpoint<PricingRequest, PricingResponse> pricing;
-    final RestEndpoint<ServiceType, FullPricingResponse> fullPricing;
-    final RestEndpoint<PrefixPricingRequest, PrefixPricingResponse> prefixPricing;
     final RestEndpoint<TopUpRequest, Void> topUp;
     final RestEndpoint<SettingsRequest, SettingsResponse> settings;
     final RestEndpoint<String, ListSecretsResponse> listSecrets;
@@ -91,9 +87,6 @@ public class AccountClient {
         }
 
         balance = new Endpoint<>(req -> "/get-balance");
-        pricing = new Endpoint<>(req -> "/get-pricing/outbound/" + req.serviceType);
-        fullPricing = new Endpoint<>(req -> "/get-full-pricing/outbound/" + req);
-        prefixPricing = new Endpoint<>(req -> "/get-prefix-pricing/outbound/" + req.serviceType);
         topUp = new Endpoint<>(req -> "/top-up", HttpMethod.POST);
         settings = new Endpoint<>(req -> "/settings", HttpMethod.POST);
         listSecrets = new SecretsEndpoint<>(Function.identity(), HttpMethod.GET);
@@ -111,61 +104,6 @@ public class AccountClient {
      */
     public BalanceResponse getBalance() throws AccountResponseException {
         return balance.execute(null);
-    }
-
-    /**
-     * Obtain pricing data on all supported countries for a specific service type.
-     *
-     * @param service The service type to retrieve pricing and network information for.
-     *
-     * @return The list of pricing information for all supported countries.
-     *
-     * @throws AccountResponseException If the pricing data could not be retrieved.
-     *
-     * @since v7.9.0
-     */
-    public List<PricingResponse> listPriceAllCountries(ServiceType service) {
-        return fullPricing.execute(Objects.requireNonNull(service, "Service type is required.")).countries;
-    }
-
-    /**
-     * Retrieve the voice pricing for a specified country.
-     *
-     * @param country The two-character country code for which you would like to retrieve pricing.
-     *
-     * @return PricingResponse object which contains the results from the API.
-     *
-     * @throws AccountResponseException If there was an error making the request or retrieving the response.
-     */
-    public PricingResponse getVoicePrice(String country) throws AccountResponseException {
-        return pricing.execute(new PricingRequest(country, ServiceType.VOICE));
-    }
-
-    /**
-     * Retrieve the SMS pricing for a specified country.
-     *
-     * @param country The two-character country code for which you would like to retrieve pricing.
-     *
-     * @return PricingResponse object which contains the results from the API.
-     *
-     * @throws AccountResponseException If there was an error making the request or retrieving the response.
-     */
-    public PricingResponse getSmsPrice(String country) throws AccountResponseException {
-        return pricing.execute(new PricingRequest(country, ServiceType.SMS));
-    }
-
-    /**
-     * Retrieve the pricing for a specified prefix.
-     *
-     * @param type   The type of service to retrieve pricing for.
-     * @param prefix The prefix to retrieve the pricing for.
-     *
-     * @return PrefixPricingResponse object which contains the results from the API.
-     *
-     * @throws AccountResponseException If there was an error making the request or retrieving the response.
-     */
-    public PrefixPricingResponse getPrefixPrice(ServiceType type, String prefix) throws AccountResponseException {
-        return prefixPricing.execute(new PrefixPricingRequest(type, prefix));
     }
 
     /**
@@ -303,7 +241,7 @@ public class AccountClient {
      * @throws AccountResponseException If there was an error making the request or retrieving the response.
      */
     public SettingsResponse updateSmsIncomingUrl(String url) throws AccountResponseException {
-        return updateSettings(SettingsRequest.withIncomingSmsUrl(url));
+        return updateSettings(new SettingsRequest(url, null));
     }
 
     /**
@@ -317,7 +255,7 @@ public class AccountClient {
      * @throws AccountResponseException If there was an error making the request or retrieving the response.
      */
     public SettingsResponse updateDeliveryReceiptUrl(String url) throws AccountResponseException {
-        return updateSettings(SettingsRequest.withDeliveryReceiptUrl(url));
+        return updateSettings(new SettingsRequest(null, url));
     }
 
     /**
@@ -328,11 +266,8 @@ public class AccountClient {
      * @return A {@link SettingsResponse} containing the newly-updated account settings.
      *
      * @throws AccountResponseException If there was an error making the request or retrieving the response.
-     *
-     * @deprecated Use {@link #updateSmsIncomingUrl(String)} or {@link #updateDeliveryReceiptUrl(String)} instead.
      */
-    @Deprecated
-    public SettingsResponse updateSettings(SettingsRequest request) throws AccountResponseException {
+    SettingsResponse updateSettings(SettingsRequest request) throws AccountResponseException {
         return settings.execute(Objects.requireNonNull(request, "Settings request cannot be null."));
     }
 }

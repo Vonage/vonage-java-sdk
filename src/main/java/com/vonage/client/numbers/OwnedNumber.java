@@ -28,14 +28,7 @@ public class OwnedNumber extends JsonableNumber {
     private String voiceCallbackValue;
     private UUID appId, messagesCallbackValue;
 
-    /**
-     * Constructor, not for public use.
-     *
-     * @deprecated This will be made private in a future release.
-     */
-    @Deprecated
-    public OwnedNumber() {
-    }
+    OwnedNumber() {}
 
     /**
      * URL of the webhook endpoint that handles inbound messages.
@@ -50,11 +43,11 @@ public class OwnedNumber extends JsonableNumber {
     /**
      * Voice webhook type. In a future release, this will be an enum.
      *
-     * @return The voice webhook callback type as a string, or {@code null} if unknown.
+     * @return The voice webhook callback type as an enum, or {@code null} if unknown.
      */
     @JsonProperty("voiceCallbackType")
-    public String getVoiceCallbackType() {
-        return voiceCallbackType != null ? voiceCallbackType.toString() : null;
+    public UpdateNumberRequest.CallbackType getVoiceCallbackType() {
+        return voiceCallbackType;
     }
 
     /**

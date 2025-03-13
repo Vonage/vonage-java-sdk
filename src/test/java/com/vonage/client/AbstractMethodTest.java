@@ -18,7 +18,7 @@ package com.vonage.client;
 import com.sun.net.httpserver.HttpServer;
 import static com.vonage.client.TestUtils.*;
 import com.vonage.client.auth.*;
-import com.vonage.client.auth.hashutils.HashUtil;
+import com.vonage.client.auth.hashutils.HashType;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.*;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -204,7 +204,7 @@ public class AbstractMethodTest {
         assertEquals(API_SECRET, paramsMap.get("api_secret"));
 
         var sigAuthCollection = new AuthCollection(new SignatureAuthMethod(
-                API_KEY, SIGNATURE_SECRET, HashUtil.HashType.HMAC_SHA256
+                API_KEY, SIGNATURE_SECRET, HashType.HMAC_SHA256
         ));
         when(mockWrapper.getAuthCollection()).thenReturn(sigAuthCollection);
 
@@ -281,8 +281,7 @@ public class AbstractMethodTest {
             httpServer.stop(0);
             httpServer = null;
         }
-        mockWrapper = new HttpWrapper();
-        mockWrapper.setHttpConfig(HttpConfig.builder().timeoutMillis(clientTimeout).build());
+        mockWrapper = new HttpWrapper(HttpConfig.builder().timeoutMillis(clientTimeout).build());
         final int port = 8049;
         String endpointPath = "/test";
         httpServer = HttpServer.create(new InetSocketAddress(port), 0);

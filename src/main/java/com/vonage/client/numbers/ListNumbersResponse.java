@@ -23,17 +23,17 @@ import com.vonage.client.JsonableBaseObject;
  * Response from a request to list the numbers currently being rented buy an account.
  */
 public class ListNumbersResponse extends JsonableBaseObject {
-    private int count;
+    private Integer count;
     private OwnedNumber[] numbers;
 
     /**
      * Total amount of numbers owned by the account.
      * Note that this may not be the same as the size of {@linkplain #getNumbers()}.
      *
-     * @return The total number of owned numbers.
+     * @return The total number of owned numbers as an integer, or {@code null} if unknown.
      */
     @JsonProperty("count")
-    public int getCount() {
+    public Integer getCount() {
         return count;
     }
 

@@ -16,8 +16,8 @@
 package com.vonage.client.auth;
 
 import static com.vonage.client.auth.RequestSigning.*;
-import com.vonage.client.auth.hashutils.HashUtil;
-import static com.vonage.client.auth.hashutils.HashUtil.HashType.*;
+import com.vonage.client.auth.hashutils.HashType;
+import static com.vonage.client.auth.hashutils.HashType.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import static org.mockito.Mockito.mock;
@@ -43,7 +43,7 @@ public class RequestSigningTest {
         inputParams.put("b", "bananas");
     }
 
-    void assertEqualsSignature(HashUtil.HashType hashType, String sig) {
+    void assertEqualsSignature(HashType hashType, String sig) {
         var result = constructSignatureForRequestParameters(inputParams, secret, time, hashType);
         assertEquals(sig, result.get(PARAM_SIGNATURE));
     }
@@ -52,7 +52,7 @@ public class RequestSigningTest {
     public void testConstructSignatureForRequestParameters() {
         String expected = "7d43241108912b32cc315b48ce681acf";
         assertEqualsSignature(MD5, expected);
-        constructSignatureForRequestParameters(inputParams, secret, MD5);
+        constructSignatureForRequestParameters(inputParams, secret, time, MD5);
         assertNotEquals(expected, inputParams.get(PARAM_SIGNATURE));
     }
 

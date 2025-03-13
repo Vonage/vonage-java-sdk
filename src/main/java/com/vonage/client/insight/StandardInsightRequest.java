@@ -15,15 +15,27 @@
  */
 package com.vonage.client.insight;
 
-public class StandardInsightRequest extends BaseInsightRequest {
+import java.util.Map;
 
-    private StandardInsightRequest(Builder builder) {
-        super(builder.number, builder.country);
+public class StandardInsightRequest extends BasicInsightRequest {
+    private Boolean cnam;
+
+    StandardInsightRequest(Builder builder) {
+        super(builder);
         cnam = builder.cnam;
     }
 
     public Boolean getCnam() {
         return cnam;
+    }
+
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = super.makeParams();
+        if (cnam != null) {
+            params.put("cnam", cnam.toString());
+        }
+        return params;
     }
 
     /**
@@ -70,7 +82,7 @@ public class StandardInsightRequest extends BaseInsightRequest {
         return new Builder();
     }
 
-    public static class Builder {
+    public static class Builder extends BasicInsightRequest.Builder {
         protected String number, country;
         protected Boolean cnam;
 
@@ -79,26 +91,6 @@ public class StandardInsightRequest extends BaseInsightRequest {
         }
 
         protected Builder() {}
-
-        /**
-         * @param number A single phone number that you need insight about in national or international format.
-         *
-         * @return This builder.
-         */
-        public Builder number(String number) {
-            this.number = number;
-            return this;
-        }
-
-        /**
-         * @param country If a number does not have a country code or it is uncertain, set the two-character country code.
-         *
-         * @return This builder.
-         */
-        public Builder country(String country) {
-            this.country = country;
-            return this;
-        }
 
         /**
          * @param cnam Indicates if the name of the person who owns the phone number should also be looked up and returned.
@@ -115,6 +107,7 @@ public class StandardInsightRequest extends BaseInsightRequest {
         /**
          * @return A new {@link StandardInsightRequest} object from the stored builder options.
          */
+        @Override
         public StandardInsightRequest build() {
             return new StandardInsightRequest(this);
         }

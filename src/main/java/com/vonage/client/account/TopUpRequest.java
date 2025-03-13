@@ -22,7 +22,7 @@ import java.util.Map;
 class TopUpRequest implements QueryParamsRequest {
     final String trx;
 
-    public TopUpRequest(String trx) {
+    TopUpRequest(String trx) {
         if ((this.trx = trx) == null || trx.trim().isEmpty()) {
             throw new IllegalArgumentException("Transaction ID is required.");
         }

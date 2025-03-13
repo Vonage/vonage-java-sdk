@@ -16,7 +16,6 @@
 package com.vonage.client.application.capabilities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.common.Webhook;
 
 /**
  * Rtc capability configuration settings.

@@ -43,7 +43,7 @@ public class ApplicationClient {
                         .wrapper(wrapper).requestMethod(method)
                         .authMethod(ApiKeyHeaderAuthMethod.class)
                         .pathGetter((de, req) -> {
-                            String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v2");
+                            String base = de.getHttpWrapper().getHttpConfig().getApiBaseUri() + "/v2";
                             String path = base + "/applications";
                             if (pathGetter != null) {
                                 path += "/" + pathGetter.apply(req);

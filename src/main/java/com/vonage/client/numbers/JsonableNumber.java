@@ -48,38 +48,18 @@ class JsonableNumber extends JsonableBaseObject {
     /**
      * Type of number as a string. In a future release, this will be an enum.
      *
-     * @return The type of number as a string.
+     * @return The type of number as an enum.
      */
-    public String getType() {
-        return type != null ? type.toString() : null;
+    public Type getType() {
+        return type;
     }
 
     /**
      * Capabilities of the number as an array of strings. In a future release, these will be enums.
      *
-     * @return The number's capabilities as a string array.
+     * @return The number's capabilities as an enum array.
      */
-    public String[] getFeatures() {
-        return Feature.getToString(features);
-    }
-
-    @Deprecated
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    @Deprecated
-    public void setMsisdn(String msisdn) {
-        this.msisdn = msisdn;
-    }
-
-    @Deprecated
-    public void setType(String type) {
-        this.type = Type.fromString(type);
-    }
-
-    @Deprecated
-    public void setFeatures(String[] features) {
-        this.features = Feature.setFromString(features);
+    public Feature[] getFeatures() {
+        return features;
     }
 }

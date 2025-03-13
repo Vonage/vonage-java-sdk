@@ -20,11 +20,9 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 /**
- *
- * @deprecated This class will be made package-private in the next major release.
+ * Base class for hashers (algorithm-agnostic).
  */
-@Deprecated
-public abstract class AbstractHasher {
+abstract class AbstractHasher {
 
     /**
      * Calculates hash for string. assume string is UTF-8 encoded
@@ -34,7 +32,7 @@ public abstract class AbstractHasher {
      * @throws NoSuchAlgorithmException if the algorithm is not available.
      * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      */
-    public String calculate(String input) throws NoSuchAlgorithmException, InvalidKeyException {
+    String calculate(String input) throws NoSuchAlgorithmException, InvalidKeyException {
         try {
             return calculate(input, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -53,7 +51,7 @@ public abstract class AbstractHasher {
      * @throws UnsupportedEncodingException if the encoding type is invalid
      * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      */
-    public String calculate(String input, String secretKey, String encoding) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+    String calculate(String input, String secretKey, String encoding) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
         return calculate(input + secretKey, encoding);
     }
 
@@ -67,9 +65,9 @@ public abstract class AbstractHasher {
      * @throws UnsupportedEncodingException if the encoding type is invalid
      * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      */
-    public abstract String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException;
+    abstract String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException;
 
-    protected String buildHexString(byte[] digest) {
+    String buildHexString(byte[] digest) {
         final StringBuilder hexString = new StringBuilder();
         for (byte element : digest) {
             int z = 0xFF & element;

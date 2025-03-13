@@ -23,10 +23,7 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Contains utility methods that use HMAC SHA-1 hashing. The class uses STANDARD JVM crypto Hmac SHA-512 algorithm.
- *
- * @deprecated This class will be made package-private in the next major release.
  */
-@Deprecated
 public class HmacSha1Hasher extends AbstractHasher {
 
     /**

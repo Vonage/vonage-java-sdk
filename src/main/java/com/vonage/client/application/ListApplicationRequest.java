@@ -47,29 +47,21 @@ public class ListApplicationRequest extends HalFilterRequest {
 
     public static class Builder extends HalFilterRequest.Builder<ListApplicationRequest, Builder> {
 
-        @Deprecated
-        public Builder() {
+        private Builder() {}
+
+        @Override
+        public Builder page(int page) {
+            return super.page(page);
+        }
+
+        @Override
+        public Builder pageSize(int pageSize) {
+            return super.pageSize(pageSize);
         }
 
         /**
-         * @param pageSize The number of applications per page.
+         * Builds the ListApplicationRequest object.
          *
-         * @return This builder.
-         */
-        public Builder pageSize(long pageSize) {
-            return super.pageSize((int) pageSize);
-        }
-
-        /**
-         * @param page The current page number, starts at 1.
-         *
-         * @return This builder.
-         */
-        public Builder page(long page) {
-            return super.page((int) page);
-        }
-
-        /**
          * @return A new {@link ListApplicationRequest} from the stored configuration.
          */
         public ListApplicationRequest build() {

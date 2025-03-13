@@ -13,12 +13,17 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+package com.vonage.client.auth.hashutils;
+
 /**
- * Implementation of the <a href=https://developer.vonage.com/en/number-insight/number-insight-v2/overview>
- * Number Insight v2 API</a>.
+ * Represents the hashing algorithm to be used.
  *
- * @since 8.2.0
- *
- * @deprecated This API is deprecated and will be removed in the next major release.
+ * @since 9.0.0 Moved from {@linkplain HashUtil}.
  */
-package com.vonage.client.numberinsight2;
+public enum HashType {
+    MD5,
+    HMAC_SHA1,
+    HMAC_MD5,
+    HMAC_SHA256,
+    HMAC_SHA512
+}

@@ -16,7 +16,6 @@
 package com.vonage.client.application.capabilities;
 
 import com.vonage.client.common.HttpMethod;
-import com.vonage.client.common.Webhook;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 

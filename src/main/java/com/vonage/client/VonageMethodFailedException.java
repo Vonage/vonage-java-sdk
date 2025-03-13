@@ -17,22 +17,7 @@ package com.vonage.client;
 
 public class VonageMethodFailedException extends VonageClientException {
 
-    @Deprecated
-    public VonageMethodFailedException() {
-        super();
-    }
-
-    @Deprecated
-    public VonageMethodFailedException(String message) {
-        super(message);
-    }
-
     public VonageMethodFailedException(String message, Throwable cause) {
         super(message, cause);
-    }
-
-    @Deprecated
-    public VonageMethodFailedException(Throwable cause) {
-        super(cause);
     }
 }

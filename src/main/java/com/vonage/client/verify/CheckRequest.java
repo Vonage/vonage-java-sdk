@@ -20,12 +20,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Request used in {@link VerifyClient#check(CheckRequest)}.
- *
- * @deprecated This will be made package-private in the next major release.
+ * Request wrapper used in {@link VerifyClient#check(String, String)}.
  */
-@Deprecated
-public class CheckRequest implements QueryParamsRequest {
+class CheckRequest implements QueryParamsRequest {
     private final String requestId, code;
 
     /**
@@ -36,7 +33,7 @@ public class CheckRequest implements QueryParamsRequest {
      *
      * @param code The verification code entered by your user. Between 4 and 6 characters.
      */
-    public CheckRequest(String requestId, String code) {
+    CheckRequest(String requestId, String code) {
         if ((this.requestId = requestId) == null) {
             throw new IllegalArgumentException("request_id is required");
         }

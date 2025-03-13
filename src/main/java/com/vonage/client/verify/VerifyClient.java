@@ -180,21 +180,6 @@ public class VerifyClient {
     /**
      * Validate a code provided by a user in response to a call from {@link #verify}.
      *
-     * @param request The request to send for validation.
-     * @return a CheckResponse representing the response received from the API call.
-     *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @deprecated Use {@link #check(String, String)}.
-     */
-    @Deprecated
-    public CheckResponse check(CheckRequest request) throws VonageClientException, VonageResponseParseException {
-        return check.execute(request);
-    }
-
-    /**
-     * Validate a code provided by a user in response to a call from {@link #verify}.
-     *
      * @param requestId (required) The requestId returned by the {@code verify} call.
      * @param code      (required) The code entered by the user.
      *
@@ -204,7 +189,7 @@ public class VerifyClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public CheckResponse check(final String requestId, final String code) throws VonageClientException, VonageResponseParseException {
-        return check(new CheckRequest(requestId, code));
+        return check.execute(new CheckRequest(requestId, code));
     }
 
     /**

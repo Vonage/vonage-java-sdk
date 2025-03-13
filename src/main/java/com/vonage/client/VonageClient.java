@@ -17,29 +17,31 @@ package com.vonage.client;
 
 import com.vonage.client.account.AccountClient;
 import com.vonage.client.application.ApplicationClient;
-import com.vonage.client.auth.*;
-import com.vonage.client.auth.hashutils.HashUtil;
+import com.vonage.client.auth.AuthCollection;
+import com.vonage.client.auth.AuthMethod;
+import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.auth.VonageUnacceptableAuthException;
+import com.vonage.client.auth.hashutils.HashType;
 import com.vonage.client.camara.numberverification.NumberVerificationClient;
 import com.vonage.client.camara.simswap.SimSwapClient;
 import com.vonage.client.conversations.ConversationsClient;
 import com.vonage.client.conversion.ConversionClient;
 import com.vonage.client.insight.InsightClient;
-import com.vonage.client.meetings.MeetingsClient;
 import com.vonage.client.messages.MessagesClient;
-import com.vonage.client.numberinsight2.NumberInsight2Client;
 import com.vonage.client.numbers.NumbersClient;
-import com.vonage.client.proactiveconnect.ProactiveConnectClient;
 import com.vonage.client.redact.RedactClient;
 import com.vonage.client.sms.SmsClient;
 import com.vonage.client.subaccounts.SubaccountsClient;
 import com.vonage.client.users.UsersClient;
 import com.vonage.client.verify.VerifyClient;
-import com.vonage.client.video.VideoClient;
 import com.vonage.client.verify2.Verify2Client;
+import com.vonage.client.video.VideoClient;
 import com.vonage.client.voice.VoiceClient;
 import org.apache.http.client.HttpClient;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 /**
@@ -67,11 +69,8 @@ public class VonageClient {
     private final MessagesClient messages;
     private final Verify2Client verify2;
     private final SubaccountsClient subaccounts;
-    private final ProactiveConnectClient proactiveConnect;
-    private final MeetingsClient meetings;
     private final UsersClient users;
     private final VideoClient video;
-    private final NumberInsight2Client numberInsight2;
     private final ConversationsClient conversations;
     private final SimSwapClient simSwap;
     private final NumberVerificationClient numberVerification;
@@ -99,11 +98,8 @@ public class VonageClient {
         messages = new MessagesClient(httpWrapper);
         verify2 = new Verify2Client(httpWrapper);
         subaccounts = new SubaccountsClient(httpWrapper);
-        proactiveConnect = new ProactiveConnectClient(httpWrapper);
-        meetings = new MeetingsClient(httpWrapper);
         users = new UsersClient(httpWrapper);
         video = new VideoClient(httpWrapper);
-        numberInsight2 = new NumberInsight2Client(httpWrapper);
         conversations = new ConversationsClient(httpWrapper);
         simSwap = new SimSwapClient(httpWrapper);
         numberVerification = new NumberVerificationClient(httpWrapper);
@@ -201,30 +197,6 @@ public class VonageClient {
     }
 
     /**
-     * Returns the Proactive Connect API client.
-     *
-     * @return The {@linkplain ProactiveConnectClient}.
-     * @since 7.6.0
-     * @deprecated This API is sunset and will be removed in the next major release.
-     */
-    @Deprecated
-    public ProactiveConnectClient getProactiveConnectClient() {
-        return proactiveConnect;
-    }
-
-    /**
-     * Returns the Meetings API client.
-     *
-     * @return The {@linkplain MeetingsClient}.
-     * @since 7.6.0
-     * @deprecated Support for this API will be removed in the next major release.
-     */
-    @Deprecated
-    public MeetingsClient getMeetingsClient() {
-        return meetings;
-    }
-
-    /**
      * Returns the Verify v2 API client.
      *
      * @return The {@linkplain Verify2Client}.
@@ -262,18 +234,6 @@ public class VonageClient {
      */
     public VideoClient getVideoClient() {
         return video;
-    }
-
-    /**
-     * Returns the Fraud Detection API client.
-     *
-     * @return The {@linkplain NumberInsight2Client}.
-     * @since 8.2.0
-     * @deprecated This API is deprecated and will be removed in the next major release.
-     */
-    @Deprecated
-    public NumberInsight2Client getNumberInsight2Client() {
-        return numberInsight2;
     }
 
     /**
@@ -336,7 +296,7 @@ public class VonageClient {
         private String apiKey, apiSecret, signatureSecret;
         private UUID applicationId;
         private byte[] privateKeyContents;
-        private HashUtil.HashType hashType = HashUtil.HashType.MD5;
+        private HashType hashType = HashType.MD5;
 
         /**
          * Configure the HTTP client parameters.
@@ -435,7 +395,7 @@ public class VonageClient {
          *
          * @return This builder.
          */
-        public Builder hashType(HashUtil.HashType hashType) {
+        public Builder hashType(HashType hashType) {
             this.hashType = hashType;
             return this;
         }

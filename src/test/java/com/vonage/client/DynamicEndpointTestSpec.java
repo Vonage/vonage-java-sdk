@@ -32,7 +32,7 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 
 	@SuppressWarnings("unchecked")
 	@SafeVarargs
-	private final Class<R> inferResponseType(R... varargs) {
+	private Class<R> inferResponseType(R... varargs) {
 		return (Class<R>) varargs.getClass().getComponentType();
 	}
 

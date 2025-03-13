@@ -13,10 +13,11 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.common;
+package com.vonage.client.application.capabilities;
 
 import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.common.HttpMethod;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
@@ -24,10 +25,7 @@ import java.util.stream.Collectors;
 
 /**
  * Represents the "webhooks" field used in Application capabilities.
- *
- * @deprecated Will be moved to the {@code com.vonage.client.application} package.
  */
-@Deprecated
 public class Webhook extends JsonableBaseObject {
     private String address;
     private HttpMethod method;
