@@ -18,7 +18,7 @@ package com.vonage.client.account;
 class SecretRequest {
     final String apiKey, secretId;
 
-    public SecretRequest(String apiKey, String secretId) {
+    SecretRequest(String apiKey, String secretId) {
         if ((this.apiKey = apiKey) == null || apiKey.trim().isEmpty()) {
             throw new IllegalArgumentException("API key is required.");
         }

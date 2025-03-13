@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.HttpMethod;
-import com.vonage.client.common.Webhook;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

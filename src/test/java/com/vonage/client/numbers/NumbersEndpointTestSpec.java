@@ -17,9 +17,8 @@ package com.vonage.client.numbers;
 
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.VonageApiResponseException;
-import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
-import java.util.Arrays;
+import com.vonage.client.auth.AuthMethod;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,5 +38,4 @@ abstract class NumbersEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, 
 	protected String expectedDefaultBaseUri() {
 		return "https://rest.nexmo.com";
 	}
-
 }

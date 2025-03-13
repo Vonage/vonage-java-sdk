@@ -36,23 +36,16 @@ abstract class AccountSecretsEndpointTestSpec<T, R> extends AccountEndpointTestS
 	@Override
 	protected String expectedEndpointUri(T request) {
 		String uri = "/accounts/%s/secrets";
-		if (request instanceof SecretRequest) {
-			String apiKey = ((SecretRequest) request).apiKey;
-			String secretId = ((SecretRequest) request).secretId;
-			uri = String.format(uri, apiKey);
-			if (secretId != null) {
-				uri += "/" + secretId;
-			}
-		}
-		else if (request instanceof CreateSecretRequest) {
-			uri = String.format(uri, ((CreateSecretRequest) request).apiKey);
-		}
-		else if (request instanceof String) {
-			uri = String.format(uri, request);
-		}
-		else {
-			throw new IllegalStateException();
-		}
+        switch (request) {
+            case SecretRequest secretRequest -> {
+                String apiKey = secretRequest.apiKey;
+                String secretId = secretRequest.secretId;
+                uri = String.format(uri, apiKey) + "/" + secretId;
+            }
+            case CreateSecretRequest createSecretRequest -> uri = String.format(uri, createSecretRequest.apiKey);
+            case String ignored -> uri = String.format(uri, request);
+            case null, default -> throw new IllegalStateException();
+        }
 		return uri;
 	}
 }

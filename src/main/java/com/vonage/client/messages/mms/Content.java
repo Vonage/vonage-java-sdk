@@ -18,7 +18,7 @@ package com.vonage.client.messages.mms;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.messages.InboundMessage;
-import com.vonage.client.messages.MessageType;
+import com.vonage.client.common.MessageType;
 import com.vonage.client.messages.internal.MessagePayload;
 import java.net.URI;
 import java.util.Objects;

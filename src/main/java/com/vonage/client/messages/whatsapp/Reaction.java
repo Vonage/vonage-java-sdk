@@ -24,7 +24,7 @@ import java.net.URI;
 import java.util.UUID;
 
 /**
- * Represents a {@linkplain com.vonage.client.messages.MessageType#REACTION} message.
+ * Represents a {@linkplain com.vonage.client.common.MessageType#REACTION} message.
  *
  * @since 8.11.0
  */

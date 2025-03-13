@@ -15,10 +15,38 @@
  */
 package com.vonage.client.insight;
 
-public class BasicInsightRequest extends BaseInsightRequest {
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-    private BasicInsightRequest(Builder builder) {
-        super(builder.number, builder.country);
+public class BasicInsightRequest implements QueryParamsRequest {
+    private final String number, country;
+
+    BasicInsightRequest(Builder builder) {
+        if ((number = builder.number) == null || number.length() < 2) {
+            throw new IllegalStateException("Must provide a number for insight.");
+        }
+        if ((country = builder.country) != null && country.length() != 2) {
+            throw new IllegalArgumentException("Country code must be 2 letters long.");
+        }
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = new LinkedHashMap<>(8);
+        params.put("number", number);
+        if (country != null) {
+            params.put("country", country);
+        }
+        return params;
     }
 
     /**

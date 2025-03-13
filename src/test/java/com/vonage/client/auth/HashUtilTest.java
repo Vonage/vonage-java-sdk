@@ -16,9 +16,9 @@
 package com.vonage.client.auth;
 
 import com.vonage.client.TestUtils;
-import static com.vonage.client.auth.hashutils.HashUtil.HashType.*;
+import static com.vonage.client.auth.hashutils.HashType.*;
 import static com.vonage.client.auth.hashutils.HashUtil.calculate;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
 
 public class HashUtilTest {
@@ -78,7 +78,7 @@ public class HashUtilTest {
     @Test
     public void testMD5() throws Exception {
         var expected = "0d691d68dcb25ec98d312f8902c0020a";
-        assertEquals(expected, calculate(INPUT, ENCODING, MD5));
+        assertEquals(expected, calculate(INPUT, ENCODING, null, MD5));
         assertEquals(expected, calculate(INPUT, MD5));
     }
 }

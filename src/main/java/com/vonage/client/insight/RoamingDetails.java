@@ -50,8 +50,7 @@ public class RoamingDetails extends JsonableBaseObject {
         }
     }
 
-    @Deprecated
-    public RoamingDetails(RoamingStatus status, String roamingCountryCode, String roamingNetworkCode, String roamingNetworkName) {
+    RoamingDetails(RoamingStatus status, String roamingCountryCode, String roamingNetworkCode, String roamingNetworkName) {
         this.status = status;
         this.roamingCountryCode = roamingCountryCode;
         this.roamingNetworkCode = roamingNetworkCode;

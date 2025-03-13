@@ -103,7 +103,7 @@ public abstract class AbstractMethod<REQ, RES> implements RestEndpoint<REQ, RES>
      * @throws VonageMethodFailedException if there was a problem executing the HTTP request.
      */
     @Override
-    public RES execute(REQ request) throws VonageMethodFailedException, VonageResponseParseException {
+    public RES execute(REQ request) throws VonageApiResponseException, VonageResponseParseException {
         final HttpUriRequest httpRequest = createFullHttpRequest(request);
 
         if (shouldLog()) {

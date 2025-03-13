@@ -18,7 +18,7 @@ package com.vonage.client.messages.viber;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.Channel;
-import com.vonage.client.messages.MessageType;
+import com.vonage.client.common.MessageType;
 import com.vonage.client.common.E164;
 
 public abstract class ViberRequest extends MessageRequest {

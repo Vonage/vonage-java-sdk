@@ -15,20 +15,20 @@
  */
 package com.vonage.client.auth;
 
-import com.vonage.client.auth.hashutils.HashUtil;
+import com.vonage.client.auth.hashutils.HashType;
 import java.util.Map;
 
 public class SignatureAuthMethod extends AbstractApiKeyQueryParamsAuthMethod {
     private static final int SORT_KEY = 20;
 
     private final String sigSecret;
-    private final HashUtil.HashType hashType;
+    private final HashType hashType;
 
     public SignatureAuthMethod(String apiKey, String sigSecret) {
-        this(apiKey, sigSecret, HashUtil.HashType.MD5);
+        this(apiKey, sigSecret, HashType.MD5);
     }
 
-    public SignatureAuthMethod(String apiKey, String sigSecret, HashUtil.HashType hashType) {
+    public SignatureAuthMethod(String apiKey, String sigSecret, HashType hashType) {
         super(apiKey);
         this.sigSecret = sigSecret;
         this.hashType = hashType;
