@@ -15,6 +15,7 @@
  */
 package com.vonage.client.account;
 
+import com.vonage.client.Jsonable;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,7 +33,7 @@ public class ListSecretsResponseTest {
 
     @Test
     public void testFromJsonEmpty() {
-        var response = ListSecretsResponse.fromJson("{}");
+        var response = Jsonable.fromJson("{}", ListSecretsResponse.class);
         assertNotNull(response);
         assertNull(response.getSecrets());
         assertNull(response.getLinks());
@@ -44,13 +45,13 @@ public class ListSecretsResponseTest {
     @Test
     public void testFromJsonInvalid() {
         assertThrows(com.vonage.client.VonageResponseParseException.class,
-                () -> ListSecretsResponse.fromJson("{malformed]")
+                () -> Jsonable.fromJson("{malformed]", ListSecretsResponse.class)
         );
     }
 
     @Test
     public void testSingleItem() {
-        var response = ListSecretsResponse.fromJson("{\"_embedded\":{\"secrets\":[{}]}}");
+        var response = Jsonable.fromJson("{\"_embedded\":{\"secrets\":[{}]}}", ListSecretsResponse.class);
         assertNotNull(response);
         var secrets = response.getSecrets();
         assertNotNull(secrets);
@@ -60,7 +61,7 @@ public class ListSecretsResponseTest {
 
     @Test
     public void testEmptySecrets() {
-        var response = ListSecretsResponse.fromJson("{\"_embedded\":{\"secrets\":[]}}");
+        var response = Jsonable.fromJson("{\"_embedded\":{\"secrets\":[]}}", ListSecretsResponse.class);
         assertNotNull(response);
         var secrets = response.getSecrets();
         assertNotNull(secrets);
@@ -69,14 +70,14 @@ public class ListSecretsResponseTest {
 
     @Test
     public void testNoSecrets() {
-        var response = ListSecretsResponse.fromJson("{}");
+        var response = Jsonable.fromJson("{}", ListSecretsResponse.class);
         assertNotNull(response);
         assertNull(response.getSecrets());
     }
 
     @Test
     public void testNullAndEmptyJson() {
-        assertNotNull(ListSecretsResponse.fromJson(null));
-        assertNotNull(ListSecretsResponse.fromJson(""));
+        assertNotNull(Jsonable.fromJson(null, ListSecretsResponse.class));
+        assertNotNull(Jsonable.fromJson("", ListSecretsResponse.class));
     }
 }

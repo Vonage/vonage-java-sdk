@@ -15,7 +15,7 @@
  */
 package com.vonage.client.messages.rcs;
 
-import com.vonage.client.messages.MessageType;
+import com.vonage.client.common.MessageType;
 import java.util.Map;
 
 /**

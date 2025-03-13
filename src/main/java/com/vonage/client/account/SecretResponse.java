@@ -16,7 +16,6 @@
 package com.vonage.client.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.time.Instant;
 
@@ -45,10 +44,5 @@ public class SecretResponse extends JsonableBaseObject {
     @JsonProperty("created_at")
     public Instant getCreated() {
         return created;
-    }
-
-    @Deprecated
-    public static SecretResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
     }
 }

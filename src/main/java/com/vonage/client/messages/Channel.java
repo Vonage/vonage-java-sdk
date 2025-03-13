@@ -17,7 +17,8 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import static com.vonage.client.messages.MessageType.*;
+import com.vonage.client.common.MessageType;
+import static com.vonage.client.common.MessageType.*;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Collectors;

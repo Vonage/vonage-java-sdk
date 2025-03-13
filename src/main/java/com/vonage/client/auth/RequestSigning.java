@@ -18,17 +18,19 @@ package com.vonage.client.auth;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.auth.hashutils.HashType;
 import com.vonage.client.auth.hashutils.HashUtil;
-import org.apache.http.NameValuePair;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Instant;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * A helper class for generating or verifying MD5 signatures when signing REST requests for submission to Vonage.
@@ -46,63 +48,6 @@ public class RequestSigning {
      * <p>
      * Generates additional parameters to represent the timestamp and generated signature.
      * Uses the supplied pre-shared secret key to generate the signature.
-     * Uses the default hash strategy of MD5.
-     *
-     * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
-     * @param secretKey the pre-shared secret key held by the client
-     *
-     * @deprecated Use {@link #getSignatureForRequestParameters(Map, String, HashUtil.HashType)}.
-     */
-    @Deprecated
-    public static void constructSignatureForRequestParameters(List<NameValuePair> params, String secretKey) {
-        constructSignatureForRequestParameters(params, secretKey, HashUtil.HashType.HMAC_MD5);
-    }
-
-    /**
-     * Signs a set of request parameters.
-     * <p>
-     * Generates additional parameters to represent the timestamp and generated signature.
-     * Uses the supplied pre-shared secret key to generate the signature.
-     *
-     * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
-     * @param secretKey the pre-shared secret key held by the client.
-     * @param hashType The type of hash that is to be used in construction.
-     * @deprecated Use {@link #constructSignatureForRequestParameters(Map, String, HashUtil.HashType)}.
-     */
-    @Deprecated
-    public static void constructSignatureForRequestParameters(List<NameValuePair> params, String secretKey, HashUtil.HashType hashType) {
-        Map<String, String> sortedParams = params.stream().collect(Collectors.toMap(
-                NameValuePair::getName,
-                NameValuePair::getValue,
-                (v1, v2) -> v1,
-                TreeMap::new
-        ));
-        constructSignatureForRequestParameters(sortedParams, secretKey, hashType);
-    }
-
-    /**
-     * Signs a set of request parameters.
-     * <p>
-     * Generates additional parameters to represent the timestamp and generated signature.
-     * Uses the supplied pre-shared secret key to generate the signature.
-     * This method modifies the input params.
-     *
-     * @param params Query parameters for the request that is to be signed.
-     * @param secretKey the pre-shared secret key held by the client.
-     * @param hashType The type of hash that is to be used in construction.
-     *
-     * @deprecated Use {@link #getSignatureForRequestParameters(Map, String, HashUtil.HashType)}.
-     */
-    @Deprecated
-    public static void constructSignatureForRequestParameters(Map<String, String> params, String secretKey, HashUtil.HashType hashType) {
-        params.putAll(getSignatureForRequestParameters(params, secretKey, hashType));
-    }
-
-    /**
-     * Signs a set of request parameters.
-     * <p>
-     * Generates additional parameters to represent the timestamp and generated signature.
-     * Uses the supplied pre-shared secret key to generate the signature.
      * This method does not modify the input parameters.
      *
      * @param params Query parameters for the request that is to be signed.
@@ -111,7 +56,7 @@ public class RequestSigning {
      *
      * @return A new Map with the signature query parameters.
      */
-    public static Map<String, String> getSignatureForRequestParameters(Map<String, String> params, String secretKey, HashUtil.HashType hashType) {
+    public static Map<String, String> getSignatureForRequestParameters(Map<String, String> params, String secretKey, HashType hashType) {
         return constructSignatureForRequestParameters(params, secretKey, Instant.now().getEpochSecond(), hashType);
     }
 
@@ -149,7 +94,7 @@ public class RequestSigning {
     static Map<String, String> constructSignatureForRequestParameters(Map<String, String> inputParams,
                                                                  String secretKey,
                                                                  long currentTimeSeconds,
-                                                                 HashUtil.HashType hashType) {
+                                                                 HashType hashType) {
 
         // First, inject a 'timestamp=' parameter containing the current time in seconds since Jan 1st 1970
         String timestampStr = Long.toString(currentTimeSeconds);
@@ -209,7 +154,7 @@ public class RequestSigning {
                                                      String secretKey,
                                                      long currentTimeMillis) {
         return verifyRequestSignature(contentType, inputStream, parameterMap,
-                secretKey, currentTimeMillis, HashUtil.HashType.MD5
+                secretKey, currentTimeMillis, HashType.MD5
         );
     }
 
@@ -230,7 +175,7 @@ public class RequestSigning {
                                                     Map<String, String[]> parameterMap,
                                                     String secretKey,
                                                     long currentTimeMillis,
-                                                    HashUtil.HashType hashType) {
+                                                    HashType hashType) {
 
         // Construct a sorted list of the name-value pair parameters supplied in the request, excluding the signature parameter
         Map<String, String> sortedParams = new TreeMap<>();

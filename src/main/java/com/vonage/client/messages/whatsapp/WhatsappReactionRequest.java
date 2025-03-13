@@ -16,7 +16,7 @@
 package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.messages.MessageType;
+import com.vonage.client.common.MessageType;
 import java.util.Objects;
 import java.util.UUID;
 

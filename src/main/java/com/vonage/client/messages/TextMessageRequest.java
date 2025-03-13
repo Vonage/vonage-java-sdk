@@ -15,6 +15,8 @@
  */
 package com.vonage.client.messages;
 
+import com.vonage.client.common.MessageType;
+
 /**
  * Convenience interface to indicate that {@link MessageRequest#getMessageType()} is {@link MessageType#TEXT}.
  *

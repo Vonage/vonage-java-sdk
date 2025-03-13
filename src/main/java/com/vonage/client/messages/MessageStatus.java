@@ -55,7 +55,7 @@ public class MessageStatus extends JsonableBaseObject {
 	/**
 	 * Describes the error that was encountered when sending the message.
 	 */
-		public static final class Error extends JsonableBaseObject {
+	public static final class Error extends JsonableBaseObject {
 		@JsonProperty("type") URI type;
 		@JsonProperty("title") String title;
 		@JsonProperty("detail") String detail;

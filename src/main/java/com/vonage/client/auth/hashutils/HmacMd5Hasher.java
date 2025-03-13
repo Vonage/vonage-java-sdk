@@ -23,11 +23,8 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Contains utility methods that use HMAC MD-5 hashing. The class uses STANDARD JVM crypto Hmac SHA-512 algorithm.
- *
- * @deprecated This class will be made package-private in the next major release.
  */
-@Deprecated
-public class HmacMd5Hasher extends AbstractHasher {
+class HmacMd5Hasher extends AbstractHasher {
 
     /**
      * Calculates HMAC MD-5 hash for string.
@@ -40,7 +37,7 @@ public class HmacMd5Hasher extends AbstractHasher {
      * @throws UnsupportedEncodingException if the specified encoding is unavailable.
      */
     @Override
-    public String calculate(String input, String secretKey, String encoding) throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
+    String calculate(String input, String secretKey, String encoding) throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
         Mac sha1HMAC = Mac.getInstance("HmacMD5");
         SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(encoding), "HmacMD5");
 
@@ -63,7 +60,7 @@ public class HmacMd5Hasher extends AbstractHasher {
      * @throws InvalidKeyException if key is invalid
      */
     @Override
-    public String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+    String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         return calculate(input, input, encoding);
     }
 }

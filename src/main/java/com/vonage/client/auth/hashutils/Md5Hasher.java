@@ -34,7 +34,7 @@ class Md5Hasher extends AbstractHasher {
      * @throws UnsupportedEncodingException if the specified encoding is unavailable.
      */
     @Override
-    public String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(input.getBytes(encoding));
         return buildHexString(md.digest());
