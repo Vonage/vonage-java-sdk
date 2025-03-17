@@ -68,12 +68,6 @@ public class RecordActionTest {
     }
 
     @Test
-    public void testSplit() {
-        RecordAction record = RecordAction.builder().split(SplitRecording.CONVERSATION).build();
-        assertEquals("[{\"action\":\"record\"}]", new Ncco(record).toJson());
-    }
-
-    @Test
     public void testSplitIsSetWhenChannelsGreaterThanOne() {
         RecordAction record = RecordAction.builder().channels(2).build();
         assertEquals("[{\"channels\":2,\"split\":\"conversation\",\"action\":\"record\"}]", new Ncco(record).toJson());

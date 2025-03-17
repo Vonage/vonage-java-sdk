@@ -32,7 +32,7 @@ public class TalkActionTest {
                 .text("New Text Message")
                 .bargeIn(true)
                 .loop(3)
-                .level(0.3333f)
+                .level(0.3333)
                 .language(TextToSpeechLanguage.AMERICAN_ENGLISH)
                 .style(2)
                 .build();
@@ -73,7 +73,7 @@ public class TalkActionTest {
 
     @Test
     public void testLevelField() {
-        TalkAction talk = TalkAction.builder("Talk to me").level(-0.34f).build();
+        TalkAction talk = TalkAction.builder("Talk to me").level(-0.34).build();
 
         String expectedJson = "[{\"text\":\"Talk to me\",\"level\":-0.34,\"action\":\"talk\"}]";
         assertEquals(expectedJson, new Ncco(talk).toJson());

@@ -26,7 +26,7 @@ public class TalkAction extends JsonableBaseObject implements Action {
     private String text;
     private Boolean bargeIn;
     private Integer loop, style;
-    private Float level;
+    private Double level;
     private TextToSpeechLanguage language;
     private Boolean premium;
 
@@ -85,10 +85,10 @@ public class TalkAction extends JsonableBaseObject implements Action {
     /**
      * Volume level that the speech is played at. This can be any value between -1 to 1, with 0 being the default.
      *
-     * @return The volume level as a Float between -1.0 and 1.0, or {@code null} if unspecified.
+     * @return The volume level as a Double between -1.0 and 1.0, or {@code null} if unspecified.
      */
     @JsonProperty("level")
-    public Float getLevel() {
+    public Double getLevel() {
         return level;
     }
 
@@ -155,7 +155,7 @@ public class TalkAction extends JsonableBaseObject implements Action {
         private String text;
         private Boolean bargeIn, premium;
         private Integer loop, style;
-        private Float level;
+        private Double level;
         private TextToSpeechLanguage language;
 
         Builder() {}
@@ -184,27 +184,10 @@ public class TalkAction extends JsonableBaseObject implements Action {
          * @param bargeIn Whether to allow early termination of the action upon user input.
          *
          * @return This builder.
-         *
-         * @deprecated Use {@link #bargeIn(boolean)} instead. This method will be removed in the next major release.
-         */
-        @Deprecated
-        public Builder bargeIn(Boolean bargeIn) {
-            this.bargeIn = bargeIn;
-            return this;
-        }
-
-        /**
-         * Set to true so this action is terminated when the user presses a button on the keypad. Use this feature to
-         * enable users to choose an option without having to listen to the whole message in your Interactive Voice
-         * Response (IVR). If you set this to {@code true} the next action in the NCCO stack must be an input action.
-         * The default value is {@code false}.
-         *
-         * @param bargeIn Whether to allow early termination of the action upon user input.
-         *
-         * @return This builder.
          */
         public Builder bargeIn(boolean bargeIn) {
-            return bargeIn(Boolean.valueOf(bargeIn));
+            this.bargeIn = bargeIn;
+            return this;
         }
 
         /**
@@ -223,27 +206,13 @@ public class TalkAction extends JsonableBaseObject implements Action {
         /**
          * Volume level that the speech is played at. This can be any value between -1 to 1 with 0 being the default.
          *
-         * @param level The volume level as a Float between -1.0 and 1.0.
-         *
-         * @return This builder.
-         *
-         * @deprecated Use {@link #level(double)} instead. This method will be removed in the next major release.
-         */
-        @Deprecated
-        public Builder level(Float level) {
-            this.level = level;
-            return this;
-        }
-
-        /**
-         * Volume level that the speech is played at. This can be any value between -1 to 1 with 0 being the default.
-         *
          * @param level The volume level, between -1.0 and 1.0 (inclusive).
          *
          * @return This builder.
          */
         public Builder level(double level) {
-            return level(Float.valueOf((float) level));
+            this.level = level;
+            return this;
         }
 
         /**
@@ -266,43 +235,9 @@ public class TalkAction extends JsonableBaseObject implements Action {
          * @param style The vocal style number to use.
          *
          * @return This builder.
-         *
-         * @deprecated Use {@link #style(int)} instead. This method will be removed in the next major release.
-         */
-        @Deprecated
-        public Builder style(Integer style) {
-            this.style = style;
-            return this;
-        }
-
-        /**
-         * Vocal style (vocal range, tessitura and timbre). Default is {@code 0}. Possible values are listed in the
-         * <a href=https://developer.vonage.com/en/voice/voice-api/concepts/text-to-speech#supported-languages>
-         * Text-To-Speech guide</a>.
-         *
-         * @param style The vocal style number to use.
-         *
-         * @return This builder.
          */
         public Builder style(int style) {
-            return style(Integer.valueOf(style));
-        }
-
-        /**
-         * Whether to use Premium text-to-speech. Set to {@code true} to use the premium version of the specified
-         * style if available, otherwise the standard version will be used. Premium voices incur an additional
-         * charge - see <a href=https://www.vonage.com/communications-apis/voice/pricing/>the Voice Pricing page</a>
-         * for details on the exact rate.
-         *
-         * @param premium {@code true} to use the premium version where possible, {@code false} for standard.
-         *
-         * @return This builder.
-         *
-         * @deprecated Use {@link #premium(boolean)} instead. This method will be removed in the next major release.
-         */
-        @Deprecated
-        public Builder premium(Boolean premium) {
-            this.premium = premium;
+            this.style = style;
             return this;
         }
 
@@ -317,7 +252,8 @@ public class TalkAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder premium(boolean premium) {
-            return premium(Boolean.valueOf(premium));
+            this.premium = premium;
+            return this;
         }
 
         /**
