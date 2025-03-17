@@ -82,19 +82,4 @@ public class OwnedNumber extends JsonableNumber {
     public UUID getAppId() {
         return appId;
     }
-
-    @Deprecated
-    public void setMoHttpUrl(String moHttpUrl) {
-        this.moHttpUrl = URI.create(moHttpUrl);
-    }
-
-    @Deprecated
-    public void setVoiceCallbackType(String voiceCallbackType) {
-        this.voiceCallbackType = UpdateNumberRequest.CallbackType.fromString(voiceCallbackType);
-    }
-
-    @Deprecated
-    public void setVoiceCallbackValue(String voiceCallbackValue) {
-        this.voiceCallbackValue = voiceCallbackValue;
-    }
 }

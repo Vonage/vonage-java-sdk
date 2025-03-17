@@ -21,18 +21,13 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- *
- * @deprecated This class will be made package-private in the next major release.
- */
-@Deprecated
-public class ConversionRequest implements QueryParamsRequest {
+class ConversionRequest implements QueryParamsRequest {
     private final Type type;
     private final String messageId;
-    private final boolean delivered;
+    private final Boolean delivered;
     private final Date timestamp;
 
-    public ConversionRequest(Type type, String messageId, boolean delivered, Date timestamp) {
+    public ConversionRequest(Type type, String messageId, Boolean delivered, Date timestamp) {
         this.type = type;
         this.messageId = messageId;
         this.delivered = delivered;
@@ -59,17 +54,12 @@ public class ConversionRequest implements QueryParamsRequest {
     public Map<String, String> makeParams() {
         LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
         params.put("message-id", messageId);
-        params.put("delivered", String.valueOf(delivered));
+        if (delivered != null) {
+            params.put("delivered", delivered.toString());
+        }
         if (timestamp != null) {
             params.put("timestamp", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timestamp));
         }
         return params;
-    }
-
-    /**
-     * This enum will be moved to its own class in the next major release.
-     */
-    public enum Type {
-        SMS, VOICE
     }
 }

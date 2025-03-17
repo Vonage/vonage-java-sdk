@@ -18,7 +18,6 @@ package com.vonage.client.voice;
 import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
-import com.vonage.client.common.HttpMethod;
 import com.vonage.client.users.channels.Websocket;
 import com.vonage.client.voice.ncco.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,7 +40,7 @@ public class CallTest {
     @Test
     public void testToJsonRandomNumber() throws Exception {
         Call call = Call.builder().to(new PhoneEndpoint("4477999000"))
-                .fromRandomNumber(true).answerMethod(HttpMethod.GET)
+                .fromRandomNumber(true).answerMethod(EventMethod.GET)
                 .answerUrl("https://callback.example.com/").build();
 
         assertEquals("{\"to\":[{\"number\":\"4477999000\",\"type\":\"phone\"}],"
@@ -312,7 +311,7 @@ public class CallTest {
                     RecordAction.builder().build(),
                     ConnectAction.builder(com.vonage.client.voice.ncco.VbcEndpoint.builder("123").build()).build()
                 )
-                .answerMethod(HttpMethod.POST).eventMethod(HttpMethod.GET)
+                .answerMethod(EventMethod.POST).eventMethod(EventMethod.GET)
                 .eventUrl("https://example.com/voice/event")
                 .answerUrl("https://example.com/voice/answer")
                 .fromRandomNumber(false).machineDetection(MachineDetection.HANGUP)
@@ -322,8 +321,8 @@ public class CallTest {
         assertEquals(55, call.getRingingTimer().intValue());
         assertNotNull(call.getAnswerUrl());
         assertNotNull(call.getEventUrl());
-        assertEquals("POST", call.getAnswerMethod());
-        assertEquals("GET", call.getEventMethod());
+        assertEquals(EventMethod.POST, call.getAnswerMethod());
+        assertEquals(EventMethod.GET, call.getEventMethod());
         assertFalse(call.getFromRandomNumber());
         assertEquals(MachineDetection.HANGUP, call.getMachineDetection());
         assertEquals("phone", call.getFrom().getType());
@@ -388,17 +387,6 @@ public class CallTest {
             Call.builder().to(vbc).from("447900000001").fromRandomNumber(true).build()
         );
         assertTrue(Call.builder().to(vbc).fromRandomNumber(true).build().getFromRandomNumber());
-    }
-
-    @Test
-    public void testConstructInvalidMethod() {
-        VbcEndpoint vbc = new VbcEndpoint("789");
-        assertThrows(IllegalArgumentException.class, () ->
-                Call.builder().to(vbc).answerMethod(HttpMethod.PATCH).build()
-        );
-        assertThrows(IllegalArgumentException.class, () ->
-                Call.builder().to(vbc).eventMethod(HttpMethod.PATCH).build()
-        );
     }
 
     @Test

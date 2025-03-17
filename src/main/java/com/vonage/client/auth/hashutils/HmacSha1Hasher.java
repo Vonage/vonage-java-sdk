@@ -49,17 +49,17 @@ public class HmacSha1Hasher extends AbstractHasher {
     }
 
     /**
-     * Calculates HMAC SHA-1 hash for string.
+     * Calculates HMAC SHA-1 hash for the input string.
      * Secret key that is supplied here is the input itself.
      *
-     * @param input string which is going to be encoded into HMAC SHA-1 format
-     * @param encoding character encoding of the string which is going to be encoded into HMAC SHA-1 format
-     * @return  HMAC SHA-1 representation of the input string
-     * @throws NoSuchAlgorithmException if the HMAC SHA-1 algorithm is not available.
+     * @param input string which is going to be encoded into HMAC SHA-1 format.
+     * @param encoding character encoding of the string which is going to be encoded into HMAC SHA-1 format.
+     *
+     * @return HMAC SHA-1 representation of the input string
+     * @throws NoSuchAlgorithmException if the HMAC SHA-1 algori.thm is not available.
      * @throws UnsupportedEncodingException if the specified encoding is unavailable.
-     * @throws InvalidKeyException if key is invalid
+     * @throws InvalidKeyException if key is invalid.
      */
-    @Deprecated
     @Override
     public String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         return calculate(input, input, encoding);

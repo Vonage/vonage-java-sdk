@@ -41,13 +41,28 @@ public class HttpWrapper {
             JAVA_VERSION = System.getProperty("java.version"),
             USER_AGENT = String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION);
 
-    private AuthCollection authCollection;
-    private CloseableHttpClient httpClient;
-    private HttpConfig httpConfig;
+    private final AuthCollection authCollection;
+    private final CloseableHttpClient httpClient;
+    private final HttpConfig httpConfig;
 
-    public HttpWrapper(HttpConfig httpConfig, AuthCollection authCollection) {
+    /**
+     * Creates a new instance of the HttpWrapper class.
+     *
+     * @param httpConfig The HTTP configuration settings to use.
+     * @param authCollection The authentication settings to use.
+     * @param httpClient The HTTP client to use.
+     *
+     * @since 9.0.0
+     */
+    HttpWrapper(HttpConfig httpConfig, AuthCollection authCollection, HttpClient httpClient) {
         this.authCollection = authCollection;
         this.httpConfig = httpConfig;
+        this.httpClient = httpClient instanceof CloseableHttpClient ?
+                (CloseableHttpClient) httpClient : createHttpClient();
+    }
+
+    public HttpWrapper(HttpConfig httpConfig, AuthCollection authCollection) {
+        this(httpConfig, authCollection, null);
     }
 
     public HttpWrapper(AuthCollection authCollection) {
@@ -68,9 +83,6 @@ public class HttpWrapper {
      * @return The Apache HTTP client instance.
      */
     public CloseableHttpClient getHttpClient() {
-        if (httpClient == null) {
-            httpClient = createHttpClient();
-        }
         return httpClient;
     }
 
@@ -102,16 +114,6 @@ public class HttpWrapper {
         catch (RuntimeException ex) {
             return null;
         }
-    }
-
-    @Deprecated
-    public void setHttpClient(HttpClient httpClient) {
-        this.httpClient = (CloseableHttpClient) httpClient;
-    }
-
-    @Deprecated
-    public void setHttpConfig(HttpConfig httpConfig) {
-        this.httpConfig = httpConfig;
     }
 
     /**

@@ -16,7 +16,6 @@
 package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.common.E164;
 
 /**
  * Intermediate class for WhatsApp workflows.
@@ -27,13 +26,6 @@ abstract class AbstractWhatsappWorkflow extends AbstractNumberWorkflow {
 
 	protected AbstractWhatsappWorkflow(Builder<?, ?> builder) {
 		super(builder);
-	}
-
-	@Override
-	protected String validateFrom(String from) {
-		// TODO: remove this when removing deprecated constructors
-		if (from == null) return null;
-		return new E164(super.validateFrom(from)).toString();
 	}
 
 	/**
