@@ -52,7 +52,7 @@ abstract class AbstractHasher {
      * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      */
     String calculate(String input, String secretKey, String encoding) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
-        return calculate(input + secretKey, encoding);
+        return calculate(input + (secretKey == null ? "" : secretKey), encoding);
     }
 
     /**

@@ -21,11 +21,6 @@ package com.vonage.client;
  */
 public class VonageUnexpectedException extends RuntimeException {
 
-    @Deprecated
-    public VonageUnexpectedException() {
-        super();
-    }
-
     public VonageUnexpectedException(String message) {
         super(message);
     }

@@ -78,7 +78,7 @@ public class HashUtilTest {
     @Test
     public void testMD5() throws Exception {
         var expected = "0d691d68dcb25ec98d312f8902c0020a";
-        assertEquals(expected, calculate(INPUT, ENCODING, null, MD5));
+        assertEquals(expected, calculate(INPUT, null, ENCODING, MD5));
         assertEquals(expected, calculate(INPUT, MD5));
     }
 }

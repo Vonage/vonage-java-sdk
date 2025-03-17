@@ -47,10 +47,6 @@ public enum Feature {
         return valueOf(feature.toUpperCase());
     }
 
-    static Feature[] setFromString(String[] features) {
-        return features == null ? null : Arrays.stream(features).map(Feature::fromString).toArray(Feature[]::new);
-    }
-
     static String[] getToString(Feature[] features) {
         return features == null ? null : Arrays.stream(features).map(Feature::toString).toArray(String[]::new);
     }

@@ -356,6 +356,8 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
     @Test
     public void testSettingsEndpoint() throws Exception {
         new AccountEndpointTestSpec<SettingsRequest, SettingsResponse>() {
+            static final String INCOMING_SMS_URL = "https://example.com/inbound-sms",
+                    DELIVERY_RECEIPT_URL = "https://example.com/delivery-receipt";
 
             @Override
             protected RestEndpoint<SettingsRequest, SettingsResponse> endpoint() {
@@ -379,18 +381,23 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
 
             @Override
             protected SettingsRequest sampleRequest() {
-                return new SettingsRequest(
-                        "https://example.com/inbound-sms",
-                        "https://example.com/delivery-receipt"
-                );
+                return new SettingsRequest(INCOMING_SMS_URL, DELIVERY_RECEIPT_URL);
             }
 
             @Override
             protected Map<String, String> sampleQueryParams() {
-                Map<String, String> params = new LinkedHashMap<>();
-                params.put("moCallBackUrl", "https://example.com/inbound-sms");
-                params.put("drCallBackUrl", "https://example.com/delivery-receipt");
+                Map<String, String> params = new LinkedHashMap<>(4);
+                params.put("moCallBackUrl", INCOMING_SMS_URL);
+                params.put("drCallBackUrl", DELIVERY_RECEIPT_URL);
                 return params;
+            }
+
+            @Override
+            public void runTests() throws Exception {
+                var request = sampleRequest();
+                assertEquals(INCOMING_SMS_URL, request.getIncomingSmsUrl());
+                assertEquals(DELIVERY_RECEIPT_URL, request.getDeliveryReceiptUrl());
+                super.runTests();
             }
         }
         .runTests();

@@ -34,6 +34,9 @@ public class CallInfoPageTest {
                 "    \"self\": {\n" +
                 "      \"href\": \"/v1/calls?page_size=10&record_index=20&order=asc\"\n" +
                 "    },\n" +
+                "    \"prev\": {\n" +
+                "        \"href\": \"/v1/calls/1452dad1b27b4e71a90fb18af2656948\"\n" +
+                "    },\n" +
                 "    \"first\": {\n" +
                 "      \"href\": \"/v1/calls?page_size=10\"\n" +
                 "    },\n" +
@@ -87,7 +90,11 @@ public class CallInfoPageTest {
     @Test
     public void testBasics() {
         TestUtils.testJsonableBaseObject(page);
-        assertEquals("/v1/calls?page_size=10&record_index=20&order=asc", page.getLinks().getSelfUrl().toString());
+        var links = page.getLinks();
+        assertNotNull(links);
+        assertEquals("/v1/calls?page_size=10", links.getFirstUrl().toString());
+        assertEquals("/v1/calls?page_size=10&record_index=20&order=asc", links.getSelfUrl().toString());
+        assertEquals("/v1/calls/1452dad1b27b4e71a90fb18af2656948", links.getPrevUrl().toString());
         assertEquals("447700900549", page.getCallInfos()[0].getTo().toLog());
         assertEquals(10, page.getPageSize());
         assertEquals(0, page.getRecordIndex());
