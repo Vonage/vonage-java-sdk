@@ -28,36 +28,36 @@ public class CallsFilterTest {
         Calendar startCalendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
         startCalendar.set(2016, Calendar.JANUARY, 1, 7, 8, 20);
         startCalendar.set(Calendar.MILLISECOND, 0);
-        Date startDate = startCalendar.getTime();
+        Instant startDate = startCalendar.getTime().toInstant();
         Calendar endCalendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
         endCalendar.set(2016, Calendar.JANUARY, 1, 7, 8, 55);
         endCalendar.set(Calendar.MILLISECOND, 0);
-        Date endDate = endCalendar.getTime();
-        Integer pageSize = 10, recordIndex = 12;
+        Instant endDate = endCalendar.getTime().toInstant();
+        int pageSize = 10, recordIndex = 12;
         String conversationUuid = "this-is-not-a-uuid";
         CallStatus status = CallStatus.COMPLETED;
-        CallOrder order = CallOrder.ASCENDING;
+        SortOrder order = SortOrder.ASCENDING;
 
         CallsFilter filter = CallsFilter.builder()
-                .order((CallOrder) null).order(order)
-                .dateStart(null).dateStart(startDate)
-                .dateEnd(null).dateEnd(endDate)
-                .recordIndex(null).recordIndex(recordIndex)
-                .pageSize(null).pageSize(pageSize)
+                .order(order)
+                .startDate(startDate)
+                .endDate(endDate)
+                .recordIndex(recordIndex)
+                .pageSize(pageSize)
                 .conversationUuid(conversationUuid)
                 .status(status).build();
 
-        assertEquals(startDate, filter.getDateStart());
-        assertEquals(endDate, filter.getDateEnd());
+        assertEquals(startDate, filter.getStartDate());
+        assertEquals(endDate, filter.getEndDate());
 
         Map<String, String> paramLookup = filter.makeParams();
         assertEquals(7, paramLookup.size());
         assertEquals(status.name().toLowerCase(), paramLookup.get("status"));
         assertEquals("2016-01-01T07:08:55Z", paramLookup.get("date_end"));
         assertEquals("2016-01-01T07:08:20Z", paramLookup.get("date_start"));
-        assertEquals(recordIndex.toString(), paramLookup.get("record_index"));
-        assertEquals(order.getCallOrder(), paramLookup.get("order"));
-        assertEquals(pageSize.toString(), paramLookup.get("page_size"));
+        assertEquals(String.valueOf(recordIndex), paramLookup.get("record_index"));
+        assertEquals(order.toString(), paramLookup.get("order"));
+        assertEquals(String.valueOf(pageSize), paramLookup.get("page_size"));
         assertEquals(conversationUuid, paramLookup.get("conversation_uuid"));
     }
 

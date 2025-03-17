@@ -16,10 +16,9 @@
 package com.vonage.client.voice.ncco;
 
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.UUID;
 
 public class InputActionTest {
@@ -89,19 +88,13 @@ public class InputActionTest {
     @Test
     public void testAtLeastOneTypeIsSpecified() {
         assertThrows(IllegalStateException.class, () -> InputAction.builder().build());
-        assertThrows(IllegalStateException.class, () -> InputAction.builder().dtmf().type(null).build());
-        for (String type : new String[] {"dtmf", "speech"}) {
-            var input = InputAction.builder().type(Collections.singletonList(type)).build();
-            String expectedJson = "[{\"type\":[\""+type+"\"],\"action\":\"input\"}]";
-            assertEquals(expectedJson, new Ncco(input).toJson());
-        }
     }
 
     @Test
     public void testDtmfOnly() {
         var dtmfSettings = DtmfSettings.builder().maxDigits(4).build();
 
-        InputAction input = InputAction.builder().type(Collections.singletonList("dtmf")).dtmf(dtmfSettings).build();
+        InputAction input = InputAction.builder().dtmf(dtmfSettings).build();
         String expectedJson = "[{\"type\":[\"dtmf\"],\"dtmf\":{\"maxDigits\":4},\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());
     }
@@ -156,7 +149,7 @@ public class InputActionTest {
                 .saveAudio(true).maxDuration(60).build();
 
         testJsonableBaseObject(speechSettings);
-        InputAction input = InputAction.builder().type(Collections.singletonList("speech")).speech(speechSettings).build();
+        InputAction input = InputAction.builder().speech(speechSettings).build();
         String expectedJson = "[{\"type\":[\"speech\"],\"speech\":{\"uuid\":[\""+uuid+"\"],\"context\":" +
                 "[\"hint1\",\"Hint 2\"],\"endOnSilence\":2.0,\"startTimeout\":10," +
                 "\"maxDuration\":60,\"sensitivity\":90,\"language\":\"en-NG\"," +
@@ -215,9 +208,7 @@ public class InputActionTest {
 
     @Test
     public void testEventUrlField() {
-        InputAction input = InputAction.builder().dtmf()
-                .eventUrl("https://nexmo.com", "https://developer.vonage.com")
-                .eventUrl("http://example.com").build();
+        InputAction input = InputAction.builder().dtmf().eventUrl("http://example.com").build();
         String expectedJson = "[{\"type\":[\"dtmf\"],\"eventUrl\":[\"http://example.com\"],\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());
     }

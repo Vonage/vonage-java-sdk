@@ -17,16 +17,16 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
+import java.net.URI;
 import java.util.*;
 
 /**
  * An NCCO input action which allows for the collection of digits and automatic speech recognition from a person.
  */
 public class InputAction extends JsonableBaseObject implements Action {
-    @JsonProperty(required = true)
     private Collection<String> type;
     private DtmfSettings dtmf;
-    private Collection<String> eventUrl;
+    private Collection<URI> eventUrl;
     private SpeechSettings speech;
     private EventMethod eventMethod;
     private InputMode mode;
@@ -37,7 +37,7 @@ public class InputAction extends JsonableBaseObject implements Action {
     InputAction() {}
 
     private InputAction(Builder builder) {
-        eventUrl = builder.eventUrl;
+        eventUrl = builder.eventUrl != null ? Collections.singletonList(URI.create(builder.eventUrl)) : null;
         eventMethod = builder.eventMethod;
         speech = builder.speech;
         mode = builder.mode;
@@ -78,10 +78,10 @@ public class InputAction extends JsonableBaseObject implements Action {
     /**
      * Event URL for this action.
      *
-     * @return The event URL wrapped in a singleton string collection, or {@code null} if unspecified.
+     * @return The event URL wrapped in a singleton collection, or {@code null} if unspecified.
      */
     @JsonProperty("eventUrl")
-    public Collection<String> getEventUrl() {
+    public Collection<URI> getEventUrl() {
         return eventUrl;
     }
 
@@ -131,7 +131,7 @@ public class InputAction extends JsonableBaseObject implements Action {
     public static class Builder {
         private final Collection<String> type = new LinkedHashSet<>(2, 1f);
         private DtmfSettings dtmf;
-        private Collection<String> eventUrl;
+        private String eventUrl;
         private EventMethod eventMethod;
         private SpeechSettings speech;
         private InputMode mode;
@@ -190,35 +190,6 @@ public class InputAction extends JsonableBaseObject implements Action {
          * Vonage sends the digits pressed by the callee to this URL after timeOut pause inactivity or when
          * {@code #} is pressed.
          *
-         * @param eventUrl The URL wrapped in a singleton collection to send the event metadata to.
-         *
-         * @return This builder to keep building the input action.
-         * @deprecated This will be removed in a future release. Use {@link #eventUrl(String)} instead.
-         */
-        @Deprecated
-        public Builder eventUrl(Collection<String> eventUrl) {
-            this.eventUrl = eventUrl;
-            return this;
-        }
-
-        /**
-         * Vonage sends the digits pressed by the callee to this URL after timeOut pause inactivity or when
-         * {@code #} is pressed.
-         *
-         * @param eventUrl The URL to send the event metadata to.
-         *
-         * @return This builder to keep building the input action.
-         * @deprecated This will be removed in a future release. Use {@link #eventUrl(String)} instead.
-         */
-        @Deprecated
-        public Builder eventUrl(String... eventUrl) {
-            return eventUrl(Arrays.asList(eventUrl));
-        }
-
-        /**
-         * Vonage sends the digits pressed by the callee to this URL after timeOut pause inactivity or when
-         * {@code #} is pressed.
-         *
          * @param eventUrl The URL to send the event metadata to.
          *
          * @return This builder to keep building the input action.
@@ -226,7 +197,8 @@ public class InputAction extends JsonableBaseObject implements Action {
          * @since 8.12.0
          */
         public Builder eventUrl(String eventUrl) {
-            return eventUrl(Collections.singletonList(eventUrl));
+            this.eventUrl = eventUrl;
+            return this;
         }
 
         /**
@@ -251,28 +223,6 @@ public class InputAction extends JsonableBaseObject implements Action {
          */
         public Builder mode(InputMode mode) {
             this.mode = mode;
-            return this;
-        }
-
-        /**
-         * Sets the acceptable input types. From v8.12.0 onwards, you should not call this method manually;
-         * instead, use {@link #dtmf()} and / or {@link #speech(SpeechSettings)}. This method will be removed
-         * in a future release.
-         *
-         * @param type Acceptable input types as a collection. Valid values are ["dtmf"] for DTMF input only,
-         *             ["speech"] for ASR only, or ["dtmf", "speech"] for both.
-         *
-         * @return This builder to keep building the input action.
-         *
-         * @deprecated Use {@link #dtmf(DtmfSettings)} and {@link #speech(SpeechSettings)} instead.
-         * The type will be set automatically based on the provided settings.
-         */
-        @Deprecated
-        public Builder type(Collection<String> type) {
-            this.type.clear();
-            if (type != null) {
-                this.type.addAll(type);
-            }
             return this;
         }
 

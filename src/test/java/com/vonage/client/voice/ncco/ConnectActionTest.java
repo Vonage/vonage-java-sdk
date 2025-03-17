@@ -17,9 +17,8 @@ package com.vonage.client.voice.ncco;
 
 import com.vonage.client.voice.AdvancedMachineDetection;
 import com.vonage.client.voice.MachineDetection;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
-import java.util.Collection;
+import org.junit.jupiter.api.*;
 import java.util.Map;
 
 public class ConnectActionTest {
@@ -255,7 +254,7 @@ public class ConnectActionTest {
 
     @Test
     public void testEndpointRequired() {
-        assertThrows(IllegalStateException.class, () -> ConnectAction.builder().build());
+        assertThrows(NullPointerException.class, () -> ConnectAction.builder().build());
     }
 
     @Test
@@ -280,6 +279,6 @@ public class ConnectActionTest {
 
     @Test
     public void testNullEndpoint() {
-        assertThrows(IllegalStateException.class, () -> ConnectAction.builder((Collection<Endpoint>) null).build());
+        assertThrows(NullPointerException.class, () -> ConnectAction.builder(null).build());
     }
 }

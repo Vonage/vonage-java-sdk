@@ -17,8 +17,9 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
-import java.util.Arrays;
+import java.net.URI;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -26,7 +27,7 @@ import java.util.Map;
  */
 public class NotifyAction extends JsonableBaseObject implements Action {
     private Map<String, ?> payload;
-    private Collection<String> eventUrl;
+    private Collection<URI> eventUrl;
     private EventMethod eventMethod;
 
     /**
@@ -36,7 +37,7 @@ public class NotifyAction extends JsonableBaseObject implements Action {
 
     private NotifyAction(Builder builder) {
         payload = builder.payload;
-        eventUrl = builder.eventUrl;
+        eventUrl = builder.eventUrl != null ? Collections.singleton(URI.create(builder.eventUrl)) : null;
         eventMethod = builder.eventMethod;
     }
 
@@ -58,10 +59,10 @@ public class NotifyAction extends JsonableBaseObject implements Action {
     /**
      * Webhook URL to send events to.
      *
-     * @return The event URL wrapped as a singleton string collection.
+     * @return The event URL wrapped as a singleton collection.
      */
     @JsonProperty("eventUrl")
-    public Collection<String> getEventUrl() {
+    public Collection<URI> getEventUrl() {
         return eventUrl;
     }
 
@@ -73,36 +74,6 @@ public class NotifyAction extends JsonableBaseObject implements Action {
     @JsonProperty("eventMethod")
     public EventMethod getEventMethod() {
         return eventMethod;
-    }
-
-    /**
-     * Entrypoint for constructing an instance of this class.
-     *
-     * @param payload The payload to send to the event URL as a Map.
-     * @param eventUrl The event URL to send the payload wrapped in a singleton string collection.
-     *
-     * @return A new Builder.
-     *
-     * @deprecated Use {@link #builder(Map, String)} instead.
-     */
-    @Deprecated
-    public static Builder builder(Map<String, ?> payload, Collection<String> eventUrl) {
-        return builder().payload(payload).eventUrl(eventUrl);
-    }
-
-    /**
-     * Entrypoint for constructing an instance of this class.
-     *
-     * @param payload The payload to send to the event URL as a Map.
-     * @param eventUrl The event URL to send the payload to as a string array.
-     *
-     * @return A new Builder.
-     *
-     * @deprecated Use {@link #builder(Map, String)} instead.
-     */
-    @Deprecated
-    public static Builder builder(Map<String, ?> payload, String... eventUrl) {
-        return builder(payload, Arrays.asList(eventUrl));
     }
 
     /**
@@ -133,7 +104,7 @@ public class NotifyAction extends JsonableBaseObject implements Action {
      */
     public static class Builder {
         private Map<String, ?> payload;
-        private Collection<String> eventUrl;
+        private String eventUrl;
         private EventMethod eventMethod;
 
         private Builder() {
@@ -154,41 +125,13 @@ public class NotifyAction extends JsonableBaseObject implements Action {
         /**
          * Webhook URL to send events to.
          *
-         * @param eventUrl The event webhook URL wrapped in a collection.
-         *
-         * @return This builder.
-         *
-         * @deprecated Use {@link #eventUrl(String)} instead.
-         */
-        @Deprecated
-        public Builder eventUrl(Collection<String> eventUrl) {
-            this.eventUrl = eventUrl;
-            return this;
-        }
-
-        /**
-         * Webhook URL to send events to.
-         *
-         * @param eventUrl The event webhook URL as a string array.
-         *
-         * @return This builder.
-         *
-         * @deprecated Use {@link #eventUrl(String)} instead.
-         */
-        @Deprecated
-        public Builder eventUrl(String... eventUrl) {
-            return eventUrl(Arrays.asList(eventUrl));
-        }
-
-        /**
-         * Webhook URL to send events to.
-         *
          * @param eventUrl The event webhook URL as a string.
          *
          * @return This builder.
          */
         public Builder eventUrl(String eventUrl) {
-            return eventUrl(new String[]{eventUrl});
+            this.eventUrl = eventUrl;
+            return this;
         }
 
         /**

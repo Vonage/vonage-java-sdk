@@ -16,11 +16,7 @@
 package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.vonage.client.Jsonable;
-import com.vonage.client.VonageUnexpectedException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,13 +27,12 @@ import java.util.Collections;
 public class Ncco implements Jsonable {
     @JsonValue
     private Collection<? extends Action> actions;
-    private ObjectWriter writer;
 
     /**
      * Creates an empty NCCO object.
      */
     public Ncco() {
-        this(new ObjectMapper().writer(), Collections.emptyList());
+        this(Collections.emptyList());
     }
 
     /**
@@ -46,7 +41,7 @@ public class Ncco implements Jsonable {
      * @param actions The actions to take in execution order.
      */
     public Ncco(Collection<Action> actions) {
-        this(Jsonable.createDefaultObjectMapper().writer(), actions);
+        this.actions = actions;
     }
 
     /**
@@ -58,37 +53,12 @@ public class Ncco implements Jsonable {
         this(Arrays.asList(action));
     }
 
-    @Deprecated
-    public Ncco(ObjectWriter writer) {
-        this(writer, Collections.emptyList());
-    }
-
-    @Deprecated
-    public Ncco(ObjectWriter writer, Collection<? extends Action> actions) {
-        this.writer = writer;
-        this.actions = actions;
-    }
-
-    @Deprecated
-    public Ncco(ObjectWriter writer, Action... action) {
-        this(writer, Arrays.asList(action));
-    }
-
     /**
      * Gets the NCCO actions as an ordered collection.
      *
      * @return The call actions to take in execution order.
      */
     public Collection<? extends Action> getActions() {
-        return this.actions;
-    }
-
-    @Override
-    public String toJson() {
-        try {
-            return this.writer.writeValueAsString(this.actions);
-        } catch (JsonProcessingException e) {
-            throw new VonageUnexpectedException("Unable to convert NCCO Object to JSON.");
-        }
+        return actions;
     }
 }

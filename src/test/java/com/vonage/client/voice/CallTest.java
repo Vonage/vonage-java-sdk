@@ -117,7 +117,7 @@ public class CallTest {
                 "      {\n" +
                 "         \"action\":\"record\",\n" +
                 "         \"eventUrl\":[\n" +
-                "            \"http://voice1.yellowfin.npe:9087/callback/verify/{userId}\"\n" +
+                "            \"http://voice1.yellowfin.npe:9087/callback/verify/userId\"\n" +
                 "         ],\n" +
                 "         \"endOnKey\":\"#\",\n" +
                 "         \"timeOut\":5,\n" +

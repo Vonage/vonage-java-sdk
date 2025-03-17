@@ -22,7 +22,7 @@ public class AppEndpointTest {
 
     @Test
     public void testAppEndpoint() {
-        AppEndpoint endpoint = AppEndpoint.builder("u").user("testUser").build();
+        AppEndpoint endpoint = AppEndpoint.builder("testUser").build();
         ConnectAction connect = ConnectAction.builder(endpoint).build();
 
         String expectedJson = "[{\"endpoint\":[{\"user\":\"testUser\",\"type\":\"app\"}],\"action\":\"connect\"}]";
