@@ -67,20 +67,6 @@ public class DtmfSettings extends JsonableBaseObject {
     }
 
     /**
-     * Set to {@code true} so the callee's activity is sent to your webhook endpoint at {@code eventUrl}
-     * after they press {@code #}. If # is not pressed the result is submitted after {@code timeOut} seconds.
-     * The default value is {@code false}. That is, the result is sent to your webhook endpoint after
-     * {@code timeOut} seconds.
-     *
-     * @param submitOnHash Whether to submit the input after pressing the hash key.
-     * @deprecated Use the {@linkplain #builder()}. This will be removed in the next major release.
-     */
-    @Deprecated
-    public void setSubmitOnHash(Boolean submitOnHash) {
-        this.submitOnHash = submitOnHash;
-    }
-
-    /**
      * Entrypoint for constructing an instance of this class.
      *
      * @return A new Builder.

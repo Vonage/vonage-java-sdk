@@ -16,50 +16,11 @@
 package com.vonage.client.voice;
 
 import com.vonage.client.common.SortOrder;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.time.Instant;
-import java.util.*;
 
 public class CallsFilterTest {
-
-    @Test
-    public void testAllDeprecatedParams() {
-        Calendar startCalendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-        startCalendar.set(2016, Calendar.JANUARY, 1, 7, 8, 20);
-        startCalendar.set(Calendar.MILLISECOND, 0);
-        Instant startDate = startCalendar.getTime().toInstant();
-        Calendar endCalendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-        endCalendar.set(2016, Calendar.JANUARY, 1, 7, 8, 55);
-        endCalendar.set(Calendar.MILLISECOND, 0);
-        Instant endDate = endCalendar.getTime().toInstant();
-        int pageSize = 10, recordIndex = 12;
-        String conversationUuid = "this-is-not-a-uuid";
-        CallStatus status = CallStatus.COMPLETED;
-        SortOrder order = SortOrder.ASCENDING;
-
-        CallsFilter filter = CallsFilter.builder()
-                .order(order)
-                .startDate(startDate)
-                .endDate(endDate)
-                .recordIndex(recordIndex)
-                .pageSize(pageSize)
-                .conversationUuid(conversationUuid)
-                .status(status).build();
-
-        assertEquals(startDate, filter.getStartDate());
-        assertEquals(endDate, filter.getEndDate());
-
-        Map<String, String> paramLookup = filter.makeParams();
-        assertEquals(7, paramLookup.size());
-        assertEquals(status.name().toLowerCase(), paramLookup.get("status"));
-        assertEquals("2016-01-01T07:08:55Z", paramLookup.get("date_end"));
-        assertEquals("2016-01-01T07:08:20Z", paramLookup.get("date_start"));
-        assertEquals(String.valueOf(recordIndex), paramLookup.get("record_index"));
-        assertEquals(order.toString(), paramLookup.get("order"));
-        assertEquals(String.valueOf(pageSize), paramLookup.get("page_size"));
-        assertEquals(conversationUuid, paramLookup.get("conversation_uuid"));
-    }
 
     @Test
     public void testNoParams() {

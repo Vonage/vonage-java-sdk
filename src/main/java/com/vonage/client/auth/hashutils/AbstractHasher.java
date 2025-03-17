@@ -58,9 +58,10 @@ abstract class AbstractHasher {
     /**
      * Calculates hash for string.
      *
-     * @param input string which is going to be encoded into requested format
-     * @param encoding The encoding type of the string
-     * @return  hashed representation of the input string
+     * @param input string which is going to be encoded into requested format.
+     * @param encoding The encoding type of the string.
+     * @return  hashed representation of the input string.
+     *
      * @throws NoSuchAlgorithmException if the algorithm is not available.
      * @throws UnsupportedEncodingException if the encoding type is invalid
      * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.

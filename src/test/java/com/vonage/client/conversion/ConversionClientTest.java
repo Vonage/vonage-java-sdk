@@ -39,7 +39,7 @@ public class ConversionClientTest extends AbstractClientTest<ConversionClient> {
     @Test
     public void testSuccessWithTimestamp() throws Exception {
         stubResponse(200);
-        client.submitConversion(ConversionRequest.Type.VOICE, UUID.randomUUID().toString(), false,
+        client.submitConversion(Type.VOICE, UUID.randomUUID().toString(), false,
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12")
         );
     }
@@ -47,14 +47,14 @@ public class ConversionClientTest extends AbstractClientTest<ConversionClient> {
     @Test
     public void testSuccessWithoutTimestamp() throws Exception {
         stubResponse(200);
-        client.submitConversion(ConversionRequest.Type.SMS, "MESSAGE-ID", true, null);
+        client.submitConversion(Type.SMS, "MESSAGE-ID", true, null);
     }
 
     @Test
     public void testWrongCredentials() throws Exception {
         stubResponse(401);
         assertThrows(VonageApiResponseException.class, () -> client.submitConversion(
-                    ConversionRequest.Type.SMS, "MESSAGE-ID", true,
+                    Type.SMS, "MESSAGE-ID", true,
                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12")
         ));
     }
@@ -96,7 +96,7 @@ public class ConversionClientTest extends AbstractClientTest<ConversionClient> {
             @Override
             protected ConversionRequest sampleRequest() {
                 try {
-                    return new ConversionRequest(ConversionRequest.Type.SMS,
+                    return new ConversionRequest(Type.SMS,
                             "MESSAGE-ID",
                             true,
                             new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12")
@@ -124,7 +124,7 @@ public class ConversionClientTest extends AbstractClientTest<ConversionClient> {
 
             void testVoice() throws Exception {
                 String timestamp = "2023-08-28 10:48:12";
-                ConversionRequest request = new ConversionRequest(ConversionRequest.Type.VOICE,
+                ConversionRequest request = new ConversionRequest(Type.VOICE,
                         "messAG3-1D",
                         false,
                         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(timestamp)

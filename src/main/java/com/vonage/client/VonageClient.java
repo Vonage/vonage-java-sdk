@@ -81,10 +81,7 @@ public class VonageClient {
      * @param builder The builder object to use for configuration.
      */
     private VonageClient(Builder builder) {
-        httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
-        if (builder.httpClient != null) {
-            httpWrapper.setHttpClient(builder.httpClient);
-        }
+        httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection, builder.httpClient);
 
         account = new AccountClient(httpWrapper);
         application = new ApplicationClient(httpWrapper);

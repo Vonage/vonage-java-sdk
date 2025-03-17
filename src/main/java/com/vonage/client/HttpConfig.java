@@ -122,7 +122,7 @@ public class HttpConfig {
     /**
      * Builder for configuring the base URI and timeout of the client.
      */
-    public static class Builder {
+    public static final class Builder {
         private int timeoutMillis = 60_000;
         private URI proxy;
         private Function<ApiRegion, String> regionalUriGetter = region -> "https://"+region+".vonage.com";
@@ -134,11 +134,8 @@ public class HttpConfig {
 
         /**
          * Constructor.
-         *
-         * @deprecated Will be made private in the next major version.
          */
-        @Deprecated
-        public Builder() {}
+        private Builder() {}
 
         private String sanitizeUri(String uri) {
             String sanitized = Objects.requireNonNull(uri, "URI must not be null");

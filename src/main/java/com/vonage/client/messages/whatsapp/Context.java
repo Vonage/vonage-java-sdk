@@ -28,7 +28,6 @@ import java.util.UUID;
 public final class Context extends JsonableBaseObject {
 	private String messageFrom;
 	private UUID messageUuid;
-	private ReferredProduct referredProduct;
 
 	Context() {}
 
@@ -54,18 +53,5 @@ public final class Context extends JsonableBaseObject {
 	@JsonProperty("message_uuid")
 	public UUID getMessageUuid() {
 		return messageUuid;
-	}
-
-	/**
-	 * Only applies to Order messages.
-	 *
-	 * @return The referred product details, or {@code null} if not applicable.
-	 *
-	 * @deprecated This will be moved in a future release.
-	 */
-	@Deprecated
-	@JsonProperty("whatsapp_referred_product")
-	public ReferredProduct getReferredProduct() {
-		return referredProduct;
 	}
 }

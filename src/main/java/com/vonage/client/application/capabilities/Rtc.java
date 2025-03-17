@@ -57,17 +57,13 @@ public final class Rtc extends Capability {
         return new Builder();
     }
 
-    public static class Builder extends Capability.Builder<Rtc, Builder> {
+    public static final class Builder extends Capability.Builder<Rtc, Builder> {
         private Boolean signedCallbacks;
 
         /**
          * Constructs a new Builder.
-         *
-         * @deprecated Use {@link #builder()} instead. This constructor will be made private in a future release.
          */
-        @Deprecated
-        public Builder() {
-        }
+        private Builder() {}
 
         /**
          * Set whether to use signed webhooks. This is a way of verifying that the request is coming from Vonage.
