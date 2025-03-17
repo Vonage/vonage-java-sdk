@@ -17,10 +17,11 @@ package com.vonage.client.subaccounts;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.time.Instant;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class ListSubaccountsResponseTest {
 	
 	@Test
 	public void testFromJsonAllFields() throws Exception {
-		ListSubaccountsResponse parsed = ListSubaccountsResponse.fromJson("{\n" +
+		ListSubaccountsResponse parsed = Jsonable.fromJson("{\n" +
 				"   \"_embedded\": {\n" +
 				"      \"primary_account\": {\n" +
 				"         \"api_key\": \"bbe6222f\",\n" +
@@ -93,20 +94,22 @@ public class ListSubaccountsResponseTest {
 	
 	@Test
 	public void testFromJsonInvalid() {
-		assertThrows(VonageResponseParseException.class, () -> ListSubaccountsResponse.fromJson("{malformed]"));
+		assertThrows(VonageResponseParseException.class, () ->
+				Jsonable.fromJson("{malformed]", ListSubaccountsResponse.class)
+		);
 	}
 
 	@Test
 	public void testFromEmptyJson() {
-		ListSubaccountsResponse response = ListSubaccountsResponse.fromJson("{}");
+		ListSubaccountsResponse response = Jsonable.fromJson("{}");
 		assertNull(response.getPrimaryAccount());
 		assertNull(response.getSubaccounts());
 
-		response = ListSubaccountsResponse.fromJson("{\"_embedded\": {}}");
+		response = Jsonable.fromJson("{\"_embedded\": {}}");
 		assertNull(response.getPrimaryAccount());
 		assertNull(response.getSubaccounts());
 
-		response = ListSubaccountsResponse.fromJson("{\"_embedded\":{\"primary_account\":{},\"subaccounts\":[]}}");
+		response = Jsonable.fromJson("{\"_embedded\":{\"primary_account\":{},\"subaccounts\":[]}}");
 		assertNotNull(response.getPrimaryAccount());
 		assertNotNull(response.getSubaccounts());
 		assertEquals(0, response.getSubaccounts().size());
@@ -114,8 +117,8 @@ public class ListSubaccountsResponseTest {
 
 	@Test
 	public void testFromNullJson() {
-		var response = ListSubaccountsResponse.fromJson(null);
+		var response = Jsonable.fromJson(null, ListSubaccountsResponse.class);
 		assertNotNull(response);
-		assertEquals(response, ListSubaccountsResponse.fromJson(""));
+		assertEquals(response, Jsonable.fromJson("", ListSubaccountsResponse.class));
 	}
 }

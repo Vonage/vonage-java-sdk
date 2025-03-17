@@ -15,6 +15,7 @@
  */
 package com.vonage.client.application;
 
+import com.vonage.client.Jsonable;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.application.capabilities.*;
 import com.vonage.client.application.capabilities.Capability.Type;
@@ -281,7 +282,7 @@ public class ApplicationTest {
 
         Application request = Application.builder().improveAi(false).improveAi(true).build();
         assertEquals(json + "\"improve_ai\":"+request.getPrivacy().getImproveAi()+"}}", request.toJson());
-        Application parsed = Application.fromJson(json + "}}");
+        Application parsed = Jsonable.fromJson(json + "}}");
         assertNotNull(parsed.getPrivacy());
         assertNull(parsed.getPrivacy().getImproveAi());
 
@@ -326,7 +327,7 @@ public class ApplicationTest {
                 "    }\n" +
                 "}";
 
-        Application parsed = Application.fromJson(json);
+        Application parsed = Jsonable.fromJson(json);
 
         assertNotNull(UUID.fromString(parsed.getId()));
         assertNotNull(parsed.getName());

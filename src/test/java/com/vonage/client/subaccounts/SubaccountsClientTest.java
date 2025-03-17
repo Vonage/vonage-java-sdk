@@ -15,12 +15,8 @@
  */
 package com.vonage.client.subaccounts;
 
-import com.vonage.client.AbstractClientTest;
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.RestEndpoint;
-import com.vonage.client.TestUtils;
+import com.vonage.client.*;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
-import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.NoAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
@@ -67,7 +63,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 
 	static void assertEqualsExpectedAccount(Account response) {
 		testJsonableBaseObject(response);
-		assertEquals(Account.fromJson(ACCOUNT_RESPONSE_JSON), response);
+		assertEquals(Jsonable.fromJson(ACCOUNT_RESPONSE_JSON, Account.class), response);
 		assertEquals("Password123", response.getSecret());
 		assertEquals("bbe6222f", response.getApiKey());
 		assertEquals("acc6111f", response.getPrimaryAccountApiKey());
@@ -471,7 +467,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 		stubResponseAndAssertThrows(200, () -> client.transferBalance(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.transferBalance(request), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.transferBalance(request));
-		assertEquals(requestJson, MoneyTransfer.fromJson(requestJson).toJson());
+		assertEquals(requestJson, Jsonable.fromJson(requestJson, MoneyTransfer.class).toJson());
 		assertThrows(NullPointerException.class, () -> MoneyTransfer.builder()
 				.from(FROM_API_KEY).to(TO_API_KEY).build()
 		);
@@ -510,7 +506,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 		stubResponseAndAssertThrows(200, () -> client.transferNumber(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.transferNumber(request), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.transferNumber(request));
-		assertEquals(requestJson, NumberTransfer.fromJson(requestJson).toJson());
+		assertEquals(requestJson, Jsonable.fromJson(requestJson, NumberTransfer.class).toJson());
 		assertThrows(IllegalArgumentException.class, () -> NumberTransfer.builder()
 				.from(request.getFrom()).to(request.getTo()).number(request.getNumber())
 				.country("United Kingdom").build()

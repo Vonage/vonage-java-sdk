@@ -59,7 +59,7 @@ public class VoiceClient {
                 super(DynamicEndpoint.<T, R> builder(type).authMethod(JWTAuthMethod.class)
                         .responseExceptionType(VoiceResponseException.class)
                         .requestMethod(method).wrapper(wrapper).pathGetter((de, req) -> {
-                            String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v1");
+                            String base = de.getHttpWrapper().getHttpConfig().getApiBaseUri() + "/v1";
                             String path = pathGetter.apply(req);
                             if (method == HttpMethod.GET && path.startsWith("http")) {
                                 return path;

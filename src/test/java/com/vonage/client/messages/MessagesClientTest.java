@@ -20,6 +20,7 @@ import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import com.vonage.client.common.MessageType;
 import com.vonage.client.messages.messenger.*;
 import com.vonage.client.messages.mms.*;
 import com.vonage.client.messages.rcs.*;

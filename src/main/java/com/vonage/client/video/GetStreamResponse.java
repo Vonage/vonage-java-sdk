@@ -16,7 +16,6 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 
 /**
  * Represents details of a stream, as returned from {@link VideoClient#getStream(String, String)}.
@@ -42,15 +41,5 @@ public class GetStreamResponse extends SessionStream {
 	@JsonProperty("name")
 	public String getName() {
 		return name;
-	}
-	
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static GetStreamResponse fromJson(String json) {
-		return Jsonable.fromJson(json);
 	}
 }

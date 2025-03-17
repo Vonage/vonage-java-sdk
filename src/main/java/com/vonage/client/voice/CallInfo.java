@@ -16,7 +16,6 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.util.Date;
 
@@ -170,19 +169,5 @@ public class CallInfo extends JsonableBaseObject {
                 "To: " + this.getTo().toLog() + ", " +
                 "Status: " + this.getStatus() +
                 ">";
-    }
-
-    /**
-     * Creates an instance of this class from a JSON payload.
-     *
-     * @param json The JSON string to parse.
-     *
-     * @return An instance of this class with the fields populated, if present.
-     *
-     * @deprecated Use {@link Jsonable#fromJson(String, Class)}. This will be removed in a future release.
-     */
-    @Deprecated
-    public static CallInfo fromJson(String json) {
-        return Jsonable.fromJson(json);
     }
 }

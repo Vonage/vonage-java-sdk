@@ -15,6 +15,7 @@
  */
 package com.vonage.client.messages;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import org.junit.jupiter.api.*;
@@ -26,7 +27,7 @@ public class MessageResponseTest {
 	@Test
 	public void testConstructFromValidJson() {
 		UUID uuid = UUID.randomUUID();
-		MessageResponse response = MessageResponse.fromJson("{\"message_uuid\":\""+uuid+"\"}");
+		MessageResponse response = Jsonable.fromJson("{\"message_uuid\":\""+uuid+"\"}");
 		assertEquals(uuid, response.getMessageUuid());
 		String toString = response.toString();
 		assertTrue(toString.contains("MessageResponse"));
@@ -36,13 +37,15 @@ public class MessageResponseTest {
 
 	@Test
 	public void testConstructFromEmptyJson() {
-		MessageResponse response = MessageResponse.fromJson("{}");
+		MessageResponse response = Jsonable.fromJson("{}");
 		assertNull(response.getMessageUuid());
 		TestUtils.testJsonableBaseObject(response);
 	}
 
 	@Test
 	public void testConstructFromInvalidJson() {
-		assertThrows(VonageResponseParseException.class, () -> MessageResponse.fromJson("{_malformed_}"));
+		assertThrows(VonageResponseParseException.class, () ->
+				Jsonable.fromJson("{_malformed_}", MessageResponse.class)
+		);
 	}
 }

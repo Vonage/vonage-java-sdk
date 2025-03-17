@@ -15,6 +15,7 @@
  */
 package com.vonage.client.insight;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ public class BasicInsightResponseTest {
 
     @Test
     public void fromJson() {
-        BasicInsightResponse response = BasicInsightResponse.fromJson("{\n" +
+        BasicInsightResponse response = Jsonable.fromJson("{\n" +
                 "    \"status\": 0,\n" +
                 "    \"status_message\": \"Success\",\n" +
                 "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\",\n" +
@@ -51,7 +52,7 @@ public class BasicInsightResponseTest {
 
     @Test
     public void fromBusyJson() {
-        BasicInsightResponse response = BasicInsightResponse.fromJson("{\n" +
+        BasicInsightResponse response = Jsonable.fromJson("{\n" +
             "    \"status\": 1,\n" +
             "    \"status_message\": \"Back off\",\n" +
             "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" +
@@ -64,7 +65,7 @@ public class BasicInsightResponseTest {
 
     @Test
     public void testFromUnknownFieldJson() {
-        StandardInsightResponse response = StandardInsightResponse.fromJson(
+        BasicInsightResponse response = Jsonable.fromJson(
                 "{\n" + "    \"status\": 3,\n" + "    \"error_text\": \"I'm not sure what you mean\",\n"
                     + "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" + "}");
 
@@ -74,6 +75,8 @@ public class BasicInsightResponseTest {
 
     @Test
     public void testJsonError() {
-        assertThrows(VonageResponseParseException.class, () -> BasicInsightResponse.fromJson("blarg"));
+        assertThrows(VonageResponseParseException.class, () ->
+                Jsonable.fromJson("blarg", BasicInsightResponse.class)
+        );
     }
 }

@@ -16,6 +16,7 @@
 package com.vonage.client.numbers;
 
 import com.vonage.client.AbstractClientTest;
+import com.vonage.client.Jsonable;
 import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.*;
 import com.vonage.client.common.HttpMethod;
@@ -90,7 +91,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
         var parsed = invocation.get();
         testJsonableBaseObject(parsed);
-        assertEquals(parsed, ListNumbersResponse.fromJson(json));
+        assertEquals(parsed, Jsonable.fromJson(json, ListNumbersResponse.class));
 
         assertEquals(count, parsed.getCount());
         var numbers = parsed.getNumbers();
@@ -140,7 +141,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
         var parsed = invocation.get();
         testJsonableBaseObject(parsed);
-        assertEquals(parsed, SearchNumbersResponse.fromJson(json));
+        assertEquals(parsed, Jsonable.fromJson(json, SearchNumbersResponse.class));
 
         assertEquals(1234, parsed.getCount());
         var numbers = parsed.getNumbers();

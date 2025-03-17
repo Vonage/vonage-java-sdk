@@ -17,7 +17,6 @@ package com.vonage.client.subaccounts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 
@@ -53,15 +52,5 @@ public class ListSubaccountsResponse extends JsonableBaseObject {
 	@JsonIgnore
 	public List<Account> getSubaccounts() {
 		return embedded != null ? embedded.subaccounts : null;
-	}
-	
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static ListSubaccountsResponse fromJson(String json) {
-		return Jsonable.fromJson(json);
 	}
 }

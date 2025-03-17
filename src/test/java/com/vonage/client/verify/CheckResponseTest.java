@@ -15,6 +15,7 @@
  */
 package com.vonage.client.verify;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -29,6 +30,6 @@ public class CheckResponseTest {
 
     @Test
     public void testBadJson() {
-        assertThrows(VonageUnexpectedException.class, () -> CheckResponse.fromJson("blarg"));
+        assertThrows(VonageUnexpectedException.class, () -> Jsonable.fromJson("blarg", CheckResponse.class));
     }
 }

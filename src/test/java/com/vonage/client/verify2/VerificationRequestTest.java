@@ -54,7 +54,6 @@ public class VerificationRequestTest {
             case SMS -> new SmsWorkflow(TO_NUMBER);
             case VOICE -> new VoiceWorkflow(TO_NUMBER);
             case WHATSAPP -> WhatsappWorkflow.builder(TO_NUMBER, FROM_NUMBER).build();
-            case WHATSAPP_INTERACTIVE -> WhatsappCodelessWorkflow.builder(TO_NUMBER, FROM_NUMBER).build();
             case EMAIL -> new EmailWorkflow(TO_EMAIL);
             case SILENT_AUTH -> new SilentAuthWorkflow(TO_NUMBER);
         };
@@ -78,7 +77,7 @@ public class VerificationRequestTest {
 	Builder getBuilderAllParamsSingleWorkflow(Channel channel) {
 		Builder builder = newBuilderAllParams()
 				.addWorkflow(getWorkflowAllParamsForChannel(channel));
-		if (channel == Channel.SILENT_AUTH || channel == Channel.WHATSAPP_INTERACTIVE) {
+		if (channel == Channel.SILENT_AUTH) {
 			builder.codeLength = null;
 		}
 		return builder;
@@ -88,7 +87,7 @@ public class VerificationRequestTest {
 		var to = channel == Channel.EMAIL ? TO_EMAIL : TO_NUMBER;
 		var json = "{\"brand\":\""+BRAND+"\",\"workflow\":[{" +
 				"\"channel\":\""+channel+"\",\"to\":\""+to+'"';
-		if (channel == Channel.WHATSAPP || channel == Channel.WHATSAPP_INTERACTIVE) {
+		if (channel == Channel.WHATSAPP) {
 			json += ",\"from\":\"" + FROM_NUMBER + '"';
 		}
 		json += "}]}";
@@ -122,7 +121,7 @@ public class VerificationRequestTest {
 
 		prefix = "{\"locale\":\"pt-pt\",\"channel_timeout\":"+ CHANNEL_TIMEOUT;
 
-		if (channel != Channel.SILENT_AUTH && channel != Channel.WHATSAPP_INTERACTIVE) {
+		if (channel != Channel.SILENT_AUTH) {
 			prefix += ",\"code_length\":"+CODE_LENGTH;
 		}
 		expectedJson = prefix + expectedJson.replaceFirst("\\{", ",");
@@ -180,7 +179,6 @@ public class VerificationRequestTest {
 			assertThrows(RuntimeException.class, () -> new SmsWorkflow(invalid));
 			assertThrows(RuntimeException.class, () -> new VoiceWorkflow(invalid));
 			assertThrows(RuntimeException.class, () -> new WhatsappWorkflow(invalid, FROM_NUMBER));
-			assertThrows(RuntimeException.class, () -> new WhatsappCodelessWorkflow(invalid, FROM_NUMBER));
 			assertThrows(RuntimeException.class, () -> new EmailWorkflow(invalid));
 		}
 	}
@@ -191,7 +189,6 @@ public class VerificationRequestTest {
 		assertEquals(FROM_EMAIL, new EmailWorkflow(TO_EMAIL, FROM_EMAIL).getFrom());
 		for (String invalid : new String[]{"", " "}) {
 			assertThrows(IllegalArgumentException.class, () -> new WhatsappWorkflow(TO_NUMBER, invalid));
-			assertThrows(IllegalArgumentException.class, () -> new WhatsappCodelessWorkflow(TO_NUMBER, invalid));
 			assertThrows(IllegalArgumentException.class, () -> new EmailWorkflow(TO_EMAIL, invalid));
 		}
 	}
@@ -200,24 +197,18 @@ public class VerificationRequestTest {
 	public void testCodelessAndCodeLengthValidation() {
 		Builder requiredBuilder = getBuilderRequiredParamsSingleWorkflow(Channel.SILENT_AUTH);
 		assertTrue(requiredBuilder.build().isCodeless());
-		requiredBuilder.addWorkflow(new WhatsappCodelessWorkflow(TO_NUMBER, FROM_NUMBER));
 		assertTrue(requiredBuilder.build().isCodeless());
 		requiredBuilder.codeLength(9);
 		assertThrows(IllegalStateException.class, requiredBuilder::build);
-		Builder allBuilder = getBuilderAllParamsSingleWorkflow(Channel.WHATSAPP_INTERACTIVE).codeLength(4);
-		assertThrows(IllegalStateException.class, allBuilder::build);
 	}
 
 	@Test
 	public void testCodelessAndCodeValidation() {
 		Builder requiredBuilder = getBuilderRequiredParamsSingleWorkflow(Channel.SILENT_AUTH);
 		assertTrue(requiredBuilder.build().isCodeless());
-		requiredBuilder.addWorkflow(new WhatsappCodelessWorkflow(TO_NUMBER, FROM_NUMBER));
 		assertTrue(requiredBuilder.build().isCodeless());
 		requiredBuilder.code("12345678");
 		assertThrows(IllegalStateException.class, requiredBuilder::build);
-		Builder allBuilder = getBuilderAllParamsSingleWorkflow(Channel.WHATSAPP_INTERACTIVE).code("5670");
-		assertThrows(IllegalStateException.class, allBuilder::build);
 	}
 
 	@Test
@@ -357,15 +348,13 @@ public class VerificationRequestTest {
 	}
 
 	@Test
-	public void testWhatsappWorkflowsWithoutSender() {
+	public void testWhatsappWorkflowWithoutSender() {
 		var request = newBuilder()
-				.addWorkflow(new WhatsappWorkflow(TO_NUMBER))
-				.addWorkflow(new WhatsappCodelessWorkflow(TO_NUMBER))
+				.addWorkflow(WhatsappWorkflow.builder(TO_NUMBER, null).build())
 				.build();
 		assertNotNull(request);
 		var expectedJson = "{\"brand\":\""+BRAND+"\",\"workflow\":[" +
-				"{\"channel\":\"whatsapp\",\"to\":\""+TO_NUMBER+"\"}," +
-				"{\"channel\":\"whatsapp_interactive\",\"to\":\""+TO_NUMBER+"\"}]}";
+				"{\"channel\":\"whatsapp\",\"to\":\""+TO_NUMBER+"\"}]}";
 		assertEquals(expectedJson, request.toJson());
 	}
 
@@ -381,18 +370,5 @@ public class VerificationRequestTest {
 		assertThrows(VonageUnexpectedException.class, () -> new SelfRefrencing(VerificationRequest.builder()
 				.addWorkflow(new SmsWorkflow(TO_NUMBER)).brand("Test")).toJson()
 		);
-	}
-
-	@Test
-	public void testDeprecatedSmsWorkflowConstructor() {
-		var workflow = new SmsWorkflow(TO_NUMBER, FROM_NUMBER, APP_HASH);
-		assertEquals(TO_NUMBER, workflow.getTo());
-		assertEquals(FROM_NUMBER, workflow.getFrom());
-		assertEquals(APP_HASH, workflow.getAppHash());
-
-		workflow = new SmsWorkflow(TO_NUMBER, APP_HASH);
-		assertEquals(TO_NUMBER, workflow.getTo());
-		assertNull(workflow.getFrom());
-		assertEquals(APP_HASH, workflow.getAppHash());
 	}
 }

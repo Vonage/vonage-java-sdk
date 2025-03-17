@@ -15,19 +15,19 @@
  */
 package com.vonage.client.voice;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.*;
 import java.io.IOException;
 
-
 public class DtmfResponseTest {
     private DtmfResponse response;
 
     @BeforeEach
     public void setUp() {
-        response = DtmfResponse.fromJson("{\n" +
+        response = Jsonable.fromJson("{\n" +
                 "  \"message\": \"DTMF sent\",\n" +
                 "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
                 "}");
@@ -45,7 +45,7 @@ public class DtmfResponseTest {
         String json = "{\n" +
                 "    \"unknownProperty\": \"unknown\"\n" +
                 "}";
-        DtmfResponse dr = DtmfResponse.fromJson(json);
+        DtmfResponse dr = Jsonable.fromJson(json);
         assertNull(dr.getUuid());
     }
 }

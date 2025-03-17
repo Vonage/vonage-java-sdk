@@ -760,7 +760,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 		assertEquals(connectionId, parsed.getConnectionId());
 		assertEquals(streamId, parsed.getStreamId());
 
-		assertEquals(parsed, SipDialResponse.fromJson(json));
+		assertEquals(parsed, Jsonable.fromJson(json, SipDialResponse.class));
 
 		stubResponseAndAssertThrowsVideoException(409, "{\"code\":409}", () -> client.sipDial(request));
 	}

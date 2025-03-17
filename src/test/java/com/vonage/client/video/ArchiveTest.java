@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.Jsonable;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
@@ -133,12 +134,12 @@ public class ArchiveTest {
 
 	@Test
 	public void testFromJsonInvalid() {
-		assertThrows(VonageResponseParseException.class, () -> Archive.fromJson("{malformed]"));
+		assertThrows(VonageResponseParseException.class, () -> Jsonable.fromJson("{malformed]", Archive.class));
 	}
 
 	@Test
 	public void testFromJsonEmpty() {
-		var archive = Archive.fromJson("{}");
+		var archive = Jsonable.fromJson("{}", Archive.class);
 		assertNotNull(archive);
 		assertNull(archive.getSessionId());
 		assertNull(archive.getName());

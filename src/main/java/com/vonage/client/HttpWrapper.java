@@ -123,11 +123,6 @@ public class HttpWrapper {
         return authCollection;
     }
 
-    @Deprecated
-    public void setAuthCollection(AuthCollection authCollection) {
-        this.authCollection = authCollection;
-    }
-
     protected CloseableHttpClient createHttpClient() {
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
         connectionManager.setDefaultMaxPerRoute(200);

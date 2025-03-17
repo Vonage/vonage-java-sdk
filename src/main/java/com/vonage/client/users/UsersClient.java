@@ -46,7 +46,7 @@ public class UsersClient {
                         .responseExceptionType(UsersResponseException.class)
                         .wrapper(wrapper).requestMethod(method).authMethod(JWTAuthMethod.class)
                         .pathGetter((de, req) -> {
-                            String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v1");
+                            String base = de.getHttpWrapper().getHttpConfig().getApiBaseUri() + "/v1";
                             String path = base + "/users";
                             if (pathGetter != null) {
                                 path += "/" + pathGetter.apply(req);

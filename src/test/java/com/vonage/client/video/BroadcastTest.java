@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
@@ -87,7 +88,7 @@ public class BroadcastTest {
 				"\",\"serverUrl\":\""+rtmp1.getServerUrl()+"\",\"streamName\":\""+rtmp1.getStreamName() +
 				"\",\"status\":\""+rtmp1Status+"\"}]}}";
 
-		Broadcast response = Broadcast.fromJson(responseJson);
+		Broadcast response = Jsonable.fromJson(responseJson);
 
 		assertEquals(id, response.getId());
 		assertEquals(sessionId, response.getSessionId());
@@ -124,7 +125,7 @@ public class BroadcastTest {
 		assertNull(stream1.hasAudio());
 		assertNull(stream1.hasVideo());
 
-		Broadcast parsedFromRequestJson = Broadcast.fromJson(requestJson);
+		Broadcast parsedFromRequestJson = Jsonable.fromJson(requestJson);
 		assertNotNull(parsedFromRequestJson);
 		assertEquals(request.toString(), parsedFromRequestJson.toString());
 
@@ -151,7 +152,7 @@ public class BroadcastTest {
 				jsonFromRequest = parsedFromRequestJson.toJson();
 		assertEquals(expectedJsonFromRequest, jsonFromRequest);
 
-		Broadcast requestFromResponseJson = Broadcast.fromJson(responseJson);
+		Broadcast requestFromResponseJson = Jsonable.fromJson(responseJson);
 		assertNotNull(requestFromResponseJson);
 		String expectedRequestFromResponseJsonToJson = "{" +
 				"\"id\":\""+id+"\"," +
@@ -317,7 +318,7 @@ public class BroadcastTest {
 
 	@Test
 	public void testFromJsonEmpty() {
-		Broadcast response = Broadcast.fromJson("{}");
+		Broadcast response = Jsonable.fromJson("{}");
 		TestUtils.testJsonableBaseObject(response);
 		assertNull(response.getId());
 		assertNull(response.getSessionId());
@@ -339,7 +340,7 @@ public class BroadcastTest {
 
 	@Test
 	public void testFromJsonInvalid() {
-		assertThrows(VonageResponseParseException.class, () -> Broadcast.fromJson("{malformed]"));
+		assertThrows(VonageResponseParseException.class, () -> Jsonable.fromJson("{malformed]", Broadcast.class));
 	}
 
 	@Test

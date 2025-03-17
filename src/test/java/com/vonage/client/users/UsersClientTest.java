@@ -16,11 +16,12 @@
 package com.vonage.client.users;
 
 import com.vonage.client.AbstractClientTest;
+import com.vonage.client.Jsonable;
 import com.vonage.client.RestEndpoint;
-import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.common.HalLinks;
 import com.vonage.client.common.HttpMethod;
+import com.vonage.client.common.SortOrder;
 import com.vonage.client.users.channels.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -310,7 +311,7 @@ public class UsersClientTest extends AbstractClientTest<UsersClient> {
                 "}");
         ListUsersRequest request = ListUsersRequest.builder()
                 .name(name).pageSize(10).cursor(URI.create(self))
-                .order(ListUsersRequest.SortOrder.DESC).build();
+                .order(SortOrder.DESCENDING).build();
 
         assertEquals(name, request.getName());
         assertEquals(10, request.getPageSize());
@@ -402,7 +403,7 @@ public class UsersClientTest extends AbstractClientTest<UsersClient> {
     @Test
     public void testListUsersEmptyJson() throws Exception {
         ListUsersResponse hal = stubResponseAndGet("{}", () ->
-                client.listUsers(ListUsersRequest.builder().order(ListUsersRequest.SortOrder.DESC).build())
+                client.listUsers(ListUsersRequest.builder().order(SortOrder.DESCENDING).build())
         );
         assertNotNull(hal);
         assertNull(hal.getUsers());
@@ -647,7 +648,7 @@ public class UsersClientTest extends AbstractClientTest<UsersClient> {
 
             @Override
             protected User sampleRequest() {
-                return User.fromJson(sampleRequestBodyString());
+                return Jsonable.fromJson(sampleRequestBodyString());
             }
 
             @Override

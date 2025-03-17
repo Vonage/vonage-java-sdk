@@ -16,7 +16,6 @@
 package com.vonage.client.verify;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
 public class ControlResponse extends JsonableBaseObject {
@@ -50,9 +49,5 @@ public class ControlResponse extends JsonableBaseObject {
     @JsonProperty("error_text")
     public String getErrorText() {
         return errorText;
-    }
-
-    public static ControlResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
     }
 }

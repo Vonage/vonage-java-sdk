@@ -26,7 +26,7 @@ public class AdvancedInsightResponseTest {
 
     @Test
     public void testFromJson() {
-        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
+        AdvancedInsightResponse response = Jsonable.fromJson("{\n" +
                 "    \"status\": 0,\n" +
                 "    \"status_message\": \"Success\",\n" +
                 "    \"lookup_outcome\": 1,\n" +
@@ -104,8 +104,6 @@ public class AdvancedInsightResponseTest {
         assertEquals("Atkey", response.getLastName());
         assertEquals("Monads, Incorporated", response.getCallerName());
         assertEquals(CallerType.UNKNOWN, response.getCallerType());
-        assertEquals("On", response.getRealTimeData().getHandsetStatus());
-        assertEquals(true, response.getRealTimeData().getActiveStatus());
         assertEquals("Success", response.getErrorText());
     }
 
@@ -123,8 +121,6 @@ public class AdvancedInsightResponseTest {
         assertEquals("unknown", response.getRoaming().getStatus().toString());
         assertEquals(CallerType.UNKNOWN, response.getCallerType());
         assertEquals("unknown", response.getCallerType().toString());
-        assertEquals(false, response.getRealTimeData().getActiveStatus());
-        assertNull(response.getRealTimeData().getHandsetStatus());
     }
 
     @Test
@@ -136,7 +132,7 @@ public class AdvancedInsightResponseTest {
 
     @Test
     public void testFromJsonWithNullableEnums() {
-        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
+        AdvancedInsightResponse response = Jsonable.fromJson("{\n" +
                 "    \"lookup_outcome\": 2,\n" +
                 "    \"lookup_outcome_message\": \"Failure\",\n" +
                 "    \"caller_type\": \"unknown\",\n" +
@@ -153,13 +149,11 @@ public class AdvancedInsightResponseTest {
         assertNull(response.getPorted());
         assertNull(response.getRoaming());
         assertNull(response.getReachability());
-        assertEquals("Off", response.getRealTimeData().getHandsetStatus());
-        assertNull(response.getRealTimeData().getActiveStatus());
     }
 
     @Test
     public void testDeserializeUnknownEnumsFallbackToUnknown() {
-        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson(
+        AdvancedInsightResponse response = Jsonable.fromJson(
                 "{\n" +
                 "    \"valid_number\": \"failed_validity\",\n" +
                 "    \"reachable\": \"failed_reachibility\",\n" +
@@ -186,14 +180,12 @@ public class AdvancedInsightResponseTest {
         assertEquals(RoamingDetails.RoamingStatus.UNKNOWN, response.getRoaming().getStatus());
         assertNull(response.getCurrentCarrier());
         assertEquals(CarrierDetails.NetworkType.UNKNOWN, response.getOriginalCarrier().getNetworkType());
-        assertNull(response.getRealTimeData().getActiveStatus());
-        assertEquals("unknown", response.getRealTimeData().getHandsetStatus());
         assertNull(response.getLookupOutcome());
     }
 
     @Test
     public void testRoamingDeserialization() {
-        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
+        AdvancedInsightResponse response = Jsonable.fromJson("{\n" +
                 "  \"roaming\": {\n" +
                 "    \"status\": \"roaming\",\n" +
                 "    \"roaming_country_code\": \"GB\",\n" +
@@ -206,12 +198,11 @@ public class AdvancedInsightResponseTest {
         assertEquals("GB", response.getRoaming().getRoamingCountryCode());
         assertEquals("gong", response.getRoaming().getRoamingNetworkCode());
         assertEquals("Gong Telecommunications", response.getRoaming().getRoamingNetworkName());
-        assertNull(response.getRealTimeData());
     }
 
     @Test
     public void testUnknownLookupOutcome() {
-        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
+        AdvancedInsightResponse response = Jsonable.fromJson("{\n" +
                 "  \"lookup_outcome\": 3,\n" +
                 "  \"lookup_outcome_message\": \"??\"\n" +
                 "}");
@@ -222,7 +213,7 @@ public class AdvancedInsightResponseTest {
 
     @Test
     public void testFromBusyJson() {
-        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson(
+        AdvancedInsightResponse response = Jsonable.fromJson(
                 "{\n" +
                         "    \"status\": 1,\n" +
                         "    \"status_message\": \"Back off\",\n" +
@@ -237,7 +228,7 @@ public class AdvancedInsightResponseTest {
 
     @Test
     public void testFromErrorJson() {
-        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson(
+        AdvancedInsightResponse response = Jsonable.fromJson(
                 "{\n" +
                         "    \"status\": 3,\n" +
                         "    \"error_text\": \"I'm not sure what you mean\",\n" +
@@ -252,33 +243,9 @@ public class AdvancedInsightResponseTest {
 
     @Test
     public void testJsonError() {
-        assertThrows(VonageResponseParseException.class, () -> AdvancedInsightResponse.fromJson("blarg"));
-    }
-
-    @Test
-    public void testRealTimeDataActiveStatus() {
-        String json = "{\n" +
-                "    \"real_time_data\": {\n" +
-                "       \"active_status\": \"ACTIVE\",\n" +
-                "       \"handset_status\": \"On\"\n" +
-                "    }\n" +
-                "}";
-        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson(json);
-
-        assertEquals(true, response.getRealTimeData().getActiveStatus());
-        assertEquals("On", response.getRealTimeData().getHandsetStatus());
-
-        response = AdvancedInsightResponse.fromJson(json.replace("ACTIVE", "False"));
-        assertFalse(response.getRealTimeData().getActiveStatus());
-
-        response = AdvancedInsightResponse.fromJson(json.replace("ACTIVE", ""));
-        assertNull(response.getRealTimeData().getActiveStatus());
-
-        response = AdvancedInsightResponse.fromJson(json.replace("ACTIVE", "Unknown??"));
-        assertNull(response.getRealTimeData().getActiveStatus());
-
-        response = AdvancedInsightResponse.fromJson(json.replace("       \"active_status\": \"ACTIVE\",\n", ""));
-        assertNull(response.getRealTimeData().getActiveStatus());
+        assertThrows(VonageResponseParseException.class, () ->
+                Jsonable.fromJson("blarg", AdvancedInsightResponse.class)
+        );
     }
 
     @Test
@@ -287,22 +254,22 @@ public class AdvancedInsightResponseTest {
                 "    \"lookup_outcome\": 0,\n" +
                 "    \"lookup_outcome_message\": \"Success\"\n" +
                 "}";
-        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson(json);
+        AdvancedInsightResponse response = Jsonable.fromJson(json);
 
         assertEquals(LookupOutcome.SUCCESS, response.getLookupOutcome());
         assertEquals(0, response.getLookupOutcome().getCode());
         assertEquals("Success", response.getLookupOutcomeMessage());
 
-        response = AdvancedInsightResponse.fromJson(json.replace("0", "1"));
+        response = Jsonable.fromJson(json.replace("0", "1"));
         assertEquals(LookupOutcome.PARTIAL_SUCCESS, response.getLookupOutcome());
 
-        response = AdvancedInsightResponse.fromJson(json.replace("0", "2"));
+        response = Jsonable.fromJson(json.replace("0", "2"));
         assertEquals(LookupOutcome.FAILED, response.getLookupOutcome());
 
-        response = AdvancedInsightResponse.fromJson(json.replace("0", "null"));
+        response = Jsonable.fromJson(json.replace("0", "null"));
         assertNull(response.getLookupOutcome());
 
-        response = AdvancedInsightResponse.fromJson(json.replace("    \"lookup_outcome\": 0,\n", ""));
+        response = Jsonable.fromJson(json.replace("    \"lookup_outcome\": 0,\n", ""));
         assertNull(response.getLookupOutcome());
 
         assertNull(LookupOutcome.fromInt(null));
