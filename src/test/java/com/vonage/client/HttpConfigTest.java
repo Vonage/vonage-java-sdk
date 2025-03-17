@@ -29,12 +29,6 @@ public class HttpConfigTest {
 
     static void assertDefaults(HttpConfig config) {
         assertEquals(60000, config.getTimeoutMillis());
-
-        assertTrue(config.isDefaultApiBaseUri());
-        assertTrue(config.isDefaultRestBaseUri());
-        assertTrue(config.isDefaultApiEuBaseUri());
-        assertTrue(config.isDefaultVideoBaseUri());
-
         assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
         assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
         assertEquals(EXPECTED_DEFAULT_API_EU_BASE_URI, config.getApiEuBaseUri());

@@ -16,7 +16,6 @@
 package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.util.UUID;
 
@@ -41,15 +40,5 @@ public class MessageResponse extends JsonableBaseObject {
 	@JsonProperty("message_uuid")
 	public UUID getMessageUuid() {
 		return messageUuid;
-	}
-
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static MessageResponse fromJson(String json) {
-		return Jsonable.fromJson(json);
 	}
 }

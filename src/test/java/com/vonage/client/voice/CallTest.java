@@ -15,9 +15,11 @@
  */
 package com.vonage.client.voice;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.common.HttpMethod;
+import com.vonage.client.users.channels.Websocket;
 import com.vonage.client.voice.ncco.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -106,9 +108,9 @@ public class CallTest {
                 )
         };
         com.vonage.client.voice.Endpoint fromEndpoint = new com.vonage.client.voice.AppEndpoint("nexmo");
-        Call expectedCall = new Call(endpoints, fromEndpoint, "http://example.com/answer");
+        Call expectedCall = Call.builder().to(endpoints).from(fromEndpoint).answerUrl("http://example.com/answer").build();
         String jsonString = toFromJsonStart + ",\"answer_method\":\"GET\",\"answer_url\":\"http://example.com/answer\"}";
-        Call fromJson = Call.fromJson(jsonString);
+        Call fromJson = Jsonable.fromJson(jsonString, Call.class);
         assertEquals(expectedCall.toJson(), fromJson.toJson());
 
         jsonString = toFromJsonStart + ",\n   \"ncco\":[\n" +
@@ -167,7 +169,7 @@ public class CallTest {
                 "   ]\n" +
                 "}";
 
-        fromJson = Call.fromJson(jsonString);
+        fromJson = Jsonable.fromJson(jsonString);
         TestUtils.testJsonableBaseObject(fromJson);
 
         assertEquals(4, fromJson.getTo().length);
@@ -178,8 +180,8 @@ public class CallTest {
         assertEquals("vbc", fromJson.getTo()[2].getType());
         assertEquals("123", ((VbcEndpoint) fromJson.getTo()[2]).getExtension());
         assertEquals("websocket", fromJson.getTo()[3].getType());
-        assertEquals("ws://example.com/socket", ((WebSocketEndpoint) fromJson.getTo()[3]).getUri());
-        assertEquals("audio/l16;rate=16000", ((WebSocketEndpoint) fromJson.getTo()[3]).getContentType());
+        assertEquals("ws://example.com/socket", ((WebSocketEndpoint) fromJson.getTo()[3]).getUri().toString());
+        assertEquals(Websocket.ContentType.AUDIO_L16_16K, ((WebSocketEndpoint) fromJson.getTo()[3]).getContentType());
         assertEquals("app", fromJson.getFrom().getType());
         assertEquals("nexmo", ((AppEndpoint) fromJson.getFrom()).getUser());
         Collection<? extends Action> ncco = fromJson.getNcco();
@@ -228,7 +230,7 @@ public class CallTest {
     @Test
     public void testMalformedJson() throws Exception {
         try {
-            Call.fromJson("{ bad Jason: \"unknown\"\n" + "}");
+            Jsonable.fromJson("{ bad Jason: \"unknown\"\n" + "}", Call.class);
             fail("Expected a VonageUnexpectedException to be thrown");
         } catch (VonageResponseParseException e) {
             assertEquals("Failed to produce Call from JSON.", e.getMessage());

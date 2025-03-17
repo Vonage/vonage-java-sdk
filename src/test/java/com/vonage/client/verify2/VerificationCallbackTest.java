@@ -32,7 +32,7 @@ public class VerificationCallbackTest {
 				"   \"request_id\": \"c11236f4-00bf-4b89-84ba-88b25df97315\",\n" +
 				"   \"triggered_at\": \"2020-01-01T14:00:00.032Z\",\n" +
 				"   \"type\": \"event\",\n" +
-				"   \"channel\": \"whatsapp_interactive\",\n" +
+				"   \"channel\": \"voice\",\n" +
 				"   \"status\": \"completed\",\n" +
 				"   \"finalized_at\": \"2020-01-01T15:00:00.001Z\",\n" +
 				"   \"client_ref\": \"my-personal-ref\"\n" +
@@ -42,6 +42,7 @@ public class VerificationCallbackTest {
 		assertEquals(UUID.fromString("c11236f4-00bf-4b89-84ba-88b25df97315"), webhook.getRequestId());
 		assertEquals(Instant.ofEpochMilli(1577887200032L), webhook.getTriggeredAt());
 		assertEquals(CallbackType.EVENT, webhook.getType());
+		assertEquals(Channel.VOICE, webhook.getChannel());
 		assertEquals(VerificationStatus.COMPLETED, webhook.getStatus());
 		assertEquals(Instant.ofEpochMilli(1577890800001L), webhook.getFinalizedAt());
 		assertEquals("my-personal-ref", webhook.getClientRef());
@@ -71,7 +72,7 @@ public class VerificationCallbackTest {
 				"         \"status\": \"completed\"\n" +
 				"      },\n" +
 				"      {\n" +
-				"         \"channel\": \"whatsapp_interactive\",\n" +
+				"         \"channel\": \"whatsapp\",\n" +
 				"         \"initiated_at\": \"2020-01-01T15:05:00.000Z\",\n" +
 				"         \"status\": \"user_rejected\"\n" +
 				"      },\n" +
@@ -97,7 +98,7 @@ public class VerificationCallbackTest {
 		assertEquals(4, workflows.size());
 		WorkflowStatus workflowUnderEvaluation;
 
-		workflowUnderEvaluation = workflows.get(0);
+		workflowUnderEvaluation = workflows.getFirst();
 		assertNotNull(workflowUnderEvaluation);
 		assertEquals(Channel.SMS, workflowUnderEvaluation.getChannel());
 		assertEquals(Instant.ofEpochMilli(1577887200000L), workflowUnderEvaluation.getInitiatedAt());
@@ -111,7 +112,7 @@ public class VerificationCallbackTest {
 
 		workflowUnderEvaluation = workflows.get(2);
 		assertNotNull(workflowUnderEvaluation);
-		assertEquals(Channel.WHATSAPP_INTERACTIVE, workflowUnderEvaluation.getChannel());
+		assertEquals(Channel.WHATSAPP, workflowUnderEvaluation.getChannel());
 		assertEquals(Instant.ofEpochMilli(1577891100000L), workflowUnderEvaluation.getInitiatedAt());
 		assertEquals(VerificationStatus.USER_REJECTED, workflowUnderEvaluation.getStatus());
 

@@ -42,13 +42,6 @@ public class HttpWrapperTest {
     }
 
     @Test
-    public void testAuthMethodAccessors() {
-        AuthCollection auths = new AuthCollection();
-        wrapper.setAuthCollection(auths);
-        assertEquals(auths, wrapper.getAuthCollection());
-    }
-
-    @Test
     public void testDefaultConstructorSetsDefaultConfigValues() {
         HttpConfig config = wrapper.getHttpConfig();
         assertNotNull(config);

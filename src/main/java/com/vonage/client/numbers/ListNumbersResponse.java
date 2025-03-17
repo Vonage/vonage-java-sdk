@@ -16,7 +16,6 @@
 package com.vonage.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
 /**
@@ -46,15 +45,5 @@ public class ListNumbersResponse extends JsonableBaseObject {
     @JsonProperty("numbers")
     public OwnedNumber[] getNumbers() {
         return numbers != null ? numbers : new OwnedNumber[0];
-    }
-
-    /**
-     * Creates an instance of this class from a JSON payload.
-     *
-     * @param json The JSON string to parse.
-     * @return An instance of this class with all known fields populated from the JSON payload, if present.
-     */
-    public static ListNumbersResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
     }
 }

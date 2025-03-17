@@ -15,6 +15,7 @@
  */
 package com.vonage.client.verify;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,7 +33,7 @@ public class ControlResponseTest {
 
     @Test
     public void testParseError() {
-        ControlResponse response = ControlResponse.fromJson("{\n" +
+        ControlResponse response = Jsonable.fromJson("{\n" +
                 "    \"error_text\": \"Missing username\",\n" +
                 "    \"status\": \"2\"\n" +
                 "}");
@@ -42,6 +43,8 @@ public class ControlResponseTest {
 
     @Test
     public void testBadJson() {
-        assertThrows(VonageUnexpectedException.class, () -> ControlResponse.fromJson("blarg"));
+        assertThrows(VonageUnexpectedException.class, () ->
+                Jsonable.fromJson("blarg", ControlResponse.class)
+        );
     }
 }

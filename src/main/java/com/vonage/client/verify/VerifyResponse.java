@@ -65,12 +65,11 @@ public class VerifyResponse extends JsonableBaseObject {
         return network;
     }
 
-    public static VerifyResponse fromJson(String json) {
-        VerifyResponse response = new VerifyResponse();
-        response.updateFromJson(json);
-        if (response.status == null) {
+    @Override
+    public void updateFromJson(String json) {
+        super.updateFromJson(json);
+        if (status == null) {
             throw new VonageResponseParseException("Response status is missing.");
         }
-        return response;
     }
 }

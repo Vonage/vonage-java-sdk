@@ -32,11 +32,6 @@ public enum Channel {
 	WHATSAPP,
 
 	/**
-	 * WhatsApp Yes/No prompt message (codeless).
-	 */
-	WHATSAPP_INTERACTIVE,
-
-	/**
 	 * Telephone voice call.
 	 */
 	VOICE,

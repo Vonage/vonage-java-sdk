@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.UrlContainer;
+import com.vonage.client.common.MessageType;
 import com.vonage.client.messages.mms.Content;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.*;

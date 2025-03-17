@@ -15,17 +15,17 @@
  */
 package com.vonage.client.voice;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
-
 
 public class TalkResponseTest {
     private TalkResponse response;
 
     @BeforeEach
     public void setUp() {
-        response = TalkResponse.fromJson("{\n" +
+        response = Jsonable.fromJson("{\n" +
                 "  \"message\": \"Talk stopped\",\n" +
                 "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
                 "}");

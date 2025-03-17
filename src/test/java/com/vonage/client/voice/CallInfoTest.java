@@ -77,7 +77,7 @@ public class CallInfoTest {
                 "    }\n" +
                 "  }\n" +
                 "}\n";
-        CallInfo record = CallInfo.fromJson(json);
+        CallInfo record = Jsonable.fromJson(json);
         TestUtils.testJsonableBaseObject(record, true);
 
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
@@ -129,7 +129,7 @@ public class CallInfoTest {
                 "    }\n" +
                 "  }\n" +
                 "}\n";
-        CallInfo record = CallInfo.fromJson(json);
+        CallInfo record = Jsonable.fromJson(json);
         TestUtils.testJsonableBaseObject(record, true);
         assertEquals(CallStatus.UNKNOWN, record.getStatus());
         assertEquals(CallDirection.UNKNOWN, record.getDirection());
@@ -187,7 +187,7 @@ public class CallInfoTest {
     }
 
     public void testStatus(String value, CallStatus expectedValue) throws Exception {
-        CallInfo record = CallInfo.fromJson(jsonWithPlaceholder.replaceFirst("PLACEHOLDER", value));
+        CallInfo record = Jsonable.fromJson(jsonWithPlaceholder.replaceFirst("PLACEHOLDER", value));
         TestUtils.testJsonableBaseObject(record, true);
         assertEquals(record.getStatus(), expectedValue);
     }

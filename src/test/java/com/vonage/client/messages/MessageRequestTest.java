@@ -15,11 +15,9 @@
  */
 package com.vonage.client.messages;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.VonageUnexpectedException;
-import org.junit.jupiter.api.Test;
+import com.vonage.client.common.MessageType;
 import static org.junit.jupiter.api.Assertions.*;
-import org.mockito.internal.matchers.Null;
+import org.junit.jupiter.api.*;
 
 public class MessageRequestTest {
 

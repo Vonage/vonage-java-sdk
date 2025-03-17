@@ -18,6 +18,7 @@ package com.vonage.client.messages;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.common.MessageType;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.Order;
 import com.vonage.client.messages.whatsapp.*;

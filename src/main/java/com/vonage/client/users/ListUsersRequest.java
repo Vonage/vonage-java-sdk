@@ -15,9 +15,9 @@
  */
 package com.vonage.client.users;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.vonage.client.QueryParamsRequest;
 import com.vonage.client.common.HalLinks;
+import com.vonage.client.common.SortOrder;
 import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -108,7 +108,7 @@ public final class ListUsersRequest implements QueryParamsRequest {
 
     public static class Builder {
         private int pageSize = 10;
-        private SortOrder order = SortOrder.ASC;
+        private SortOrder order = SortOrder.ASCENDING;
         private String name;
         private URI cursor;
 
@@ -176,30 +176,6 @@ public final class ListUsersRequest implements QueryParamsRequest {
          */
         public ListUsersRequest build() {
             return new ListUsersRequest(this);
-        }
-    }
-
-    /**
-     * Represents the sort order for events.
-     *
-     * @deprecated Will be replaced with {@linkplain com.vonage.client.common.SortOrder} in the next major release.
-     */
-    @Deprecated
-    public enum SortOrder {
-        /**
-         * Ascending
-         */
-        ASC,
-
-        /**
-         * Descending
-         */
-        DESC;
-
-        @JsonValue
-        @Override
-        public String toString() {
-            return name().toLowerCase();
         }
     }
 }

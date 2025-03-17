@@ -15,6 +15,7 @@
  */
 package com.vonage.client.voice;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageUnexpectedException;
 import org.junit.jupiter.api.*;
@@ -25,7 +26,7 @@ public class CallInfoPageTest {
 
     @BeforeEach
     public void setUp() {
-        page = CallInfoPage.fromJson("{\n" +
+        page = Jsonable.fromJson("{\n" +
                 "  \"page_size\": 10,\n" +
                 "  \"record_index\": 0,\n" +
                 "  \"count\": 1,\n" +
@@ -75,7 +76,7 @@ public class CallInfoPageTest {
     @Test
     public void testFailedUnmarshal() throws Exception {
         try {
-            CallInfoPage.fromJson("Notvalidjson");
+            Jsonable.fromJson("Notvalidjson", CallInfoPage.class);
             fail("Parsing invalid JSON should raise a VonageUnexpectedException");
         } catch (VonageUnexpectedException nue) {
             // This is expected.
@@ -86,8 +87,8 @@ public class CallInfoPageTest {
     @Test
     public void testBasics() {
         TestUtils.testJsonableBaseObject(page);
-        assertEquals("/v1/calls?page_size=10&record_index=20&order=asc", page.getLinks().getSelf().getHref());
-        assertEquals("447700900549", page.getEmbedded().getCallInfos()[0].getTo().toLog());
+        assertEquals("/v1/calls?page_size=10&record_index=20&order=asc", page.getLinks().getSelfUrl().toString());
+        assertEquals("447700900549", page.getCallInfos()[0].getTo().toLog());
         assertEquals(10, page.getPageSize());
         assertEquals(0, page.getRecordIndex());
     }

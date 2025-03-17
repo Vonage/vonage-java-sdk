@@ -15,6 +15,7 @@
  */
 package com.vonage.client.verify2;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +29,7 @@ public class VerificationResponseTest {
 	public void testConstructFromValidJson() {
 		UUID rqid = UUID.randomUUID();
 		String checkUrl = "https://example.com/v2/"+rqid+"/silent-auth/redirect";
-		VerificationResponse response = VerificationResponse.fromJson(
+		VerificationResponse response = Jsonable.fromJson(
 				"{\"request_id\":\""+rqid+"\",\"check_url\":\""+checkUrl+"\"}"
 		);
 		TestUtils.testJsonableBaseObject(response);
@@ -41,12 +42,14 @@ public class VerificationResponseTest {
 
 	@Test
 	public void testConstructFromEmptyJson() {
-		VerificationResponse response = VerificationResponse.fromJson("{}");
+		VerificationResponse response = Jsonable.fromJson("{}");
 		assertNull(response.getRequestId());
 	}
 
 	@Test
 	public void testConstructFromInvalidJson() {
-		assertThrows(VonageResponseParseException.class, () -> VerificationResponse.fromJson("{_malformed_}"));
+		assertThrows(VonageResponseParseException.class, () ->
+				Jsonable.fromJson("{_malformed_}", VerificationResponse.class)
+		);
 	}
 }

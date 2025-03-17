@@ -17,12 +17,13 @@ package com.vonage.client.insight;
 
 import java.util.Map;
 
-public class AdvancedInsightRequest extends StandardInsightRequest {
+public class AdvancedInsightRequest extends BaseInsightRequest {
     private final boolean async;
     private final String callback;
 
     AdvancedInsightRequest(Builder builder) {
-        super(builder);
+        super(builder.number, builder.country);
+        cnam = builder.cnam;
         callback = builder.callback;
         if ((async = builder.async) && (callback == null || callback.isEmpty())) {
             throw new IllegalStateException("You must define a callback URL when using asynchronous insights.");
@@ -58,6 +59,10 @@ public class AdvancedInsightRequest extends StandardInsightRequest {
         return callback;
     }
 
+    public Boolean getCnam() {
+        return cnam;
+    }
+
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
@@ -90,12 +95,13 @@ public class AdvancedInsightRequest extends StandardInsightRequest {
         return new Builder(number).country(country).build();
     }
 
-    public static class Builder extends StandardInsightRequest.Builder {
+    public static class Builder {
         protected boolean async;
-        protected String callback;
+        protected Boolean cnam;
+        protected String number, country, callback;
 
         protected Builder(String number) {
-            super(number);
+            this.number = number;
         }
 
         protected Builder() {}

@@ -16,7 +16,6 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
 /**
@@ -49,16 +48,5 @@ public class DtmfResponse extends JsonableBaseObject {
     @JsonProperty("message")
     public String getMessage() {
         return message;
-    }
-
-    /**
-     * Creates an instance of this class from a JSON payload.
-     *
-     * @param json The JSON string to parse.
-     *
-     * @return An instance of this class with the fields populated, if present.
-     */
-    public static DtmfResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
     }
 }

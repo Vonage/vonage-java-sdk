@@ -16,6 +16,7 @@
 package com.vonage.client.voice;
 
 import com.vonage.client.AbstractClientTest;
+import com.vonage.client.Jsonable;
 import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.common.HttpMethod;
@@ -64,7 +65,7 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
                 + "  \"status\": \"started\",\n" + "  \"direction\": \"outbound\"\n" + "}";
         stubResponse(200, expectedJson);
         CallEvent evt = client.createCall(new Call("447700900903", "447700900904", "http://api.example.com/answer"));
-        assertEquals(CallEvent.fromJson(expectedJson), evt);
+        assertEquals(Jsonable.fromJson(expectedJson, CallEvent.class), evt);
         assertEquals("63f61863-4a51-4f6b-86e1-46edebio0391", evt.getConversationUuid());
         assertEquals(SAMPLE_CALL_ID, evt.getUuid());
         assertEquals(CallDirection.OUTBOUND, evt.getDirection());

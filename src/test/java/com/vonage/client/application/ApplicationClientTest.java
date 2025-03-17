@@ -16,6 +16,7 @@
 package com.vonage.client.application;
 
 import com.vonage.client.AbstractClientTest;
+import com.vonage.client.Jsonable;
 import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.application.capabilities.*;
@@ -457,7 +458,7 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
 
             @Override
             protected Application sampleRequest() {
-                return Application.fromJson(sampleRequestBodyString());
+                return Jsonable.fromJson(sampleRequestBodyString(), Application.class);
             }
 
             @Override

@@ -15,10 +15,11 @@
  */
 package com.vonage.client.verify2;
 
-import com.vonage.client.*;
+import com.vonage.client.AbstractClientTest;
+import com.vonage.client.HttpWrapper;
+import com.vonage.client.Jsonable;
+import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
-import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
-import com.vonage.client.auth.NoAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -131,8 +132,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 				new SmsWorkflow(toNumber),
 				new EmailWorkflow(toEmail, fromEmail),
 				new VoiceWorkflow(toNumber),
-				new WhatsappWorkflow(toNumber, fromNumber),
-				new WhatsappCodelessWorkflow(toNumber, fromNumber)
+				new WhatsappWorkflow(toNumber, fromNumber)
 		);
 		return VerificationRequest.builder()
 				.brand("Nexmo").fraudCheck(false)

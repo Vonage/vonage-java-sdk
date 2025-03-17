@@ -16,7 +16,6 @@
 package com.vonage.client.application;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.application.capabilities.*;
 
@@ -90,10 +89,6 @@ public class Application extends JsonableBaseObject {
     @JsonProperty("privacy")
     public Privacy getPrivacy() {
         return privacy;
-    }
-
-    public static Application fromJson(String json) {
-        return Jsonable.fromJson(json);
     }
 
     /**

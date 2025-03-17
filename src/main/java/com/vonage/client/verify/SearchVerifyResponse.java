@@ -83,9 +83,4 @@ public class SearchVerifyResponse extends JsonableBaseObject {
             throw new VonageResponseParseException("Failed to produce SearchVerifyResponse from json.", jme);
         }
     }
-
-    @Deprecated
-    public static SearchVerifyResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
-    }
 }

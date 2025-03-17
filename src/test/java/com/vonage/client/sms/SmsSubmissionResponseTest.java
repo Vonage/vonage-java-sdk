@@ -15,6 +15,7 @@
  */
 package com.vonage.client.sms;
 
+import com.vonage.client.Jsonable;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +23,7 @@ public class SmsSubmissionResponseTest {
 
     @Test
     public void testSingleEmptyMessageResponse() {
-        var response = SmsSubmissionResponse.fromJson("{\"message-count\":1, \"messages\":[{}]}");
+        SmsSubmissionResponse response = Jsonable.fromJson("{\"message-count\":1, \"messages\":[{}]}");
         assertEquals(1, response.getMessageCount());
         assertNotNull(response.getMessages());
         assertEquals(1, response.getMessages().size());
@@ -31,7 +32,7 @@ public class SmsSubmissionResponseTest {
 
     @Test
     public void testEmptyMessageResponses() {
-        var response = SmsSubmissionResponse.fromJson("{\"message-count\":0, \"messages\":[]}");
+        SmsSubmissionResponse response = Jsonable.fromJson("{\"message-count\":0, \"messages\":[]}");
         assertEquals(0, response.getMessageCount());
         assertNotNull(response.getMessages());
         assertEquals(0, response.getMessages().size());
@@ -39,14 +40,14 @@ public class SmsSubmissionResponseTest {
 
     @Test
     public void testNoMessageResponses() {
-        var response = SmsSubmissionResponse.fromJson("{\"message-count\":-2}");
+        SmsSubmissionResponse response = Jsonable.fromJson("{\"message-count\":-2}");
         assertEquals(-2, response.getMessageCount());
         assertNull(response.getMessages());
     }
 
     @Test
     public void testEmptyJson() {
-        var response = SmsSubmissionResponse.fromJson("{}");
+        SmsSubmissionResponse response = Jsonable.fromJson("{}");
         assertEquals(0, response.getMessageCount());
         assertNull(response.getMessages());
     }

@@ -16,7 +16,6 @@
 package com.vonage.client.sms;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 
@@ -57,9 +56,5 @@ public class SmsSubmissionResponse extends JsonableBaseObject {
     @JsonProperty("messages")
     public List<SmsSubmissionResponseMessage> getMessages() {
         return messages;
-    }
-
-    public static SmsSubmissionResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
     }
 }
