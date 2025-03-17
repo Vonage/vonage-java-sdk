@@ -24,9 +24,9 @@ import java.util.*;
  */
 public class UpdateNumberRequest extends BaseNumberRequest {
     private final UUID applicationId;
-    private CallbackType voiceCallbackType;
-    private URI moHttpUrl, voiceStatusCallback;
-    private String moSmppSysType, voiceCallbackValue,  messagesCallbackValue;
+    private final CallbackType voiceCallbackType;
+    private final URI moHttpUrl, voiceStatusCallback;
+    private final String moSmppSysType, voiceCallbackValue;
 
     private UpdateNumberRequest(Builder builder) {
         super(builder.country, builder.msisdn);
@@ -36,18 +36,6 @@ public class UpdateNumberRequest extends BaseNumberRequest {
         moSmppSysType = builder.moSmppSysType;
         voiceCallbackType = builder.voiceCallbackType;
         voiceCallbackValue = builder.voiceCallbackValue;
-    }
-
-    /**
-     * Deprecated constructor.
-     *
-     * @param msisdn The inbound virtual number to update.
-     * @param country The two character country code in ISO 3166-1 alpha-2 format.
-     * @deprecated Use {@link #builder(String, String)}. This will be removed in the next major release.
-     */
-    @Deprecated
-    public UpdateNumberRequest(String msisdn, String country) {
-        this(builder(msisdn, country));
     }
 
     /**
@@ -107,41 +95,6 @@ public class UpdateNumberRequest extends BaseNumberRequest {
         return voiceStatusCallback != null ? voiceStatusCallback.toString() : null;
     }
 
-    @Deprecated
-    public void setMoHttpUrl(String moHttpUrl) {
-        this.moHttpUrl = URI.create(moHttpUrl);
-    }
-
-    @Deprecated
-    public void setMoSmppSysType(String moSmppSysType) {
-        this.moSmppSysType = moSmppSysType;
-    }
-
-    @Deprecated
-    public void setVoiceCallbackType(CallbackType voiceCallbackType) {
-        this.voiceCallbackType = voiceCallbackType;
-    }
-
-    @Deprecated
-    public void setVoiceCallbackValue(String voiceCallbackValue) {
-        this.voiceCallbackValue = voiceCallbackValue;
-    }
-
-    @Deprecated
-    public void setVoiceStatusCallback(String voiceStatusCallback) {
-        this.voiceStatusCallback = URI.create(voiceStatusCallback);
-    }
-
-    @Deprecated
-    public String getMessagesCallbackValue() {
-        return messagesCallbackValue;
-    }
-
-    @Deprecated
-    public void setMessagesCallbackValue(String messagesCallbackValue) {
-        this.messagesCallbackValue = messagesCallbackValue;
-    }
-
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
@@ -163,10 +116,6 @@ public class UpdateNumberRequest extends BaseNumberRequest {
         if (voiceStatusCallback != null) {
             params.put("voiceStatusCallback", voiceStatusCallback.toString());
         }
-        if (messagesCallbackValue != null) {
-            params.put("messagesCallbackValue", messagesCallbackValue);
-            params.put("messagesCallbackType", CallbackType.APP.paramValue());
-        }
         return params;
     }
 
@@ -178,22 +127,7 @@ public class UpdateNumberRequest extends BaseNumberRequest {
 
         TEL,
 
-        @Deprecated
-        VXML,
-
         APP;
-
-
-        /**
-         * Serialized enum.
-         *
-         * @return The string value.
-         * @deprecated Use {@link #toString()}.
-         */
-        @Deprecated
-        public String paramValue() {
-            return toString();
-        }
 
         @Override
         public String toString() {

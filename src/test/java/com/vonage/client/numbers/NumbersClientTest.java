@@ -184,7 +184,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
         stubResponse("{}");
         var response = client.listNumbers();
         assertNotNull(response);
-        assertEquals(0, response.getCount());
+        assertNull(response.getCount());
         var numbers = response.getNumbers();
         assertNotNull(numbers);
         assertEquals(0, numbers.length);
@@ -353,7 +353,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                 SearchNumbersFilter filter = sampleRequest();
                 Map<String, String> params = new LinkedHashMap<>();
                 params.put("country", filter.getCountry());
-                params.put("features", String.join(",", filter.getFeatures()));
+                params.put("features", String.join(",", Feature.getToString(filter.getFeatures())));
                 params.put("pattern", filter.getPattern());
                 params.put("search_pattern", String.valueOf(filter.getSearchPattern().getValue()));
                 params.put("index", String.valueOf(filter.getIndex()));
@@ -374,6 +374,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                 assertRequestUriAndBody(filter, Map.of());
                 filter = SearchNumbersFilter.builder().features((Feature[]) null).build();
                 assertNull(filter.getFeatures());
+                assertNull(Feature.getToString(filter.getFeatures()));
             }
         }
         .runTests();
