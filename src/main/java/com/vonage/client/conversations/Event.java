@@ -49,7 +49,7 @@ import java.util.Objects;
 	@JsonSubTypes.Type(value = AudioSpeakingOffEvent.class, name = "audio:speaking:off"),
 	@JsonSubTypes.Type(value = AudioSpeakingOnEvent.class, name = "audio:speaking:on"),
 	@JsonSubTypes.Type(value = ConversationUpdatedEvent.class, name = "conversation:updated"),
-	@JsonSubTypes.Type(value = CustomEvent.class, name = "custom"),
+	@JsonSubTypes.Type(value = CustomEvent.class, name = "custom:"),
 	@JsonSubTypes.Type(value = EphemeralEvent.class, name = "ephemeral"),
 	@JsonSubTypes.Type(value = EventDeleteEvent.class, name = "event:delete"),
 	@JsonSubTypes.Type(value = MemberMediaEvent.class, name = "member:media"),
@@ -70,7 +70,7 @@ import java.util.Objects;
 })
 public abstract class Event extends JsonableBaseObject {
 	@JsonIgnore String conversationId;
-	@JsonProperty("type") EventType type;
+	@JsonProperty("type") String type;
 	@JsonProperty("id") Integer id;
 	@JsonProperty("from") String from;
 	@JsonProperty("timestamp") Instant timestamp;
@@ -103,7 +103,19 @@ public abstract class Event extends JsonableBaseObject {
 	 * 
 	 * @return The event type as an enum.
 	 */
+	@JsonIgnore
 	public EventType getType() {
+		return EventType.fromString(type);
+	}
+
+	/**
+	 * Gets the event type as a string. This is mainly useful for distinguishing {@link EventType#CUSTOM} events.
+	 *
+	 * @return The event type as a string, including the suffix if it's a custom event.
+	 * @since 8.20.0
+	 */
+	@JsonProperty("type")
+	public String getTypeName() {
 		return type;
 	}
 
@@ -153,8 +165,19 @@ public abstract class Event extends JsonableBaseObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public abstract static class Builder<E extends Event, B extends Builder<? extends E, ? extends B>> {
-		private final EventType type;
+		private final String type;
 		private String from;
+
+		/**
+		 * Construct a new builder for a given event type.
+		 *
+		 * @param type The event type as a string.
+		 * @since 8.20.0
+		 */
+		protected Builder(String type) {
+			// Validate the event type.
+			EventType.fromString(this.type = Objects.requireNonNull(type, "Event type is required."));
+		}
 
 		/**
 		 * Construct a new builder for a given event type.
@@ -162,7 +185,7 @@ public abstract class Event extends JsonableBaseObject {
 		 * @param type The event type as an enum.
 		 */
 		protected Builder(EventType type) {
-			this.type = type;
+			this(type.toString());
 		}
 
 		/**

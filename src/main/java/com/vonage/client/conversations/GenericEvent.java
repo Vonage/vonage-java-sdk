@@ -42,7 +42,11 @@ public class GenericEvent extends EventWithBody<Map<String, ?>> {
 
         private Map<String, ?> body;
 
-        Builder(EventType type) {
+        protected Builder(String type) {
+            super(type);
+        }
+
+        protected Builder(EventType type) {
             super(type);
         }
 
