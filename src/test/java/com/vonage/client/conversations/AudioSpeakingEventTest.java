@@ -15,8 +15,6 @@
  */
 package com.vonage.client.conversations;
 
-import com.vonage.client.Jsonable;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.*;
 import java.util.List;
@@ -24,15 +22,14 @@ import java.util.List;
 public class AudioSpeakingEventTest extends AbstractEventTest {
 
     @Test
-    public void testFromJson() {
-        final String json = "{\"body\":{\"channel\":{}}}";
-        for (var clazz : List.of(
-                AudioSpeakingOnEvent.class,
-                AudioSpeakingOffEvent.class
+    public void testParseEmptyEvent() {
+        for (var tuple : List.of(
+                new ParseEventTuple(AudioSpeakingOnEvent.class, EventType.AUDIO_SPEAKING_ON, "audio:speaking:on"),
+                new ParseEventTuple(AudioSpeakingOffEvent.class, EventType.AUDIO_SPEAKING_OFF, "audio:speaking:off")
         )) {
-            var event = Jsonable.fromJson(json, clazz);
-            assertNotNull(event);
-            assertEquals(clazz, event.getClass());
+            var event = (AbstractAudioSpeakingEvent) parseEvent(
+                    tuple.eventTypeEnum(), tuple.clazz(), "{\"body\":{\"channel\":{}},\"type\":\""+tuple.eventTypeStr()+"\"}"
+            );
             var channel = event.getChannel();
             assertNotNull(channel);
         }

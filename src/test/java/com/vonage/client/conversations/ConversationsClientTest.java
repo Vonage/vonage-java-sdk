@@ -562,8 +562,8 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 		parsed.conversationId = convId;
 		assertEquals(CUSTOM_EVENT_TYPE, parsed.getTypeName());
 		assertEquals(EventType.CUSTOM, parsed.getType());
-		assertEquals(CustomEvent.class, parsed.getClass());
-		assertEquals(CONVERSATION_CUSTOM_DATA, ((CustomEvent) parsed).getBody());
+		assertTrue(GenericEvent.class.isAssignableFrom(parsed.getClass()));
+		assertEquals(CONVERSATION_CUSTOM_DATA, ((GenericEvent) parsed).getBody());
 		assertEquals(EVENT_ID, parsed.getId());
 		assertEquals(MEMBER_ID, parsed.getFrom());
 		assertEquals(TIMESTAMP_CREATED, parsed.getTimestamp());
