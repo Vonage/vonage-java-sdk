@@ -32,7 +32,7 @@ public class GenericEventTest extends AbstractEventTest {
             assertEquals(body, built.getBody());
         }
 
-        GenericEvent parsed = parseEvent(eventType, eventClass, "{\n" +
+        var parsed = parseEvent(eventType, eventClass, "{\n" +
             "  \"id\": " + randomEventId + ",\n" +
             "  \"type\": \"" + eventTypeStr + "\",\n" +
             "  \"body\": " + TestUtils.mapToJson(body) + ",\n" +
@@ -61,10 +61,16 @@ public class GenericEventTest extends AbstractEventTest {
 
     @Test
     public void testCustomEvent() {
-        testGenericEvent(CustomEvent.builder(),
+        testGenericEvent(CustomEvent.builder("test"),
                 EventType.CUSTOM,
                 "custom:test",
                 GenericEvent.class,
+                Map.of()
+        );
+        testGenericEvent(CustomEvent.builder(""),
+                EventType.CUSTOM,
+                "custom:",
+                CustomEvent.class,
                 Map.of()
         );
     }

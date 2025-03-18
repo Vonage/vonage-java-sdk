@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.20.0] - 2025-03-19
+- Fixed custom event type parsing and creation in Conversation API
+- Added support for the following event types in Conversation API:
+  - `member:invited`
+  - `member:joined`
+  - `member:left`
+  - `rtc:hangup`
+  - `sip:hangup`
+
 # [8.19.0] - 2025-03-12
 - Added start / stop text-to-speech and audio stream endpoints to Conversation API
 - Exposed `StreamPayload` in Voice API and added Builder

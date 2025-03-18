@@ -29,15 +29,18 @@ public final class CustomEvent extends GenericEvent {
     /**
      * Entry point for constructing an instance of this class.
      *
+     * @param typeName The suffix to append to the event type name (excluding the {@code custom:} prefix).
+     *
      * @return A new Builder.
+     * @since 8.20.0 Added {@code typeName} parameter.
      */
-    public static Builder builder() {
-        return new Builder();
+    public static Builder builder(String typeName) {
+        return new Builder(EventType.CUSTOM + ":" + typeName);
     }
 
     public static final class Builder extends GenericEvent.Builder<CustomEvent, Builder> {
-        Builder() {
-            super(EventType.CUSTOM);
+        Builder(String type) {
+            super(type);
         }
 
         @Override

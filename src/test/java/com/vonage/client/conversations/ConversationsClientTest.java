@@ -57,7 +57,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 	static final ConversationStatus CONVERSATION_STATE = ConversationStatus.INACTIVE;
 	static final MemberState MEMBER_STATE = MemberState.JOINED;
 	static final Class<? extends Event> KNOWN_EVENT_CLASS = AudioSayDoneEvent.class;
-	static final EventType KNOWN_EVENT_TYPE = EventType.AUDIO_SAY_DONE, CUSTOM_EVENT_TYPE = EventType.CUSTOM;
+	static final EventType KNOWN_EVENT_TYPE = EventType.AUDIO_SAY_DONE;
 	static final ChannelType CHANNEL_TYPE = ChannelType.PHONE,
 			CHANNEL_TYPE_TO = ChannelType.MMS, CHANNEL_TYPE_FROM = ChannelType.SMS;
 	static final Map<String, Object> CONVERSATION_CUSTOM_DATA = Map.of(
@@ -66,6 +66,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 	);
 
 	static final String
+			CUSTOM_EVENT_TYPE = "custom:notification",
 			STREAM_URL = "https://example.com/waiting.mp3",
 			KNOCKING_ID_STR = "ccc86f37-0a18-4f2e-9bee-da5dce04f601",
 			INVALID_UUID_STR = "12345678-9abc-defg-hijk-lmnopqrstuvw",
@@ -102,7 +103,6 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 			CHANNEL_TYPE_FROM_STR = "sms",
 			CHANNEL_TYPE_TO_STR = "mms",
 			ORDER_STR = "desc",
-			CUSTOM_EVENT_TYPE_STR = "custom",
 			KNOWN_EVENT_TYPE_STR = "audio:say:done",
 			CONVERSATION_TYPE = "quick_chat",
 			CONVERSATION_CUSTOM_SORT_KEY = "CSK_1",
@@ -267,7 +267,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 				"}",
 			SAMPLE_EVENT_RESPONSE = "{\n" +
 				"   \"id\": " + EVENT_ID + ",\n" +
-				"   \"type\": \"" + CUSTOM_EVENT_TYPE_STR + "\",\n" +
+				"   \"type\": \"" + CUSTOM_EVENT_TYPE + "\",\n" +
 				"   \"from\": \"" + MEMBER_ID + "\",\n" +
 				"   \"body\": " + CONVERSATION_CUSTOM_DATA_STR + ",\n" +
 				"   \"timestamp\": \"" + TIMESTAMP_CREATED_STR + "\",\n" +
@@ -560,9 +560,10 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 		parsed.conversationId = null;
 		testJsonableBaseObject(parsed);
 		parsed.conversationId = convId;
-		assertEquals(CUSTOM_EVENT_TYPE, parsed.getType());
-		assertEquals(CustomEvent.class, parsed.getClass());
-		assertEquals(CONVERSATION_CUSTOM_DATA, ((CustomEvent) parsed).getBody());
+		assertEquals(CUSTOM_EVENT_TYPE, parsed.getTypeName());
+		assertEquals(EventType.CUSTOM, parsed.getType());
+		assertTrue(GenericEvent.class.isAssignableFrom(parsed.getClass()));
+		assertEquals(CONVERSATION_CUSTOM_DATA, ((GenericEvent) parsed).getBody());
 		assertEquals(EVENT_ID, parsed.getId());
 		assertEquals(MEMBER_ID, parsed.getFrom());
 		assertEquals(TIMESTAMP_CREATED, parsed.getTimestamp());
@@ -1702,7 +1703,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 
 	@Test
 	public void testCreateEvent() throws Exception {
-		Event request = CustomEvent.builder().body(CONVERSATION_CUSTOM_DATA).build();
+		Event request = CustomEvent.builder("notification").body(CONVERSATION_CUSTOM_DATA).build();
 		stubResponse(201, SAMPLE_EVENT_RESPONSE);
 		assertEqualsSampleEvent(client.createEvent(CONVERSATION_ID, request));
 
