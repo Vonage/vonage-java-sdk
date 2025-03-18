@@ -22,7 +22,9 @@ import java.time.Instant;
 import java.util.Objects;
 
 /**
- * Events are actions that occur within a conversation.
+ * Events are actions that occur within a conversation. This is the base class for all events.
+ * The specific event subtype is determined by the {@code type} field.
+ * For custom events, use the {@linkplain #getTypeName()} to determine the specific custom suffix.
  */
 @JsonTypeInfo(
 		use = JsonTypeInfo.Id.NAME,
@@ -63,11 +65,13 @@ import java.util.Objects;
 	@JsonSubTypes.Type(value = MessageUndeliverableEvent.class, name = "message:undeliverable"),
 	@JsonSubTypes.Type(value = RtcAnswerEvent.class, name = "rtc:answer"),
 	@JsonSubTypes.Type(value = RtcAnsweredEvent.class, name = "rtc:answered"),
+	@JsonSubTypes.Type(value = RtcHangupEvent.class, name = "rtc:hangup"),
 	@JsonSubTypes.Type(value = RtcRingingEvent.class, name = "rtc:ringing"),
 	@JsonSubTypes.Type(value = RtcStatusEvent.class, name = "rtc:status"),
 	@JsonSubTypes.Type(value = RtcTransferEvent.class, name = "rtc:transfer"),
 	@JsonSubTypes.Type(value = SipAmdMachineEvent.class, name = "sip:amd_machine"),
 	@JsonSubTypes.Type(value = SipAnsweredEvent.class, name = "sip:answered"),
+	@JsonSubTypes.Type(value = SipHangupEvent.class, name = "sip:hangup"),
 	@JsonSubTypes.Type(value = SipMachineEvent.class, name = "sip:machine"),
 	@JsonSubTypes.Type(value = SipRingingEvent.class, name = "sip:ringing")
 })

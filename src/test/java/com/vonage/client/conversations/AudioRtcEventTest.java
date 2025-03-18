@@ -42,6 +42,21 @@ public class AudioRtcEventTest extends AbstractEventTest {
     }
 
     @Test
+    public void testParseEmptyRtcEvents() {
+        for (var tuple : new ParseEventTuple[] {
+                new ParseEventTuple(AudioMuteOffEvent.class, EventType.AUDIO_MUTE_OFF, "audio:mute:off"),
+                new ParseEventTuple(AudioMuteOnEvent.class, EventType.AUDIO_MUTE_ON, "audio:mute:on"),
+                new ParseEventTuple(AudioEarmuffOffEvent.class, EventType.AUDIO_EARMUFF_OFF, "audio:earmuff:off"),
+                new ParseEventTuple(AudioEarmuffOnEvent.class, EventType.AUDIO_EARMUFF_ON, "audio:earmuff:on")
+        }) {
+            var event = (AudioRtcEvent) parseEvent(
+                    tuple.eventTypeEnum(), tuple.clazz(), "{\"body\":{\"rtc_id\":\""+randomIdStr+"\"},\"type\":\""+tuple.eventTypeStr()+"\"}"
+            );
+            assertEquals(randomId, event.getRtcId());
+        }
+    }
+
+    @Test
     public void testFromEmptyJson() {
         final String json = "{}";
         for (var clazz : List.of(
