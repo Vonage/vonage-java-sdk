@@ -108,7 +108,7 @@ public class CallTest {
         };
         com.vonage.client.voice.Endpoint fromEndpoint = new com.vonage.client.voice.AppEndpoint("nexmo");
         Call expectedCall = Call.builder().to(endpoints).from(fromEndpoint).answerUrl("http://example.com/answer").build();
-        String jsonString = toFromJsonStart + ",\"answer_method\":\"GET\",\"answer_url\":\"http://example.com/answer\"}";
+        String jsonString = toFromJsonStart + ",\"answer_method\":\"GET\",\"answer_url\":[\"http://example.com/answer\"]}";
         Call fromJson = Jsonable.fromJson(jsonString, Call.class);
         assertEquals(expectedCall.toJson(), fromJson.toJson());
 
@@ -377,7 +377,7 @@ public class CallTest {
     public void testConstructDefaultAnswerMethod() {
         Call call = Call.builder().to(new VbcEndpoint("123"))
                 .answerUrl("http://example.com/answer").build();
-        assertEquals("GET", call.getAnswerMethod());
+        assertEquals(EventMethod.GET, call.getAnswerMethod());
     }
 
     @Test
