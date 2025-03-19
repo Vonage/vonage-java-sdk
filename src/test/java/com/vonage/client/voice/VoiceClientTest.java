@@ -20,6 +20,7 @@ import com.vonage.client.Jsonable;
 import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.common.HttpMethod;
+import com.vonage.client.voice.ncco.EventMethod;
 import com.vonage.client.voice.ncco.Ncco;
 import com.vonage.client.voice.ncco.TalkAction;
 import static org.junit.jupiter.api.Assertions.*;
@@ -70,7 +71,7 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
         assertEquals(SAMPLE_CALL_ID, evt.getUuid());
         assertEquals(CallDirection.OUTBOUND, evt.getDirection());
         assert401Response(() -> client.createCall(Call.builder()
-                .to(new VbcEndpoint("123")).eventMethod(HttpMethod.POST).build())
+                .to(new VbcEndpoint("123")).eventMethod(EventMethod.POST).build())
         );
     }
 

@@ -48,7 +48,7 @@ public class SmsSubmissionResponseTest {
     @Test
     public void testEmptyJson() {
         SmsSubmissionResponse response = Jsonable.fromJson("{}");
-        assertEquals(0, response.getMessageCount());
+        assertNull(response.getMessageCount());
         assertNull(response.getMessages());
     }
 }

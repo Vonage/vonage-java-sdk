@@ -41,9 +41,9 @@ public class HttpWrapper {
             JAVA_VERSION = System.getProperty("java.version"),
             USER_AGENT = String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION);
 
+    private CloseableHttpClient httpClient;
+    private HttpConfig httpConfig;
     private final AuthCollection authCollection;
-    private final CloseableHttpClient httpClient;
-    private final HttpConfig httpConfig;
 
     /**
      * Creates a new instance of the HttpWrapper class.
@@ -75,6 +75,14 @@ public class HttpWrapper {
 
     public HttpWrapper(HttpConfig httpConfig, AuthMethod... authMethods) {
         this(httpConfig, new AuthCollection(authMethods));
+    }
+
+    void setHttpClient(CloseableHttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+
+    void setHttpConfig(HttpConfig httpConfig) {
+        this.httpConfig = httpConfig;
     }
 
     /**

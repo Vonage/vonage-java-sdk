@@ -24,7 +24,7 @@ import java.util.Map;
 class ConversionRequest implements QueryParamsRequest {
     private final Type type;
     private final String messageId;
-    private final Boolean delivered;
+    private final boolean delivered;
     private final Date timestamp;
 
     public ConversionRequest(Type type, String messageId, Boolean delivered, Date timestamp) {
@@ -54,9 +54,7 @@ class ConversionRequest implements QueryParamsRequest {
     public Map<String, String> makeParams() {
         LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
         params.put("message-id", messageId);
-        if (delivered != null) {
-            params.put("delivered", delivered.toString());
-        }
+        params.put("delivered", String.valueOf(delivered));
         if (timestamp != null) {
             params.put("timestamp", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timestamp));
         }

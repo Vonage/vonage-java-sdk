@@ -55,20 +55,14 @@ public class Call extends JsonableBaseObject {
         if ((ringingTimer = builder.ringingTimer) != null && (ringingTimer > 120 || ringingTimer < 1)) {
             throw new IllegalArgumentException("Ringing timer must be between 1 and 120.");
         }
-        if ((answerMethod = builder.answerMethod) != null) switch (answerMethod) {
-            case GET: case POST: break;
-            default: throw new IllegalArgumentException("Answer method must be GET or POST.");
-        }
-        if ((eventMethod = builder.eventMethod) != null) switch (eventMethod) {
-            case GET: case POST: break;
-            default: throw new IllegalArgumentException("Event method must be GET or POST.");
-        }
         if ((from = builder.from) == null) {
             fromRandomNumber = true;
         }
         else if ((fromRandomNumber = builder.fromRandomNumber) != null && fromRandomNumber) {
             throw new IllegalStateException("From number shouldn't be set if using random.");
         }
+        answerMethod = builder.answerMethod;
+        eventMethod = builder.eventMethod;
         answerUrl = builder.answerUrl != null ? Collections.singletonList(URI.create(builder.answerUrl)) : null;
         eventUrl = builder.eventUrl != null ? Collections.singletonList(URI.create(builder.eventUrl)) : null;
         ncco = builder.ncco;
