@@ -15,7 +15,7 @@
  */
 package com.vonage.client.video;
 
-import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -38,7 +38,7 @@ public class ArchiveTest {
 				.streamMode(StreamMode.AUTO).layout(layout)
 				.multiArchiveTag(multiArchiveTag).build();
 
-		TestUtils.testJsonableBaseObject(request);
+		testJsonableBaseObject(request);
 		String json = request.toJson();
 		assertTrue(json.contains("\"name\":\""+name+"\""));
 		assertTrue(json.contains("\"multiArchiveTag\":\""+multiArchiveTag+"\""));
@@ -53,6 +53,30 @@ public class ArchiveTest {
 	}
 
 	@Test
+	public void testQuantizationParameter() {
+		String sessionId = "flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN";
+		int qp = 19;
+		Archive request = Archive.builder(sessionId).quantizationParameter(qp).build();
+		testJsonableBaseObject(request);
+		String json = request.toJson();
+		assertTrue(json.contains("\"sessionId\":\""+sessionId+"\""));
+		assertTrue(json.contains("\"quantizationParameter\":"+qp));
+		assertThrows(IllegalStateException.class, () ->
+				Archive.builder(sessionId).quantizationParameter(qp).maxBitrate(213450).build()
+		);
+	}
+
+	@Test
+	public void testQuantizationParameterBounds() {
+		var builder = Archive.builder("SESSION_ID");
+		int min = 15, max = 40;
+		assertThrows(IllegalArgumentException.class, () -> builder.quantizationParameter(min-1).build());
+		assertEquals(min, builder.quantizationParameter(min).build().getQuantizationParameter());
+		assertThrows(IllegalArgumentException.class, () -> builder.quantizationParameter(max+1).build());
+		assertEquals(max, builder.quantizationParameter(max).build().getQuantizationParameter());
+	}
+
+	@Test
 	public void testSerializeCustomLayout() {
 		String style = "stream.instructor {position: absolute; width: 100%;  height:50%;}";
 		StreamCompositionLayout layout = StreamCompositionLayout.builder(ScreenLayoutType.CUSTOM).stylesheet(style).build();
@@ -62,7 +86,7 @@ public class ArchiveTest {
 				.streamMode(StreamMode.MANUAL).layout(layout)
 				.outputMode(OutputMode.COMPOSED).build();
 
-		TestUtils.testJsonableBaseObject(request);
+		testJsonableBaseObject(request);
 		String json = request.toJson();
 		assertTrue(json.contains("\"outputMode\":\"composed\""));
 		assertTrue(json.contains("\"streamMode\":\"manual\""));
@@ -130,5 +154,6 @@ public class ArchiveTest {
 		assertNull(archive.getDurationSeconds());
 		assertNull(archive.getCreatedAt());
 		assertNull(archive.getCreatedAtMillis());
+		assertNull(archive.getQuantizationParameter());
 	}
 }

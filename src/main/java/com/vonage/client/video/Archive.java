@@ -31,6 +31,7 @@ public class Archive extends StreamComposition {
     private URI url;
     private ArchiveStatus status;
     private OutputMode outputMode;
+    private Integer quantizationParameter;
 
     protected Archive() {
     }
@@ -51,6 +52,14 @@ public class Archive extends StreamComposition {
         streamMode = builder.streamMode;
         if ((maxBitrate = builder.maxBitrate) != null && (maxBitrate < 100000 || maxBitrate > 6000000)) {
             throw new IllegalArgumentException("Maximum bitrate must be between 100000 and 6000000.");
+        }
+        if ((quantizationParameter = builder.quantizationParameter) != null) {
+            if (maxBitrate != null) {
+                throw new IllegalStateException("Quantization parameter is mutually exclusive with maxBitrate.");
+            }
+            if (quantizationParameter < 15 || quantizationParameter > 40) {
+                throw new IllegalArgumentException("Quantization parameter must be between 15 and 40.");
+            }
         }
     }
 
@@ -150,6 +159,17 @@ public class Archive extends StreamComposition {
     }
 
     /**
+     * Returns the quantization parameter if set for the Archive.
+     *
+     * @return The quantization parameter, or {@code null} if not applicable.
+     * @since 8.20.0
+     */
+    @JsonProperty("quantizationParameter")
+    public Integer getQuantizationParameter() {
+        return quantizationParameter;
+    }
+
+    /**
      * Creates an instance of this class from a JSON payload.
      *
      * @param json The JSON string to parse.
@@ -179,6 +199,7 @@ public class Archive extends StreamComposition {
     public static class Builder extends StreamComposition.Builder {
         private String name, multiArchiveTag;
         private OutputMode outputMode;
+        private Integer quantizationParameter;
 
         Builder(String sessionId) {
             this.sessionId = sessionId;
@@ -314,6 +335,21 @@ public class Archive extends StreamComposition {
          */
         public Builder maxBitrate(int maxBitrate) {
             this.maxBitrate = maxBitrate;
+            return this;
+        }
+
+        /**
+         * (OPTIONAL) Quantization Parameter (QP) is an optional video encoding value allowed for composed archiving,
+         * smaller values generate higher quality and larger archives, larger values generate lower quality and smaller
+         * archives, QP uses variable bitrate (VBR). This must be between 15 and 40.
+         *
+         * @param quantizationParameter The quantization parameter as an integer (minimum 15, maximum 40).
+         *
+         * @return This builder.
+         * @since 8.20.0
+         */
+        public Builder quantizationParameter(int quantizationParameter) {
+            this.quantizationParameter = quantizationParameter;
             return this;
         }
 
