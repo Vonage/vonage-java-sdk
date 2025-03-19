@@ -329,7 +329,7 @@ public class ApplicationTest {
 
         Application parsed = Jsonable.fromJson(json);
 
-        assertNotNull(UUID.fromString(parsed.getId()));
+        assertNotNull(parsed.getId());
         assertNotNull(parsed.getName());
         assertNotNull(parsed.getPrivacy());
         assertNotNull(parsed.getKeys());

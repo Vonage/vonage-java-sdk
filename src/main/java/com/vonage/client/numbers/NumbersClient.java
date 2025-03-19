@@ -15,9 +15,13 @@
  */
 package com.vonage.client.numbers;
 
-import com.vonage.client.*;
+import com.vonage.client.DynamicEndpoint;
+import com.vonage.client.HttpWrapper;
+import com.vonage.client.RestEndpoint;
+import com.vonage.client.VonageClient;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -54,11 +58,11 @@ public class NumbersClient {
     /**
      * Get the first page of phone numbers assigned to the authenticated account.
      *
-     * @return A ListNumbersResponse containing the first 10 phone numbers
+     * @return A list containing the first 10 owned phone numbers.
      *
      * @throws NumbersResponseException If the API call returned an unsuccessful (4xx or 5xx) response.
      */
-    public ListNumbersResponse listNumbers() throws NumbersResponseException {
+    public List<OwnedNumber> listNumbers() throws NumbersResponseException {
         return listNumbers(ListNumbersFilter.builder().build());
     }
 
@@ -67,12 +71,12 @@ public class NumbersClient {
      *
      * @param filter A ListNumbersFilter describing the filters to be applied to the request.
      *
-     * @return A ListNumbersResponse containing phone numbers matching the supplied filter.
+     * @return A list of owned phone numbers matching the supplied filter.
      *
      * @throws NumbersResponseException If the API call returned an unsuccessful (4xx or 5xx) response.
      */
-    public ListNumbersResponse listNumbers(ListNumbersFilter filter) throws NumbersResponseException {
-        return listNumbers.execute(filter);
+    public List<OwnedNumber> listNumbers(ListNumbersFilter filter) throws NumbersResponseException {
+        return listNumbers.execute(filter).getNumbers();
     }
 
     /**
@@ -180,6 +184,6 @@ public class NumbersClient {
      */
     public void linkNumber(String msisdn, String country, String appId) throws NumbersResponseException {
         updateNumber(UpdateNumberRequest.builder(msisdn, country)
-                .voiceCallback(UpdateNumberRequest.CallbackType.APP, UUID.fromString(appId).toString()).build());
+                .voiceCallback(CallbackType.APP, UUID.fromString(appId).toString()).build());
     }
 }

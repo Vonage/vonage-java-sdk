@@ -82,19 +82,17 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
                 + "    }\n" + "}";
         stubResponse(200, json);
 
-        ListSecretsResponse response = client.listSecrets();
-        TestUtils.testJsonableBaseObject(response);
-        SecretResponse[] responses = response.getSecrets().toArray(new SecretResponse[0]);
+        var responses = client.listSecrets();
 
         Calendar calendar = new GregorianCalendar(2017, Calendar.MARCH, 2, 16, 34, 49);
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-        assertEquals("secret-id-one", responses[0].getId());
-        assertEquals(calendar.getTime(), Date.from(responses[0].getCreated()));
+        assertEquals("secret-id-one", responses.getFirst().getId());
+        assertEquals(calendar.getTime(), Date.from(responses.getFirst().getCreated()));
         //assertEquals("/accounts/abcd1234/secrets/secret-id-one", responses[0].getSelf().getHref());
 
         calendar.set(2016, Calendar.JANUARY, 20, 16, 34, 49);
-        assertEquals("secret-id-two", responses[1].getId());
-        assertEquals(calendar.getTime(), Date.from(responses[1].getCreated()));
+        assertEquals("secret-id-two", responses.get(1).getId());
+        assertEquals(calendar.getTime(), Date.from(responses.get(1).getCreated()));
         //assertEquals("/accounts/abcd1234/secrets/secret-id-two", responses[1].getSelf().getHref());
     }
 
@@ -149,7 +147,6 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         assertEquals("secret-id-one", response.getId());
         assertEquals(calendar.getTime(), Date.from(response.getCreated()));
-        //assertEquals("/accounts/abcd1234/secrets/secret-id-one", response.getSelf().getHref());
     }
 
     @Test
@@ -178,7 +175,6 @@ public class AccountClientTest extends AbstractClientTest<AccountClient> {
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         assertEquals("secret-id-one", response.getId());
         assertEquals(calendar.getTime(), Date.from(response.getCreated()));
-        //assertEquals("/accounts/abcd1234/secrets/secret-id-one", response.getSelf().getHref());
     }
 
     @Test

@@ -25,9 +25,9 @@ public class ControlResponseTest {
 
     @Test
     public void testConstructor() {
-        ControlResponse response = new ControlResponse("1", VerifyControlCommand.CANCEL);
+        ControlResponse response = new ControlResponse(VerifyStatus.THROTTLED, VerifyControlCommand.CANCEL);
         TestUtils.testJsonableBaseObject(response);
-        assertEquals("1", response.getStatus());
+        assertEquals(VerifyStatus.THROTTLED, response.getStatus());
         assertEquals(VerifyControlCommand.CANCEL, response.getCommand());
     }
 
@@ -37,7 +37,7 @@ public class ControlResponseTest {
                 "    \"error_text\": \"Missing username\",\n" +
                 "    \"status\": \"2\"\n" +
                 "}");
-        assertEquals("2", response.getStatus());
+        assertEquals(VerifyStatus.MISSING_PARAMS, response.getStatus());
         assertEquals("Missing username", response.getErrorText());
     }
 

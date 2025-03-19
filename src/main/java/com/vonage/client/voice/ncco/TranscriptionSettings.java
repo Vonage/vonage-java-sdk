@@ -27,7 +27,7 @@ import java.util.List;
  * @since 8.2.0
  */
 public final class TranscriptionSettings extends JsonableBaseObject {
-    private SpeechSettings.Language language;
+    private Language language;
     private List<URI> eventUrl;
     private EventMethod eventMethod;
     private Boolean sentimentAnalysis;
@@ -52,7 +52,7 @@ public final class TranscriptionSettings extends JsonableBaseObject {
      * @return The language as an enum, or {@code null} if unspecified.
      */
     @JsonProperty("language")
-    public SpeechSettings.Language getLanguage() {
+    public Language getLanguage() {
         return language;
     }
 
@@ -99,7 +99,7 @@ public final class TranscriptionSettings extends JsonableBaseObject {
      * Builder for setting the TranscriptionSettings parameters. All settings / fields are optional.
      */
     public static final class Builder {
-        private SpeechSettings.Language language;
+        private Language language;
         private String eventUrl;
         private EventMethod eventMethod;
         private Boolean sentimentAnalysis;
@@ -113,7 +113,7 @@ public final class TranscriptionSettings extends JsonableBaseObject {
          * @param language The recording language as an enum.
          * @return This builder.
          */
-        public Builder language(SpeechSettings.Language language) {
+        public Builder language(Language language) {
             this.language = language;
             return this;
         }

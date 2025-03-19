@@ -139,7 +139,7 @@ public class VerifyClientVerifyEndpointTest extends AbstractClientTest<VerifyCli
         stubResponse(200, json);
 
         ControlResponse response = client.advanceVerification("a-request-id");
-        assertEquals("0", response.getStatus());
+        assertEquals(VerifyStatus.OK, response.getStatus());
         assertEquals(VerifyControlCommand.TRIGGER_NEXT_EVENT, response.getCommand());
     }
 
@@ -149,7 +149,7 @@ public class VerifyClientVerifyEndpointTest extends AbstractClientTest<VerifyCli
         stubResponse(200, json);
 
         ControlResponse response = client.cancelVerification("a-request-id");
-        assertEquals("0", response.getStatus());
+        assertEquals(VerifyStatus.OK, response.getStatus());
         assertEquals(VerifyControlCommand.CANCEL, response.getCommand());
     }
 

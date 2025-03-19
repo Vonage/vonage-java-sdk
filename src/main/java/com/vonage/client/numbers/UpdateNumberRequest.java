@@ -15,7 +15,6 @@
  */
 package com.vonage.client.numbers;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.net.URI;
 import java.util.*;
 
@@ -117,36 +116,6 @@ public class UpdateNumberRequest extends BaseNumberRequest {
             params.put("voiceStatusCallback", voiceStatusCallback.toString());
         }
         return params;
-    }
-
-    /**
-     * Represents the callback type for voice.
-     */
-    public enum CallbackType {
-        SIP,
-
-        TEL,
-
-        APP;
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-
-        /**
-         * Creates the enum from its string representation.
-         *
-         * @param type The serialized callback type as a string.
-         *
-         * @return Enum representation of the callback type, or {@code null} if {@code type} is null.
-         * @since 8.10.0
-         */
-        @JsonCreator
-        public static CallbackType fromString(String type) {
-            if (type == null) return null;
-            return valueOf(type.toUpperCase());
-        }
     }
 
     /**

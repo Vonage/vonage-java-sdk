@@ -18,12 +18,14 @@ package com.vonage.client.application;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.application.capabilities.*;
+import java.util.UUID;
 
 /**
  * Represents a Vonage Application (both request and response).
  */
 public class Application extends JsonableBaseObject {
-    private String id, name;
+    private UUID id;
+    private String name;
     private Keys keys;
     private Capabilities capabilities;
     private Privacy privacy;
@@ -42,10 +44,10 @@ public class Application extends JsonableBaseObject {
     /**
      * Unique application ID.
      *
-     * @return The application ID as a string, or {@code null} if unknown.
+     * @return The application UUID, or {@code null} if unknown.
      */
     @JsonProperty("id")
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -113,7 +115,8 @@ public class Application extends JsonableBaseObject {
 
     public static class Builder {
         private Privacy privacy;
-        private String id, name;
+        private UUID id;
+        private String name;
         private Keys keys;
         private Capabilities capabilities;
 
