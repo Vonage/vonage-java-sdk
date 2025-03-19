@@ -56,7 +56,7 @@ public class AppEndpoint extends JsonableBaseObject implements Endpoint {
     }
 
     @Override
-    public String getType() {
-        return EndpointType.APP.toString();
+    public EndpointType getType() {
+        return EndpointType.APP;
     }
 }

@@ -57,7 +57,7 @@ public class ApplicationClient {
         listApplications = new Endpoint<>(null, HttpMethod.GET);
         createApplication = new Endpoint<>(null, HttpMethod.POST);
         getApplication = new Endpoint<>(UUID::toString, HttpMethod.GET);
-        updateApplication = new Endpoint<>(Application::getId, HttpMethod.PUT);
+        updateApplication = new Endpoint<>(app -> app.getId().toString(), HttpMethod.PUT);
         deleteApplication = new Endpoint<>(UUID::toString, HttpMethod.DELETE);
     }
 

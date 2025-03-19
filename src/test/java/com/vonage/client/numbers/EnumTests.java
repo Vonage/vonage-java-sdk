@@ -15,7 +15,6 @@
  */
 package com.vonage.client.numbers;
 
-import com.vonage.client.numbers.UpdateNumberRequest.CallbackType;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 

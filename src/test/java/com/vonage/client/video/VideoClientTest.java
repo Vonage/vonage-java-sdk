@@ -756,9 +756,9 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 		stubResponse(200, json);
 
 		SipDialResponse parsed = client.sipDial(request);
-		assertEquals(id, parsed.getId());
-		assertEquals(connectionId, parsed.getConnectionId());
-		assertEquals(streamId, parsed.getStreamId());
+		assertEquals(UUID.fromString(id), parsed.getId());
+		assertEquals(UUID.fromString(connectionId), parsed.getConnectionId());
+		assertEquals(UUID.fromString(streamId), parsed.getStreamId());
 
 		assertEquals(parsed, Jsonable.fromJson(json, SipDialResponse.class));
 

@@ -84,20 +84,20 @@ public class CallInfoTest {
         assertEquals("aa17bd11-c895-4225-840d-30dc38c31e50", record.getConversationUuid());
         assertEquals(CallStatus.COMPLETED, record.getStatus());
         assertEquals("outbound", record.getDirection().toString());
-        assertEquals("0.02400000", record.getRate());
-        assertEquals("0.00280000", record.getPrice());
+        assertEquals(0.024, record.getRate());
+        assertEquals(0.0028, record.getPrice());
         assertEquals(7, (long) record.getDuration());
         assertEquals("23410", record.getNetwork());
         // 2017-01-13T13:55:02.000Z
         Calendar expectedStart = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
         expectedStart.set(2017, Calendar.JANUARY, 13, 13, 55, 2);
         expectedStart.set(Calendar.MILLISECOND, 0);
-        assertEquals(expectedStart.getTime(), record.getStartTime());
+        assertEquals(expectedStart.getTime().toInstant(), record.getStartTime());
         // 2017-01-13T13:55:09.000Z
         Calendar expectedEnd = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
         expectedEnd.set(2017, Calendar.JANUARY, 13, 13, 55, 9);
         expectedEnd.set(Calendar.MILLISECOND, 0);
-        assertEquals(expectedEnd.getTime(), record.getEndTime());
+        assertEquals(expectedEnd.getTime().toInstant(), record.getEndTime());
         assertEquals(new PhoneEndpoint("447700900104"), record.getTo());
         assertEquals(new PhoneEndpoint("447700900105"), record.getFrom());
     }

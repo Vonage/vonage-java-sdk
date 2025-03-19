@@ -20,12 +20,12 @@ import com.vonage.client.Jsonable;
 import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.*;
 import com.vonage.client.common.HttpMethod;
-import com.vonage.client.numbers.UpdateNumberRequest.CallbackType;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 import java.net.URI;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -58,7 +58,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
         );
     }
 
-    private void assertEqualsSampleListNumbers(Supplier<ListNumbersResponse> invocation) throws Exception {
+    private void assertEqualsSampleListNumbers(Supplier<List<OwnedNumber>> invocation) throws Exception {
         final int count = 127;
         final UUID appId = UUID.randomUUID();
         String moHttpUrl = "https://example.com/mo", voiceCallbackValue = "sip:nexmo@example.com ",
@@ -89,17 +89,12 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
         stubResponse(200, json);
 
-        var parsed = invocation.get();
-        testJsonableBaseObject(parsed);
-        assertEquals(parsed, Jsonable.fromJson(json, ListNumbersResponse.class));
-
-        assertEquals(count, parsed.getCount());
-        var numbers = parsed.getNumbers();
+        var numbers = invocation.get();
         assertNotNull(numbers);
-        assertEquals(3, numbers.length);
-        assertNotNull(numbers[0]);
-        assertNull(numbers[0].getFeatures());
-        var main = numbers[1];
+        assertEquals(3, numbers.size());
+        assertNotNull(numbers.getFirst());
+        assertNull(numbers.getFirst().getFeatures());
+        var main = numbers.get(1);
         testJsonableBaseObject(main);
         assertEquals(COUNTRY, main.getCountry());
         assertEquals(MSISDN, main.getMsisdn());
@@ -114,7 +109,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
         assertEquals(voiceCallbackValue, main.getVoiceCallbackValue());
         assertEquals(APPLICATION_ID, main.getMessagesCallbackValue());
         assertEquals(appId, main.getAppId());
-        var last = numbers[2];
+        var last = numbers.get(2);
         testJsonableBaseObject(last);
         assertEquals(Type.LANDLINE_TOLL_FREE, last.getType());
         assertNotNull(last.getFeatures());
@@ -182,12 +177,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
         assert401ResponseException(() -> client.listNumbers(filter));
 
         stubResponse("{}");
-        var response = client.listNumbers();
-        assertNotNull(response);
-        assertNull(response.getCount());
-        var numbers = response.getNumbers();
-        assertNotNull(numbers);
-        assertEquals(0, numbers.length);
+        assertNull(client.listNumbers());
     }
 
     @Test

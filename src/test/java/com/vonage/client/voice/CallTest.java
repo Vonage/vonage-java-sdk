@@ -172,16 +172,16 @@ public class CallTest {
         TestUtils.testJsonableBaseObject(fromJson);
 
         assertEquals(4, fromJson.getTo().length);
-        assertEquals("phone", fromJson.getTo()[0].getType());
+        assertEquals(EndpointType.PHONE, fromJson.getTo()[0].getType());
         assertEquals("441632960960", ((PhoneEndpoint) fromJson.getTo()[0]).getNumber());
-        assertEquals("sip", fromJson.getTo()[1].getType());
+        assertEquals(EndpointType.SIP, fromJson.getTo()[1].getType());
         assertEquals("sip:sip@example.com", ((SipEndpoint) fromJson.getTo()[1]).getUri());
-        assertEquals("vbc", fromJson.getTo()[2].getType());
+        assertEquals(EndpointType.VBC, fromJson.getTo()[2].getType());
         assertEquals("123", ((VbcEndpoint) fromJson.getTo()[2]).getExtension());
-        assertEquals("websocket", fromJson.getTo()[3].getType());
+        assertEquals(EndpointType.WEBSOCKET, fromJson.getTo()[3].getType());
         assertEquals("ws://example.com/socket", ((WebSocketEndpoint) fromJson.getTo()[3]).getUri().toString());
         assertEquals(Websocket.ContentType.AUDIO_L16_16K, ((WebSocketEndpoint) fromJson.getTo()[3]).getContentType());
-        assertEquals("app", fromJson.getFrom().getType());
+        assertEquals(EndpointType.APP, fromJson.getFrom().getType());
         assertEquals("nexmo", ((AppEndpoint) fromJson.getFrom()).getUser());
         Collection<? extends Action> ncco = fromJson.getNcco();
         assertEquals(7, ncco.size());
@@ -325,13 +325,13 @@ public class CallTest {
         assertEquals(EventMethod.GET, call.getEventMethod());
         assertFalse(call.getFromRandomNumber());
         assertEquals(MachineDetection.HANGUP, call.getMachineDetection());
-        assertEquals("phone", call.getFrom().getType());
+        assertEquals(EndpointType.PHONE, call.getFrom().getType());
         Endpoint[] to = call.getTo();
         assertEquals(6, to.length);
-        assertEquals("app", to[0].getType());
-        assertEquals("sip", to[1].getType());
-        assertEquals("vbc", to[2].getType());
-        assertEquals("websocket", to[3].getType());
+        assertEquals(EndpointType.APP, to[0].getType());
+        assertEquals(EndpointType.SIP, to[1].getType());
+        assertEquals(EndpointType.VBC, to[2].getType());
+        assertEquals(EndpointType.WEBSOCKET, to[3].getType());
         assertEquals(sipUri, ((SipEndpoint) to[4]).getUri());
         assertEquals(sipUser2User, ((SipEndpoint) to[4])
                 .getStandardHeaders().get(SipHeader.fromString("User-to-User"))

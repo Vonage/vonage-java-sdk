@@ -17,12 +17,13 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
+import java.util.UUID;
 
 /**
  * Represents a Vonage Video SIP call.
  */
 public class SipDialResponse extends JsonableBaseObject {
-    private String id, connectionId, streamId;
+    private UUID id, connectionId, streamId;
 
     protected SipDialResponse() {
     }
@@ -33,7 +34,7 @@ public class SipDialResponse extends JsonableBaseObject {
      * @return The unique ID of the SIP conference.
      */
     @JsonProperty("id")
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -44,17 +45,17 @@ public class SipDialResponse extends JsonableBaseObject {
      * @return The connection ID of the audio-only stream that is put into a video session.
      */
     @JsonProperty("connectionId")
-    public String getConnectionId() {
+    public UUID getConnectionId() {
         return connectionId;
     }
 
     /**
-     * The video stream ID for the SIP call's stream in the OpenTok session.
+     * The video stream ID for the SIP call's stream in the Vonage Video session.
      *
      * @return The stream ID of the audio-only stream that is put into a video session.
      */
     @JsonProperty("streamId")
-    public String getStreamId() {
+    public UUID getStreamId() {
         return streamId;
     }
 }

@@ -34,7 +34,7 @@ public class InputActionTest {
         var speechSettings = SpeechSettings.builder()
                 .uuid("aaaaaaaa-bbbb-cccc-dddd-0123456789ab")
                 .startTimeout(3).endOnSilence(5).maxDuration(50)
-                .language(SpeechSettings.Language.ENGLISH_NIGERIA)
+                .language(Language.ENGLISH_NIGERIA)
                 .context(Arrays.asList("support", "buy", "credit")).build();
 
         var dtmfSettings = DtmfSettings.builder().maxDigits(4).submitOnHash(true).timeOut(10).build();
@@ -144,7 +144,7 @@ public class InputActionTest {
         String uuid = UUID.randomUUID().toString();
         SpeechSettings speechSettings = SpeechSettings.builder()
                 .endOnSilence(2.0).sensitivity(90).startTimeout(10)
-                .language(SpeechSettings.Language.ENGLISH_NIGERIA)
+                .language(Language.ENGLISH_NIGERIA)
                 .context("hint1", "Hint 2").uuid(uuid)
                 .saveAudio(true).maxDuration(60).build();
 

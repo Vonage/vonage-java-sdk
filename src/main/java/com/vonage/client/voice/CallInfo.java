@@ -17,17 +17,18 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
-import java.util.Date;
+import java.time.Instant;
 
 /**
  * Holds the information related to a call. It is obtained using {@link VoiceClient#listCalls()}.
  */
 public class CallInfo extends JsonableBaseObject {
     private Endpoint from, to;
-    private String conversationUuid, uuid, network, price, rate;
+    private String conversationUuid, uuid, network;
+    private Double rate, price;
     private CallDirection direction;
     private Integer duration;
-    private Date startTime, endTime;
+    private Instant startTime, endTime;
     private CallStatus status;
 
     /**
@@ -90,21 +91,21 @@ public class CallInfo extends JsonableBaseObject {
      * Start time of the call.
      * This is only present if {@linkplain #getStatus()} is {@linkplain CallStatus#COMPLETED}.
      *
-     * @return The start time of the call as a {@link Date} object, or {@code null} if unknown.
+     * @return The start time of the call as an Instant, or {@code null} if unknown.
      */
     @JsonProperty("start_time")
-    public Date getStartTime() {
-        return this.startTime;
+    public Instant getStartTime() {
+        return startTime;
     }
 
     /**
      * End time of the call.
      * This is only present if {@linkplain #getStatus()} is {@linkplain CallStatus#COMPLETED}.
      *
-     * @return The end time of the call as a {@link Date} object, or {@code null} if unknown.
+     * @return The end time of the call as an Instant, or {@code null} if unknown.
      */
     @JsonProperty("end_time")
-    public Date getEndTime() {
+    public Instant getEndTime() {
         return endTime;
     }
 
@@ -112,10 +113,10 @@ public class CallInfo extends JsonableBaseObject {
      * Total price charged for this call.
      * This is only present if {@linkplain #getStatus()} is {@linkplain CallStatus#COMPLETED}.
      *
-     * @return The call total cost as a string, or {@code null} if unknown.
+     * @return The call total cost as a Double, or {@code null} if unknown.
      */
     @JsonProperty("price")
-    public String getPrice() {
+    public Double getPrice() {
         return price;
     }
 
@@ -123,10 +124,10 @@ public class CallInfo extends JsonableBaseObject {
      * Price per minute for this call.
      * This is only present if {@linkplain #getStatus()} is {@linkplain CallStatus#COMPLETED}.
      *
-     * @return The per-minute call rate as a string, or {@code null} if unknown.
+     * @return The per-minute call rate as a Double, or {@code null} if unknown.
      */
     @JsonProperty("rate")
-    public String getRate() {
+    public Double getRate() {
         return rate;
     }
 
@@ -164,10 +165,10 @@ public class CallInfo extends JsonableBaseObject {
     @Override
     public String toString() {
         return "<CallInfo " +
-                "ID: " + this.getUuid() + ", " +
-                "From: " + this.getFrom().toLog() + ", " +
-                "To: " + this.getTo().toLog() + ", " +
-                "Status: " + this.getStatus() +
+                "ID: " + getUuid() + ", " +
+                "From: " + getFrom().toLog() + ", " +
+                "To: " + getTo().toLog() + ", " +
+                "Status: " + getStatus() +
                 ">";
     }
 }

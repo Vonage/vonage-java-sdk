@@ -47,7 +47,7 @@ abstract class ApplicationEndpointTestSpec<T, R> extends DynamicEndpointTestSpec
 			suffix = request.toString();
 		}
 		else if (request instanceof Application && HttpMethod.PUT.equals(expectedHttpMethod())) {
-			suffix = ((Application) request).getId();
+			suffix = ((Application) request).getId().toString();
 		}
 		else {
 			suffix = null;

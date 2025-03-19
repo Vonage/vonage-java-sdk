@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * HAL response for {@link AccountClient#listSecrets(String)}.
  */
-public class ListSecretsResponse extends HalPageResponse {
+class ListSecretsResponse extends HalPageResponse {
     @JsonProperty("_embedded") private Embedded _embedded;
 
     ListSecretsResponse() {}

@@ -41,10 +41,10 @@ public interface Endpoint {
     /**
      * Endpoint type name.
      *
-     * @return The type of endpoint as a string.
+     * @return The type of endpoint as an enum.
      */
     @JsonProperty("type")
-    String getType();
+    EndpointType getType();
 
     /**
      * Description of the endpoint.

@@ -64,7 +64,7 @@ public class VerifyClient {
         control = new Endpoint<ControlRequest, ControlResponse>("/control", true) {
             @Override
             public ControlResponse postProcessParsedResponse(ControlResponse parsed) {
-                if (parsed.getStatus().equals("0")) {
+                if (VerifyStatus.OK.equals(parsed.getStatus())) {
                     return parsed;
                 }
                 else {

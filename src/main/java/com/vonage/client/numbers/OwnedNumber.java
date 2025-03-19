@@ -24,7 +24,7 @@ import java.util.UUID;
  */
 public class OwnedNumber extends JsonableNumber {
     private URI moHttpUrl;
-    private UpdateNumberRequest.CallbackType voiceCallbackType;
+    private CallbackType voiceCallbackType;
     private String voiceCallbackValue;
     private UUID appId, messagesCallbackValue;
 
@@ -46,7 +46,7 @@ public class OwnedNumber extends JsonableNumber {
      * @return The voice webhook callback type as an enum, or {@code null} if unknown.
      */
     @JsonProperty("voiceCallbackType")
-    public UpdateNumberRequest.CallbackType getVoiceCallbackType() {
+    public CallbackType getVoiceCallbackType() {
         return voiceCallbackType;
     }
 

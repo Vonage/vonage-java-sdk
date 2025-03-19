@@ -19,6 +19,7 @@ import com.vonage.client.*;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -121,13 +122,13 @@ public class AccountClient {
     /**
      * List the ID of each secret associated with this account's main API key.
      *
-     * @return ListSecretsResponse object which contains the results from the API.
+     * @return The list of secrets from the API response, or {@code null} if the response was empty.
      *
      * @throws AccountResponseException If there was an error making the request or retrieving the response.
      *
      * @since 7.9.0
      */
-    public ListSecretsResponse listSecrets() throws AccountResponseException {
+    public List<SecretResponse> listSecrets() throws AccountResponseException {
         return listSecrets(apiKeyGetter.get());
     }
 
@@ -136,15 +137,15 @@ public class AccountClient {
      *
      * @param apiKey The API key to look up secrets for.
      *
-     * @return ListSecretsResponse object which contains the results from the API.
+     * @return The list of secrets from the API response, or {@code null} if the response was empty.
      *
      * @throws AccountResponseException If there was an error making the request or retrieving the response.
      */
-    public ListSecretsResponse listSecrets(String apiKey) throws AccountResponseException {
+    public List<SecretResponse> listSecrets(String apiKey) throws AccountResponseException {
         if (apiKey == null || apiKey.trim().isEmpty()) {
             throw new IllegalArgumentException("API key is required.");
         }
-        return listSecrets.execute(apiKey);
+        return listSecrets.execute(apiKey).getSecrets();
     }
 
     /**
