@@ -15,14 +15,39 @@
  */
 package com.vonage.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
+
 /**
- * Response from successfully sending a synthesized speech message or stopping a message to an active {@link Call}.
- * This is returned by {@link VoiceClient#startTalk(String, TalkPayload)} or {@link VoiceClient#stopTalk(String)}.
+ * Base class for {@linkplain TalkResponse} and {@linkplain StreamResponse}.
+ *
+ * @since 9.0.0
  */
-public final class TalkResponse extends AbstractAudioResponse {
+class AbstractAudioResponse extends JsonableBaseObject {
+    private String uuid, message;
 
     /**
      * Constructor used reflectively by Jackson for instantiation.
      */
-    private TalkResponse() {}
+    AbstractAudioResponse() {}
+
+    /**
+     * UUID of the call to which the message was sent.
+     *
+     * @return The call ID as a string.
+     */
+    @JsonProperty("uuid")
+    public String getUuid() {
+        return uuid;
+    }
+
+    /**
+     * A message describing the result of the operation.
+     *
+     * @return The response message.
+     */
+    @JsonProperty("message")
+    public String getMessage() {
+        return message;
+    }
 }
