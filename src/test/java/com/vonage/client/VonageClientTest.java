@@ -154,7 +154,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
 
             String timestamp = params.get("timestamp");
             String input = "&api_key="+API_KEY+"&timestamp=" + timestamp;
-            String sig = HashUtil.calculate(input, SIGNATURE_SECRET, "UTF-8", hashType);
+            String sig = HashUtil.calculate(input, SIGNATURE_SECRET, hashType);
 
             assertEquals(sig, params.get("sig"));
         }
