@@ -41,7 +41,7 @@ public class DtmfResponseTest {
     }
 
     @Test
-    public void testUnknownJson() throws IOException {
+    public void testUnknownJson() {
         String json = "{\n" +
                 "    \"unknownProperty\": \"unknown\"\n" +
                 "}";

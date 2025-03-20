@@ -41,10 +41,8 @@ public class ApiKeyHeaderAuthMethod extends BasicAuthMethod implements ApiKeyAut
      * Converts this to a {@linkplain QueryParamsAuthMethod}.
      *
      * @return A new {@linkplain ApiKeyQueryParamsAuthMethod} with this object's API key and secret.
-     * @deprecated This will be removed in a future release.
      */
-    @Deprecated
-    public QueryParamsAuthMethod asQueryParams() {
+    QueryParamsAuthMethod asQueryParams() {
         return new ApiKeyQueryParamsAuthMethod(apiKey, apiSecret);
     }
 

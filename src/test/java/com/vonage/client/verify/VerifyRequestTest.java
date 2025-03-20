@@ -38,7 +38,7 @@ public class VerifyRequestTest {
 	}
 
 	@Test
-	public void testConstructVerifyParamsMissingValues() throws Exception {
+	public void testConstructVerifyParamsMissingValues() {
 		VerifyRequest verifyRequest = VerifyRequest.builder("4477990090090", "Brand.com").build();
 
 		Map<String, ?> params = verifyRequest.makeParams();

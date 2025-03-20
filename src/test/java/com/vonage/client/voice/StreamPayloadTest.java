@@ -24,7 +24,7 @@ public class StreamPayloadTest {
     private StreamPayload payload;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
         payload = StreamPayload.builder()
                 .streamUrl("https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3")
                 .loop(2).level(-0.4).build();
@@ -32,7 +32,7 @@ public class StreamPayloadTest {
     }
 
     @Test
-    public void getStreamUrl() throws Exception {
+    public void getStreamUrl() {
         assertArrayEquals(new URI[]{URI.create(
                 "https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3")},
                 payload.getStreamUrl()
@@ -40,17 +40,17 @@ public class StreamPayloadTest {
     }
 
     @Test
-    public void getLoop() throws Exception {
+    public void getLoop() {
         assertEquals(2, payload.getLoop().intValue());
     }
 
     @Test
-    public void getLevel() throws Exception {
+    public void getLevel() {
         assertEquals(-0.4, payload.getLevel(), 0.01);
     }
 
     @Test
-    public void toJson() throws Exception {
+    public void toJson() {
         String jsonString = "{\"stream_url\":[" +
                 "\"https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3\"" +
                 "],\"loop\":2,\"level\":-0.4}";

@@ -128,8 +128,8 @@ public final class ListUsersRequest implements QueryParamsRequest {
 
         /**
          * The order to return the results in. Users are sorted by their creation time.
-         * Default is ascending - i.e. newest to oldest. Use {@linkplain SortOrder#DESC} to sort
-         * the results from oldest to newest.
+         * Default is ascending - i.e. newest to oldest. Use {@linkplain SortOrder#DESCENDING}
+         * to sort the results from oldest to newest.
          *
          * @param order The sort order for results as an enum.
          *

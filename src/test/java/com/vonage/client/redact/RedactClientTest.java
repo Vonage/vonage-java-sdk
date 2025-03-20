@@ -18,7 +18,6 @@ package com.vonage.client.redact;
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.RestEndpoint;
-import com.vonage.client.TestUtils;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.common.HttpMethod;
@@ -52,7 +51,7 @@ public class RedactClientTest extends AbstractClientTest<RedactClient> {
     }
 
     @Test
-    public void testInvalidRedactRequests() throws Exception {
+    public void testInvalidRedactRequests() {
         assertThrows(IllegalArgumentException.class, () -> client.redactTransaction(
                 "test-id", RedactRequest.Product.SMS
         ));

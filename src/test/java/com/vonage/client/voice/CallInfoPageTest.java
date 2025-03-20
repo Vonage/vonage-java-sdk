@@ -77,7 +77,7 @@ public class CallInfoPageTest {
     }
 
     @Test
-    public void testFailedUnmarshal() throws Exception {
+    public void testFailedUnmarshal() {
         try {
             Jsonable.fromJson("Notvalidjson", CallInfoPage.class);
             fail("Parsing invalid JSON should raise a VonageUnexpectedException");
@@ -101,7 +101,7 @@ public class CallInfoPageTest {
     }
 
     @Test
-    public void testIterable() throws Exception {
+    public void testIterable() {
         assertEquals("447700900549", page.iterator().next().getTo().toLog());
     }
 }

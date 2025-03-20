@@ -25,7 +25,7 @@ import java.util.UUID;
 public class TransferCallPayloadTest {
 
     @Test
-    public void transferJson() throws Exception {
+    public void transferJson() {
         String expected = "{\"action\":\"transfer\",\"destination\":{\"type\":\"ncco\",\"url\":[\"https://example"
                 + ".com/ncco\"]}}";
         String actual = new TransferCallPayload("https://example.com/ncco", "not-a-uuid").toJson();
@@ -44,7 +44,7 @@ public class TransferCallPayloadTest {
     }
 
     @Test
-    public void testTypeValueOf() throws Exception {
+    public void testTypeValueOf() {
         assertEquals(TransferDestination.Type.NCCO, TransferDestination.Type.valueOf("NCCO"));
     }
 }

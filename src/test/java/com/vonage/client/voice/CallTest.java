@@ -27,7 +27,7 @@ import java.util.*;
 public class CallTest {
 
     @Test
-    public void testToJson() throws Exception {
+    public void testToJson() {
         Call call = new Call("4477999000", "44111222333", "https://callback.example.com/");
         assertEquals(
                 "{\"to\":[{\"number\":\"4477999000\",\"type\":\"phone\"}]," +
@@ -38,7 +38,7 @@ public class CallTest {
     }
 
     @Test
-    public void testToJsonRandomNumber() throws Exception {
+    public void testToJsonRandomNumber() {
         Call call = Call.builder().to(new PhoneEndpoint("4477999000"))
                 .fromRandomNumber(true).answerMethod(EventMethod.GET)
                 .answerUrl("https://callback.example.com/").build();
@@ -49,7 +49,7 @@ public class CallTest {
     }
 
     @Test
-    public void testToJsonMachineDetection() throws Exception {
+    public void testToJsonMachineDetection() {
         Call call = Call.builder()
                 .to(new PhoneEndpoint("4477999000"))
                 .from(new PhoneEndpoint("44111222333"))
@@ -227,7 +227,7 @@ public class CallTest {
     }
 
     @Test
-    public void testMalformedJson() throws Exception {
+    public void testMalformedJson() {
         try {
             Jsonable.fromJson("{ bad Jason: \"unknown\"\n" + "}", Call.class);
             fail("Expected a VonageUnexpectedException to be thrown");

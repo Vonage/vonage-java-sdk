@@ -285,7 +285,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 		assertEquals("Could not load URL", response.getReason());
 	}
 
-	static void assertEmptyRender(RenderResponse response) throws Exception {
+	static void assertEmptyRender(RenderResponse response) {
 		testJsonableBaseObject(response);
 		assertNull(response.getUpdatedAt());
 		assertNull(response.getCreatedAt());

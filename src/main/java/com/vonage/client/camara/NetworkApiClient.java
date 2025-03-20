@@ -17,7 +17,6 @@ package com.vonage.client.camara;
 
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.camara.*;
-import java.util.UUID;
 
 /**
  * Base class for Vonage Network API clients.

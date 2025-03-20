@@ -16,7 +16,6 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.JsonableBaseObject;
 
 /**
  * Defines the text-to-speech properties.

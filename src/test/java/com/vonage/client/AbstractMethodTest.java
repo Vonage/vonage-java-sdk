@@ -57,7 +57,7 @@ public class AbstractMethodTest {
                     .setLevel(java.util.logging.Level.FINE);
         }
 
-        RequestBuilder makeRequest() throws UnsupportedEncodingException {
+        RequestBuilder makeRequest() {
             return makeRequest("http://example.org/resource")
                     .addParameter("foo", "bar")
                     .addParameter("BAZINGA", "Yes");
@@ -249,7 +249,7 @@ public class AbstractMethodTest {
     }
 
     @Test
-    public void rse() throws Exception {
+    public void rse() {
         String json = "{\"text\":\"Hello World\",\"loop\":0,\"voice_name\":\"Kimberly\"}";
         ConcreteMethod method = mockJsonResponse(json, true);
         try {
