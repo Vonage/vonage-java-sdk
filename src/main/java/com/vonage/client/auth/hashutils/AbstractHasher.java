@@ -15,7 +15,8 @@
  */
 package com.vonage.client.auth.hashutils;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -23,50 +24,32 @@ import java.security.NoSuchAlgorithmException;
  * Base class for hashers (algorithm-agnostic).
  */
 abstract class AbstractHasher {
+    static final Charset ENCODING = StandardCharsets.UTF_8;
 
     /**
-     * Calculates hash for string. assume string is UTF-8 encoded
+     * Calculates hash for string, assuming the string is UTF-8 encoded.
      *
-     * @param input string which is going to be encoded into requested format
-     * @return  hashed representation of the input string
+     * @param input string which is going to be encoded into requested format.
+     * @return Hashed representation of the input string.
+     *
      * @throws NoSuchAlgorithmException if the algorithm is not available.
      * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      */
-    String calculate(String input) throws NoSuchAlgorithmException, InvalidKeyException {
-        try {
-            return calculate(input, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            return null; // -- impossible --
-        }
-    }
-
-    /**
-     * Calculates hash for string.
-     *
-     * @param input string which is going to be encoded into requested format
-     * @param secretKey The secret key for the input
-     * @param encoding The encoding type of the string
-     * @return  hashed representation of the input string
-     * @throws NoSuchAlgorithmException if the algorithm is not available.
-     * @throws UnsupportedEncodingException if the encoding type is invalid
-     * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
-     */
-    String calculate(String input, String secretKey, String encoding) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
-        return calculate(input + (secretKey == null ? "" : secretKey), encoding);
-    }
+    abstract String calculate(String input) throws NoSuchAlgorithmException, InvalidKeyException;
 
     /**
      * Calculates hash for string.
      *
      * @param input string which is going to be encoded into requested format.
-     * @param encoding The encoding type of the string.
-     * @return  hashed representation of the input string.
+     * @param secretKey The secret key for the input.
      *
+     * @return The hashed representation of the input string.
      * @throws NoSuchAlgorithmException if the algorithm is not available.
-     * @throws UnsupportedEncodingException if the encoding type is invalid
      * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      */
-    abstract String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException;
+    String calculate(String input, String secretKey) throws NoSuchAlgorithmException, InvalidKeyException {
+        return calculate(input + (secretKey == null ? "" : secretKey));
+    }
 
     String buildHexString(byte[] digest) {
         final StringBuilder hexString = new StringBuilder();
@@ -76,7 +59,6 @@ abstract class AbstractHasher {
                 hexString.append("0");
             hexString.append(Integer.toHexString(z));
         }
-
         return hexString.toString();
     }
 }

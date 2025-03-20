@@ -15,7 +15,6 @@
  */
 package com.vonage.client.auth.hashutils;
 
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -58,15 +57,13 @@ public final class HashUtil {
      *
      * @param input string which is going to be encoded into requested format.
      * @param secretKey the key to be used for encoding.
-     * @param encoding character encoding of the string which is going to be encoded into requested format.
      * @param hashType The type of hash to be applied to the input string.
      *
      * @return representation of the input string with given hash type.
      * @throws NoSuchAlgorithmException if the algorithm is not available.
-     * @throws UnsupportedEncodingException if the specified encoding is unavailable.
      * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      */
-    public static String calculate(String input, String secretKey, String encoding, HashType hashType) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
-        return HASH_TYPES.get(hashType).calculate(input, secretKey, encoding);
+    public static String calculate(String input, String secretKey, HashType hashType) throws NoSuchAlgorithmException, InvalidKeyException {
+        return HASH_TYPES.get(hashType).calculate(input, secretKey);
     }
 }

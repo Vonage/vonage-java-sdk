@@ -43,6 +43,8 @@ public class RequestSigning {
     public static final String PARAM_TIMESTAMP = "timestamp";
     public static final String APPLICATION_JSON = "application/json";
 
+    private RequestSigning() {}
+
     /**
      * Signs a set of request parameters.
      * <p>
@@ -61,13 +63,10 @@ public class RequestSigning {
     }
 
     private static String clean(String str) {
-        return str == null ? null : str.replaceAll("[=&]", "_");
+        return str.replaceAll("[=&]", "_");
     }
 
-    static String generateParamsString(Map<String, String> params) {
-        SortedMap<String, String> sortedParams = params instanceof SortedMap ?
-                (SortedMap<String, String>) params : new TreeMap<>(params);
-
+    static String generateParamsString(SortedMap<String, String> sortedParams) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> param : sortedParams.entrySet()) {
             String name = param.getKey(), value = param.getValue();
@@ -98,12 +97,12 @@ public class RequestSigning {
 
         // First, inject a 'timestamp=' parameter containing the current time in seconds since Jan 1st 1970
         String timestampStr = Long.toString(currentTimeSeconds);
-        Map<String, String> tempParams = new TreeMap<>(inputParams);
+        SortedMap<String, String> tempParams = new TreeMap<>(inputParams);
         tempParams.put(PARAM_TIMESTAMP, timestampStr);
 
-        String hashed, str = generateParamsString(tempParams);
+        String str = generateParamsString(tempParams), hashed;
         try {
-            hashed = HashUtil.calculate(str, secretKey, "UTF-8", hashType);
+            hashed = HashUtil.calculate(str, secretKey, hashType);
         }
         catch (Exception ex) {
             LOGGER.log(Level.WARNING, "error...", ex);
@@ -187,9 +186,6 @@ public class RequestSigning {
                     String name = entry.getKey();
                     String value = entry.getValue();
                     LOGGER.info(name + " = " + value);
-                    if (value == null || value.trim().isEmpty()) {
-                        continue;
-                    }
                     sortedParams.put(name, value);
                 }
             }
@@ -216,13 +212,16 @@ public class RequestSigning {
         // Extract the timestamp parameter and verify that it is within 5 minutes of 'current time'
         String timeString = sortedParams.get(PARAM_TIMESTAMP);
         long time = -1;
-        try {
-            if (timeString != null)
+        if (timeString != null) {
+            try {
                 time = Long.parseLong(timeString) * 1000;
-        } catch (NumberFormatException e) {
-            LOGGER.log(Level.WARNING, "Error parsing 'time' parameter [ " + timeString + " ]", e);
-            time = 0;
+            }
+            catch (NumberFormatException e) {
+                LOGGER.log(Level.WARNING, "Error parsing 'time' parameter [ " + timeString + " ]", e);
+                time = 0;
+            }
         }
+
         long diff = currentTimeMillis - time;
         if (diff > MAX_ALLOWABLE_TIME_DELTA || diff < -MAX_ALLOWABLE_TIME_DELTA) {
             LOGGER.log(Level.WARNING, "SECURITY-KEY-VERIFICATION -- BAD-TIMESTAMP ... Timestamp [ " +
@@ -230,7 +229,6 @@ public class RequestSigning {
             );
             return false;
         }
-
 
         // Walk this sorted list of parameters and construct a string
         StringBuilder sb = new StringBuilder();
@@ -241,11 +239,9 @@ public class RequestSigning {
             sb.append("&").append(clean(name)).append("=").append(clean(value));
         }
 
-        String str = sb.toString();
-
-        String hashed;
+        String str = sb.toString(), hashed;
         try {
-            hashed = HashUtil.calculate(str, secretKey, "UTF-8", hashType);
+            hashed = HashUtil.calculate(str, secretKey, hashType);
         }
         catch (Exception ex) {
             LOGGER.log(Level.WARNING, "error...", ex);
