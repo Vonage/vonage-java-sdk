@@ -19,7 +19,6 @@ import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.APPLICATION_ID_STR;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -49,7 +48,7 @@ public class JWTAuthMethodTest {
     }
 
     @Test
-    public void testEqualsAndHashCode() throws Exception {
+    public void testEqualsAndHashCode() {
         assertNotEquals(new Object(), auth);
         var clone = new JWTAuthMethod(APPLICATION_ID_STR, keyBytes);
         assertEquals(auth, clone);

@@ -190,7 +190,7 @@ public class RequestSigningTest {
         assertFalse(verifyRequestSignature(null, APPLICATION_JSON, constructDummyParams(), "abcde"));
     }
 
-    private InputStream constructDummyRequestJson() throws Exception  {
+    private InputStream constructDummyRequestJson() {
         String dummyJson = "{\"a\":\"alphabet\",\"b\":\"bananas\",\"timestamp\":\"2100\",\"sig\":\"b7f749de27b4adcf736cc95c9a7e059a16c85127\"}";
         return new ByteArrayInputStream(dummyJson.getBytes(StandardCharsets.UTF_8));
     }

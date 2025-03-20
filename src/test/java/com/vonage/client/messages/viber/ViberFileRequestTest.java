@@ -15,7 +15,6 @@
  */
 package com.vonage.client.messages.viber;
 
-import com.vonage.client.messages.internal.MessagePayload;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 

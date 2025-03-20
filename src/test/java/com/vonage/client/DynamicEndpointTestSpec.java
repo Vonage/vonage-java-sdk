@@ -118,14 +118,14 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 		return endpointAsAbstractMethod().parseResponse(TestUtils.makeJsonHttpResponse(statusCode, expectedResponse));
 	}
 
-	protected void assertRequestContainsParams(Map<String, String> expectedParams, T request) throws Exception {
+	protected void assertRequestContainsParams(Map<String, String> expectedParams, T request) {
 		RequestBuilder builder = endpointAsAbstractMethod().makeRequest(request);
 		Map<String, String> actualParams = builder.getParameters().stream()
 				.collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
 		assertTrue(actualParams.entrySet().containsAll(expectedParams.entrySet()));
 	}
 
-	protected void assertRequestParams(Map<String, String> expectedParams, T request) throws Exception {
+	protected void assertRequestParams(Map<String, String> expectedParams, T request) {
 		RequestBuilder builder = endpointAsAbstractMethod().makeRequest(request);
 		List<NameValuePair> actualParams = builder.getParameters();
 		assertEquals(expectedParams.size(), actualParams.size());
@@ -207,7 +207,7 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 		}
 	}
 
-	private RequestBuilder makeTestRequest(T request) throws Exception {
+	private RequestBuilder makeTestRequest(T request) {
 		RequestBuilder builder = endpointAsAbstractMethod().makeRequest(request);
 		assertEquals(expectedHttpMethod().toString(), builder.getMethod());
 		String expectedContentTypeHeader = expectedContentTypeHeader(request);

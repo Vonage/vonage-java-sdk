@@ -51,7 +51,7 @@ public class CallInfoTest {
             "}\n";
 
     @Test
-    public void testJson() throws Exception {
+    public void testJson() {
         String json = "{\n" +
                 "  \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n" +
                 "  \"status\": \"completed\",\n" +
@@ -103,7 +103,7 @@ public class CallInfoTest {
     }
 
     @Test
-    public void testDeserializeUnknownEnumsFallbackToUnknown() throws Exception {
+    public void testDeserializeUnknownEnumsFallbackToUnknown() {
         String json = "{\n" +
                 "  \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n" +
                 "  \"status\": \"test-unknown-call-status\",\n" +
@@ -186,14 +186,14 @@ public class CallInfoTest {
         testStatus("cancelled", CallStatus.CANCELLED);
     }
 
-    public void testStatus(String value, CallStatus expectedValue) throws Exception {
+    public void testStatus(String value, CallStatus expectedValue) {
         CallInfo record = Jsonable.fromJson(jsonWithPlaceholder.replaceFirst("PLACEHOLDER", value));
         TestUtils.testJsonableBaseObject(record, true);
         assertEquals(record.getStatus(), expectedValue);
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() {
         CallInfo record = Jsonable.fromJson("{" +
             "\"uuid\":\"93137ee3-580e-45f7-a61a-e0b5716000ef\"," +
             "\"status\":\"completed\"," +

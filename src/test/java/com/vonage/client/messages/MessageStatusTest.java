@@ -16,7 +16,6 @@
 package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.messages.MessageStatus.Status;

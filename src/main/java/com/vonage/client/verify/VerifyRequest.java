@@ -146,7 +146,8 @@ public class VerifyRequest extends BaseRequest {
      * @since 5.5.0
      */
     public static class Builder {
-        private String brand, senderId, number, country, pinCode;
+        private final String brand, number;
+        private String senderId, country, pinCode;
         private Integer length, pinExpiry, nextEventWait;
         private Workflow workflow;
         private Locale locale;

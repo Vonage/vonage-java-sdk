@@ -74,8 +74,7 @@ public class AuthCollectionTest {
         ac.add(jwtAuth);
         assertEquals(jwtAuth, ac.getAcceptableAuthMethod(JWT_AUTH_CLASS_SET));
         assertNotEquals(jwtAuth, am);
-        boolean equalsNull = am.equals(null);
-        assertFalse(equalsNull);
+        assertEquals(new ConcreteBasicAuthMethod(), am);
         boolean equalsObject = am.equals(new Object());
         assertFalse(equalsObject);
 

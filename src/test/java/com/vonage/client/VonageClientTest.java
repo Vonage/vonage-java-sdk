@@ -185,7 +185,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
     }
 
     @Test
-    public void testApplicationIdWithCertPath() throws Exception {
+    public void testApplicationIdWithCertPath() {
         VonageClient vonageClient = VonageClient.builder()
                 .applicationId(APPLICATION_ID_STR)
                 .privateKeyPath(privateKeyPath)
@@ -195,7 +195,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
     }
 
     @Test
-    public void testApplicationIdWithCertPathAsString() throws Exception {
+    public void testApplicationIdWithCertPathAsString() {
       VonageClient vonageClient = VonageClient.builder()
                 .applicationId(APPLICATION_ID)
                 .privateKeyPath(privateKeyPath)
@@ -205,7 +205,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
     }
 
     @Test
-    public void testInvalidApplicationId() throws Exception {
+    public void testInvalidApplicationId() {
         assertThrows(IllegalArgumentException.class, () -> VonageClient.builder()
                 .privateKeyPath(privateKeyPath).applicationId(API_KEY).build()
         );

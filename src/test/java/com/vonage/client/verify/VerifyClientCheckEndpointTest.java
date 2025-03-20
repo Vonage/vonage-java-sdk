@@ -148,12 +148,12 @@ public class VerifyClientCheckEndpointTest extends AbstractClientTest<VerifyClie
     }
 
     @Test
-    public void testNullRequestId() throws Exception {
+    public void testNullRequestId() {
         assertThrows(IllegalArgumentException.class, () -> client.check(null, "1234"));
     }
 
     @Test
-    public void testLongRequestId() throws Exception {
+    public void testLongRequestId() {
         StringBuilder requestId = new StringBuilder(33);
         for (; requestId.length() < 32; requestId.append("req-"));
         assertThrows(IllegalArgumentException.class, () ->
@@ -162,17 +162,17 @@ public class VerifyClientCheckEndpointTest extends AbstractClientTest<VerifyClie
     }
 
     @Test
-    public void testNullCode() throws Exception {
+    public void testNullCode() {
         assertThrows(IllegalArgumentException.class, () -> client.check("a-request-id", null));
     }
 
     @Test
-    public void testCodeLessThan4Characters() throws Exception {
+    public void testCodeLessThan4Characters() {
         assertThrows(IllegalArgumentException.class, () -> client.check("a-request-id", "012"));
     }
 
     @Test
-    public void testCodeMoreThan6Characters() throws Exception {
+    public void testCodeMoreThan6Characters() {
         assertThrows(IllegalArgumentException.class, () -> client.check("a-request-id", "1234567"));
     }
 

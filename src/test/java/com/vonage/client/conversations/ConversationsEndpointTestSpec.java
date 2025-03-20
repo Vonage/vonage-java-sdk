@@ -23,7 +23,7 @@ abstract class ConversationsEndpointTestSpec<T, R> extends DynamicEndpointTestSp
 
 	@Override
 	protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-		return Arrays.asList(JWTAuthMethod.class);
+		return List.of(JWTAuthMethod.class);
 	}
 
 	@Override

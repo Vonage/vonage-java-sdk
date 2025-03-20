@@ -36,7 +36,7 @@ public class SetStreamLayoutRequestTest {
 				id4 = UUID.randomUUID().toString();
 		List<SessionStream> streams = Arrays.asList(
 				SessionStream.builder(id0).layoutClassList(Collections.emptyList()).build(),
-				SessionStream.builder(id1).layoutClassList(Arrays.asList("full")).build(),
+				SessionStream.builder(id1).layoutClassList(List.of("full")).build(),
 				SessionStream.builder(id2).build(),
 				SessionStream.builder(id3).layoutClassList().build(),
 				SessionStream.builder(id4).layoutClassList("focus", "min").build()

@@ -17,7 +17,6 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
-import java.util.Map;
 
 /**
  * Used for inbound Button messages.

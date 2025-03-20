@@ -18,7 +18,6 @@ package com.vonage.client.messages.mms;
 import com.vonage.client.common.MessageType;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 
 public class MmsContentRequestTest {

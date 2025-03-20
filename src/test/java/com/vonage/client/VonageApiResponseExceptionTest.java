@@ -16,7 +16,6 @@
 package com.vonage.client;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.account.AccountResponseException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.net.URI;
@@ -132,7 +131,7 @@ public class VonageApiResponseExceptionTest {
 	}
 
 	@Test
-	public void triggerJsonProcessingException() throws Exception {
+	public void triggerJsonProcessingException() {
 		class SelfReferencing extends VonageApiResponseException {
 			@JsonProperty("self") final SelfReferencing self = this;
 		}
@@ -141,7 +140,7 @@ public class VonageApiResponseExceptionTest {
 	}
 
 	@Test
-	public void testFromJsonWithBadConstructorDefinition() throws Exception {
+	public void testFromJsonWithBadConstructorDefinition() {
 		class MissingNoArgs extends VonageApiResponseException {
 			public MissingNoArgs(boolean dummy) {}
 		}

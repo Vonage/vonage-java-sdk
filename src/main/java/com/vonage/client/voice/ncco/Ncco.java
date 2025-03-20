@@ -26,7 +26,7 @@ import java.util.Collections;
  */
 public class Ncco implements Jsonable {
     @JsonValue
-    private Collection<? extends Action> actions;
+    private final Collection<? extends Action> actions;
 
     /**
      * Creates an empty NCCO object.

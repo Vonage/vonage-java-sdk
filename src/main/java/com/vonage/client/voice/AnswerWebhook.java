@@ -22,7 +22,6 @@ import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Maps the fields for data sent to the {@code answer_url} configured in your voice application.

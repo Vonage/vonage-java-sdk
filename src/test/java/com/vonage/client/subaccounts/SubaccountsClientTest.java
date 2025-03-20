@@ -401,7 +401,7 @@ public class SubaccountsClientTest extends AbstractClientTest<SubaccountsClient>
 		.runTests();
 	}
 
-	abstract class MoneyTransferEndpointTestSpec extends SubaccountsEndpointTestSpec<MoneyTransfer, MoneyTransfer> {
+	abstract static class MoneyTransferEndpointTestSpec extends SubaccountsEndpointTestSpec<MoneyTransfer, MoneyTransfer> {
 
 		abstract String name();
 

@@ -19,9 +19,7 @@ import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.auth.JWTAuthMethod;
-import com.vonage.client.auth.NoAuthMethod;
 import com.vonage.client.common.HttpMethod;
-import java.net.URI;
 import java.util.Objects;
 
 /**

@@ -135,7 +135,7 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 	}
 
 	@Test
-	public void testSensSmsSandboxFailure() throws Exception {
+	public void testSensSmsSandboxFailure() {
 		assertThrows(MessageResponseException.class, () -> client.useSandboxEndpoint()
 				.sendMessage(SmsTextRequest.builder()
 					.text(TEXT).from("447700900001").to("447700900002").build()
