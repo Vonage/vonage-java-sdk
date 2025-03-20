@@ -63,16 +63,10 @@ public class AppEndpoint extends JsonableBaseObject implements Endpoint {
      * Builder for constructing an instance of this class.
      */
     public static class Builder {
-        private String user;
+        private final String user;
 
         Builder(String user) {
             this.user = user;
-        }
-
-        @Deprecated
-        public Builder user(String user) {
-            this.user = user;
-            return this;
         }
 
         /**

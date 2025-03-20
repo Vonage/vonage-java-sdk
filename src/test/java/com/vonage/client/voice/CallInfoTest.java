@@ -51,7 +51,7 @@ public class CallInfoTest {
             "}\n";
 
     @Test
-    public void testJson() throws Exception {
+    public void testJson() {
         String json = "{\n" +
                 "  \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n" +
                 "  \"status\": \"completed\",\n" +
@@ -77,33 +77,33 @@ public class CallInfoTest {
                 "    }\n" +
                 "  }\n" +
                 "}\n";
-        CallInfo record = CallInfo.fromJson(json);
+        CallInfo record = Jsonable.fromJson(json);
         TestUtils.testJsonableBaseObject(record, true);
 
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
         assertEquals("aa17bd11-c895-4225-840d-30dc38c31e50", record.getConversationUuid());
         assertEquals(CallStatus.COMPLETED, record.getStatus());
         assertEquals("outbound", record.getDirection().toString());
-        assertEquals("0.02400000", record.getRate());
-        assertEquals("0.00280000", record.getPrice());
+        assertEquals(0.024, record.getRate());
+        assertEquals(0.0028, record.getPrice());
         assertEquals(7, (long) record.getDuration());
         assertEquals("23410", record.getNetwork());
         // 2017-01-13T13:55:02.000Z
         Calendar expectedStart = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
         expectedStart.set(2017, Calendar.JANUARY, 13, 13, 55, 2);
         expectedStart.set(Calendar.MILLISECOND, 0);
-        assertEquals(expectedStart.getTime(), record.getStartTime());
+        assertEquals(expectedStart.getTime().toInstant(), record.getStartTime());
         // 2017-01-13T13:55:09.000Z
         Calendar expectedEnd = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
         expectedEnd.set(2017, Calendar.JANUARY, 13, 13, 55, 9);
         expectedEnd.set(Calendar.MILLISECOND, 0);
-        assertEquals(expectedEnd.getTime(), record.getEndTime());
+        assertEquals(expectedEnd.getTime().toInstant(), record.getEndTime());
         assertEquals(new PhoneEndpoint("447700900104"), record.getTo());
         assertEquals(new PhoneEndpoint("447700900105"), record.getFrom());
     }
 
     @Test
-    public void testDeserializeUnknownEnumsFallbackToUnknown() throws Exception {
+    public void testDeserializeUnknownEnumsFallbackToUnknown() {
         String json = "{\n" +
                 "  \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n" +
                 "  \"status\": \"test-unknown-call-status\",\n" +
@@ -129,7 +129,7 @@ public class CallInfoTest {
                 "    }\n" +
                 "  }\n" +
                 "}\n";
-        CallInfo record = CallInfo.fromJson(json);
+        CallInfo record = Jsonable.fromJson(json);
         TestUtils.testJsonableBaseObject(record, true);
         assertEquals(CallStatus.UNKNOWN, record.getStatus());
         assertEquals(CallDirection.UNKNOWN, record.getDirection());
@@ -186,14 +186,14 @@ public class CallInfoTest {
         testStatus("cancelled", CallStatus.CANCELLED);
     }
 
-    public void testStatus(String value, CallStatus expectedValue) throws Exception {
-        CallInfo record = CallInfo.fromJson(jsonWithPlaceholder.replaceFirst("PLACEHOLDER", value));
+    public void testStatus(String value, CallStatus expectedValue) {
+        CallInfo record = Jsonable.fromJson(jsonWithPlaceholder.replaceFirst("PLACEHOLDER", value));
         TestUtils.testJsonableBaseObject(record, true);
         assertEquals(record.getStatus(), expectedValue);
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() {
         CallInfo record = Jsonable.fromJson("{" +
             "\"uuid\":\"93137ee3-580e-45f7-a61a-e0b5716000ef\"," +
             "\"status\":\"completed\"," +

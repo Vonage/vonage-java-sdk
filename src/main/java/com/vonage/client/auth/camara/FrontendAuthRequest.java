@@ -17,7 +17,6 @@ package com.vonage.client.auth.camara;
 
 import com.vonage.client.DynamicEndpoint;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.util.Objects;
 import java.util.UUID;
 

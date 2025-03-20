@@ -19,36 +19,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
 /**
- * Represents the {@code _links} section in a paginated response.
+ * Base class for {@linkplain TalkResponse} and {@linkplain StreamResponse}.
  *
- * @deprecated Will be replaced by {@link com.vonage.client.common.HalLinks} in a future release.
+ * @since 9.0.0
  */
-@Deprecated
-public class PageLinks extends JsonableBaseObject {
-    private PageLink self, next, prev, first, last;
+class AbstractAudioResponse extends JsonableBaseObject {
+    private String uuid, message;
 
-    @JsonProperty("self")
-    public PageLink getSelf() {
-        return self;
+    /**
+     * Constructor used reflectively by Jackson for instantiation.
+     */
+    AbstractAudioResponse() {}
+
+    /**
+     * UUID of the call to which the message was sent.
+     *
+     * @return The call ID as a string.
+     */
+    @JsonProperty("uuid")
+    public String getUuid() {
+        return uuid;
     }
 
-    @JsonProperty("next")
-    public PageLink getNext() {
-        return next;
-    }
-
-    @JsonProperty("prev")
-    public PageLink getPrev() {
-        return prev;
-    }
-
-    @JsonProperty("first")
-    public PageLink getFirst() {
-        return first;
-    }
-
-    @JsonProperty("last")
-    public PageLink getLast() {
-        return last;
+    /**
+     * A message describing the result of the operation.
+     *
+     * @return The response message.
+     */
+    @JsonProperty("message")
+    public String getMessage() {
+        return message;
     }
 }

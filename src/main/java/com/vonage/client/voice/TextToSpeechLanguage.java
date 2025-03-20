@@ -15,6 +15,7 @@
  */
 package com.vonage.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -111,6 +112,30 @@ public enum TextToSpeechLanguage {
      */
     @JsonValue
     public String getLanguage() {
-        return this.language;
+        return language;
+    }
+
+    @Override
+    public String toString() {
+        return getLanguage();
+    }
+
+    /**
+     * Converts a string to a TextToSpeechLanguage enum.
+     *
+     * @param language The language code as a string.
+     *
+     * @return The language as an enum; {@code null} if the input is null or {@link #UNKNOWN} if invalid.
+     * @since 9.0.0
+     */
+    @JsonCreator
+    public static TextToSpeechLanguage fromString(String language) {
+        if (language == null || language.trim().isEmpty()) return null;
+        for (TextToSpeechLanguage ttsLanguage : TextToSpeechLanguage.values()) {
+            if (ttsLanguage.getLanguage().equals(language)) {
+                return ttsLanguage;
+            }
+        }
+        return UNKNOWN;
     }
 }

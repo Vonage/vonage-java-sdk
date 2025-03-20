@@ -27,17 +27,6 @@ public enum Type {
     LANDLINE_TOLL_FREE,
     UNKNOWN;
 
-    /**
-     * Serialized name.
-     *
-     * @return The string value.
-     * @deprecated Use {@link #toString()}
-     */
-    @Deprecated
-    public String getType() {
-        return toString();
-    }
-
     @JsonValue
     @Override
     public String toString() {

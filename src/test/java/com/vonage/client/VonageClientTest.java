@@ -17,6 +17,7 @@ package com.vonage.client;
 
 import static com.vonage.client.TestUtils.*;
 import com.vonage.client.auth.*;
+import com.vonage.client.auth.hashutils.HashType;
 import com.vonage.client.auth.hashutils.HashUtil;
 import com.vonage.client.voice.Call;
 import com.vonage.client.voice.CallEvent;
@@ -63,7 +64,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
         VonageClient client = VonageClient.builder()
                 .applicationId("951614e0-eec4-4087-a6b1-3f4c2f169cb0")
                 .privateKeyContents(keyBytes)
-                .hashType(HashUtil.HashType.HMAC_SHA256)
+                .hashType(HashType.HMAC_SHA256)
                 .httpClient(stubHttpClient(
                         200,
                         "{\n" + "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n"
@@ -140,7 +141,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
 
     @Test
     public void testApiKeyWithSignatureSecret() throws Exception {
-        for (var hashType : HashUtil.HashType.values()) {
+        for (var hashType : HashType.values()) {
             var vonageClient = VonageClient.builder()
                     .apiKey(API_KEY).signatureSecret(SIGNATURE_SECRET).hashType(hashType).build();
 
@@ -153,7 +154,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
 
             String timestamp = params.get("timestamp");
             String input = "&api_key="+API_KEY+"&timestamp=" + timestamp;
-            String sig = HashUtil.calculate(input, SIGNATURE_SECRET, "UTF-8", hashType);
+            String sig = HashUtil.calculate(input, SIGNATURE_SECRET, hashType);
 
             assertEquals(sig, params.get("sig"));
         }
@@ -184,7 +185,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
     }
 
     @Test
-    public void testApplicationIdWithCertPath() throws Exception {
+    public void testApplicationIdWithCertPath() {
         VonageClient vonageClient = VonageClient.builder()
                 .applicationId(APPLICATION_ID_STR)
                 .privateKeyPath(privateKeyPath)
@@ -194,7 +195,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
     }
 
     @Test
-    public void testApplicationIdWithCertPathAsString() throws Exception {
+    public void testApplicationIdWithCertPathAsString() {
       VonageClient vonageClient = VonageClient.builder()
                 .applicationId(APPLICATION_ID)
                 .privateKeyPath(privateKeyPath)
@@ -204,7 +205,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
     }
 
     @Test
-    public void testInvalidApplicationId() throws Exception {
+    public void testInvalidApplicationId() {
         assertThrows(IllegalArgumentException.class, () -> VonageClient.builder()
                 .privateKeyPath(privateKeyPath).applicationId(API_KEY).build()
         );
@@ -243,12 +244,9 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
         assertNotNull(client.getConversionClient());
         assertNotNull(client.getVoiceClient());
         assertNotNull(client.getInsightClient());
-        assertNotNull(client.getMeetingsClient());
         assertNotNull(client.getMessagesClient());
-        assertNotNull(client.getNumberInsight2Client());
         assertNotNull(client.getNumbersClient());
         assertNotNull(client.getNumberVerificationClient());
-        assertNotNull(client.getProactiveConnectClient());
         assertNotNull(client.getRedactClient());
         assertNotNull(client.getSimSwapClient());
         assertNotNull(client.getSmsClient());

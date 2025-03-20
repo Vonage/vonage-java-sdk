@@ -41,18 +41,16 @@ public interface Endpoint {
     /**
      * Endpoint type name.
      *
-     * @return The type of endpoint as a string.
+     * @return The type of endpoint as an enum.
      */
     @JsonProperty("type")
-    String getType();
+    EndpointType getType();
 
     /**
      * Description of the endpoint.
      *
-     * @return String representation of the object.
-     * @deprecated This method will be removed in the next major release.
+     * @return A string representation of the object.
      */
     @JsonIgnore
-    @Deprecated
     String toLog();
 }

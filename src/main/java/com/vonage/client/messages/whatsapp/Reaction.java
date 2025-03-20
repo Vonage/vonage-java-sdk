@@ -19,12 +19,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.vonage.client.JsonableBaseObject;
-import com.vonage.client.messages.internal.MessagePayload;
-import java.net.URI;
-import java.util.UUID;
 
 /**
- * Represents a {@linkplain com.vonage.client.messages.MessageType#REACTION} message.
+ * Represents a {@linkplain com.vonage.client.common.MessageType#REACTION} message.
  *
  * @since 8.11.0
  */

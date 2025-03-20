@@ -13,38 +13,37 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.incoming;
+package com.vonage.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
- * @deprecated Use {@link com.vonage.client.voice.CallStatus}.
+ * Represents the callback type for voice.
+ *
+ * @since 9.0.0 Moved from {@linkplain UpdateNumberRequest}.
  */
-@Deprecated
-public enum CallStatus {
-    STARTED,
-    RINGING,
-    ANSWERED,
-    COMPLETED,
-    MACHINE,
-    HUMAN,
-    INPUT,
-    BUSY,
-    CANCELLED,
-    FAILED,
-    RECORDING,
-    REJECTED,
-    TIMEOUT,
-    UNANSWERED,
-    UNKNOWN;
+public enum CallbackType {
+    SIP,
 
+    TEL,
+
+    APP;
+
+    @Override
+    public String toString() {
+        return name().toLowerCase();
+    }
+
+    /**
+     * Creates the enum from its string representation.
+     *
+     * @param type The serialized callback type as a string.
+     * @return Enum representation of the callback type, or {@code null} if {@code type} is null.
+     * @since 8.10.0
+     */
     @JsonCreator
-    public static CallStatus fromString(String status) {
-        try {
-            return CallStatus.valueOf(status.toUpperCase());
-        }
-        catch (IllegalArgumentException ex) {
-            return UNKNOWN;
-        }
+    public static CallbackType fromString(String type) {
+        if (type == null) return null;
+        return valueOf(type.toUpperCase());
     }
 }

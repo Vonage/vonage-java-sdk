@@ -17,8 +17,9 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
-import java.util.Arrays;
+import java.net.URI;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * An NCCO record action which allows for the call to be recorded.
@@ -33,7 +34,7 @@ public final class RecordAction extends JsonableBaseObject implements Action {
     private Integer endOnSilence, timeOut, channels;
     private Character endOnKey;
     private Boolean beepStart;
-    private Collection<String> eventUrl;
+    private Collection<URI> eventUrl;
     private EventMethod eventMethod;
     private SplitRecording split;
     private TranscriptionSettings transcription;
@@ -49,7 +50,7 @@ public final class RecordAction extends JsonableBaseObject implements Action {
         endOnKey = builder.endOnKey;
         timeOut = builder.timeOut;
         beepStart = builder.beepStart;
-        eventUrl = builder.eventUrl;
+        eventUrl = builder.eventUrl != null ? Collections.singletonList(URI.create(builder.eventUrl)) : null;
         eventMethod = builder.eventMethod;
         // Split conversation must be enabled for multiple channels. Checked during construction to avoid
         // method-chaining state confusion.
@@ -120,10 +121,10 @@ public final class RecordAction extends JsonableBaseObject implements Action {
      * If the message recording is hosted by Vonage, this webhook contains the URL you need to download the
      * recording and other metadata, which can be parsed using {@linkplain com.vonage.client.voice.EventWebhook}.
      *
-     * @return The URL to deliver the webhook to wrapped in a string collection, or {@code null} if unspecified.
+     * @return The URL to deliver the webhook to wrapped in a collection, or {@code null} if unspecified.
      */
     @JsonProperty("eventUrl")
-    public Collection<String> getEventUrl() {
+    public Collection<URI> getEventUrl() {
         return eventUrl;
     }
 
@@ -185,7 +186,7 @@ public final class RecordAction extends JsonableBaseObject implements Action {
         private Character endOnKey;
         private Integer timeOut, channels, endOnSilence;
         private Boolean beepStart;
-        private Collection<String> eventUrl;
+        private String eventUrl;
         private EventMethod eventMethod;
         private TranscriptionSettings transcription;
 
@@ -212,23 +213,8 @@ public final class RecordAction extends JsonableBaseObject implements Action {
          *
          * @return This builder.
          */
-        public Builder endOnSilence(Integer endOnSilence) {
+        public Builder endOnSilence(int endOnSilence) {
             this.endOnSilence = endOnSilence;
-            return this;
-        }
-
-        /**
-         * Stop recording when a digit is pressed on the handset. Possible values are: *, # and digits 0-9.
-         *
-         * @param endOnKey The key that will end the recording as a character.
-         *
-         * @return This builder.
-         *
-         * @deprecated Please use {@link #endOnKey(char)} instead.
-         */
-        @Deprecated
-        public Builder endOnKey(Character endOnKey) {
-            this.endOnKey = endOnKey;
             return this;
         }
 
@@ -240,22 +226,7 @@ public final class RecordAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder endOnKey(char endOnKey) {
-            return endOnKey(Character.valueOf(endOnKey));
-        }
-
-        /**
-         * Maximum length of a recording in seconds. Once the recording is stopped the recording data is sent to
-         * the eventUrl. The range of possible values is between 3 and 7200 seconds (i.e. 2 hours).
-         *
-         * @param timeOut The maximum recording length in seconds.
-         *
-         * @return This builder.
-         *
-         * @deprecated Please use {@link #timeOut(int)} instead.
-         */
-        @Deprecated
-        public Builder timeOut(Integer timeOut) {
-            this.timeOut = timeOut;
+            this.endOnKey = endOnKey;
             return this;
         }
 
@@ -268,21 +239,7 @@ public final class RecordAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder timeOut(int timeOut) {
-            return timeOut(Integer.valueOf(timeOut));
-        }
-
-        /**
-         * Whether to play a beep when the recording starts.
-         *
-         * @param beepStart Set {@code true} to play a beep when a recording starts, {@code false} otherwise.
-         *
-         * @return This builder.
-         *
-         * @deprecated Please use {@link #beepStart(boolean)} instead.
-         */
-        @Deprecated
-        public Builder beepStart(Boolean beepStart) {
-            this.beepStart = beepStart;
+            this.timeOut = timeOut;
             return this;
         }
 
@@ -294,40 +251,8 @@ public final class RecordAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder beepStart(boolean beepStart) {
-            return beepStart(Boolean.valueOf(beepStart));
-        }
-
-        /**
-         * URL to the webhook endpoint that is called asynchronously when a recording is finished. If the message
-         * recording is hosted by Vonage, this webhook contains the URL you need to download the recording and
-         * other metadata.
-         *
-         * @param eventUrl The URL to deliver the webhook to as a singleton string collection.
-         *
-         * @return This builder.
-         *
-         * @deprecated This method will be removed in the next major release. Use {@linkplain #eventUrl(String)}.
-         */
-        @Deprecated
-        public Builder eventUrl(Collection<String> eventUrl) {
-            this.eventUrl = eventUrl;
+            this.beepStart = beepStart;
             return this;
-        }
-
-        /**
-         * URL to the webhook endpoint that is called asynchronously when a recording is finished. If the message
-         * recording is hosted by Vonage, this webhook contains the URL you need to download the recording and
-         * other metadata.
-         *
-         * @param eventUrl The URL to deliver the webhook to as a string array.
-         *
-         * @return This builder.
-         *
-         * @deprecated This method will be removed in the next major release. Use {@linkplain #eventUrl(String)}.
-         */
-        @Deprecated
-        public Builder eventUrl(String... eventUrl) {
-            return eventUrl(Arrays.asList(eventUrl));
         }
 
         /**
@@ -340,7 +265,8 @@ public final class RecordAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder eventUrl(String eventUrl) {
-            return eventUrl(new String[]{eventUrl});
+            this.eventUrl = eventUrl;
+            return this;
         }
 
         /**
@@ -356,38 +282,6 @@ public final class RecordAction extends JsonableBaseObject implements Action {
         }
 
         /**
-         * Record the sent and received audio in separate channels of a stereo recording - set to
-         * {@link SplitRecording#CONVERSATION} to enable this.
-         *
-         * @param split The split recording enum.
-         *
-         * @return This builder.
-         *
-         * @deprecated This will be set automatically if the number of channels is greater than 1.
-         */
-        @Deprecated
-        public Builder split(SplitRecording split) {
-            return this;
-        }
-
-        /**
-         * Number of channels to record (maximum 32). If the number of participants exceeds channels any additional
-         * participants will be added to the last channel in file. {@link #split} will be set to
-         * {@link SplitRecording#CONVERSATION} during the build process if channels is greater than 1.
-         *
-         * @param channels The number of channels to record.
-         *
-         * @return This builder.
-         *
-         * @deprecated Please use {@link #channels(int)} instead.
-         */
-        @Deprecated
-        public Builder channels(Integer channels) {
-            this.channels = channels;
-            return this;
-        }
-
-        /**
          * Number of channels to record (maximum 32). If the number of participants exceeds channels any additional
          * participants will be added to the last channel in file. {@link #split} will be set to
          * {@link SplitRecording#CONVERSATION} during the build process if channels is greater than 1.
@@ -397,7 +291,8 @@ public final class RecordAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder channels(int channels) {
-            return channels(Integer.valueOf(channels));
+            this.channels = channels;
+            return this;
         }
 
         /**

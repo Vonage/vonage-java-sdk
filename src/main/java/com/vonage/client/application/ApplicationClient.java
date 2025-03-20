@@ -43,7 +43,7 @@ public class ApplicationClient {
                         .wrapper(wrapper).requestMethod(method)
                         .authMethod(ApiKeyHeaderAuthMethod.class)
                         .pathGetter((de, req) -> {
-                            String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v2");
+                            String base = de.getHttpWrapper().getHttpConfig().getApiBaseUri() + "/v2";
                             String path = base + "/applications";
                             if (pathGetter != null) {
                                 path += "/" + pathGetter.apply(req);
@@ -57,7 +57,7 @@ public class ApplicationClient {
         listApplications = new Endpoint<>(null, HttpMethod.GET);
         createApplication = new Endpoint<>(null, HttpMethod.POST);
         getApplication = new Endpoint<>(UUID::toString, HttpMethod.GET);
-        updateApplication = new Endpoint<>(Application::getId, HttpMethod.PUT);
+        updateApplication = new Endpoint<>(app -> app.getId().toString(), HttpMethod.PUT);
         deleteApplication = new Endpoint<>(UUID::toString, HttpMethod.DELETE);
     }
 

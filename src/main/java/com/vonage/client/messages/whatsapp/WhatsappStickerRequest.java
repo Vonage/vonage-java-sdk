@@ -16,7 +16,7 @@
 package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.messages.MessageType;
+import com.vonage.client.common.MessageType;
 
 /**
  * See <a href=https://developer.vonage.com/en/messages/concepts/whatsapp-stickers>the documentation</a>

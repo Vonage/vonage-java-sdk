@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.UrlContainer;
+import com.vonage.client.common.MessageType;
 import com.vonage.client.messages.mms.Content;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.*;
@@ -47,6 +48,7 @@ public class InboundMessage extends JsonableBaseObject {
 
 	protected static class Whatsapp extends JsonableBaseObject {
 		@JsonProperty("referral") protected Referral referral;
+		@JsonProperty("whatsapp_referred_product") protected ReferredProduct referredProduct;
 	}
 
 	protected static class Origin extends JsonableBaseObject {
@@ -426,6 +428,18 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonIgnore
 	public Referral getWhatsappReferral() {
 		return whatsapp != null ? whatsapp.referral : null;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP} and {@linkplain #getMessageType()} is
+	 * {@linkplain MessageType#ORDER}, returns the product details from the product message being quoted or replied to.
+	 *
+	 * @return The referred product object, or {@code null} if not applicable.
+	 * @since 9.0.0
+	 */
+	@JsonIgnore
+	public ReferredProduct getWhatsappReferredProduct() {
+		return whatsapp != null ? whatsapp.referredProduct : null;
 	}
 
 	/**

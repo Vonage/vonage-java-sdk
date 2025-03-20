@@ -16,7 +16,6 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
 /**
@@ -69,18 +68,5 @@ public class ProjectDetails extends JsonableBaseObject {
 	@JsonProperty("createdAt")
 	public Long getCreatedAt() {
 		return createdAt;
-	}
-
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static ProjectDetails fromJson(String json) {
-		if (json == null || json.trim().isEmpty()) {
-			return new ProjectDetails();
-		}
-		return Jsonable.fromJson(json);
 	}
 }

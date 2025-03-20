@@ -285,7 +285,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 		assertEquals("Could not load URL", response.getReason());
 	}
 
-	static void assertEmptyRender(RenderResponse response) throws Exception {
+	static void assertEmptyRender(RenderResponse response) {
 		testJsonableBaseObject(response);
 		assertNull(response.getUpdatedAt());
 		assertNull(response.getCreatedAt());
@@ -756,11 +756,11 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 		stubResponse(200, json);
 
 		SipDialResponse parsed = client.sipDial(request);
-		assertEquals(id, parsed.getId());
-		assertEquals(connectionId, parsed.getConnectionId());
-		assertEquals(streamId, parsed.getStreamId());
+		assertEquals(UUID.fromString(id), parsed.getId());
+		assertEquals(UUID.fromString(connectionId), parsed.getConnectionId());
+		assertEquals(UUID.fromString(streamId), parsed.getStreamId());
 
-		assertEquals(parsed, SipDialResponse.fromJson(json));
+		assertEquals(parsed, Jsonable.fromJson(json, SipDialResponse.class));
 
 		stubResponseAndAssertThrowsVideoException(409, "{\"code\":409}", () -> client.sipDial(request));
 	}

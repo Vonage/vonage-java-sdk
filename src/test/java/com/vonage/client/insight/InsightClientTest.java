@@ -296,25 +296,8 @@ public class InsightClientTest extends AbstractClientTest<InsightClient> {
             @Override
             protected AdvancedInsightRequest sampleRequest() {
                 return AdvancedInsightRequest.builder("15555551234")
-                        .cnam(false).country("US").async(true).realTimeData(false)
+                        .cnam(false).country("US").async(true)
                         .callback("https://example.com/cb").build();
-            }
-
-            @Override
-            public void runTests() throws Exception {
-                super.runTests();
-                testSyncRealTimeDataParams();
-            }
-
-            void testSyncRealTimeDataParams() throws Exception {
-                AdvancedInsightRequest request = AdvancedInsightRequest.builder()
-                        .number("1234").realTimeData(true).build();
-                Map<String, String> params = new LinkedHashMap<>(2);
-                params.put("number", "1234");
-                params.put("real_time_data", "true");
-                assertFalse(request.isAsync());
-                assertTrue(request.getRealTimeData());
-                assertRequestUriAndBody(request, params);
             }
         }
         .runTests();

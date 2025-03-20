@@ -15,7 +15,6 @@
  */
 package com.vonage.client.auth.hashutils;
 
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -27,16 +26,16 @@ class Md5Hasher extends AbstractHasher {
     /**
      * Calculates MD5 hash for string.
      *
-     * @param input string which is going to be encoded into MD5 format
-     * @param encoding character encoding of the string which is going to be encoded into MD5 format
-     * @return  MD5 representation of the input string
+     * @param input string which is going to be encoded into MD5 format.
+
+     * @return MD5 representation of the input string.
+     *
      * @throws NoSuchAlgorithmException if the MD5 algorithm is not available.
-     * @throws UnsupportedEncodingException if the specified encoding is unavailable.
      */
     @Override
-    public String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    String calculate(String input) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(input.getBytes(encoding));
+        md.update(input.getBytes(ENCODING));
         return buildHexString(md.digest());
     }
 }

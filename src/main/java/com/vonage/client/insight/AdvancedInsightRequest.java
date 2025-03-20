@@ -20,20 +20,13 @@ import java.util.Map;
 public class AdvancedInsightRequest extends BaseInsightRequest {
     private final boolean async;
     private final String callback;
-    private final Boolean realTimeData;
 
-    private AdvancedInsightRequest(Builder builder) {
+    AdvancedInsightRequest(Builder builder) {
         super(builder.number, builder.country);
         cnam = builder.cnam;
         callback = builder.callback;
-        if (!(async = builder.async)) {
-            realTimeData = builder.realTimeData;
-        }
-        else {
-            realTimeData = null;
-            if (callback == null || callback.isEmpty()) {
-                throw new IllegalStateException("You must define a callback URL when using asynchronous insights.");
-            }
+        if ((async = builder.async) && (callback == null || callback.isEmpty())) {
+            throw new IllegalStateException("You must define a callback URL when using asynchronous insights.");
         }
     }
 
@@ -58,15 +51,6 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         return new Builder();
     }
 
-    @Deprecated
-    public Boolean getRealTimeData() {
-        return realTimeData;
-    }
-
-    public Boolean getCnam() {
-        return cnam;
-    }
-
     public boolean isAsync() {
         return async;
     }
@@ -75,14 +59,15 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         return callback;
     }
 
+    public Boolean getCnam() {
+        return cnam;
+    }
+
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
         if (callback != null) {
             params.put("callback", callback);
-        }
-        if (realTimeData != null) {
-            params.put("real_time_data", realTimeData.toString());
         }
         return params;
     }
@@ -112,7 +97,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
 
     public static class Builder {
         protected boolean async;
-        protected Boolean cnam, realTimeData;
+        protected Boolean cnam;
         protected String number, country, callback;
 
         protected Builder(String number) {
@@ -173,20 +158,6 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
          */
         public Builder callback(String url) {
             this.callback = url;
-            return this;
-        }
-
-        /**
-         * @param realTimeData A boolean to choose whether to get real time data back in the response.
-         *                     This only applies when {@link #async(boolean)} is {@code false}.
-         *
-         * @return This builder.
-         *
-         * @deprecated This feature will be removed in the next major release.
-         */
-        @Deprecated
-        public Builder realTimeData(boolean realTimeData) {
-            this.realTimeData = realTimeData;
             return this;
         }
 

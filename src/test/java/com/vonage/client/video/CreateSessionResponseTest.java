@@ -20,7 +20,6 @@
  */
 package com.vonage.client.video;
 
-import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;

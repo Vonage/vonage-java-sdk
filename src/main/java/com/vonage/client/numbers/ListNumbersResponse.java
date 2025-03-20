@@ -16,26 +16,15 @@
 package com.vonage.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
+import java.util.List;
 
 /**
  * Response from a request to list the numbers currently being rented buy an account.
  */
-public class ListNumbersResponse extends JsonableBaseObject {
-    private int count;
-    private OwnedNumber[] numbers;
-
-    /**
-     * Total amount of numbers owned by the account.
-     * Note that this may not be the same as the size of {@linkplain #getNumbers()}.
-     *
-     * @return The total number of owned numbers.
-     */
-    @JsonProperty("count")
-    public int getCount() {
-        return count;
-    }
+class ListNumbersResponse extends JsonableBaseObject {
+    @JsonProperty("count") private Integer count;
+    @JsonProperty("numbers") private List<OwnedNumber> numbers;
 
     /**
      * A paginated array of owned numbers and their details.
@@ -43,18 +32,7 @@ public class ListNumbersResponse extends JsonableBaseObject {
      *
      * @return The owned numbers as an array.
      */
-    @JsonProperty("numbers")
-    public OwnedNumber[] getNumbers() {
-        return numbers != null ? numbers : new OwnedNumber[0];
-    }
-
-    /**
-     * Creates an instance of this class from a JSON payload.
-     *
-     * @param json The JSON string to parse.
-     * @return An instance of this class with all known fields populated from the JSON payload, if present.
-     */
-    public static ListNumbersResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
+    public List<OwnedNumber> getNumbers() {
+        return numbers != null ? numbers : null;
     }
 }

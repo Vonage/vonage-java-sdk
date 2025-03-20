@@ -17,7 +17,7 @@ package com.vonage.client.messages.mms;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.CaptionMediaMessageRequest;
-import com.vonage.client.messages.MessageType;
+import com.vonage.client.common.MessageType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.Objects;
  * @since 8.18.0
  */
 public final class MmsContentRequest extends MmsRequest implements CaptionMediaMessageRequest {
-	private List<Content> content;
+	private final List<Content> content;
 
 	MmsContentRequest(Builder builder) {
 		super(builder, MessageType.CONTENT);

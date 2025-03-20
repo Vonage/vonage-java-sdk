@@ -26,7 +26,6 @@ import com.vonage.client.camara.CamaraResponseException;
 import com.vonage.client.camara.NetworkApiClient;
 import com.vonage.client.common.HttpMethod;
 import java.net.URI;
-import java.util.Objects;
 import java.util.UUID;
 
 /**

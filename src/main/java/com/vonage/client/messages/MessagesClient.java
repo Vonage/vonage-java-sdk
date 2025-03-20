@@ -20,7 +20,6 @@ import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.jwt.Jwt;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class MessagesClient {

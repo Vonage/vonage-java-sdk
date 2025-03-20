@@ -16,18 +16,16 @@
 package com.vonage.client.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
 /**
  * Details of the configured account settings.
  */
-public class SettingsResponse extends JsonableBaseObject {
+public final class SettingsResponse extends JsonableBaseObject {
     private String incomingSmsUrl, deliveryReceiptUrl;
     private Integer maxOutboundMessagesPerSecond, maxInboundMessagesPerSecond, maxApiCallsPerSecond;
 
-    @Deprecated
-    public SettingsResponse() {}
+    private SettingsResponse() {}
 
     /**
      * URL where Vonage will send a webhook when an incoming SMS is received when a
@@ -79,10 +77,5 @@ public class SettingsResponse extends JsonableBaseObject {
     @JsonProperty("max-calls-per-second")
     public Integer getMaxApiCallsPerSecond() {
         return maxApiCallsPerSecond;
-    }
-
-    @Deprecated
-    public static SettingsResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
     }
 }

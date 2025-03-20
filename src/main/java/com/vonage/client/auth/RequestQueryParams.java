@@ -17,7 +17,6 @@ package com.vonage.client.auth;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -30,8 +29,6 @@ import java.util.stream.Collectors;
 public class RequestQueryParams extends ArrayList<AbstractMap.SimpleEntry<String, String>> {
 
     public Map<String, String> toMap() {
-        return stream().collect(Collectors.toMap(
-                Entry::getKey, Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new
-        ));
+        return stream().collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
 }

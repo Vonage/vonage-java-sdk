@@ -17,7 +17,6 @@ package com.vonage.client.auth.camara;
 
 import com.vonage.client.QueryParamsRequest;
 import com.vonage.client.common.E164;
-import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;

@@ -56,9 +56,8 @@ public class VbcEndpoint extends JsonableBaseObject implements Endpoint {
         return extension;
     }
 
-    @JsonProperty("type")
     @Override
-    public String getType() {
-        return EndpointType.VBC.toString();
+    public EndpointType getType() {
+        return EndpointType.VBC;
     }
 }

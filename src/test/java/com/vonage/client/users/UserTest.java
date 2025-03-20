@@ -16,7 +16,7 @@
 package com.vonage.client.users;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.TestUtils;
+import com.vonage.client.Jsonable;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.users.channels.*;
@@ -53,7 +53,7 @@ public class UserTest {
 		assertTrue(json.contains("\"properties\":{\"custom_data\":"+customDataJson));
 		assertTrue(json.contains("\"channels\":{}"));
 
-		User parsed = User.fromJson(json);
+		User parsed = Jsonable.fromJson(json);
 		assertEquals(request, parsed);
 		assertEquals(request.hashCode(), parsed.hashCode());
 		assertEquals(request.toString(), parsed.toString());
@@ -221,7 +221,7 @@ public class UserTest {
                     "messenger": []
                   }
                 }""";
-		User parsed = User.fromJson(json);
+		User parsed = Jsonable.fromJson(json);
 		testJsonableBaseObject(parsed);
 		Channels channels = parsed.getChannels();
 		assertNotNull(channels);
@@ -252,7 +252,7 @@ public class UserTest {
 				"messenger": [{}]
 			  }
 			}""";
-		User parsed = User.fromJson(json);
+		User parsed = Jsonable.fromJson(json);
 		testJsonableBaseObject(parsed);
 		Channels channels = parsed.getChannels();
 		assertNotNull(channels);
@@ -323,9 +323,9 @@ public class UserTest {
 				"  }\n" +
 				"}";
 
-		assertThrows(VonageResponseParseException.class, () -> User.fromJson(json));
+		assertThrows(VonageResponseParseException.class, () -> Jsonable.fromJson(json, User.class));
 
-		User user = User.fromJson(json.replace(invalidContentType, ""));
+		User user = Jsonable.fromJson(json.replace(invalidContentType, ""));
 		assertEquals(id, user.getId());
 		Channels channels = user.getChannels();
 		assertNotNull(channels);

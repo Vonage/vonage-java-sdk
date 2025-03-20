@@ -13,19 +13,17 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.incoming;
+package com.vonage.client.auth.hashutils;
 
-import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
-
-public class MessageTypeTest {
-    @Test
-    public void testMessageTypeFromString() {
-        assertEquals(MessageType.TEXT, MessageType.fromString("text"));
-    }
-
-    @Test
-    public void testDeserializeUnknownEnumsFallbackToUnknown() {
-        assertEquals(MessageType.UNKNOWN, MessageType.fromString("test"));
-    }
+/**
+ * Represents the hashing algorithm to be used.
+ *
+ * @since 9.0.0 Moved from {@linkplain HashUtil}.
+ */
+public enum HashType {
+    MD5,
+    HMAC_SHA1,
+    HMAC_MD5,
+    HMAC_SHA256,
+    HMAC_SHA512
 }

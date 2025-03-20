@@ -25,11 +25,9 @@ public class DtmfSettings extends JsonableBaseObject {
     private Boolean submitOnHash;
 
     /**
-     * Constructor.
-     * @deprecated Use {@link #builder()}. This will be made package-private in the next major release.
+     * Constructor used by Jackson.
      */
-    @Deprecated
-    public DtmfSettings() {}
+    DtmfSettings() {}
 
     private DtmfSettings(Builder builder) {
         submitOnHash = builder.submitOnHash;
@@ -51,18 +49,6 @@ public class DtmfSettings extends JsonableBaseObject {
     }
 
     /**
-     * The result of the callee's activity is sent to the {@code eventUrl} webhook endpoint
-     * {@code timeOut} seconds after the last action. The default value is 3. Max is 10.
-     *
-     * @param timeOut The DTMF input timeout in seconds as an int.
-     * @deprecated Use the {@linkplain #builder()}. This will be removed in the next major release.
-     */
-    @Deprecated
-    public void setTimeOut(Integer timeOut) {
-        this.timeOut = timeOut;
-    }
-
-    /**
      * The number of digits the user can press. The maximum value is 20, the default is 4 digits.
      *
      * @return The number of digits as an integer, or {@code null} if unspecified.
@@ -72,37 +58,12 @@ public class DtmfSettings extends JsonableBaseObject {
     }
 
     /**
-     * The number of digits the user can press. The maximum value is 20, the default is 4 digits.
-     *
-     * @param maxDigits The number of digits as an int.
-     * @deprecated Use the {@linkplain #builder()}. This will be removed in the next major release.
-     */
-    @Deprecated
-    public void setMaxDigits(Integer maxDigits) {
-        this.maxDigits = maxDigits;
-    }
-
-    /**
      * Determines if the callee's activity is sent to your webhook endpoint after pressing the hash key.
      *
      * @return {@code true} if the input is submitted on {@code #}, or {@code null} if unspecified.
      */
     public Boolean isSubmitOnHash() {
         return submitOnHash;
-    }
-
-    /**
-     * Set to {@code true} so the callee's activity is sent to your webhook endpoint at {@code eventUrl}
-     * after they press {@code #}. If # is not pressed the result is submitted after {@code timeOut} seconds.
-     * The default value is {@code false}. That is, the result is sent to your webhook endpoint after
-     * {@code timeOut} seconds.
-     *
-     * @param submitOnHash Whether to submit the input after pressing the hash key.
-     * @deprecated Use the {@linkplain #builder()}. This will be removed in the next major release.
-     */
-    @Deprecated
-    public void setSubmitOnHash(Boolean submitOnHash) {
-        this.submitOnHash = submitOnHash;
     }
 
     /**

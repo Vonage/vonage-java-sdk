@@ -15,7 +15,6 @@
  */
 package com.vonage.client.voice;
 
-import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;

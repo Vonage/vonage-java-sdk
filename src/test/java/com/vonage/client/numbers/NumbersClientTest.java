@@ -16,15 +16,16 @@
 package com.vonage.client.numbers;
 
 import com.vonage.client.AbstractClientTest;
+import com.vonage.client.Jsonable;
 import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.*;
 import com.vonage.client.common.HttpMethod;
-import com.vonage.client.numbers.UpdateNumberRequest.CallbackType;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 import java.net.URI;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -57,7 +58,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
         );
     }
 
-    private void assertEqualsSampleListNumbers(Supplier<ListNumbersResponse> invocation) throws Exception {
+    private void assertEqualsSampleListNumbers(Supplier<List<OwnedNumber>> invocation) throws Exception {
         final int count = 127;
         final UUID appId = UUID.randomUUID();
         String moHttpUrl = "https://example.com/mo", voiceCallbackValue = "sip:nexmo@example.com ",
@@ -88,39 +89,29 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
         stubResponse(200, json);
 
-        var parsed = invocation.get();
-        testJsonableBaseObject(parsed);
-        assertEquals(parsed, ListNumbersResponse.fromJson(json));
-
-        assertEquals(count, parsed.getCount());
-        var numbers = parsed.getNumbers();
+        var numbers = invocation.get();
         assertNotNull(numbers);
-        assertEquals(3, numbers.length);
-        assertNotNull(numbers[0]);
-        assertNull(numbers[0].getFeatures());
-        var main = numbers[1];
+        assertEquals(3, numbers.size());
+        assertNotNull(numbers.getFirst());
+        assertNull(numbers.getFirst().getFeatures());
+        var main = numbers.get(1);
         testJsonableBaseObject(main);
         assertEquals(COUNTRY, main.getCountry());
         assertEquals(MSISDN, main.getMsisdn());
-        // TODO change to URI
         assertEquals(URI.create(moHttpUrl).toString(), main.getMoHttpUrl());
-        // TODO change to enum
-        assertEquals(Type.MOBILE_LVN, Type.fromString(main.getType()));
+        assertEquals(Type.MOBILE_LVN, main.getType());
         var features = main.getFeatures();
         assertNotNull(features);
         assertEquals(2, features.length);
-        // TODO change to enum
-        assertEquals(Feature.SMS, Feature.fromString(features[0]));
-        assertEquals(Feature.MMS, Feature.fromString(features[1]));
-        // TODO change to enum
-        assertEquals(CallbackType.SIP, CallbackType.fromString(main.getVoiceCallbackType()));
+        assertEquals(Feature.SMS, features[0]);
+        assertEquals(Feature.MMS, features[1]);
+        assertEquals(CallbackType.SIP, main.getVoiceCallbackType());
         assertEquals(voiceCallbackValue, main.getVoiceCallbackValue());
         assertEquals(APPLICATION_ID, main.getMessagesCallbackValue());
         assertEquals(appId, main.getAppId());
-        var last = numbers[2];
+        var last = numbers.get(2);
         testJsonableBaseObject(last);
-        // TODO change to enum
-        assertEquals(Type.LANDLINE_TOLL_FREE, Type.fromString(last.getType()));
+        assertEquals(Type.LANDLINE_TOLL_FREE, last.getType());
         assertNotNull(last.getFeatures());
         assertEquals(0, last.getFeatures().length);
     }
@@ -145,7 +136,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
 
         var parsed = invocation.get();
         testJsonableBaseObject(parsed);
-        assertEquals(parsed, SearchNumbersResponse.fromJson(json));
+        assertEquals(parsed, Jsonable.fromJson(json, SearchNumbersResponse.class));
 
         assertEquals(1234, parsed.getCount());
         var numbers = parsed.getNumbers();
@@ -156,13 +147,11 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
         assertEquals(COUNTRY, main.getCountry());
         assertEquals(MSISDN, main.getMsisdn());
         assertEquals("0.80", main.getCost());
-        // TODO use enum
-        assertEquals(Type.LANDLINE, Type.fromString(main.getType()));
+        assertEquals(Type.LANDLINE, main.getType());
         var features = main.getFeatures();
         assertNotNull(features);
         assertEquals(1, features.length);
-        // TODO use enum
-        assertEquals(Feature.VOICE, Feature.fromString(features[0]));
+        assertEquals(Feature.VOICE, features[0]);
     }
 
     @Test
@@ -188,12 +177,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
         assert401ResponseException(() -> client.listNumbers(filter));
 
         stubResponse("{}");
-        var response = client.listNumbers();
-        assertNotNull(response);
-        assertEquals(0, response.getCount());
-        var numbers = response.getNumbers();
-        assertNotNull(numbers);
-        assertEquals(0, numbers.length);
+        assertNull(client.listNumbers());
     }
 
     @Test
@@ -300,7 +284,6 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                 super.runTests();
                 testValidation();
                 testBlank();
-                testDeprecated();
             }
 
             private void testValidation() {
@@ -313,7 +296,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
             }
 
             private void testBlank() throws Exception {
-                var blank = new ListNumbersFilter();
+                var blank = ListNumbersFilter.builder().build();
                 assertNull(blank.getHasApplication());
                 assertNull(blank.getApplicationId());
                 assertNull(blank.getSearchPattern());
@@ -322,17 +305,6 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                 assertNull(blank.getSize());
                 assertNull(blank.getCountry());
                 assertRequestUriAndBody(blank, Map.of());
-            }
-
-            private void testDeprecated() {
-                var old = new ListNumbersFilter(2, 99, "*", SearchPattern.ANYWHERE);
-                assertEquals(2, old.getIndex());
-                assertEquals(99, old.getSize());
-                assertEquals("*", old.getPattern());
-                assertEquals(SearchPattern.ANYWHERE, old.getSearchPattern());
-                assertNull(old.getHasApplication());
-                assertNull(old.getApplicationId());
-                assertNull(old.getCountry());
             }
         }
         .runTests();
@@ -371,7 +343,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                 SearchNumbersFilter filter = sampleRequest();
                 Map<String, String> params = new LinkedHashMap<>();
                 params.put("country", filter.getCountry());
-                params.put("features", String.join(",", filter.getFeatures()));
+                params.put("features", String.join(",", Feature.getToString(filter.getFeatures())));
                 params.put("pattern", filter.getPattern());
                 params.put("search_pattern", String.valueOf(filter.getSearchPattern().getValue()));
                 params.put("index", String.valueOf(filter.getIndex()));
@@ -384,7 +356,6 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
             public void runTests() throws Exception {
                 super.runTests();
                 testEmptyFeatures();
-                testDeprecated();
             }
 
             private void testEmptyFeatures() throws Exception {
@@ -393,22 +364,7 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                 assertRequestUriAndBody(filter, Map.of());
                 filter = SearchNumbersFilter.builder().features((Feature[]) null).build();
                 assertNull(filter.getFeatures());
-            }
-
-            private void testDeprecated() throws Exception {
-                var filter = new SearchNumbersFilter("io");
-                assertRequestUriAndBody(filter, Map.of("country", "IO"));
-
-                var sample = sampleRequest();
-                filter.setType(sample.getType());
-                filter.setIndex(sample.getIndex());
-                filter.setSize(sample.getSize());
-                filter.setFeatures(sample.getFeatures());
-                filter.setPattern(sample.getPattern());
-                filter.setSearchPattern(sample.getSearchPattern());
-                var params = sampleQueryParams();
-                params.put("country", filter.getCountry());
-                assertRequestUriAndBody(filter, params);
+                assertNull(Feature.getToString(filter.getFeatures()));
             }
         }
         .runTests();
@@ -482,29 +438,6 @@ public class NumbersClientTest extends AbstractClientTest<NumbersClient> {
                 params.put("voiceCallbackValue", request.getVoiceCallbackValue());
                 params.put("voiceCallbackType", request.getVoiceCallbackType().toString());
                 params.put("voiceStatusCallback", request.getVoiceStatusCallback());
-            }
-
-            @Override
-            public void runTests() throws Exception {
-                super.runTests();
-                testDeprecated();
-            }
-
-            private void testDeprecated() throws Exception {
-                var sample = sampleRequest();
-                var setterReq = new UpdateNumberRequest(sample.getMsisdn(), sample.getCountry());
-                setterReq.setVoiceStatusCallback(sample.getVoiceStatusCallback());
-                setterReq.setVoiceCallbackValue(sample.getVoiceCallbackValue());
-                setterReq.setVoiceCallbackType(sample.getVoiceCallbackType());
-                setterReq.setMoHttpUrl(sample.getMoHttpUrl());
-                setterReq.setMoSmppSysType(sample.getMoSmppSysType());
-                setterReq.setMessagesCallbackValue("not-an-Application-ID");
-
-                params.remove("app_id");
-                params.put("messagesCallbackValue", setterReq.getMessagesCallbackValue());
-                params.put("messagesCallbackType", "app");
-
-                assertRequestUriAndBody(setterReq, params);
             }
         }
         .runTests();

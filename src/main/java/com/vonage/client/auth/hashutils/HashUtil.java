@@ -15,7 +15,6 @@
  */
 package com.vonage.client.auth.hashutils;
 
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -24,7 +23,8 @@ import java.util.Map;
 /**
  * Utility methods for hashing strings.
  */
-public class HashUtil {
+public final class HashUtil {
+    private HashUtil() {}
 
     private static final Map<HashType, AbstractHasher> HASH_TYPES;
 
@@ -42,6 +42,7 @@ public class HashUtil {
      *
      * @param input string which is going to be encoded into requested format.
      * @param hashType The type of hash to be applied to the input string.
+     *
      * @return representation of the input string with given hash type.
      *
      * @throws NoSuchAlgorithmException if the algorithm is not available.
@@ -55,40 +56,14 @@ public class HashUtil {
      * Calculates hash for string.
      *
      * @param input string which is going to be encoded into requested format.
-     * @param encoding encoding type of input.
+     * @param secretKey the key to be used for encoding.
      * @param hashType The type of hash to be applied to the input string.
+     *
      * @return representation of the input string with given hash type.
      * @throws NoSuchAlgorithmException if the algorithm is not available.
      * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
-     * @throws UnsupportedEncodingException if the specified encoding is unavailable.
-     *
-     * @deprecated This will be removed in the next major release.
      */
-    @Deprecated
-    public static String calculate(String input, String encoding, HashType hashType) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
-        return HASH_TYPES.get(hashType).calculate(input, encoding);
-    }
-
-    /**
-     * Calculates hash for string.
-     * @param input string which is going to be encoded into requested format
-     * @param secretKey the key to be used for encoding
-     * @param encoding character encoding of the string which is going to be encoded into requested format
-     * @param hashType The type of hash to be applied to the input string
-     * @return representation of the input string with given hash type
-     * @throws NoSuchAlgorithmException if the algorithm is not available.
-     * @throws UnsupportedEncodingException if the specified encoding is unavailable.
-     * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
-     */
-    public static String calculate(String input, String secretKey, String encoding, HashType hashType) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
-        return HASH_TYPES.get(hashType).calculate(input, secretKey, encoding);
-    }
-
-    public enum HashType {
-        MD5,
-        HMAC_SHA1,
-        HMAC_MD5,
-        HMAC_SHA256,
-        HMAC_SHA512
+    public static String calculate(String input, String secretKey, HashType hashType) throws NoSuchAlgorithmException, InvalidKeyException {
+        return HASH_TYPES.get(hashType).calculate(input, secretKey);
     }
 }
