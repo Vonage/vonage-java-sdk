@@ -1,9 +1,15 @@
 {
   "packageRules": [
     {
-      "matchPackagePatterns": [".*"],
-      "matchUpdateTypes": ["patch", "pin", "digest"],
-      "automerge": true
+      "matchUpdateTypes": [
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "automerge": true,
+      "matchPackageNames": [
+        "/.*/"
+      ]
     }
   ]
 }
