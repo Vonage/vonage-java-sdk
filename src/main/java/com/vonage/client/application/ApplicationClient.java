@@ -83,9 +83,11 @@ public class ApplicationClient {
     }
 
     /**
-     * Update an existing application.
+     * Update an existing application. Use {@link Application#builder(Application)} to modify an existing
+     * Application obtained via {@linkplain #getApplication(String)}, or to reset all properties and capabilities
+     * of an application, use {@link Application#builder(UUID)}.
      *
-     * @param application The application properties for the application to be updated with.
+     * @param application The properties for the application to be updated with.
      *
      * @return The application which has been updated.
      *

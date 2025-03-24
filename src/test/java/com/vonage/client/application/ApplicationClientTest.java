@@ -31,10 +31,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ApplicationClientTest extends AbstractClientTest<ApplicationClient> {
-    static final UUID SAMPLE_APPLICATION_ID = UUID.randomUUID();
+    static final UUID SAMPLE_APPLICATION_ID = UUID.fromString("78d335fa-323d-0114-9c3d-d6f0d48968cf");
 
     static final String SAMPLE_APPLICATION = "{\n" +
-            "  \"id\": \"78d335fa-323d-0114-9c3d-d6f0d48968cf\",\n" +
+            "  \"id\": \""+SAMPLE_APPLICATION_ID+"\",\n" +
             "  \"name\": \"My Application\",\n" +
             "  \"capabilities\": {\n" +
             "    \"voice\": {\n" +
@@ -114,7 +114,7 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
 
     static void assertEqualsSampleApplication(Application response) {
         testJsonableBaseObject(response);
-        assertEquals(UUID.fromString("78d335fa-323d-0114-9c3d-d6f0d48968cf"), response.getId());
+        assertEquals(SAMPLE_APPLICATION_ID, response.getId());
         assertEquals("My Application", response.getName());
 
         Application.Capabilities capabilities = response.getCapabilities();
@@ -194,11 +194,16 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
     @Test
     public void testUpdateApplication() throws Exception {
         stubResponse(200, SAMPLE_APPLICATION);
-        Application existing = Jsonable.fromJson("{\"id\":\"78d335fa-323d-0114-9c3d-d6f0d48968cf\"}", Application.class);
-        Application request = Application.builder(existing).name("Test app").build();
-        assertEqualsSampleApplication(client.updateApplication(request));
+        Application existing = Jsonable.fromJson("{\"id\":\""+SAMPLE_APPLICATION_ID+"\"}", Application.class);
+        Application request1 = Application.builder(existing).name("Test app").build();
+        assertEqualsSampleApplication(client.updateApplication(request1));
+
         assertThrows(NullPointerException.class, () -> client.updateApplication(null));
-        assert400ResponseException(() -> client.updateApplication(request));
+        assert400ResponseException(() -> client.updateApplication(request1));
+
+        stubResponse(200, SAMPLE_APPLICATION);
+        Application request2 = Application.builder(SAMPLE_APPLICATION_ID).name(request1.getName()).build();
+        assertEqualsSampleApplication(client.updateApplication(request2));
     }
 
     @Test
@@ -230,7 +235,7 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
                 "  \"_embedded\": {\n" +
                 "    \"applications\": [\n" +
                 "      {\n" +
-                "        \"id\": \"78d335fa-323d-0114-9c3d-d6f0d48968cf\",\n" +
+                "        \"id\": \""+SAMPLE_APPLICATION_ID+"\",\n" +
                 "        \"name\": \"My Application\",\n" +
                 "        \"capabilities\": {\n" +
                 "          \"voice\": {\n" +

@@ -42,6 +42,15 @@ public class ApplicationTest {
     }
 
     @Test
+    public void testId() {
+        var id = ApplicationClientTest.SAMPLE_APPLICATION_ID;
+        String json = "{\"id\":\""+id+"\"}";
+        Application application = Application.builder(id).build();
+
+        assertEquals(json, application.toJson());
+    }
+
+    @Test
     public void testPublicKey() {
         String json = "{\"keys\":{\"public_key\":\"public key\"}}";
         Application application = Application.builder().publicKey("public key").build();
