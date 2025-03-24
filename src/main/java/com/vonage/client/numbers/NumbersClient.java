@@ -184,6 +184,7 @@ public class NumbersClient {
      */
     public void linkNumber(String msisdn, String country, String appId) throws NumbersResponseException {
         updateNumber(UpdateNumberRequest.builder(msisdn, country)
-                .voiceCallback(CallbackType.APP, UUID.fromString(appId).toString()).build());
+                .applicationId(appId).voiceCallback(CallbackType.APP, UUID.fromString(appId).toString()).build()
+        );
     }
 }
