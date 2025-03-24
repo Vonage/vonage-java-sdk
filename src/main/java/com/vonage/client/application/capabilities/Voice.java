@@ -167,14 +167,40 @@ public final class Voice extends Capability {
             return this;
         }
 
-        @Override
-        public Builder addWebhook(Webhook.Type type, Webhook webhook) {
-            return super.addWebhook(type, webhook);
+        /**
+         * Set the {@code answer_url} webhook for this capability.
+         *
+         * @param webhook The webhook properties, or {@code null} to remove.
+         *
+         * @return This builder.
+         * @since 9.0.0
+         */
+        public Builder answer(Webhook webhook) {
+            return webhook(Webhook.Type.ANSWER, webhook);
         }
 
-        @Override
-        public Builder removeWebhook(Webhook.Type type) {
-            return super.removeWebhook(type);
+        /**
+         * Set the {@code event_url} webhook for this capability.
+         *
+         * @param webhook The webhook properties, or {@code null} to remove.
+         *
+         * @return This builder.
+         * @since 9.0.0
+         */
+        public Builder fallbackAnswer(Webhook webhook) {
+            return webhook(Webhook.Type.FALLBACK_ANSWER, webhook);
+        }
+
+        /**
+         * Set the {@code event_url} webhook for this capability.
+         *
+         * @param webhook The webhook properties, or {@code null} to remove.
+         *
+         * @return This builder.
+         * @since 9.0.0
+         */
+        public Builder event(Webhook webhook) {
+            return webhook(Webhook.Type.EVENT, webhook);
         }
 
         /**

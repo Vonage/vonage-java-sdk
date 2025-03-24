@@ -37,7 +37,7 @@ public class VoiceTest {
 
     @Test
     public void testAnswerWebhook() {
-        Voice voice = Voice.builder().addWebhook(Webhook.Type.ANSWER, new Webhook("https://example.com/answer", HttpMethod.POST)).build();
+        Voice voice = Voice.builder().answer(new Webhook("https://example.com/answer", HttpMethod.POST)).build();
 
         assertEquals(Capability.Type.VOICE, voice.getType());
         assertEquals("https://example.com/answer", voice.getWebhooks().get(Webhook.Type.ANSWER).getAddress());
@@ -46,7 +46,7 @@ public class VoiceTest {
 
     @Test
     public void testEventWebhook() {
-        Voice voice = Voice.builder().addWebhook(Webhook.Type.EVENT, new Webhook("https://example.com/event", HttpMethod.GET)).build();
+        Voice voice = Voice.builder().event(new Webhook("https://example.com/event", HttpMethod.GET)).build();
 
         assertEquals(Capability.Type.VOICE, voice.getType());
         assertEquals("https://example.com/event", voice.getWebhooks().get(Webhook.Type.EVENT).getAddress());
@@ -56,8 +56,8 @@ public class VoiceTest {
     @Test
     public void testMultipleWebhooks() {
         Voice voice = Voice.builder()
-                .addWebhook(Webhook.Type.ANSWER, new Webhook("https://example.com/answer", HttpMethod.POST))
-                .addWebhook(Webhook.Type.EVENT, new Webhook("https://example.com/event", HttpMethod.GET))
+                .answer(new Webhook("https://example.com/answer", HttpMethod.POST))
+                .event(new Webhook("https://example.com/event", HttpMethod.GET))
                 .build();
 
         assertEquals(Capability.Type.VOICE, voice.getType());
@@ -70,9 +70,9 @@ public class VoiceTest {
     @Test
     public void testRemoveWebhook() {
         Voice voice = Voice.builder()
-                .addWebhook(Webhook.Type.ANSWER, new Webhook("https://example.com/answer", HttpMethod.POST))
-                .addWebhook(Webhook.Type.EVENT, new Webhook("https://example.com/event", HttpMethod.GET))
-                .removeWebhook(Webhook.Type.ANSWER)
+                .answer(new Webhook("https://example.com/answer", HttpMethod.POST))
+                .event(new Webhook("https://example.com/event", HttpMethod.GET))
+                .answer(null)
                 .legPersistenceTime(3).signedCallbacks(false)
                 .build();
 
@@ -87,8 +87,8 @@ public class VoiceTest {
     @Test
     public void testRemoveAllWebhooks() {
         Voice voice = Voice.builder()
-                .addWebhook(Webhook.Type.ANSWER, new Webhook("https://example.com/answer", HttpMethod.POST))
-                .removeWebhook(Webhook.Type.ANSWER)
+                .answer(new Webhook("https://example.com/answer", HttpMethod.POST))
+                .answer(null)
                 .build();
 
         assertEquals(Capability.Type.VOICE, voice.getType());
@@ -118,7 +118,7 @@ public class VoiceTest {
         assertThrows(IllegalArgumentException.class, () -> whBuilder.socketTimeout(sockMax+1).build());
 
         Webhook webhook = whBuilder.socketTimeout(3000).build();
-        Voice fallback = Voice.builder().addWebhook(Webhook.Type.FALLBACK_ANSWER, webhook).build();
+        Voice fallback = Voice.builder().fallbackAnswer(webhook).build();
         assertEquals(1, fallback.getWebhooks().size());
         assertEquals(webhook, fallback.getWebhooks().get(Webhook.Type.FALLBACK_ANSWER));
     }

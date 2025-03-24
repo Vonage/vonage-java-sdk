@@ -47,9 +47,16 @@ public final class Verify extends Capability {
 
         private Builder() {}
 
-        @Override
-        public Builder addWebhook(Webhook.Type type, Webhook webhook) {
-            return super.addWebhook(type, webhook);
+        /**
+         * Set the {@code status_url} webhook for this capability.
+         *
+         * @param webhook The webhook properties, or {@code null} to remove.
+         *
+         * @return This builder.
+         * @since 9.0.0
+         */
+        public Builder status(Webhook webhook) {
+            return webhook(Webhook.Type.STATUS, webhook);
         }
 
         /**

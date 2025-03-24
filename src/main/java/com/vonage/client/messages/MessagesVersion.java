@@ -15,6 +15,7 @@
  */
 package com.vonage.client.messages;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
@@ -37,5 +38,19 @@ public enum MessagesVersion {
     @Override
     public String toString() {
         return name().toLowerCase().replace('_', '.');
+    }
+
+    /**
+     * Convert a string version to a MessagesVersion enum.
+     *
+     * @param value The version as a string.
+     *
+     * @return The Messages API version as an enum, or {@code null} if the input is null.
+     * @since 9.0.0
+     */
+    @JsonCreator
+    public static MessagesVersion fromString(String value) {
+        if (value == null) return null;
+        return MessagesVersion.valueOf(value.toUpperCase().replace('.', '_'));
     }
 }

@@ -91,10 +91,10 @@ public class ApplicationTest {
                 "\"connection_timeout\":500,\"socket_timeout\":3600}}}}}";
 
         Application application = Application.builder()
-                .addCapability(Voice.builder().addWebhook(Webhook.Type.EVENT, Webhook.builder()
+                .addCapability(Voice.builder().event(Webhook.builder()
                         .address("https://example.com/webhooks/event").method(HttpMethod.POST).build()
                 ).build())
-                .addCapability(Voice.builder().addWebhook(Webhook.Type.FALLBACK_ANSWER,
+                .addCapability(Voice.builder().fallbackAnswer(
                         Webhook.builder().method(HttpMethod.GET)
                                 .address("https://fallback.example.com/webhooks/answer")
                                 .connectionTimeout(500).socketTimeout(3600).build()
@@ -209,7 +209,7 @@ public class ApplicationTest {
 
     @Test
     public void testRemoveWebhookWhenThereAreNone() {
-        var voice = Voice.builder().removeWebhook(Webhook.Type.FALLBACK_ANSWER).build();
+        var voice = Voice.builder().fallbackAnswer(null).build();
         assertNotNull(voice);
         assertNull(voice.getWebhooks());
     }
@@ -220,8 +220,8 @@ public class ApplicationTest {
         Application application = Application.builder()
                 .addCapability(
                         Messages.builder()
-                                .addWebhook(Webhook.Type.INBOUND, new Webhook("https://example.com/inbound", HttpMethod.POST))
-                                .addWebhook(Webhook.Type.STATUS, new Webhook("https://example.com/status", HttpMethod.GET))
+                                .inbound(new Webhook("https://example.com/inbound", HttpMethod.POST))
+                                .status(new Webhook("https://example.com/status", HttpMethod.GET))
                                 .build())
                 .build();
 
@@ -234,7 +234,7 @@ public class ApplicationTest {
         String json = "{\"capabilities\":{\"verify\":{\"webhooks\":{\"status_url\":{\"address\":\"https://example.org/status_cb\",\"http_method\":\"GET\"}}}}}";
         Application application = Application.builder()
                 .addCapability(Verify.builder()
-                        .addWebhook(Webhook.Type.STATUS, new Webhook("https://example.org/status_cb", HttpMethod.GET))
+                        .status(new Webhook("https://example.org/status_cb", HttpMethod.GET))
                         .build()
                 )
                 .build();
@@ -248,7 +248,7 @@ public class ApplicationTest {
         String json = "{\"capabilities\":{\"messages\":{\"webhooks\":{\"inbound_url\":{\"address\":\"https://example.com/inbound\",\"http_method\":\"POST\"}}}}}";
         Application application = Application.builder().addCapability(
                 Messages.builder()
-                        .addWebhook(Webhook.Type.INBOUND, new Webhook("https://example.com/inbound", HttpMethod.POST))
+                        .inbound(new Webhook("https://example.com/inbound", HttpMethod.POST))
                         .build()
                 )
             .build();
