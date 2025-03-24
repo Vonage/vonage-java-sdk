@@ -22,7 +22,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Objects;
 
-public class WebSocketEndpoint extends JsonableBaseObject implements Endpoint {
+public class WebSocketEndpoint extends JsonableBaseObject implements CallEndpoint {
     private URI uri;
     private Websocket.ContentType contentType;
     @JsonProperty("headers") private Map<String, Object> headers;

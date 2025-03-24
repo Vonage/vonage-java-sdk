@@ -23,7 +23,7 @@ import com.vonage.client.JsonableBaseObject;
  *
  * @since 7.3.0
  */
-public class AppEndpoint extends JsonableBaseObject implements Endpoint {
+public class AppEndpoint extends JsonableBaseObject implements CallEndpoint {
     private String user;
 
     /**

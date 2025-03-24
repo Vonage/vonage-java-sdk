@@ -29,8 +29,8 @@ import java.util.Collections;
  * Call encapsulates the information required to create a call using {@link VoiceClient#createCall(Call)}
  */
 public class Call extends JsonableBaseObject {
-    private Endpoint[] to;
-    private Endpoint from;
+    private CallEndpoint[] to;
+    private CallEndpoint from;
     private EventMethod answerMethod, eventMethod;
     private Collection<URI> answerUrl, eventUrl;
     private MachineDetection machineDetection;
@@ -92,7 +92,7 @@ public class Call extends JsonableBaseObject {
      * @param from The caller endpoint.
      * @param answerUrl The URL to fetch the NCCO from.
      */
-    public Call(Endpoint to, Endpoint from, String answerUrl) {
+    public Call(CallEndpoint to, CallEndpoint from, String answerUrl) {
         this(builder().to(to).from(from).answerUrl(answerUrl));
     }
 
@@ -114,7 +114,7 @@ public class Call extends JsonableBaseObject {
      * @param from The caller endpoint.
      * @param ncco The NCCO actions to take.
      */
-    public Call(Endpoint to, Endpoint from, Collection<? extends Action> ncco) {
+    public Call(CallEndpoint to, CallEndpoint from, Collection<? extends Action> ncco) {
         this(builder().to(to).from(from).ncco(ncco));
     }
 
@@ -124,7 +124,7 @@ public class Call extends JsonableBaseObject {
      * @return The callee endpoint wrapped in an array.
      */
     @JsonProperty("to")
-    public Endpoint[] getTo() {
+    public CallEndpoint[] getTo() {
         return to;
     }
 
@@ -134,7 +134,7 @@ public class Call extends JsonableBaseObject {
      * @return The caller number / URI, or {@code null} if unspecified.
      */
     @JsonProperty("from")
-    public Endpoint getFrom() {
+    public CallEndpoint getFrom() {
         return from;
     }
 
@@ -258,8 +258,8 @@ public class Call extends JsonableBaseObject {
      * @since 7.3.0
      */
     public static class Builder {
-        private Endpoint[] to;
-        private Endpoint from;
+        private CallEndpoint[] to;
+        private CallEndpoint from;
         private EventMethod answerMethod = EventMethod.GET, eventMethod;
         private String answerUrl, eventUrl;
         private MachineDetection machineDetection;
@@ -277,7 +277,7 @@ public class Call extends JsonableBaseObject {
          *
          * @return This builder.
          */
-        public Builder to(Endpoint... endpoints) {
+        public Builder to(CallEndpoint... endpoints) {
             to = endpoints;
             return this;
         }
@@ -300,7 +300,7 @@ public class Call extends JsonableBaseObject {
          *
          * @return This builder.
          */
-        Builder from(Endpoint from) {
+        Builder from(CallEndpoint from) {
             this.from = from;
             return this;
         }

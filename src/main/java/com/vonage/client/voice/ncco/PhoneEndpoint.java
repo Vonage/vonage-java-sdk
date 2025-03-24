@@ -25,7 +25,7 @@ import java.util.Objects;
  * <a href=https://developer.vonage.com/voice/voice-api/ncco-reference#phone-endpoint>the documentation</a>
  * for an example.
  */
-public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
+public class PhoneEndpoint extends JsonableBaseObject implements ConnectEndpoint {
     private final String number, dtmfAnswer;
     private final OnAnswer onAnswer;
 

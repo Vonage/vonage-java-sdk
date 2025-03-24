@@ -16,12 +16,14 @@
 package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.voice.CallEndpoint;
 
 /**
- * An endpoint for a {@link ConnectAction} to connect to.
- * Not to be confused with Call endpoints - see {@link com.vonage.client.voice.Endpoint}.
+ * An endpoint for a {@link ConnectAction} to connect to. For outbound call endpoints, see {@link CallEndpoint}.
+ *
+ * @since 9.0.0 Renamed to ConnectEndpoint from Endpoint.
  */
-public interface Endpoint {
+public interface ConnectEndpoint {
 
     /**
      * Gets the endpoint type name.

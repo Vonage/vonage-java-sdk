@@ -26,7 +26,7 @@ import com.vonage.client.voice.EndpointType;
  *
  * @since 7.3.0
  */
-public class VbcEndpoint extends JsonableBaseObject implements Endpoint {
+public class VbcEndpoint extends JsonableBaseObject implements ConnectEndpoint {
     private final String extension;
 
     private VbcEndpoint(Builder builder) {

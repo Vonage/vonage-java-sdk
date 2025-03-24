@@ -28,7 +28,7 @@ import java.util.Map;
  * <a href=https://developer.vonage.com/voice/voice-api/ncco-reference#sip-endpoint>the documentation</a>
  * for an example.
  */
-public class SipEndpoint extends JsonableBaseObject implements Endpoint {
+public class SipEndpoint extends JsonableBaseObject implements ConnectEndpoint {
     private final URI uri;
     private final String domain, user;
     private final Map<String, ?> headers;

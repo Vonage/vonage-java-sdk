@@ -25,10 +25,10 @@ import java.util.Collections;
 import java.util.Objects;
 
 /**
- * An NCCO connect action that allows for the establishment of a connection to various {@link Endpoint}.
+ * An NCCO connect action that allows for the establishment of a connection to various {@link ConnectEndpoint}.
  */
 public class ConnectAction extends JsonableBaseObject implements Action {
-    private Collection<Endpoint> endpoint;
+    private Collection<ConnectEndpoint> endpoint;
     private String from;
     private EventType eventType;
     private Integer limit, timeOut;
@@ -75,7 +75,7 @@ public class ConnectAction extends JsonableBaseObject implements Action {
      * @return The endpoint wrapped in a collection.
      */
     @JsonProperty("endpoint")
-    public Collection<Endpoint> getEndpoint() {
+    public Collection<ConnectEndpoint> getEndpoint() {
         return endpoint;
     }
 
@@ -182,11 +182,11 @@ public class ConnectAction extends JsonableBaseObject implements Action {
     /**
      * Entry point for constructing an instance of this class.
      *
-     * @param endpoint Connect the call to a specific {@linkplain Endpoint}.
+     * @param endpoint Connect the call to a specific {@linkplain ConnectEndpoint}.
      *
      * @return A new Builder.
      */
-    public static Builder builder(Endpoint endpoint) {
+    public static Builder builder(ConnectEndpoint endpoint) {
         return builder().endpoint(endpoint);
     }
 
@@ -203,7 +203,7 @@ public class ConnectAction extends JsonableBaseObject implements Action {
      * Builder to create a ConnectAction. The endpoint to connect to is mandatory.
      */
     public static class Builder {
-        private Endpoint endpoint;
+        private ConnectEndpoint endpoint;
         private String from, eventUrl, ringbackTone;
         private EventType eventType;
         private Integer timeOut, limit;
@@ -215,13 +215,13 @@ public class ConnectAction extends JsonableBaseObject implements Action {
         Builder() {}
 
         /**
-         * Connect the call to a specific {@linkplain Endpoint}.
+         * Connect the call to a specific {@linkplain ConnectEndpoint}.
          *
          * @param endpoint The endpoint to connect to.
          *
          * @return This builder.
          */
-        public Builder endpoint(Endpoint endpoint) {
+        public Builder endpoint(ConnectEndpoint endpoint) {
             this.endpoint = endpoint;
             return this;
         }

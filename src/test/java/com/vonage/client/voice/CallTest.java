@@ -96,7 +96,7 @@ public class CallTest {
         headers.put("address", address);
         headers.put("system_roles", Arrays.asList(183493, 1038492, 22));
         headers.put("enable_auditing", false);
-        com.vonage.client.voice.Endpoint[] endpoints = {
+        CallEndpoint[] endpoints = {
                 new PhoneEndpoint("441632960960"),
                 new SipEndpoint("sip:sip@example.com"),
                 new VbcEndpoint("123"),
@@ -106,7 +106,7 @@ public class CallTest {
                         headers
                 )
         };
-        com.vonage.client.voice.Endpoint fromEndpoint = new com.vonage.client.voice.AppEndpoint("nexmo");
+        CallEndpoint fromEndpoint = new com.vonage.client.voice.AppEndpoint("nexmo");
         Call expectedCall = Call.builder().to(endpoints).from(fromEndpoint).answerUrl("http://example.com/answer").build();
         String jsonString = toFromJsonStart + ",\"answer_method\":\"GET\",\"answer_url\":[\"http://example.com/answer\"]}";
         Call fromJson = Jsonable.fromJson(jsonString, Call.class);
@@ -326,7 +326,7 @@ public class CallTest {
         assertFalse(call.getFromRandomNumber());
         assertEquals(MachineDetection.HANGUP, call.getMachineDetection());
         assertEquals(EndpointType.PHONE, call.getFrom().getType());
-        Endpoint[] to = call.getTo();
+        CallEndpoint[] to = call.getTo();
         assertEquals(6, to.length);
         assertEquals(EndpointType.APP, to[0].getType());
         assertEquals(EndpointType.SIP, to[1].getType());
@@ -370,7 +370,7 @@ public class CallTest {
         assertEquals("123", call.getTo()[0].toLog());
         assertThrows(IllegalStateException.class, () -> Call.builder().build());
         assertThrows(IllegalStateException.class, () -> Call.builder().to().build());
-        assertThrows(IllegalStateException.class, () -> Call.builder().to((Endpoint) null).build());
+        assertThrows(IllegalStateException.class, () -> Call.builder().to((CallEndpoint) null).build());
     }
 
     @Test

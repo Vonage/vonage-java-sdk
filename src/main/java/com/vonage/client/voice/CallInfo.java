@@ -23,7 +23,7 @@ import java.time.Instant;
  * Holds the information related to a call. It is obtained using {@link VoiceClient#listCalls()}.
  */
 public class CallInfo extends JsonableBaseObject {
-    private Endpoint from, to;
+    private CallEndpoint from, to;
     private String conversationUuid, uuid, network;
     private Double rate, price;
     private CallDirection direction;
@@ -42,7 +42,7 @@ public class CallInfo extends JsonableBaseObject {
      * @return The call recipient endpoint.
      */
     @JsonProperty("to")
-    public Endpoint getTo() {
+    public CallEndpoint getTo() {
         return to;
     }
 
@@ -52,7 +52,7 @@ public class CallInfo extends JsonableBaseObject {
      * @return The caller endpoint.
      */
     @JsonProperty("from")
-    public Endpoint getFrom() {
+    public CallEndpoint getFrom() {
         return from;
     }
 

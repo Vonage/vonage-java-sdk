@@ -18,7 +18,7 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
-public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
+public class PhoneEndpoint extends JsonableBaseObject implements CallEndpoint {
     private String number, dtmfAnswer;
 
     /**

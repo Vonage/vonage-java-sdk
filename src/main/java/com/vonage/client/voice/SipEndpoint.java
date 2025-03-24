@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * Endpoint for connecting to a SIP URI.
  */
-public class SipEndpoint extends JsonableBaseObject implements Endpoint {
+public class SipEndpoint extends JsonableBaseObject implements CallEndpoint {
     private String uri;
     private Map<String, ?> headers;
     private Map<SipHeader, String> standardHeaders;

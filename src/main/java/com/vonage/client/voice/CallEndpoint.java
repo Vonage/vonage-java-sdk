@@ -19,10 +19,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.vonage.client.voice.ncco.ConnectEndpoint;
 
 /**
- * Represents a receiver endpoint in a {@link Call}.
- * For NCCO endpoints, see {@link com.vonage.client.voice.ncco.Endpoint}.
+ * Represents a receiver endpoint in a {@link Call}. For NCCO endpoints, see {@link ConnectEndpoint}.
+ *
+ * @since 9.0.0 Renamed to CallEndpoint from Endpoint.
  */
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -36,7 +38,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = VbcEndpoint.class, name = "vbc"),
         @JsonSubTypes.Type(value = AppEndpoint.class, name = "app")
 })
-public interface Endpoint {
+public interface CallEndpoint {
 
     /**
      * Endpoint type name.
