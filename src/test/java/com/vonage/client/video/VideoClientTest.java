@@ -264,8 +264,8 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 		assertEquals("myfoostream", rtmp.getStreamName());
 		Hls hls = response.getHlsSettings();
 		assertNotNull(hls);
-		assertFalse(hls.dvr());
-		assertTrue(hls.lowLatency());
+		assertFalse(hls.getDvr());
+		assertTrue(hls.getLowLatency());
 		assertVideoStreamsEqualsExpectedJson(response);
 	}
 

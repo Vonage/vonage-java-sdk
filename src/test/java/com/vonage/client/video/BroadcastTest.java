@@ -65,8 +65,8 @@ public class BroadcastTest {
 				stylesheet+"\"},\"maxBitrate\":"+maxBitrate+",\"multiBroadcastTag\":\""+multiBroadcastTag +
 				"\",\"maxDuration\":" + maxDuration+",\"outputs\":{" + "\"rtmp\":[{\"id\":\"" +
 				rtmp1.getId()+"\",\"streamName\":\""+rtmp1.getStreamName()+"\",\"serverUrl\":\"" +
-				rtmp1.getServerUrl()+"\"}],\"hls\":{\"dvr\":"+hls.dvr()+",\"lowLatency\":" +
-				hls.lowLatency()+"}}}", requestJson = request.toJson();
+				rtmp1.getServerUrl()+"\"}],\"hls\":{\"dvr\":"+hls.getDvr()+",\"lowLatency\":" +
+				hls.getLowLatency()+"}}}", requestJson = request.toJson();
 
 		assertEquals(expectedRequestedJson, requestJson);
 
@@ -83,7 +83,7 @@ public class BroadcastTest {
 				",\"streams\":[{}]," +
 				"\"resolution\":\""+resolution+"\"," +
 				"\"streamMode\":\""+streamMode+"\"," +
-				"\"settings\":{\"hls\":{\"lowLatency\":"+hls.lowLatency()+",\"dvr\":"+hls.dvr()+"}}," +
+				"\"settings\":{\"hls\":{\"lowLatency\":"+hls.getLowLatency()+",\"dvr\":"+hls.getDvr()+"}}," +
 				"\"broadcastUrls\":{\"hls\":\""+hlsUrl+"\",\"rtmp\":[{\"id\":\""+rtmp1.getId() +
 				"\",\"serverUrl\":\""+rtmp1.getServerUrl()+"\",\"streamName\":\""+rtmp1.getStreamName() +
 				"\",\"status\":\""+rtmp1Status+"\"}]}}";
@@ -172,7 +172,7 @@ public class BroadcastTest {
 				"\"broadcastUrls\":{\"hls\":\""+hlsUrl+"\"," +
 				"\"rtmp\":[{\"id\":\""+rtmp1.getId()+"\",\"streamName\":\""+rtmp1.getStreamName()+"\"," +
 				"\"serverUrl\":\""+rtmp1.getServerUrl()+"\",\"status\":\""+rtmp1Status+"\"}]}," +
-				"\"settings\":{\"hls\":{\"dvr\":"+hls.dvr()+",\"lowLatency\":"+hls.lowLatency()+"}}}";
+				"\"settings\":{\"hls\":{\"dvr\":"+hls.getDvr()+",\"lowLatency\":"+hls.getLowLatency()+"}}}";
 		String requestFromResponseJsonJson = requestFromResponseJson.toJson();
 		assertEquals(expectedRequestFromResponseJsonToJson, requestFromResponseJsonJson);
 	}
