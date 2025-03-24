@@ -45,8 +45,7 @@ public class BroadcastTest {
 		StreamMode streamMode = StreamMode.AUTO;
 		BroadcastStatus status = BroadcastStatus.STOPPED;
 		String stylesheet = "stream.instructor {position: absolute; width: 100%;  height:50%;}";
-		StreamCompositionLayout layout = StreamCompositionLayout.builder(ScreenLayoutType.CUSTOM)
-				.stylesheet(stylesheet).build();
+		StreamCompositionLayout layout = StreamCompositionLayout.customLayout(stylesheet);
 		Hls hls = Hls.builder().dvr(false).lowLatency(false).build();
 		URI hlsUrl = URI.create("https://example.com/path/to/playlist.m3u8");
 		Rtmp rtmp1 = Rtmp.builder().serverUrl("rtmps://myfooserver/myfooapp")

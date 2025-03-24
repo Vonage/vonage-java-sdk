@@ -529,7 +529,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 
 	@Test
 	public void testUpdateArchiveLayout() throws Exception {
-		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.HORIZONTAL).build();
+		StreamCompositionLayout request = StreamCompositionLayout.standardLayout(ScreenLayoutType.HORIZONTAL);
 		stubResponseAndRun(() -> client.updateArchiveLayout(archiveId, request));
 		stubResponseAndAssertThrowsIAX(() -> client.updateArchiveLayout(null, request));
 		stubResponseAndAssertThrowsIAX(() -> client.updateArchiveLayout(archiveId, null));
@@ -638,7 +638,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 
 	@Test
 	public void testUpdateBroadcastLayout() throws Exception {
-		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.HORIZONTAL).build();
+		StreamCompositionLayout request = StreamCompositionLayout.standardLayout(ScreenLayoutType.HORIZONTAL);
 		stubResponseAndRun(() -> client.updateBroadcastLayout(broadcastId, request));
 		stubResponseAndAssertThrowsIAX(() -> client.updateBroadcastLayout(null, request));
 		stubResponseAndAssertThrowsIAX(() -> client.updateBroadcastLayout(broadcastId, null));
@@ -728,7 +728,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 				.addRtmpStream(Rtmp.builder().streamName("YT_key").serverUrl("https://youtu.be").id("uuID").build())
 				.hls(Hls.builder().dvr(true).lowLatency(false).build())
 				.resolution(Resolution.FHD_LANDSCAPE).streamMode(StreamMode.AUTO)
-				.layout(StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL).build())
+				.layout(StreamCompositionLayout.standardLayout(ScreenLayoutType.VERTICAL))
 				.multiBroadcastTag("broadcast_tag_provided")
 				.maxBitrate(128_000_000).maxDuration(1200).build();
 
@@ -1821,7 +1821,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 
 			@Override
 			protected StreamCompositionLayout sampleRequest() {
-				StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL).build();
+				StreamCompositionLayout request = StreamCompositionLayout.standardLayout(ScreenLayoutType.VERTICAL);
 				request.id = archiveId;
 				return request;
 			}
@@ -1855,7 +1855,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 
 			@Override
 			protected StreamCompositionLayout sampleRequest() {
-				StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.HORIZONTAL).build();
+				StreamCompositionLayout request = StreamCompositionLayout.standardLayout(ScreenLayoutType.HORIZONTAL);
 				request.id = broadcastId;
 				return request;
 			}

@@ -117,21 +117,12 @@ public abstract class Capability extends JsonableBaseObject {
                 webhooks.put(type, webhook);
             }
             else {
-                removeWebhook(type);
+                webhooks.remove(type);
+                if (webhooks.isEmpty()) {
+                    webhooks = null;
+                }
             }
             return (B) this;
-        }
-
-        /**
-         * Remove a webhook.
-         *
-         * @param type The {@link Webhook.Type} to remove.
-         */
-        private void removeWebhook(Webhook.Type type) {
-            webhooks.remove(type);
-            if (webhooks.isEmpty()) {
-                webhooks = null;
-            }
         }
 
         /**
