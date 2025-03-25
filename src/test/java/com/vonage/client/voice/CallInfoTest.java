@@ -102,39 +102,6 @@ public class CallInfoTest {
         assertEquals(new PhoneEndpoint("447700900105"), record.getFrom());
     }
 
-    @Test
-    public void testDeserializeUnknownEnumsFallbackToUnknown() {
-        String json = "{\n" +
-                "  \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n" +
-                "  \"status\": \"test-unknown-call-status\",\n" +
-                "  \"direction\": \"test-unknown-direction\",\n" +
-                "  \"rate\": \"0.02400000\",\n" +
-                "  \"price\": \"0.00280000\",\n" +
-                "  \"duration\": \"7\",\n" +
-                "  \"network\": \"23410\",\n" +
-                "  \"conversation_uuid\": \"aa17bd11-c895-4225-840d-30dc38c31e50\",\n" +
-                "  \"start_time\": \"2017-01-13T13:55:02.000Z\",\n" +
-                "  \"end_time\": \"2017-01-13T13:55:09.000Z\",\n" +
-                "  \"to\": {\n" +
-                "    \"type\": \"phone\",\n" +
-                "    \"number\": \"447700900104\"\n" +
-                "  },\n" +
-                "  \"from\": {\n" +
-                "    \"type\": \"phone\",\n" +
-                "    \"number\": \"447700900105\"\n" +
-                "  },\n" +
-                "  \"_links\": {\n" +
-                "    \"self\": {\n" +
-                "      \"href\": \"/v1/calls/93137ee3-580e-45f7-a61a-e0b5716000ef\"\n" +
-                "    }\n" +
-                "  }\n" +
-                "}\n";
-        CallInfo record = Jsonable.fromJson(json);
-        TestUtils.testJsonableBaseObject(record, true);
-        assertEquals(CallStatus.UNKNOWN, record.getStatus());
-        assertEquals(CallDirection.UNKNOWN, record.getDirection());
-    }
-
 
     @Test
     public void testStatusStarted() throws Exception {

@@ -16,7 +16,9 @@
 package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
 public class CarrierDetails extends JsonableBaseObject {
@@ -67,20 +69,19 @@ public class CarrierDetails extends JsonableBaseObject {
         LANDLINE_PREMIUM,
         LANDLINE_TOLLFREE,
         VIRTUAL,
-        UNKNOWN,
+        @JsonEnumDefaultValue UNKNOWN,
         PAGER;
 
+        /**
+         * Convert a string to a NetworkType enum.
+         *
+         * @param name The string to convert.
+         *
+         * @return The NetworkType enum, or {@code null} if invalid.
+         */
         @JsonCreator
         public static NetworkType fromString(String name) {
-            if (name.equalsIgnoreCase("null")) {
-                return null;
-            }
-            try {
-                return NetworkType.valueOf(name.toUpperCase());
-            }
-            catch (IllegalArgumentException iax) {
-                return UNKNOWN;
-            }
+            return Jsonable.fromString(name, NetworkType.class);
         }
 
         @Override

@@ -17,6 +17,7 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents event substates for advanced machine detection in {@link EventWebhook#getMachineDetectionSubstate()}.
@@ -33,12 +34,7 @@ public enum MachineDetectionStatus {
 	/**
 	 * Beep wasn't received after waiting for the designated period.
 	 */
-	BEEP_TIMEOUT,
-
-	/**
-	 * Unmapped value.
-	 */
-	UNKNOWN;
+	BEEP_TIMEOUT;
 
 	@JsonValue
 	@Override
@@ -47,19 +43,14 @@ public enum MachineDetectionStatus {
 	}
 
 	/**
-	 * Convert a string to a MachineDetectionStatus enum.
+	 * Convert a string value to a MachineDetectionStatus enum.
 	 *
-	 * @param name The machine detection status as a string.
+	 * @param name The string value to convert.
 	 *
-	 * @return The machine detection status as an enum, or {@link #UNKNOWN} if an invalid value was provided.
+	 * @return The machine detection status as an enum, or {@code null} if invalid.
 	 */
 	@JsonCreator
 	public static MachineDetectionStatus fromString(String name) {
-		try {
-			return MachineDetectionStatus.valueOf(name.toUpperCase());
-		}
-		catch (IllegalArgumentException ex) {
-			return UNKNOWN;
-		}
+		return Jsonable.fromString(name, MachineDetectionStatus.class);
 	}
 }

@@ -17,6 +17,7 @@ package com.vonage.client.sms;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the SMS message type.
@@ -24,23 +25,18 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @since 8.3.0
  */
 public enum MessageType {
-    TEXT, UNICODE, BINARY, UNKNOWN;
+    TEXT, UNICODE, BINARY;
 
     /**
      * Convert a string value to a MessageType enum.
      *
      * @param name The string value to convert.
      *
-     * @return The message type as an enum.
+     * @return The message type as an enum, or {@code null} if invalid.
      */
     @JsonCreator
     public static MessageType fromString(String name) {
-        try {
-            return MessageType.valueOf(name.toUpperCase());
-        }
-        catch (IllegalArgumentException | NullPointerException ex) {
-            return UNKNOWN;
-        }
+        return Jsonable.fromString(name, MessageType.class);
     }
 
     @JsonValue

@@ -130,4 +130,23 @@ public interface Jsonable {
 			throw new VonageUnexpectedException(ex);
 		}
     }
+
+	/**
+	 * Convenience method for converting a string to an enum.
+	 *
+	 * @param <E> The enum type.
+	 * @param value String representation of the enum.
+	 * @param type The enum class to parse.
+	 *
+	 * @return The parsed value as an enum, or {@code null} if an invalid value was passed in.
+	 * @since 9.0.0
+	 */
+	static <E extends Enum<E>> E fromString(String value, Class<E> type) {
+		try {
+			return Enum.valueOf(type, value.toUpperCase().replace('-', '_').replace(':', '_'));
+		}
+		catch (IllegalArgumentException | NullPointerException ex) {
+			return null;
+		}
+	}
 }

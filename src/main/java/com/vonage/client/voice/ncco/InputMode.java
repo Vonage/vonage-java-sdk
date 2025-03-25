@@ -17,6 +17,7 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the input mode for {@link InputAction}.
@@ -46,16 +47,10 @@ public enum InputMode {
      *
      * @param name The input mode name as a string.
      *
-     * @return The {@link InputMode} enum, or {@code null} if invalid / unknown.
+     * @return The {@link InputMode} enum, or {@code null} if invalid.
      */
     @JsonCreator
     public static InputMode fromString(String name) {
-        if (name == null) return null;
-        try {
-            return InputMode.valueOf(name.toUpperCase());
-        }
-        catch (IllegalArgumentException ex) {
-            return null;
-        }
+        return Jsonable.fromString(name, InputMode.class);
     }
 }

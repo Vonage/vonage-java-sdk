@@ -17,6 +17,7 @@ package com.vonage.client.application.capabilities;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents a Vonage region.
@@ -60,13 +61,14 @@ public enum Region {
 		return name().toLowerCase().replace("_", "-");
 	}
 
+	/**
+	 * Parse a region from a string.
+	 *
+	 * @param value The string value to convert.
+	 * @return The Region represented by the string, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static Region fromString(String value) {
-		try {
-			return Region.valueOf(value.toUpperCase().replace("-", "_"));
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
-			return null;
-		}
+		return Jsonable.fromString(value, Region.class);
 	}
 }

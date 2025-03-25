@@ -15,7 +15,9 @@
  */
 package com.vonage.client.messages.whatsapp;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the policy for resolving what language template to use.
@@ -27,5 +29,19 @@ public enum Policy {
 	@Override
 	public String toString() {
 		return name().toLowerCase();
+	}
+
+	/**
+	 * Convert a string value to a Policy enum.
+	 *
+	 * @param value The string value to convert.
+	 *
+	 * @return The policy as an enum, or {@code null} if invalid.
+	 *
+	 * @since 9.0.0
+	 */
+	@JsonCreator
+	public static Policy fromString(String value) {
+		return Jsonable.fromString(value, Policy.class);
 	}
 }

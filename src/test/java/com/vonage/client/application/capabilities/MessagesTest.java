@@ -17,10 +17,10 @@ package com.vonage.client.application.capabilities;
 
 import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
-import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.messages.MessagesVersion;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.*;
 
 public class MessagesTest {
@@ -42,9 +42,7 @@ public class MessagesTest {
         TestUtils.testJsonableBaseObject(messages);
 
         assertNull(MessagesVersion.fromString(null));
-        assertThrows(VonageResponseParseException.class, () ->
-                Jsonable.fromJson("{\"version\":\"1.2.3\"}", Messages.class)
-        );
+        assertNull(Jsonable.fromJson("{\"version\":\"1.2.3\"}", Messages.class).getVersion());
     }
 
     @Test

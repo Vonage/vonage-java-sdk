@@ -25,15 +25,23 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum SortOrder {
 	/**
-	 * Ascending (asc)
+	 * Ascending (asc).
 	 */
 	ASCENDING,
 
 	/**
-	 * Descending (desc)
+	 * Descending (desc).
 	 */
 	DESCENDING;
 
+	/**
+	 * Parse a sort order from a string.
+	 *
+	 * @param value The sort order as a string.
+	 *
+	 * @return The sort order as an enum, or {@code null} if the string is null.
+	 * @throws IllegalArgumentException if the string is not a valid sort order.
+	 */
 	@JsonCreator
 	public static SortOrder fromString(String value) {
 		if (value == null || value.isEmpty()) return null;

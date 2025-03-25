@@ -17,6 +17,7 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the project status.
@@ -32,14 +33,16 @@ public enum ProjectStatus {
 	 */
 	SUSPENDED;
 
+	/**
+	 * Convert a string to a ProjectStatus enum.
+	 *
+	 * @param value The string to convert.
+	 *
+	 * @return The ProjectStatus as an enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static ProjectStatus fromString(String value) {
-		try {
-			return valueOf(value.toUpperCase());
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
-			return null;
-		}
+		return Jsonable.fromString(value, ProjectStatus.class);
 	}
 
 	@JsonValue

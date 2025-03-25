@@ -16,6 +16,7 @@
 package com.vonage.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the callback type for voice.
@@ -38,12 +39,13 @@ public enum CallbackType {
      * Creates the enum from its string representation.
      *
      * @param type The serialized callback type as a string.
-     * @return Enum representation of the callback type, or {@code null} if {@code type} is null.
+     *
+     * @return Enum representation of the callback type, or {@code null} if invalid.
+     *
      * @since 8.10.0
      */
     @JsonCreator
     public static CallbackType fromString(String type) {
-        if (type == null) return null;
-        return valueOf(type.toUpperCase());
+        return Jsonable.fromString(type, CallbackType.class);
     }
 }

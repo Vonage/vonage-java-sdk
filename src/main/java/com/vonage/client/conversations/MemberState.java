@@ -16,6 +16,8 @@
 package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the state of a conversation member.
@@ -24,15 +26,17 @@ public enum MemberState {
 	INVITED,
 	JOINED,
 	LEFT,
-	UNKNOWN;
+	@JsonEnumDefaultValue UNKNOWN;
 
+	/**
+	 * Convert a string to a MemberState enum.
+	 *
+	 * @param name The string to convert.
+	 *
+	 * @return The MemberState enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static MemberState fromString(String name) {
-		try {
-			return valueOf(name.toUpperCase());
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
-			return null;
-		}
+		return Jsonable.fromString(name, MemberState.class);
 	}
 }

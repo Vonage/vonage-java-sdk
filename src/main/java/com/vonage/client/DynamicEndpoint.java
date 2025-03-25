@@ -155,12 +155,11 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	static RequestBuilder createRequestBuilderFromRequestMethod(HttpMethod requestMethod) {
 		switch (requestMethod) {
-			case GET: return RequestBuilder.get();
+			default: return RequestBuilder.get();
 			case POST: return RequestBuilder.post();
 			case PATCH: return RequestBuilder.patch();
 			case DELETE: return RequestBuilder.delete();
 			case PUT: return RequestBuilder.put();
-			default: throw new IllegalStateException("Unknown request method.");
 		}
 	}
 

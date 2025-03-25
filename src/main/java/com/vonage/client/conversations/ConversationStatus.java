@@ -17,6 +17,7 @@ package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the status of a {@linkplain Conversation}.
@@ -26,14 +27,16 @@ public enum ConversationStatus {
 	INACTIVE,
 	DELETED;
 
+	/**
+	 * Convert a string to a ConversationStatus enum.
+	 *
+	 * @param name The string to convert.
+	 *
+	 * @return The ConversationStatus enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static ConversationStatus fromString(String name) {
-		try {
-			return valueOf(name.toUpperCase());
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
-			return null;
-		}
+		return Jsonable.fromString(name, ConversationStatus.class);
 	}
 
 	@JsonValue

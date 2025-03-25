@@ -17,6 +17,7 @@ package com.vonage.client.verify;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Enum representing the control command. The possible commands are {@code cancel} to request cancellation of
@@ -34,8 +35,15 @@ public enum VerifyControlCommand {
         return name().toLowerCase();
     }
 
+    /**
+     * Convert a string to a VerifyControlCommand enum.
+     *
+     * @param name The control command as a string.
+     *
+     * @return The control command as an enum, or {@code null} if invalid.
+     */
     @JsonCreator
     public static VerifyControlCommand fromString(String name) {
-        return VerifyControlCommand.valueOf(name.toUpperCase());
+        return Jsonable.fromString(name, VerifyControlCommand.class);
     }
 }

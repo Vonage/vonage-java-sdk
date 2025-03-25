@@ -18,7 +18,6 @@ package com.vonage.client.sms;
 import com.vonage.client.TestUtils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -67,27 +66,5 @@ public class MessageEventTest {
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         var time = calendar.toZonedDateTime().toInstant();
         assertEquals(time, messageEvent.getMessageTimestamp());
-    }
-
-    @Test
-    public void testUnknownMessageType() {
-        var me = MessageEvent.fromJson("{\"type\": \"pigeon\"}");
-        TestUtils.testJsonableBaseObject(me);
-        assertNull(me.getConcat());
-        assertNull(me.getMessageId());
-        assertNull(me.getMessageTimestamp());
-        assertNull(me.getConcatPart());
-        assertNull(me.getConcatTotal());
-        assertNull(me.getData());
-        assertNull(me.getUdh());
-        assertNull(me.getText());
-        assertNull(me.getMsisdn());
-        assertNull(me.getKeyword());
-        assertNull(me.getNonce());
-        assertNull(me.getTo());
-        assertEquals(MessageType.UNKNOWN, me.getType());
-
-        me = MessageEvent.fromJson("{}");
-        assertNull(me.getType());
     }
 }

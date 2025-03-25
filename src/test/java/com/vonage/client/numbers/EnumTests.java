@@ -25,7 +25,7 @@ public class EnumTests {
         assertEquals(Type.LANDLINE, Type.fromString("landline"));
         assertEquals(Type.MOBILE_LVN, Type.fromString("mobile-lvn"));
         assertEquals(Type.LANDLINE_TOLL_FREE, Type.fromString("landline-toll-free"));
-        assertEquals(Type.UNKNOWN, Type.fromString("test unknown"));
+        assertNull(Type.fromString("test unknown"));
     }
 
     @Test
@@ -33,7 +33,6 @@ public class EnumTests {
         assertEquals("landline", Type.LANDLINE.toString());
         assertEquals("mobile-lvn", Type.MOBILE_LVN.toString());
         assertEquals("landline-toll-free", Type.LANDLINE_TOLL_FREE.toString());
-        assertEquals("unknown", Type.UNKNOWN.toString());
         assertNull(Type.fromString(null));
     }
 

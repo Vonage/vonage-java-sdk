@@ -58,6 +58,14 @@ public enum Resolution {
 		return value;
 	}
 
+	/**
+	 * Parse a string to a Resolution enum.
+	 *
+	 * @param resolution The string to convert.
+	 *
+	 * @return The Resolution enum, or {@code null} if the string is null.
+	 * @throws IllegalArgumentException If the string is not a valid enum value.
+	 */
 	@JsonCreator
 	public static Resolution fromString(String resolution) {
 		return RESOLUTION_INDEX.getOrDefault(resolution, null);

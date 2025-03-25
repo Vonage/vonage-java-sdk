@@ -65,7 +65,7 @@ public class SpeechResults extends JsonableBaseObject {
      * Indicates if the input ended when user stopped speaking, by max duration timeout
      * or if the user didn't say anything.
      *
-     * @return Reason for the timeout as an enum.
+     * @return Reason for the timeout as an enum, or {@code null} if unknown.
      */
     @JsonProperty("timeout_reason")
     public SpeechTimeoutReason getTimeoutReason() {

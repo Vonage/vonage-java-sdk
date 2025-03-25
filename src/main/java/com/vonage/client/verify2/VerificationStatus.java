@@ -17,6 +17,7 @@ package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the status of an event or update in {@link VerificationCallback#getStatus()}.
@@ -52,14 +53,16 @@ public enum VerificationStatus {
 	 */
 	UNUSED;
 
+	/**
+	 * Convert a string to a VerificationStatus enum.
+	 *
+	 * @param name The string to convert.
+	 *
+	 * @return The VerificationStatus as an enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static VerificationStatus fromString(String name) {
-		try {
-			return VerificationStatus.valueOf(name.toUpperCase());
-		}
-		catch (IllegalArgumentException ex) {
-			return null;
-		}
+		return Jsonable.fromString(name, VerificationStatus.class);
 	}
 
 	@JsonValue

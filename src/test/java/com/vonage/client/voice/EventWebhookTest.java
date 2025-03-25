@@ -200,38 +200,9 @@ public class EventWebhookTest {
     }
 
     @Test
-    public void testMachineDetectionStatusUnknown() {
-        CallStatus status = CallStatus.REJECTED;
-        String json = "{\"status\":\"" + status + "\",\"sub_state\": \"L0L\"}";
-        EventWebhook event = EventWebhook.fromJson(json);
-        assertEquals(status, event.getStatus());
-        assertEquals(MachineDetectionStatus.UNKNOWN, event.getMachineDetectionSubstate());
-    }
-
-    @Test
-    public void testSpeechTimeoutReasonUnknown() {
-        CallStatus status = CallStatus.INPUT;
-        String json = "{\n" +
-            "  \"status\":\"" + status + "\",\n" +
-            "  \"speech\": {\n" +
-            "    \"timeout_reason\": \"who_knows\"\n" +
-            "  }\n" +
-            "}";
-        EventWebhook event = EventWebhook.fromJson(json);
-        assertEquals(status, event.getStatus());
-        SpeechResults speech = event.getSpeech();
-        assertNotNull(speech);
-        assertEquals(SpeechTimeoutReason.UNKNOWN, speech.getTimeoutReason());
-        assertNull(speech.getResults());
-        assertNull(speech.getRecordingUrl());
-        assertNull(speech.getError());
-    }
-
-    @Test
     public void testDisconnectedByEnum() {
         assertEquals(DisconnectedBy.PLATFORM, DisconnectedBy.fromString("platform"));
         assertEquals(DisconnectedBy.USER, DisconnectedBy.fromString("user"));
         assertNull(DisconnectedBy.fromString(null));
-        assertEquals(DisconnectedBy.UNKNOWN, DisconnectedBy.fromString("Somebody Else"));
     }
 }

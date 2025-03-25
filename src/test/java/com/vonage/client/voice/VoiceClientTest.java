@@ -700,6 +700,13 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
             protected String sampleRequestBodyString() {
                 return "{\"action\":\""+action.name().toLowerCase()+"\"}";
             }
+
+            @Override
+            public void runTests() throws Exception {
+                super.runTests();
+                assertNull(ModifyCallAction.fromString("not_an_action"));
+                assertNull(ModifyCallAction.fromString(null));
+            }
         }
         .runTests();
     }

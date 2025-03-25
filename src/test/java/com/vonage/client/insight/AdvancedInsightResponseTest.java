@@ -111,7 +111,7 @@ public class AdvancedInsightResponseTest {
     public void testFromJsonUnknownRoaming() {
         AdvancedInsightResponse response = Jsonable.fromJson("{\n" +
                 "    \"roaming\": \"unknown\",\n" +
-                "    \"caller_type\": \"dunno\",\n" +
+                "    \"caller_type\": \"unknown\",\n" +
                 "    \"real_time_data\": {\n" +
                 "       \"active_status\": \"inactive\"" +
                 "    }\n" +
@@ -152,7 +152,7 @@ public class AdvancedInsightResponseTest {
     }
 
     @Test
-    public void testDeserializeUnknownEnumsFallbackToUnknown() {
+    public void testDeserializeUnknownEnumsAreNull() {
         AdvancedInsightResponse response = Jsonable.fromJson(
                 "{\n" +
                 "    \"valid_number\": \"failed_validity\",\n" +
@@ -174,12 +174,12 @@ public class AdvancedInsightResponseTest {
                 "}"
         );
 
-        assertEquals(Validity.UNKNOWN, response.getValidNumber());
-        assertEquals(Reachability.UNKNOWN, response.getReachability());
-        assertEquals(PortedStatus.UNKNOWN, response.getPorted());
-        assertEquals(RoamingDetails.RoamingStatus.UNKNOWN, response.getRoaming().getStatus());
+        assertNull(response.getValidNumber());
+        assertNull(response.getReachability());
+        assertNull(response.getPorted());
+        assertNull(response.getRoaming().getStatus());
         assertNull(response.getCurrentCarrier());
-        assertEquals(CarrierDetails.NetworkType.UNKNOWN, response.getOriginalCarrier().getNetworkType());
+        assertNull(response.getOriginalCarrier().getNetworkType());
         assertNull(response.getLookupOutcome());
     }
 
@@ -207,8 +207,7 @@ public class AdvancedInsightResponseTest {
                 "  \"lookup_outcome_message\": \"??\"\n" +
                 "}");
 
-        assertEquals(LookupOutcome.UNKNOWN, response.getLookupOutcome());
-        assertEquals(3, response.getLookupOutcome().getCode());
+        assertNull(response.getLookupOutcome());
     }
 
     @Test

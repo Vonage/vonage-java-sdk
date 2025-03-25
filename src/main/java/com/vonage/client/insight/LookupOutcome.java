@@ -27,18 +27,19 @@ import java.util.Arrays;
  * {@code 2} is failure.
  */
 public enum LookupOutcome {
-	UNKNOWN(Integer.MAX_VALUE),
 	SUCCESS(0),
 	PARTIAL_SUCCESS(1),
 	FAILED(2);
 
-	private int code;
+	private final int code;
 
 	LookupOutcome(int code) {
 		this.code = code;
 	}
 
 	/**
+	 * Gets the enum code.
+	 *
 	 * @return The code used to create this enum.
 	 */
 	@JsonValue
@@ -46,15 +47,18 @@ public enum LookupOutcome {
 		return code;
 	}
 
+	/**
+	 * Convert an integer value to a LookupOutcome enum.
+	 *
+	 * @param code The integer value to convert.
+	 *
+	 * @return The LookupOutcome enum, or {@code null} if unknown.
+	 */
 	@JsonCreator
 	public static LookupOutcome fromInt(Integer code) {
 		if (code == null) return null;
 		return Arrays.stream(LookupOutcome.values())
 				.filter(lo -> lo.code == code)
-				.findFirst().orElseGet(() -> {
-					LookupOutcome wildcard = UNKNOWN;
-					wildcard.code = code;
-					return wildcard;
-				});
+				.findFirst().orElse(null);
 	}
 }

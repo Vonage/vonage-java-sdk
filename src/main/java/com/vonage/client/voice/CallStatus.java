@@ -17,6 +17,7 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Describes the status of the call, and also the event in {@link EventWebhook#getStatus()}.
@@ -99,12 +100,7 @@ public enum CallStatus {
     /**
      * Either the recipient is unreachable or the recipient declined the call.
      */
-    UNANSWERED,
-
-    /**
-     * Unknown status or event.
-     */
-    UNKNOWN;
+    UNANSWERED;
 
     @JsonValue
     @Override
@@ -113,19 +109,14 @@ public enum CallStatus {
     }
 
     /**
-     * Convert a string into a {@link CallStatus} enum.
+     * Convert a string value to a CallStatus enum.
      *
-     * @param name The call status name as a string.
+     * @param name The string value to convert.
      *
-     * @return The call status as an enum, or {@code UNKNOWN} if an invalid value is provided.
+     * @return The status as an enum, or {@code null} if invalid.
      */
     @JsonCreator
     public static CallStatus fromString(String name) {
-        try {
-            return CallStatus.valueOf(name.toUpperCase());
-        }
-        catch (IllegalArgumentException ex) {
-            return UNKNOWN;
-        }
+       return Jsonable.fromString(name, CallStatus.class);
     }
 }

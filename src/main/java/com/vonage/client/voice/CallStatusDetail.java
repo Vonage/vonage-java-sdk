@@ -81,6 +81,13 @@ public enum CallStatusDetail {
         return name().toLowerCase();
     }
 
+    /**
+     * Convert a string into a {@link CallStatusDetail} enum.
+     *
+     * @param detail The call status detail as a string.
+     *
+     * @return The call status detail as an enum, or {@code NO_DETAIL} if the detail is {@code null}.
+     */
     @JsonCreator
     public static CallStatusDetail fromString(String detail) {
         if (detail == null) {

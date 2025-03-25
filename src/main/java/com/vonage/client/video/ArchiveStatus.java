@@ -17,6 +17,7 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Defines values returned by the {@link Archive#getStatus} method.
@@ -74,13 +75,15 @@ public enum ArchiveStatus {
 		return name().toLowerCase();
 	}
 
+	/**
+	 * Convert a string to an ArchiveStatus enum.
+	 *
+	 * @param value The archive status as a string.
+	 *
+	 * @return The archive status as an enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static ArchiveStatus fromString(String value) {
-		try {
-			return ArchiveStatus.valueOf(value.toUpperCase());
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
-			return null;
-		}
+		return Jsonable.fromString(value, ArchiveStatus.class);
 	}
 }

@@ -17,6 +17,7 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the various types of call endpoints supported by the Voice API.
@@ -41,11 +42,10 @@ public enum EndpointType {
      *
      * @param name The endpoint type as a string.
      *
-     * @return The endpoint type as an enum, or {@code null} if the string is null.
+     * @return The endpoint type as an enum, or {@code null} if invalid.
      */
     @JsonCreator
     public static EndpointType fromString(String name) {
-        if (name == null) return null;
-        return EndpointType.valueOf(name.toUpperCase());
+        return Jsonable.fromString(name, EndpointType.class);
     }
 }

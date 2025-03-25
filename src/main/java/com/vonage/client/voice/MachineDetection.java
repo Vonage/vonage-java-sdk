@@ -17,6 +17,7 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents machine detection behaviour.
@@ -30,12 +31,7 @@ public enum MachineDetection {
     /**
      * End the call on encounter.
      */
-    HANGUP,
-
-    /**
-     * Unmapped / invalid value.
-     */
-    UNKNOWN;
+    HANGUP;
 
     @JsonValue
     @Override
@@ -44,19 +40,14 @@ public enum MachineDetection {
     }
 
     /**
-     * Convert a string to a MachineDetection enum.
+     * Convert a string value to a MachineDetection enum.
      *
-     * @param name The string to convert to a MachineDetection enum.
+     * @param name The string value to convert.
      *
-     * @return The machine detection mode as an enum, or {@linkplain #UNKNOWN} if an invalid value is provided.
+     * @return The machine detection as an enum, or {@code null} if invalid.
      */
     @JsonCreator
     public static MachineDetection fromString(String name) {
-        try {
-            return MachineDetection.valueOf(name.toUpperCase());
-        }
-        catch (IllegalArgumentException ex) {
-            return UNKNOWN;
-        }
+        return Jsonable.fromString(name, MachineDetection.class);
     }
 }

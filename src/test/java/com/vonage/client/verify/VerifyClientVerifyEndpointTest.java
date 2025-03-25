@@ -171,7 +171,7 @@ public class VerifyClientVerifyEndpointTest extends AbstractClientTest<VerifyCli
             protected VerifyRequest sampleRequest() {
                 return VerifyRequest.builder("4477990090090", "Brand.com")
                         .senderId("VERIFICATION").length(6).country("GB")
-                        .locale(new Locale("en", "gb"))
+                        .locale(Locale.forLanguageTag("en-GB"))
                         .pinExpiry(60).pinCode("a1b2C3").nextEventWait(90)
                         .workflow(VerifyRequest.Workflow.TTS_TTS).build();
             }

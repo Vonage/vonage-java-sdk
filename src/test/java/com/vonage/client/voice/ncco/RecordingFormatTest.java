@@ -23,7 +23,7 @@ public class RecordingFormatTest {
     public void testFromString() {
         assertEquals(RecordingFormat.MP3, RecordingFormat.fromString("mp3"));
         assertEquals(RecordingFormat.WAV, RecordingFormat.fromString("wav"));
-        assertEquals(RecordingFormat.UNKNOWN, RecordingFormat.fromString("test unknown"));
+        assertNull(RecordingFormat.fromString("test unknown"));
     }
 
     @Test

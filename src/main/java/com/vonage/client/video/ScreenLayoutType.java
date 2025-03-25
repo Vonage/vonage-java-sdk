@@ -62,6 +62,14 @@ public enum ScreenLayoutType {
 		this.value = value;
 	}
 
+	/**
+	 * Convert a string to a ScreenLayoutType enum.
+	 *
+	 * @param value The string to convert.
+	 *
+	 * @return The ScreenLayoutType as an enum, or {@code null} if the value is null.
+	 * @throws IllegalArgumentException If the string is not a valid enum value.
+	 */
 	@JsonCreator
 	public static ScreenLayoutType fromString(String value) {
 		return TYPE_INDEX.getOrDefault(value, null);

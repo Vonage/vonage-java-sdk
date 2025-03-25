@@ -17,6 +17,7 @@ package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 import com.vonage.client.messages.MessageStatus;
 
 /**
@@ -37,9 +38,15 @@ public enum ConversationType {
         return name().toLowerCase();
     }
 
+    /**
+     * Convert a string value to a ConversationType enum.
+     *
+     * @param value The string value to convert.
+     *
+     * @return The conversation type as an enum, or {@code null} if invalid
+     */
     @JsonCreator
     public static ConversationType fromString(String value) {
-        if (value == null) return null;
-        return ConversationType.valueOf(value.toUpperCase());
+        return Jsonable.fromString(value, ConversationType.class);
     }
 }

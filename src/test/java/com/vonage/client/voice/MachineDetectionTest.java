@@ -23,10 +23,6 @@ public class MachineDetectionTest {
     @Test
     public void testMachineDetectionFromString() {
         assertEquals(MachineDetection.HANGUP, MachineDetection.fromString("hangup"));
-    }
-
-    @Test
-    public void testDeserializeUnknownEnumsFallbackToUnknown() {
-        assertEquals(MachineDetection.UNKNOWN, MachineDetection.fromString("test unknown machine detection"));
+        assertEquals(MachineDetection.CONTINUE, MachineDetection.fromString("continue"));
     }
 }

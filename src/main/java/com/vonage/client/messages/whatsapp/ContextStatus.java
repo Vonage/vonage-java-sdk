@@ -17,6 +17,8 @@ package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
+
 /**
  * Represents the WhatsApp {@code context_status} field in {@link com.vonage.client.messages.InboundMessage}.
  * <p>
@@ -37,9 +39,15 @@ public enum ContextStatus {
         return name().toLowerCase();
     }
 
+    /**
+     * Convert a string value to a ContextStatus enum.
+     *
+     * @param value The string value to convert.
+     *
+     * @return The context status as an enum, or {@code null} if invalid.
+     */
     @JsonCreator
     public static ContextStatus fromString(String value) {
-        if (value == null) return null;
-        return ContextStatus.valueOf(value.toUpperCase());
+        return Jsonable.fromString(value, ContextStatus.class);
     }
 }

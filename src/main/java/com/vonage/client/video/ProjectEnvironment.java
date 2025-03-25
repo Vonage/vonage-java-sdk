@@ -17,6 +17,7 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the project environment type. Enterprise package partners have access to the enterprise environment.
@@ -25,14 +26,16 @@ public enum ProjectEnvironment {
 	STANDARD,
 	ENTERPRISE;
 
+	/**
+	 * Convert a string to a ProjectEnvironment enum.
+	 *
+	 * @param value The string to convert.
+	 *
+	 * @return The ProjectEnvironment as an enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static ProjectEnvironment fromString(String value) {
-		try {
-			return valueOf(value.toUpperCase());
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
-			return null;
-		}
+		return Jsonable.fromString(value, ProjectEnvironment.class);
 	}
 
 	@JsonValue

@@ -258,6 +258,13 @@ public enum EventType {
 	 */
 	RTC_ANSWER;
 
+	/**
+	 * Convert a string to an EventType enum.
+	 *
+	 * @param name The string to convert.
+	 *
+	 * @return The EventType enum, {@code null} if empty and {@linkplain #UNKNOWN} if invalid.
+	 */
 	@JsonCreator
 	public static EventType fromString(String name) {
 		if (name == null || name.trim().isEmpty()) {

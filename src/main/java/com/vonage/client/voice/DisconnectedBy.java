@@ -17,6 +17,7 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the call terminator in {@linkplain EventWebhook#getDisconnectedBy()}.
@@ -34,12 +35,7 @@ public enum DisconnectedBy {
      * The call was terminated by the user,
      * for example the user hung up the call, rejected the call, or didn't answer.
      */
-    USER,
-
-    /**
-     * The call was terminator is unmapped by this enum.
-     */
-    UNKNOWN;
+    USER;
 
     @JsonValue
     @Override
@@ -52,16 +48,10 @@ public enum DisconnectedBy {
      *
      * @param name The disconnected_by field from the webhook as a string.
      *
-     * @return The enum value mapping, or {@code null} if the string is null.
+     * @return The enum value mapping, or {@code null} if invalid.
      */
     @JsonCreator
     public static DisconnectedBy fromString(String name) {
-        if (name == null) return null;
-        try {
-            return valueOf(name.toUpperCase());
-        }
-        catch (IllegalArgumentException ex) {
-            return UNKNOWN;
-        }
+        return Jsonable.fromString(name, DisconnectedBy.class);
     }
 }

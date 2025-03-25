@@ -17,6 +17,7 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the direction of a call.
@@ -30,12 +31,7 @@ public enum CallDirection {
     /**
      * Incoming call.
      */
-    INBOUND,
-
-    /**
-     * Unknown call direction.
-     */
-    UNKNOWN;
+    INBOUND;
 
     @JsonValue
     @Override
@@ -48,15 +44,10 @@ public enum CallDirection {
      *
      * @param name The call direction as a string.
      *
-     * @return The call direction as an enum, or {@link #UNKNOWN} if an invalid value was provided.
+     * @return The call direction as an enum, or {@code null} if invalid.
      */
     @JsonCreator
     public static CallDirection fromString(String name) {
-        try {
-            return CallDirection.valueOf(name.toUpperCase());
-        }
-        catch (IllegalArgumentException ex) {
-            return UNKNOWN;
-        }
+        return Jsonable.fromString(name, CallDirection.class);
     }
 }

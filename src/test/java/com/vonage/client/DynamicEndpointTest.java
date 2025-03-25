@@ -110,19 +110,6 @@ public class DynamicEndpointTest {
     }
 
     @Test
-    public void testUnknownRequestMethod() {
-        @SuppressWarnings("unchecked")
-        var endpoint = DynamicEndpoint.builder(Void.class)
-                .wrapper(WRAPPER).authMethod(NoAuthMethod.class)
-                .pathGetter((de, req) -> TEST_BASE_URI + req)
-                .requestMethod(HttpMethod.UNKNOWN).build();
-
-        assertThrows(IllegalStateException.class, () -> endpoint.execute("rest"));
-
-        assertEquals(HttpMethod.UNKNOWN, HttpMethod.fromString("TELEPORT"));
-    }
-
-    @Test
     public void testCustomParsedResponse() throws Exception {
         record CustomData(Object field) { }
 

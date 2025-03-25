@@ -17,6 +17,7 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the possible versions used for webhooks in the Messages API.
@@ -45,12 +46,11 @@ public enum MessagesVersion {
      *
      * @param value The version as a string.
      *
-     * @return The Messages API version as an enum, or {@code null} if the input is null.
+     * @return The Messages API version as an enum, or {@code null} if invalid.
      * @since 9.0.0
      */
     @JsonCreator
     public static MessagesVersion fromString(String value) {
-        if (value == null) return null;
-        return MessagesVersion.valueOf(value.toUpperCase().replace('.', '_'));
+        return Jsonable.fromString(value, MessagesVersion.class);
     }
 }

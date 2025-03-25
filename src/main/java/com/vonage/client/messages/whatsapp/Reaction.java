@@ -18,6 +18,7 @@ package com.vonage.client.messages.whatsapp;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
 /**
@@ -87,10 +88,16 @@ public final class Reaction extends JsonableBaseObject {
 			return name().toLowerCase();
 		}
 
+		/**
+		 * Convert a string value to an Action enum.
+		 *
+		 * @param value The string value to convert.
+		 *
+		 * @return The action as an enum, or {@code null} if invalid.
+		 */
 		@JsonCreator
 		public static Action fromString(String value) {
-			if (value == null) return null;
-			return Action.valueOf(value.toUpperCase());
+			return Jsonable.fromString(value, Action.class);
 		}
 	}
 }
