@@ -15,30 +15,29 @@
  */
 package com.vonage.client.insight;
 
-/**
- * Represents a synchronous advanced insight request.
- */
-public final class AdvancedInsightRequest extends BaseInsightRequest {
+import java.net.URI;
+import java.util.Map;
 
-    AdvancedInsightRequest(Builder builder) {
+/**
+ * Represents an asynchronous advanced insight request. The main response body will be returned to the callback URL.
+ *
+ * @since 9.0.0
+ */
+public final class AdvancedInsightAsyncRequest extends BaseInsightRequest {
+    private final URI callback;
+
+    AdvancedInsightAsyncRequest(Builder builder) {
         super(builder.number, builder.country);
         cnam = builder.cnam;
+        if (builder.callback == null || builder.callback.trim().isEmpty()) {
+            throw new IllegalArgumentException("Callback URL is required.");
+        }
+        callback = URI.create(builder.callback);
     }
 
     /**
      * This method is the starting point for constructing an Advanced Insight 
-     *
-     * @param number A single phone number that you need insight about in national or international format.
-     *
-     * @return A new {@link Builder} instance.
-     */
-    public static Builder builder(String number) {
-        return new Builder(number);
-    }
-
-    /**
-     * This method is the starting point for constructing an Advanced Insight 
-     * Note that the number field must be set.
+     * Note that the number and callback fields must be set.
      *
      * @return A new {@link Builder} instance.
      */
@@ -46,40 +45,24 @@ public final class AdvancedInsightRequest extends BaseInsightRequest {
         return new Builder();
     }
 
+    public URI getCallback() {
+        return callback;
+    }
+
     public Boolean getCnam() {
         return cnam;
     }
 
-    /**
-     * Construct an AdvancedInsightRequest with a number.
-     *
-     * @param number A single phone number that you need insight about in national or international format.
-     *
-     * @return A new AdvancedInsightRequest object.
-     */
-    public static AdvancedInsightRequest withNumber(String number) {
-        return new Builder(number).build();
-    }
-
-    /**
-     * Construct a AdvancedInsightRequest with a number and country.
-     *
-     * @param number  A single phone number that you need insight about in national or international format.
-     * @param country If a number does not have a country code, or it is uncertain, set the two-character country code.
-     *
-     * @return A new AdvancedInsightRequest object.
-     */
-    public static AdvancedInsightRequest withNumberAndCountry(String number, String country) {
-        return new Builder(number).country(country).build();
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = super.makeParams();
+        params.put("callback", callback.toString());
+        return params;
     }
 
     public static final class Builder {
         private Boolean cnam;
-        private String number, country;
-
-        private Builder(String number) {
-            this.number = number;
-        }
+        private String number, country, callback;
 
         private Builder() {}
 
@@ -117,10 +100,20 @@ public final class AdvancedInsightRequest extends BaseInsightRequest {
         }
 
         /**
-         * @return A new {@link AdvancedInsightRequest} object from the stored builder options.
+         * @param url The URL that Vonage will send a request to when the insight lookup is finished.
+         *
+         * @return This builder.
          */
-        public AdvancedInsightRequest build() {
-            return new AdvancedInsightRequest(this);
+        public Builder callback(String url) {
+            this.callback = url;
+            return this;
+        }
+
+        /**
+         * @return A new {@link AdvancedInsightAsyncRequest} object from the stored builder options.
+         */
+        public AdvancedInsightAsyncRequest build() {
+            return new AdvancedInsightAsyncRequest(this);
         }
     }
 }

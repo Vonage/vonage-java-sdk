@@ -29,6 +29,7 @@ public class InsightClient {
     final RestEndpoint<BasicInsightRequest, BasicInsightResponse> basic;
     final RestEndpoint<StandardInsightRequest, StandardInsightResponse> standard;
     final RestEndpoint<AdvancedInsightRequest, AdvancedInsightResponse> advanced;
+    final RestEndpoint<AdvancedInsightAsyncRequest, AdvancedAsyncInsightResponse> advancedAsync;
 
     /**
      * Constructor.
@@ -52,7 +53,8 @@ public class InsightClient {
 
         basic = new Endpoint<>(req -> "basic");
         standard = new Endpoint<>(req -> "standard");
-        advanced = new Endpoint<>(req -> "advanced" + (req.isAsync() ? "/async" : ""));
+        advanced = new Endpoint<>(req -> "advanced");
+        advancedAsync = new Endpoint<>(req -> "advanced/async");
     }
 
     /**
@@ -171,16 +173,32 @@ public class InsightClient {
     }
 
     /**
-     * Perform an Advanced Insight Request with a {@link AdvancedInsightRequest}.
+     * Perform an Advanced Insight Request with a {@link AdvancedInsightAsyncRequest}.
      *
-     * @param advancedInsightRequest A request object containing the details of the request to make.
+     * @param request A request object containing the details of the request to make.
      *
      * @return A {@link AdvancedInsightResponse} representing the response from the Vonage Number Insight API.
      *
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      */
-    public AdvancedInsightResponse getAdvancedNumberInsight(AdvancedInsightRequest advancedInsightRequest) throws VonageResponseParseException, VonageClientException {
-        return advanced.execute(advancedInsightRequest);
+    public AdvancedInsightResponse getAdvancedNumberInsight(AdvancedInsightRequest request) throws VonageResponseParseException, VonageClientException {
+        return advanced.execute(request);
+    }
+
+    /**
+     * Perform an Advanced Insight Request with a {@link AdvancedInsightAsyncRequest}.
+     *
+     * @param request A request object containing the details of the request to make.
+     *
+     * @return A {@link AdvancedInsightResponse} representing the response from the Vonage Number Insight API.
+     *
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     *
+     * @since 9.0.0
+     */
+    public AdvancedAsyncInsightResponse getAdvancedAsyncNumberInsight(AdvancedInsightAsyncRequest request) throws VonageResponseParseException, VonageClientException {
+        return advancedAsync.execute(request);
     }
 }
