@@ -168,6 +168,42 @@ public class Verify2Client {
 	}
 
 	/**
+	 * Convenience method for validating a verification code and getting a boolean response.
+	 * This is functionally the same API call as {@linkplain #checkVerificationCode(UUID, String)}, except that
+	 * it will return {@code true} if successful, {@code false} if the code is invalid (HTTP status 400 or 410),
+	 * and throw an exception if the API call fails for any other reason.
+	 *
+	 * @param requestId ID of the verify request, obtained from {@link VerificationResponse#getRequestId()}.
+	 * @param code The code supplied by the user.
+	 *
+	 * @return {@code true} if the code is valid, {@code false} if it is not.
+	 *
+	 * @throws VerifyResponseException If the code could not be checked. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401</b>: Invalid credentials.</li>
+	 *     <li><b>402</b>: Low balance.</li>
+	 *     <li><b>404</b>: Request ID was not found or it has been verified already.</li>
+	 *     <li><b>409</b>: The current workflow step does not support a code.</li>
+	 *     <li><b>429</b>: Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500</b>: An error occurred on the Vonage platform.</li>
+	 * </ul>
+	 *
+	 * @since 9.0.0
+	 */
+	public boolean isValidVerificationCode(UUID requestId, String code) {
+		try {
+			checkVerificationCode(requestId, code);
+			return true;
+		}
+		catch (VerifyResponseException ex) {
+			switch (ex.getStatusCode()) {
+				case 400: case 410: return false;
+				default: throw ex;
+			}
+		}
+	}
+
+	/**
 	 * Attempts to abort an active verification workflow.
 	 * If successful (HTTP status 204), this method will return normally.
 	 * Otherwise, a {@link VerifyResponseException} exception will be thrown, indicating a 404 response.

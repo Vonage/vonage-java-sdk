@@ -282,11 +282,17 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 		testJsonableBaseObject(parsed);
 		assertEquals(REQUEST_ID, parsed.getRequestId());
 		assertEquals(VerificationStatus.COMPLETED, parsed.getStatus());
+		assertTrue(client.isValidVerificationCode(REQUEST_ID, CODE));
 	}
 
 	@Test
 	public void testVerifyCodeFailure() throws Exception {
-		assert429ResponseException(() -> client.checkVerificationCode(REQUEST_ID, CODE));
+		stubResponse(400, VERIFICATION_RESPONSE);
+		assertFalse(client.isValidVerificationCode(REQUEST_ID, CODE));
+		stubResponse(410, VERIFICATION_RESPONSE);
+		assertFalse(client.isValidVerificationCode(REQUEST_ID, CODE));
+
+		assert429ResponseException(() -> client.isValidVerificationCode(REQUEST_ID, CODE));
 
 		stubResponseAndAssertThrows(204, () ->
 				client.checkVerificationCode(null, CODE),
