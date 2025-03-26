@@ -35,37 +35,37 @@ public class RedactClientTest extends AbstractClientTest<RedactClient> {
 
     @Test
     public void testSuccessfulResponse() throws Exception {
-        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.SMS);
-        redactRequest.setType(RedactRequest.Type.INBOUND);
+        RedactRequest redactRequest = new RedactRequest("test-id", Product.SMS);
+        redactRequest.setType(Type.INBOUND);
         stubResponseAndRun(204, () -> client.redactTransaction(redactRequest));
         stubResponse(204);
         client.redactTransaction(redactRequest.getId(), redactRequest.getProduct(), redactRequest.getType());
-        stubResponseAndRun(204, () -> client.redactTransaction("test-id", RedactRequest.Product.VERIFY));
+        stubResponseAndRun(204, () -> client.redactTransaction("test-id", Product.VERIFY));
     }
 
     @Test
     public void testRedactResponseException() throws Exception {
         assert401ApiResponseException(RedactResponseException.class, () ->
-                client.redactTransaction(UUID.randomUUID().toString(), RedactRequest.Product.MESSAGES)
+                client.redactTransaction(UUID.randomUUID().toString(), Product.MESSAGES)
         );
     }
 
     @Test
     public void testInvalidRedactRequests() {
         assertThrows(IllegalArgumentException.class, () -> client.redactTransaction(
-                "test-id", RedactRequest.Product.SMS
+                "test-id", Product.SMS
         ));
         assertThrows(IllegalArgumentException.class, () -> client.redactTransaction(
                 "test-id", null
         ));
         assertThrows(IllegalArgumentException.class, () -> client.redactTransaction(
-                new RedactRequest(null, RedactRequest.Product.SMS)
+                new RedactRequest(null, Product.SMS)
         ));
     }
 
     @Test
     public void testWrongCredentials() throws Exception {
-        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
+        RedactRequest redactRequest = new RedactRequest("test-id", Product.VOICE);
         stubResponseAndAssertThrows(401, () ->
                 client.redactTransaction(redactRequest),
                 RedactResponseException.class
@@ -78,7 +78,7 @@ public class RedactClientTest extends AbstractClientTest<RedactClient> {
 
     @Test
     public void testPrematureRedactionOrUnauthorized() throws Exception {
-        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
+        RedactRequest redactRequest = new RedactRequest("test-id", Product.VOICE);
         stubResponseAndAssertThrows(403, () ->
                 client.redactTransaction(redactRequest), RedactResponseException.class
         );
@@ -90,7 +90,7 @@ public class RedactClientTest extends AbstractClientTest<RedactClient> {
 
     @Test
     public void testInvalidId() throws Exception {
-        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
+        RedactRequest redactRequest = new RedactRequest("test-id", Product.VOICE);
         stubResponseAndAssertThrows(404, () ->
                 client.redactTransaction(redactRequest), RedactResponseException.class
         );
@@ -136,8 +136,8 @@ public class RedactClientTest extends AbstractClientTest<RedactClient> {
 
             @Override
             protected RedactRequest sampleRequest() {
-                RedactRequest request = new RedactRequest("test-id", RedactRequest.Product.SMS);
-                request.setType(RedactRequest.Type.INBOUND);
+                RedactRequest request = new RedactRequest("test-id", Product.SMS);
+                request.setType(Type.INBOUND);
                 return request;
             }
 
