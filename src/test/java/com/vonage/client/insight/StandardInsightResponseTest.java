@@ -75,14 +75,14 @@ public class StandardInsightResponseTest {
         assertEquals("GB-FIXED-RESERVED", response.getCurrentCarrier().getNetworkCode());
         assertEquals("United Kingdom Landline Reserved", response.getCurrentCarrier().getName());
         assertEquals("GB", response.getCurrentCarrier().getCountry());
-        assertEquals(CarrierDetails.NetworkType.LANDLINE, response.getCurrentCarrier().getNetworkType());
+        assertEquals(NetworkType.LANDLINE, response.getCurrentCarrier().getNetworkType());
         assertEquals("landline", response.getCurrentCarrier().getNetworkType().toString());
         assertEquals(PortedStatus.ASSUMED_NOT_PORTED, response.getPorted());
         assertEquals("assumed_not_ported", response.getPorted().toString());
         assertEquals("GB-HAPPY-RESERVED", response.getOriginalCarrier().getNetworkCode());
         assertEquals("United Kingdom Mobile Reserved", response.getOriginalCarrier().getName());
         assertEquals("GB", response.getOriginalCarrier().getCountry());
-        assertEquals(CarrierDetails.NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
+        assertEquals(NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
         assertEquals("mobile", response.getOriginalCarrier().getNetworkType().toString());
         assertEquals(new BigDecimal("18.34408949"), response.getRemainingBalance());
         assertEquals(new BigDecimal("0.00500000"), response.getRequestPrice());

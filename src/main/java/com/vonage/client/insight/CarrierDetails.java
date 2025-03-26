@@ -15,10 +15,7 @@
  */
 package com.vonage.client.insight;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
 public class CarrierDetails extends JsonableBaseObject {
@@ -59,34 +56,4 @@ public class CarrierDetails extends JsonableBaseObject {
         return networkType;
     }
 
-    /**
-     * Enum representing the type of network that the number is associated with.
-     * Note that this enum may be {@code null}.
-     */
-    public enum NetworkType {
-        MOBILE,
-        LANDLINE,
-        LANDLINE_PREMIUM,
-        LANDLINE_TOLLFREE,
-        VIRTUAL,
-        @JsonEnumDefaultValue UNKNOWN,
-        PAGER;
-
-        /**
-         * Convert a string to a NetworkType enum.
-         *
-         * @param name The string to convert.
-         *
-         * @return The NetworkType enum, or {@code null} if invalid.
-         */
-        @JsonCreator
-        public static NetworkType fromString(String name) {
-            return Jsonable.fromString(name, NetworkType.class);
-        }
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-    }
 }

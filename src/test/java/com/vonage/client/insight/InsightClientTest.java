@@ -171,12 +171,12 @@ public class InsightClientTest extends AbstractClientTest<InsightClient> {
         assertEquals("12345", response.getCurrentCarrier().getNetworkCode());
         assertEquals("Acme Inc", response.getCurrentCarrier().getName());
         assertEquals("GB", response.getCurrentCarrier().getCountry());
-        assertEquals(CarrierDetails.NetworkType.MOBILE, response.getCurrentCarrier().getNetworkType());
+        assertEquals(NetworkType.MOBILE, response.getCurrentCarrier().getNetworkType());
 
         assertEquals("98765", response.getOriginalCarrier().getNetworkCode());
         assertEquals("Foo Bar", response.getOriginalCarrier().getName());
         assertEquals("US", response.getOriginalCarrier().getCountry());
-        assertEquals(CarrierDetails.NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
+        assertEquals(NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
 
         assertEquals(CallerType.CONSUMER, response.getCallerIdentity().getType());
         assertEquals("John Smith", response.getCallerIdentity().getName());

@@ -107,7 +107,7 @@ public class VerifyClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @since 5.5.0
      */
-    public VerifyResponse verify(final String number, final String brand, VerifyRequest.Workflow workflow)
+    public VerifyResponse verify(final String number, final String brand, Workflow workflow)
             throws VonageResponseParseException, VonageClientException {
         return verify(new VerifyRequest.Builder(number, brand).workflow(workflow).build());
     }
@@ -283,7 +283,7 @@ public class VerifyClient {
      *
      * @since 5.5.0
      */
-    public VerifyResponse psd2Verify(String number, Double amount, String payee, Psd2Request.Workflow workflow)
+    public VerifyResponse psd2Verify(String number, Double amount, String payee, Workflow workflow)
             throws VonageClientException, VonageResponseParseException {
         return psd2Verify(new Psd2Request.Builder(number, amount, payee).workflow(workflow).build());
     }

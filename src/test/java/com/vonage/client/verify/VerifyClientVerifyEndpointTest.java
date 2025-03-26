@@ -127,7 +127,7 @@ public class VerifyClientVerifyEndpointTest extends AbstractClientTest<VerifyCli
                         + "  \"error_text\": \"error\"\n" + "}"
         );
 
-        VerifyResponse response = client.verify("447900000000", "testBrand", VerifyRequest.Workflow.SMS);
+        VerifyResponse response = client.verify("447900000000", "testBrand", Workflow.SMS);
         assertEquals(VerifyStatus.INTERNAL_ERROR, response.getStatus());
         assertEquals("error", response.getErrorText());
         assertEquals("not-really-a-request-id", response.getRequestId());
@@ -173,7 +173,7 @@ public class VerifyClientVerifyEndpointTest extends AbstractClientTest<VerifyCli
                         .senderId("VERIFICATION").length(6).country("GB")
                         .locale(Locale.forLanguageTag("en-GB"))
                         .pinExpiry(60).pinCode("a1b2C3").nextEventWait(90)
-                        .workflow(VerifyRequest.Workflow.TTS_TTS).build();
+                        .workflow(Workflow.TTS_TTS).build();
             }
 
             @Override

@@ -15,7 +15,6 @@
  */
 package com.vonage.client.verify;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Locale;
 import java.util.Map;
 
@@ -61,35 +60,6 @@ public class Psd2Request extends BaseRequest {
     }
 
     /**
-     * Enumeration representing different verification workflows. See the
-     * <a href="https://developer.nexmo.com/verify/guides/workflows-and-events">Workflow and Events documentation</a>
-     * for more details.
-     */
-    public enum Workflow {
-        /**
-         * The default workflow.
-         */
-        SMS_TTS_TTS(1),
-        SMS_SMS_TTS(2),
-        TTS_TTS(3),
-        SMS_SMS(4),
-        SMS_TTS(5),
-        SMS(6),
-        TTS(7);
-
-        private final int id;
-
-        Workflow(int id) {
-            this.id = id;
-        }
-
-        @JsonValue
-        public int getId() {
-            return id;
-        }
-    }
-
-    /**
      * Entry point for constructing an instance of this class.
      *
      * @return A new Builder.
@@ -126,10 +96,10 @@ public class Psd2Request extends BaseRequest {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
-        params.put("payee", payee);
-        params.put("amount", Double.toString(amount));
+        conditionalAdd("payee", payee);
+        conditionalAdd("amount", amount);
         if (workflow != null) {
-            params.put("workflow_id", Integer.toString(workflow.id));
+            conditionalAdd("workflow_id", workflow.getId());
         }
         return params;
     }
@@ -139,7 +109,7 @@ public class Psd2Request extends BaseRequest {
         private String payee, number, country;
         private Workflow workflow;
         private Locale locale;
-        private Integer length,  pinExpiry, nextEventWait;
+        private Integer length, pinExpiry, nextEventWait;
 
         /**
          * @param number The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
@@ -204,7 +174,7 @@ public class Psd2Request extends BaseRequest {
          *                 <a href="https://developer.nexmo.com/verify/guides/workflows-and-events">developer portal.</a>
          * @return This builder.
          */
-        public Builder workflow(Workflow workflow){
+        public Builder workflow(Workflow workflow) {
             this.workflow = workflow;
             return this;
         }

@@ -83,11 +83,11 @@ public class AdvancedInsightResponseTest {
         assertEquals("GB-FIXED-RESERVED", response.getCurrentCarrier().getNetworkCode());
         assertEquals("United Kingdom Landline Reserved", response.getCurrentCarrier().getName());
         assertEquals("GB", response.getCurrentCarrier().getCountry());
-        assertEquals(CarrierDetails.NetworkType.LANDLINE, response.getCurrentCarrier().getNetworkType());
+        assertEquals(NetworkType.LANDLINE, response.getCurrentCarrier().getNetworkType());
         assertEquals("GB-HAPPY-RESERVED", response.getOriginalCarrier().getNetworkCode());
         assertEquals("United Kingdom Mobile Reserved", response.getOriginalCarrier().getName());
         assertEquals("GB", response.getOriginalCarrier().getCountry());
-        assertEquals(CarrierDetails.NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
+        assertEquals(NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
         assertEquals(new BigDecimal("18.30908949"), response.getRemainingBalance());
         assertEquals(new BigDecimal("0.03000000"), response.getRequestPrice());
         assertEquals(Validity.VALID, response.getValidNumber());
