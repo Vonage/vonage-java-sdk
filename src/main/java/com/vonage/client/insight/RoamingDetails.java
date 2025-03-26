@@ -15,11 +15,8 @@
  */
 package com.vonage.client.insight;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
 /**
@@ -29,32 +26,6 @@ import com.vonage.client.JsonableBaseObject;
 public class RoamingDetails extends JsonableBaseObject {
     private final RoamingStatus status;
     private final String roamingCountryCode, roamingNetworkCode, roamingNetworkName;
-
-    /**
-     * Represents whether the number is outside its home carrier network, as an enum.
-     */
-    public enum RoamingStatus {
-        @JsonEnumDefaultValue UNKNOWN,
-        ROAMING,
-        NOT_ROAMING;
-
-        /**
-         * Convert a string to a RoamingStatus enum.
-         *
-         * @param name The string to convert.
-         *
-         * @return The RoamingStatus enum, or {@code null} if invalid.
-         */
-        @JsonCreator
-        public static RoamingStatus fromString(String name) {
-            return Jsonable.fromString(name, RoamingStatus.class);
-        }
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-    }
 
     RoamingDetails(RoamingStatus status, String roamingCountryCode, String roamingNetworkCode, String roamingNetworkName) {
         this.status = status;

@@ -39,8 +39,8 @@ public class WebSocketEndpoint extends JsonableBaseObject implements ConnectEndp
     }
 
     @Override
-    public String getType() {
-        return EndpointType.WEBSOCKET.toString();
+    public EndpointType getType() {
+        return EndpointType.WEBSOCKET;
     }
 
     /**

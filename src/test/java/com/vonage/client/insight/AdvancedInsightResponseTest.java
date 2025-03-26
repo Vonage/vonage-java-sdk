@@ -95,7 +95,7 @@ public class AdvancedInsightResponseTest {
         assertEquals(Reachability.REACHABLE, response.getReachability());
         assertEquals("reachable", response.getReachability().toString());
         assertEquals(PortedStatus.ASSUMED_NOT_PORTED, response.getPorted());
-        assertEquals(RoamingDetails.RoamingStatus.NOT_ROAMING, response.getRoaming().getStatus());
+        assertEquals(RoamingStatus.NOT_ROAMING, response.getRoaming().getStatus());
         assertEquals("not_roaming", response.getRoaming().getStatus().toString());
         assertEquals(LookupOutcome.PARTIAL_SUCCESS, response.getLookupOutcome());
         assertEquals(1, response.getLookupOutcome().getCode());
@@ -117,7 +117,7 @@ public class AdvancedInsightResponseTest {
                 "    }\n" +
                 "}");
 
-        assertEquals(RoamingDetails.RoamingStatus.UNKNOWN, response.getRoaming().getStatus());
+        assertEquals(RoamingStatus.UNKNOWN, response.getRoaming().getStatus());
         assertEquals("unknown", response.getRoaming().getStatus().toString());
         assertEquals(CallerType.UNKNOWN, response.getCallerType());
         assertEquals("unknown", response.getCallerType().toString());
@@ -127,7 +127,7 @@ public class AdvancedInsightResponseTest {
     public void testInvalidRoamingShape() {
         AdvancedInsightResponse response = Jsonable.fromJson("{\"roaming\": []}");
         assertNotNull(response);
-        assertEquals(RoamingDetails.RoamingStatus.UNKNOWN, response.getRoaming().getStatus());
+        assertEquals(RoamingStatus.UNKNOWN, response.getRoaming().getStatus());
     }
 
     @Test
@@ -194,7 +194,7 @@ public class AdvancedInsightResponseTest {
                 "  }\n" +
                 "}");
 
-        assertEquals(RoamingDetails.RoamingStatus.ROAMING, response.getRoaming().getStatus());
+        assertEquals(RoamingStatus.ROAMING, response.getRoaming().getStatus());
         assertEquals("GB", response.getRoaming().getRoamingCountryCode());
         assertEquals("gong", response.getRoaming().getRoamingNetworkCode());
         assertEquals("Gong Telecommunications", response.getRoaming().getRoamingNetworkName());

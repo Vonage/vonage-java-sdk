@@ -35,15 +35,15 @@ class RoamingDeserializer extends StdDeserializer<RoamingDetails> {
     @Override
     public RoamingDetails deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         JsonNode node = p.getCodec().readTree(p);
-        RoamingDetails.RoamingStatus status = RoamingDetails.RoamingStatus.UNKNOWN;
+        RoamingStatus status = RoamingStatus.UNKNOWN;
         String roamingCountryCode = null;
         String roamingNetworkCode = null;
         String roamingNetworkName = null;
         if (node.getNodeType() == JsonNodeType.STRING) {
-            status = RoamingDetails.RoamingStatus.fromString(node.asText());
+            status = RoamingStatus.fromString(node.asText());
         }
         else if (node.getNodeType() == JsonNodeType.OBJECT) {
-            status = RoamingDetails.RoamingStatus.fromString(node.get("status").asText());
+            status = RoamingStatus.fromString(node.get("status").asText());
             JsonNode rcc = node.get("roaming_country_code");
             if (rcc != null) {
                 roamingCountryCode = rcc.asText();

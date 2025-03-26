@@ -190,7 +190,7 @@ public class InsightClientTest extends AbstractClientTest<InsightClient> {
 
         assertEquals(PortedStatus.NOT_PORTED, response.getPorted());
 
-        assertEquals(RoamingDetails.RoamingStatus.ROAMING, response.getRoaming().getStatus());
+        assertEquals(RoamingStatus.ROAMING, response.getRoaming().getStatus());
         assertEquals("US", response.getRoaming().getRoamingCountryCode());
         assertEquals("12345", response.getRoaming().getRoamingNetworkCode());
         assertEquals("Acme Inc", response.getRoaming().getRoamingNetworkName());

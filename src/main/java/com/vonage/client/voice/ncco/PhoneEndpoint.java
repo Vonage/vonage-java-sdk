@@ -36,8 +36,8 @@ public class PhoneEndpoint extends JsonableBaseObject implements ConnectEndpoint
     }
 
     @Override
-    public String getType() {
-        return EndpointType.PHONE.toString();
+    public EndpointType getType() {
+        return EndpointType.PHONE;
     }
 
     /**

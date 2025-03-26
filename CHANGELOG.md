@@ -2,8 +2,43 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# [9.0.0] - 2025-0?-??
-- TODO
+# [9.0.0] - 2025-04-0?
+- Removed deprecations (classes, methods, constructors, packages etc.)
+- Removed Pricing API (was contained in `com.vonage.client.account.*`)
+- Refactored `RequestSigning` and `com.vonage.client.auth.hashutils.*` classes (mostly internal changes)
+- Standardised handling of query parameters using `AbstractQueryParamsRequest` class
+- Removed `public static fromJson(String)` methods from all non-webhook classes
+- Moved most enums from inner classes to their own file / class
+- Standardised enum parsing (see `Jsonable.fromString(String, Class<E>)`)
+  - Removed `UNKNOWN` enums where it is not an actual value
+  - Invalid enums now return `null` instead of throwing `IllegalArgumentException` to facilitate parsing response data
+- Refactored Number Insight API to properly support Advanced insights
+  - Removed `async` parameter from `AdvancedInsightRequest`
+  - Added `AdvancedAsyncInsightRequest` and `AdvancedAsyncInsightResponse` classes
+  - Made `callback` parameter mandatory in `AdvancedAsyncInsightRequest.Builder`
+  - Added `InsightClient.getAdvancedAsyncNumberInsight(AdvancedInsightAsyncRequest)` method
+- Refactored Application API capabilities to make adding webhooks more declarative and correct by construction
+  - All capabilities now have explicit methods for specifying valid webhook types
+  - `addWebhook` and `removeWebhook` methods have been removed - `null` parameters are now used to remove webhooks
+- Added `Application.builder(String)` as an option for updating an application by ID from scratch
+- Removed `StreamCompositionLayout.Builder` - replaced by three valid presets as static methods instead
+- Added `Verify2Client#isValidVerificationCode(UUID, String)` method to simplify checking verification codes
+- Renamed `com.vonage.client.voice.Endpoint` to `CallEndpoint`
+- Renamed `com.vonage.client.voice.ncco.Endpoint` to `ConnectEndpoint`
+- Refactored `CallInfoPage` to be aligned with other HAL responses (now extends `HalPageResponse`)
+- Added `get` prefix to `VideoStream` and `HlsSettings` accessors
+- `NumbersClient#listNumbers` now returns `List<OwnedNumber>` instead of `ListNumbersResponse`
+- `NumbersClient#linkNumber` now assigns the number to the application by ID
+- Use stronger data types in responses:
+  - `Application` `id` now uses `UUID`
+  - `OwnedNumber` `features` uses enum
+  - `CallInfo` `rate` and `price` now use `Double`
+  - `CallInfo` and `Call` use `Instant` for timestamps
+  - `WebSocketEndpoint` `contentType` uses `WebSocket.ContentType` enum
+  - `Call` `answerMethod` now uses `EventMethod` enum
+  - `CallEndpoint` and `ConnectEndpoint` `type` now uses `EndpointType` enum
+  - `ListUsersRequest.SortOrder` uses enum from `com.vonage.client.common.SortOrder`
+  - `com.vonage.client.messages.MessageType` replaced by `com.vonage.client.common.MessageType` enum
 
 # [8.20.1] - 2025-03-20
 - Removed `brand` length limit in Verify v2 request

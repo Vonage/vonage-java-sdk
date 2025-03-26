@@ -34,8 +34,8 @@ public class AppEndpoint extends JsonableBaseObject implements ConnectEndpoint {
     }
 
     @Override
-    public String getType() {
-        return EndpointType.APP.toString();
+    public EndpointType getType() {
+        return EndpointType.APP;
     }
 
     /**

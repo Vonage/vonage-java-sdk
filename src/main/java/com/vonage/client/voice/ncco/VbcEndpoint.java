@@ -44,8 +44,8 @@ public class VbcEndpoint extends JsonableBaseObject implements ConnectEndpoint {
     }
 
     @Override
-    public String getType() {
-        return EndpointType.VBC.toString();
+    public EndpointType getType() {
+        return EndpointType.VBC;
     }
 
     /**

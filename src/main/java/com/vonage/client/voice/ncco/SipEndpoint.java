@@ -49,8 +49,8 @@ public class SipEndpoint extends JsonableBaseObject implements ConnectEndpoint {
     }
 
     @Override
-    public String getType() {
-        return EndpointType.SIP.toString();
+    public EndpointType getType() {
+        return EndpointType.SIP;
     }
 
     /**
