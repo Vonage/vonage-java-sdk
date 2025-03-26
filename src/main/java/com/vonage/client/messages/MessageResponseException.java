@@ -15,7 +15,6 @@
  */
 package com.vonage.client.messages;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.vonage.client.VonageApiResponseException;
 
 /**
@@ -24,19 +23,10 @@ import com.vonage.client.VonageApiResponseException;
  * {@link MessagesClient#sendMessage(MessageRequest)} to handle failures.
  */
 public final class MessageResponseException extends VonageApiResponseException {
+	MessageResponseException() {}
 
-	void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
-
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
-	 */
-	@JsonCreator
-	public static MessageResponseException fromJson(String json) {
-		return fromJson(MessageResponseException.class, json);
+	@Override
+	protected void setStatusCode(int statusCode) {
+		super.setStatusCode(statusCode);
 	}
 }

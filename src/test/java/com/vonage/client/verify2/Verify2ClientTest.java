@@ -229,7 +229,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 				}
 				catch (VerifyResponseException mrx) {
 					// The mock returns "OK"
-					VerifyResponseException expected = VerifyResponseException.fromJson("{\"title\":\"OK\"}");
+					VerifyResponseException expected = Jsonable.fromJson("{\"title\":\"OK\"}");
 					expected.setStatusCode(statusCode);
 					assertEquals(expected, mrx);
 				}
@@ -255,7 +255,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 					fail("Expected " + VerifyResponseException.class.getName());
 				}
 				catch (VerifyResponseException vrx) {
-					VerifyResponseException expected = VerifyResponseException.fromJson(json);
+					VerifyResponseException expected = Jsonable.fromJson(json);
 					expected.setStatusCode(statusCode);
 					assertEquals(expected, vrx);
 					assertEquals(statusCode, vrx.getStatusCode());
@@ -360,7 +360,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 					fail("Expected "+ VerifyResponseException.class.getName());
 				}
 				catch (VerifyResponseException vrx) {
-					VerifyResponseException expected = VerifyResponseException.fromJson(json);
+					VerifyResponseException expected = Jsonable.fromJson(json);
 					expected.setStatusCode(statusCode);
 					assertEquals(expected, vrx);
 					assertEquals(statusCode, vrx.getStatusCode());
@@ -380,7 +380,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 				}
 				catch (VerifyResponseException mrx) {
 					// The mock returns "OK"
-					VerifyResponseException expected = VerifyResponseException.fromJson("{\"title\":\"OK\"}");
+					VerifyResponseException expected = Jsonable.fromJson("{\"title\":\"OK\"}");
 					expected.setStatusCode(statusCode);
 					assertEquals(expected, mrx);
 				}
@@ -450,7 +450,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 					fail("Expected "+ VerifyResponseException.class.getName());
 				}
 				catch (VerifyResponseException vrx) {
-					VerifyResponseException expected = VerifyResponseException.fromJson(json);
+					VerifyResponseException expected = Jsonable.fromJson(json);
 					expected.setStatusCode(statusCode);
 					assertEquals(expected, vrx);
 					assertEquals(statusCode, vrx.getStatusCode());

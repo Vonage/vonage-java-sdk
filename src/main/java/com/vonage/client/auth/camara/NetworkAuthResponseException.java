@@ -15,26 +15,11 @@
  */
 package com.vonage.client.auth.camara;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.vonage.client.VonageApiResponseException;
 
 /**
  * Response returned when an authentication request fails (i.e. returns a non-2xx status code).
  */
 public final class NetworkAuthResponseException extends VonageApiResponseException {
-
-	void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
-
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
-	 */
-	@JsonCreator
-	public static NetworkAuthResponseException fromJson(String json) {
-		return fromJson(NetworkAuthResponseException.class, json);
-	}
+	NetworkAuthResponseException() {}
 }

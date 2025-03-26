@@ -15,26 +15,11 @@
  */
 package com.vonage.client.subaccounts;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.vonage.client.VonageApiResponseException;
 
 /**
  * Response returned when an error is encountered (i.e. the API returns a non-2xx status code).
  */
 public final class SubaccountsResponseException extends VonageApiResponseException {
-
-	void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
-
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
-	 */
-	@JsonCreator
-	public static SubaccountsResponseException fromJson(String json) {
-		return fromJson(SubaccountsResponseException.class, json);
-	}
+	SubaccountsResponseException() {}
 }

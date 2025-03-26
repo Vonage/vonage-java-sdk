@@ -331,7 +331,7 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 					fail("Expected "+ MessageResponseException.class.getName());
 				}
 				catch (MessageResponseException mrx) {
-					MessageResponseException expected = MessageResponseException.fromJson(json);
+					MessageResponseException expected = Jsonable.fromJson(json);
 					expected.setStatusCode(statusCode);
 					assertEquals(expected, mrx);
 					assertEquals(statusCode, mrx.getStatusCode());

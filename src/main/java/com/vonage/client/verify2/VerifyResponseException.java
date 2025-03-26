@@ -15,7 +15,6 @@
  */
 package com.vonage.client.verify2;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageApiResponseException;
 import java.util.UUID;
@@ -26,8 +25,11 @@ import java.util.UUID;
 public final class VerifyResponseException extends VonageApiResponseException {
 	UUID requestId;
 
-	void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
+	VerifyResponseException() {}
+
+	@Override
+	protected void setStatusCode(int statusCode) {
+		super.setStatusCode(statusCode);
 	}
 
 	/**
@@ -38,16 +40,5 @@ public final class VerifyResponseException extends VonageApiResponseException {
 	@JsonProperty("request_id")
 	public UUID getRequestId() {
 		return requestId;
-	}
-
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
-	 */
-	@JsonCreator
-	public static VerifyResponseException fromJson(String json) {
-		return fromJson(VerifyResponseException.class, json);
 	}
 }

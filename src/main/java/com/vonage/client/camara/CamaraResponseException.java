@@ -15,22 +15,11 @@
  */
 package com.vonage.client.camara;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.vonage.client.VonageApiResponseException;
 
 /**
  * Response returned when a network request fails (i.e. returns a non-2xx status code).
  */
 public class CamaraResponseException extends VonageApiResponseException {
-
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
-	 */
-	@JsonCreator
-	public static CamaraResponseException fromJson(String json) {
-		return fromJson(CamaraResponseException.class, json);
-	}
+	CamaraResponseException() {}
 }

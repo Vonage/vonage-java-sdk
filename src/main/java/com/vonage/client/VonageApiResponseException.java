@@ -50,6 +50,16 @@ public class VonageApiResponseException extends VonageClientException implements
 		super(cause);
 	}
 
+	/**
+	 * Sets the HTTP status code of the response. Intended to be called reflectively.
+	 *
+	 * @param statusCode The status code as an integer (typically in the 4xx range).
+	 */
+	@JsonIgnore
+	protected void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
+	}
+
 	@JsonSetter("error-code")
 	private void setErrorCode(String errorCode) {
 		if (errorCode != null && !errorCode.trim().isEmpty()) {

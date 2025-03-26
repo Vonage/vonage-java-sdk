@@ -15,7 +15,6 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.vonage.client.VonageApiResponseException;
 
 /**
@@ -24,24 +23,5 @@ import com.vonage.client.VonageApiResponseException;
  * @since 7.11.0
  */
 public final class VoiceResponseException extends VonageApiResponseException {
-
-	/**
-	 * Sets the HTTP status code of the response. Intended to be called reflectively.
-	 *
-	 * @param statusCode The status code as an integer (typically in the 4xx range).
-	 */
-	void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
-
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
-	 */
-	@JsonCreator
-	public static VoiceResponseException fromJson(String json) {
-		return fromJson(VoiceResponseException.class, json);
-	}
+	VoiceResponseException() {}
 }
