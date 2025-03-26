@@ -49,8 +49,8 @@ abstract class AbstractConversationsFilterRequest extends HalFilterRequest {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
-        conditionalAdd(params, "date_start", formatTimestamp(startDate));
-        conditionalAdd(params, "date_end", formatTimestamp(endDate));
+        conditionalAdd("date_start", formatTimestamp(startDate));
+        conditionalAdd("date_end", formatTimestamp(endDate));
         return params;
     }
 

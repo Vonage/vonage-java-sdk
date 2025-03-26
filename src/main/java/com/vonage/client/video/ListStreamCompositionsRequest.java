@@ -15,15 +15,14 @@
  */
 package com.vonage.client.video;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
+import com.vonage.client.AbstractQueryParamsRequest;
 import java.util.Map;
 
 /**
  * Filter properties and pagination for {@link VideoClient#listArchives(ListStreamCompositionsRequest)}
  * and {@link VideoClient#listBroadcasts(ListStreamCompositionsRequest)}.
  */
-public class ListStreamCompositionsRequest implements QueryParamsRequest {
+public class ListStreamCompositionsRequest extends AbstractQueryParamsRequest {
 	private final Integer offset, count;
 	private final String sessionId;
 
@@ -39,16 +38,10 @@ public class ListStreamCompositionsRequest implements QueryParamsRequest {
 
 	@Override
 	public Map<String, String> makeParams() {
-		Map<String, String> params = new LinkedHashMap<>(4);
-		if (offset != null) {
-			params.put("offset", offset.toString());
-		}
-		if (count != null) {
-			params.put("count", count.toString());
-		}
-		if (sessionId != null) {
-			params.put("sessionId", sessionId);
-		}
+		Map<String, String> params = super.makeParams();
+		conditionalAdd("offset", offset);
+		conditionalAdd("count", count);
+		conditionalAdd("sessionId", sessionId);
 		return params;
 	}
 

@@ -15,17 +15,16 @@
  */
 package com.vonage.client.users;
 
-import com.vonage.client.QueryParamsRequest;
+import com.vonage.client.AbstractQueryParamsRequest;
 import com.vonage.client.common.HalLinks;
 import com.vonage.client.common.SortOrder;
 import java.net.URI;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * Query parameters for {@link UsersClient#listUsers(ListUsersRequest)}.
  */
-public final class ListUsersRequest implements QueryParamsRequest {
+public final class ListUsersRequest extends AbstractQueryParamsRequest {
     private final int pageSize;
     private final SortOrder order;
     private final String name, cursor;
@@ -47,17 +46,11 @@ public final class ListUsersRequest implements QueryParamsRequest {
 
     @Override
     public Map<String, String> makeParams() {
-        LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
-        params.put("page_size", String.valueOf(pageSize));
-        if (order != null) {
-            params.put("order", order.toString());
-        }
-        if (name != null) {
-            params.put("name", name);
-        }
-        if (cursor != null) {
-            params.put("cursor", cursor);
-        }
+        Map<String, String> params = super.makeParams();
+        conditionalAdd("page_size", pageSize);
+        conditionalAdd("order", order);
+        conditionalAdd("name", name);
+        conditionalAdd("cursor", cursor);
         return params;
     }
 

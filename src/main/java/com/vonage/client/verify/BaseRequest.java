@@ -15,9 +15,8 @@
  */
 package com.vonage.client.verify;
 
-import com.vonage.client.QueryParamsRequest;
+import com.vonage.client.AbstractQueryParamsRequest;
 import com.vonage.client.common.E164;
-import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -25,7 +24,7 @@ import java.util.Map;
  * Base request class for {@link VerifyRequest} and {@link Psd2Request}.
  * @since 5.5.0
  */
-public abstract class BaseRequest implements QueryParamsRequest {
+public abstract class BaseRequest extends AbstractQueryParamsRequest {
     private final String number, country;
     private final Integer length, pinExpiry, nextEventWait;
     private final Locale locale;
@@ -123,23 +122,13 @@ public abstract class BaseRequest implements QueryParamsRequest {
 
     @Override
     public Map<String, String> makeParams() {
-        Map<String, String> params = new LinkedHashMap<>();
-        params.put("number", number);
-        if (length != null) {
-            params.put("code_length", String.valueOf(length));
-        }
-        if (locale != null) {
-            params.put("lg", getDashedLocale());
-        }
-        if (country != null) {
-            params.put("country", country);
-        }
-        if (pinExpiry != null) {
-            params.put("pin_expiry", String.valueOf(pinExpiry));
-        }
-        if (nextEventWait != null) {
-            params.put("next_event_wait", String.valueOf(nextEventWait));
-        }
+        Map<String, String> params = super.makeParams();
+        conditionalAdd("number", number);
+        conditionalAdd("code_length", length);
+        conditionalAdd("lg", getDashedLocale());
+        conditionalAdd("country", country);
+        conditionalAdd("pin_expiry", pinExpiry);
+        conditionalAdd("next_event_wait", nextEventWait);
         return params;
     }
 }

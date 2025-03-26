@@ -15,16 +15,15 @@
  */
 package com.vonage.client.video;
 
-import com.vonage.client.QueryParamsRequest;
+import com.vonage.client.AbstractQueryParamsRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * Defines the properties used to create a new video session.
  */
-public class CreateSessionRequest implements QueryParamsRequest {
+public class CreateSessionRequest extends AbstractQueryParamsRequest {
 	private final InetAddress location;
 	private final MediaMode mediaMode;
 	private final ArchiveMode archiveMode;
@@ -42,19 +41,13 @@ public class CreateSessionRequest implements QueryParamsRequest {
 
 	@Override
 	public Map<String, String> makeParams() {
-		Map<String, String> params = new LinkedHashMap<>(4, 1f);
+		Map<String, String> params = super.makeParams();
 		if (location != null) {
 			params.put("location", location.getHostAddress());
 		}
-		if (mediaMode != null) {
-			params.put("p2p.preference", mediaMode.toString());
-		}
-		if (archiveMode != null) {
-			params.put("archiveMode", getArchiveMode().toString());
-		}
-		if (e2ee != null) {
-			params.put("e2ee", e2ee.toString());
-		}
+		conditionalAdd("p2p.preference", mediaMode);
+		conditionalAdd("archiveMode", archiveMode);
+		conditionalAdd("e2ee", e2ee);
 		return params;
 	}
 

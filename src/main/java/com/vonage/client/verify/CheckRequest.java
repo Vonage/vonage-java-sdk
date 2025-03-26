@@ -15,14 +15,13 @@
  */
 package com.vonage.client.verify;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
+import com.vonage.client.AbstractQueryParamsRequest;
 import java.util.Map;
 
 /**
  * Request wrapper used in {@link VerifyClient#check(String, String)}.
  */
-class CheckRequest implements QueryParamsRequest {
+class CheckRequest extends AbstractQueryParamsRequest {
     private final String requestId, code;
 
     /**
@@ -68,9 +67,9 @@ class CheckRequest implements QueryParamsRequest {
 
     @Override
     public Map<String, String> makeParams() {
-        Map<String, String> params = new LinkedHashMap<>(4);
-        params.put("request_id", requestId);
-        params.put("code", code);
+        Map<String, String> params = super.makeParams();
+        conditionalAdd("request_id", requestId);
+        conditionalAdd("code", code);
         return params;
     }
 }

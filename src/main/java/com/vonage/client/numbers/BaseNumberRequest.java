@@ -15,9 +15,8 @@
  */
 package com.vonage.client.numbers;
 
-import com.vonage.client.QueryParamsRequest;
+import com.vonage.client.AbstractQueryParamsRequest;
 import com.vonage.client.common.E164;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -25,7 +24,7 @@ import java.util.Map;
  *
  * @since 8.10.0
  */
-abstract class BaseNumberRequest implements QueryParamsRequest {
+abstract class BaseNumberRequest extends AbstractQueryParamsRequest {
     private final String country, msisdn;
 
     protected BaseNumberRequest(String country, String msisdn) {
@@ -53,9 +52,9 @@ abstract class BaseNumberRequest implements QueryParamsRequest {
 
     @Override
     public Map<String, String> makeParams() {
-        LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
-        params.put("country", country);
-        params.put("msisdn", msisdn);
+        Map<String, String> params = super.makeParams();
+        conditionalAdd("country", country);
+        conditionalAdd("msisdn", msisdn);
         return params;
     }
 

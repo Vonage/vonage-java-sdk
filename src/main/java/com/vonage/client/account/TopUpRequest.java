@@ -15,11 +15,10 @@
  */
 package com.vonage.client.account;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
+import com.vonage.client.AbstractQueryParamsRequest;
 import java.util.Map;
 
-class TopUpRequest implements QueryParamsRequest {
+class TopUpRequest extends AbstractQueryParamsRequest {
     final String trx;
 
     TopUpRequest(String trx) {
@@ -30,8 +29,8 @@ class TopUpRequest implements QueryParamsRequest {
 
     @Override
     public Map<String, String> makeParams() {
-        Map<String, String> params = new LinkedHashMap<>(2);
-        params.put("trx", trx);
+        Map<String, String> params = super.makeParams();
+        conditionalAdd("trx", trx);
         return params;
     }
 }

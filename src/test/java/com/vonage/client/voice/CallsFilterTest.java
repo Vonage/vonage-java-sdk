@@ -19,6 +19,7 @@ import com.vonage.client.common.SortOrder;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 public class CallsFilterTest {
 
@@ -34,7 +35,8 @@ public class CallsFilterTest {
 
     @Test
     public void testAllParams() {
-        Instant startDate = Instant.parse("2020-01-30T07:08:24Z"), endDate = Instant.now();
+        Instant startDate = Instant.parse("2020-01-30T07:08:24Z"),
+                endDate = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         String conversationId = "CON-aaaaaaaa-bbbb-4ccc-8ddd-0123456789ab";
         int recordIndex = 6, pageSize = 31;
         CallStatus status = CallStatus.RINGING;

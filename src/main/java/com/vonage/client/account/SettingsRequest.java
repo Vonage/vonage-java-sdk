@@ -15,14 +15,13 @@
  */
 package com.vonage.client.account;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
+import com.vonage.client.AbstractQueryParamsRequest;
 import java.util.Map;
 
 /**
  * Request wrapper for updating account settings.
  */
-class SettingsRequest implements QueryParamsRequest {
+class SettingsRequest extends AbstractQueryParamsRequest {
     private final String incomingSmsUrl, deliveryReceiptUrl;
 
     /**
@@ -60,13 +59,9 @@ class SettingsRequest implements QueryParamsRequest {
 
     @Override
     public Map<String, String> makeParams() {
-        Map<String, String> params = new LinkedHashMap<>(4);
-        if (incomingSmsUrl != null) {
-            params.put("moCallBackUrl", incomingSmsUrl);
-        }
-        if (deliveryReceiptUrl != null) {
-            params.put("drCallBackUrl", deliveryReceiptUrl);
-        }
+        Map<String, String> params = super.makeParams();
+        conditionalAdd("moCallBackUrl", incomingSmsUrl);
+        conditionalAdd("drCallBackUrl", deliveryReceiptUrl);
         return params;
     }
 }

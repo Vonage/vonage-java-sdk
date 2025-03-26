@@ -15,10 +15,8 @@
  */
 package com.vonage.client.common;
 
-import com.vonage.client.QueryParamsRequest;
+import com.vonage.client.AbstractQueryParamsRequest;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -26,7 +24,7 @@ import java.util.Map;
  *
  * @since 8.4.0
  */
-public abstract class HalFilterRequest implements QueryParamsRequest {
+public abstract class HalFilterRequest extends AbstractQueryParamsRequest {
 	protected final String cursor;
 	protected final Integer page, pageSize;
 	protected final SortOrder order;
@@ -66,25 +64,12 @@ public abstract class HalFilterRequest implements QueryParamsRequest {
 
 	@Override
 	public Map<String, String> makeParams() {
-		Map<String, String> params = new LinkedHashMap<>();
-		conditionalAdd(params, "cursor", cursor);
-		conditionalAdd(params, "page", page);
-		conditionalAdd(params, "page_size", pageSize);
-		conditionalAdd(params, "order", order);
+		Map<String, String> params = super.makeParams();
+		conditionalAdd("cursor", cursor);
+		conditionalAdd("page", page);
+		conditionalAdd("page_size", pageSize);
+		conditionalAdd("order", order);
 		return params;
-	}
-
-	protected static void conditionalAdd(Map<String, String> params, String name, Object value) {
-		if (value != null) {
-			String valueStr;
-			if (value instanceof Instant) {
-				valueStr = DateTimeFormatter.ISO_INSTANT.format((Instant) value);
-			}
-			else {
-				valueStr = value.toString();
-			}
-			params.put(name, valueStr);
-		}
 	}
 
 	/**

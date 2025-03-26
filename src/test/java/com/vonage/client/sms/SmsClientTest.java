@@ -16,7 +16,7 @@
 package com.vonage.client.sms;
 
 import com.vonage.client.AbstractClientTest;
-import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.sms.messages.BinaryMessage;
 import com.vonage.client.sms.messages.Message;
@@ -64,7 +64,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
         var message = new TextMessage("Nexmo", "not-a-number", "Test");
 
         var response = client.submitMessage(message);
-        TestUtils.testJsonableBaseObject(response, true);
+        testJsonableBaseObject(response, true);
         assertEquals(2, response.getMessageCount());
         assertEquals(2, response.getMessages().size());
     }
@@ -80,7 +80,8 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
     @Test
     public void testSendMessageEndpoint() throws Exception {
         new SmsEndpointTestSpec(client) {
-            private final String sender = "TestSender", recipient = "not-a-number", text = "Test Hi";
+            private final String sender = "TestSender", recipient = "not-a-number", text = "Test Hi",
+                    callback = "https://example.org/sms/cb", clientRef = "40 char reference", id = "abcd-1234";
 
             @Override
             public void runTests() throws Exception {
@@ -102,19 +103,29 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
                 testParseResponseStatusTooManyBinds();
             }
 
-            void testConstructParamsText() throws Exception {
+            void testConstructParamsText() {
+
                 var message = new TextMessage(sender, recipient, text);
-                message.setClientReference("40 char reference");
+                message.setClientReference(clientRef);
                 message.setMessageClass(Message.MessageClass.CLASS_3);
-                message.setCallbackUrl("https://example.org/sms/cb");
+                message.setCallbackUrl(callback);
                 message.setStatusReportRequired(true);
+
+                assertEquals(sender, message.getFrom());
+                assertEquals(recipient, message.getTo());
+                assertEquals(text, message.getMessageBody());
+                assertEquals(clientRef, message.getClientReference());
+                assertEquals(Message.MessageClass.CLASS_3, message.getMessageClass());
+                assertEquals(callback, message.getCallbackUrl());
+                assertTrue(message.getStatusReportRequired());
+
                 Map<String, String> params = new LinkedHashMap<>();
                 params.put("status-report-req", "1");
                 params.put("from", sender);
                 params.put("to", recipient);
                 params.put("type", "text");
                 params.put("text", text);
-                params.put("client-ref", "40 char reference");
+                params.put("client-ref", clientRef);
                 params.put("message-class", "3");
                 params.put("callback", "https://example.org/sms/cb");
                 assertFalse(message.isUnicode());
@@ -134,8 +145,9 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
                 assertRequestParams(params, message);
             }
 
-            void testConstructParamsUnicode() throws Exception {
+            void testConstructParamsUnicode() {
                 var message = new TextMessage(sender, recipient, text, true);
+                assertEquals(Message.MessageType.UNICODE, message.getType());
                 Map<String, String> params = new LinkedHashMap<>();
                 params.put("from", sender);
                 params.put("to", recipient);
@@ -145,7 +157,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
                 assertRequestParams(params, message);
             }
 
-            void testConstructParamsBinary() throws Exception {
+            void testConstructParamsBinary() {
                 var message = new BinaryMessage(sender, recipient, "abc".getBytes(), "def".getBytes());
                 message.setProtocolId(123456);
                 Map<String, String> params = new LinkedHashMap<>();
@@ -158,13 +170,17 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
                 assertRequestParams(params, message);
             }
 
-            void testConstructParamsBinaryRandom() throws Exception {
+            void testConstructParamsBinaryRandom() {
                 var random = new Random();
                 byte[] body = new byte[512], udh = new byte[100];
                 random.nextBytes(body);
                 random.nextBytes(udh);
 
                 var message = new BinaryMessage(sender, recipient, body, udh);
+                assertEquals(Message.MessageType.BINARY, message.getType());
+                assertArrayEquals(body, message.getMessageBody());
+                assertArrayEquals(udh, message.getUdh());
+
                 Map<String, String> params = new LinkedHashMap<>();
                 params.put("from", sender);
                 params.put("to", recipient);
@@ -175,65 +191,71 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
                 assertRequestParams(params, message);
             }
 
-            void testConstructParamsValidityPeriodTTL() throws Exception {
+            void testConstructParamsValidityPeriodTTL() {
                 Message message = new BinaryMessage("TestSender", "not-a-number", "abc".getBytes(), "def".getBytes());
                 message.setTimeToLive(50L);
+                assertEquals(50, message.getTimeToLive());
                 Map<String, String> params = new LinkedHashMap<>();
                 params.put("ttl", "50");
                 assertRequestContainsParams(params, message);
             }
 
-            void testConstructParamsContentId() throws Exception {
+            void testConstructParamsContentId() {
                 Message message = new TextMessage("TestSender", "not-a-number", "Test");
-                message.setContentId("abcd-1234");
+                message.setContentId(id);
+                assertEquals(id, message.getContentId());
+
                 Map<String, String> params = new LinkedHashMap<>();
                 params.put("from", "TestSender");
                 params.put("to", "not-a-number");
                 params.put("type", "text");
                 params.put("text", "Test");
-                params.put("content-id", "abcd-1234");
+                params.put("content-id", id);
                 assertRequestContainsParams(params, message);
             }
             
-            void testConstructParamsEntityId() throws Exception {
+            void testConstructParamsEntityId() {
                 Message message = new TextMessage("TestSender", "not-a-number", "Test");
-                message.setEntityId("abcd-1234");
+                message.setEntityId(id);
+                assertEquals(id, message.getEntityId());
+
                 Map<String, String> params = new LinkedHashMap<>();
                 params.put("from", "TestSender");
                 params.put("to", "not-a-number");
                 params.put("type", "text");
                 params.put("text", "Test");
-                params.put("entity-id","abcd-1234");
+                params.put("entity-id", id);
                 assertRequestContainsParams(params, message);
             }
 
             void testParseResponse() throws Exception {
                 SmsSubmissionResponse rs = parseResponse(
                         """
+                            {
+                              "message-count":2,
+                              "messages":[
                                 {
-                                  "message-count":2,
-                                  "messages":[
-                                    {
-                                      "to":"not-a-number",
-                                      "message-id":"message-id-1",
-                                      "status":"0",
-                                      "remaining-balance":"26.43133450",
-                                      "message-price":"0.03330000",
-                                      "network":"12345",
-                                      "client-ref": "first ref",
-                                      "account-ref": "customer1234"
-                                    },
-                                    {
-                                      "to":"not-a-number-2",
-                                      "message-id":"message-id-2",
-                                      "status":"0",
-                                      "remaining-balance":"27.43133450",
-                                      "message-price":"0.03430000",
-                                      "network":"98765",
-                                      "client-ref": "second ref"
-                                    }
-                                  ]
-                                }"""
+                                  "to":"not-a-number",
+                                  "message-id":"message-id-1",
+                                  "status":"0",
+                                  "remaining-balance":"26.43133450",
+                                  "message-price":"0.03330000",
+                                  "network":"12345",
+                                  "client-ref": "first ref",
+                                  "account-ref": "customer1234"
+                                },
+                                {
+                                  "to":"not-a-number-2",
+                                  "message-id":"message-id-2",
+                                  "status":"0",
+                                  "remaining-balance":"27.43133450",
+                                  "message-price":"0.03430000",
+                                  "network":"98765",
+                                  "client-ref": "second ref"
+                                }
+                              ]
+                            }
+                        """
                 );
                 assertEquals(2, rs.getMessageCount());
                 assertEquals(2, rs.getMessages().size());
@@ -241,7 +263,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
                 var firstMessage = rs.getMessages().getFirst();
                 var secondMessage = rs.getMessages().get(1);
 
-                TestUtils.testJsonableBaseObject(firstMessage, true);
+                testJsonableBaseObject(firstMessage, true);
                 assertEquals("not-a-number", firstMessage.getTo());
                 assertEquals("message-id-1", firstMessage.getId());
                 assertEquals(MessageStatus.OK, firstMessage.getStatus());
@@ -252,7 +274,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
                 assertEquals("customer1234", firstMessage.getAccountRef());
                 assertTrue(firstMessage.toString().contains("first ref"));
 
-                TestUtils.testJsonableBaseObject(secondMessage, true);
+                testJsonableBaseObject(secondMessage, true);
                 assertEquals("not-a-number-2", secondMessage.getTo());
                 assertEquals("message-id-2", secondMessage.getId());
                 assertEquals(MessageStatus.OK, secondMessage.getStatus());
@@ -266,29 +288,30 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
             void testParseResponseInvalidStatus() throws Exception {
                 SmsSubmissionResponse rs = parseResponse(
                         """
+                            {
+                              "message-count":2,
+                              "messages":[
                                 {
-                                  "message-count":2,
-                                  "messages":[
-                                    {
-                                      "to":"not-a-number",
-                                      "message-id":"message-id-1",
-                                      "status":"12345",
-                                      "remaining-balance":"26.43133450",
-                                      "message-price":"0.03330000",
-                                      "network":"12345",
-                                      "client-ref":"abcde"
-                                    },
-                                    {
-                                      "to":"not-a-number",
-                                      "message-id":"message-id-2",
-                                      "status":"0",
-                                      "remaining-balance":"26.43133450",
-                                      "message-price":"0.03330000",
-                                      "network":"12345",
-                                      "error-text": "Missing to param"
-                                    }
-                                  ]
-                                }"""
+                                  "to":"not-a-number",
+                                  "message-id":"message-id-1",
+                                  "status":"12345",
+                                  "remaining-balance":"26.43133450",
+                                  "message-price":"0.03330000",
+                                  "network":"12345",
+                                  "client-ref":"abcde"
+                                },
+                                {
+                                  "to":"not-a-number",
+                                  "message-id":"message-id-2",
+                                  "status":"0",
+                                  "remaining-balance":"26.43133450",
+                                  "message-price":"0.03330000",
+                                  "network":"12345",
+                                  "error-text": "Missing to param"
+                                }
+                              ]
+                            }
+                        """
                 );
                 assertEquals(MessageStatus.UNKNOWN, rs.getMessages().getFirst().getStatus());
                 assertEquals("Missing to param", rs.getMessages().get(1).getErrorText());
@@ -297,15 +320,16 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
             void testParseResponseError() throws Exception {
                 SmsSubmissionResponse rs = parseResponse(
                         """
+                            {
+                              "message-count":1,
+                              "messages":[
                                 {
-                                  "message-count":1,
-                                  "messages":[
-                                    {
-                                    "status":"6",
-                                    "error-text": "The message was invalid"
-                                    }
-                                  ]
-                                }"""
+                                "status":"6",
+                                "error-text": "The message was invalid"
+                                }
+                              ]
+                            }
+                        """
                 );
                 assertEquals(MessageStatus.INVALID_MESSAGE, rs.getMessages().getFirst().getStatus());
             }
@@ -313,20 +337,21 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
             void testParseResponseUnexpectedNode() throws Exception {
                 SmsSubmissionResponse rs = parseResponse(
                         """
+                            {
+                              "message-count":1,
+                              "messages":[
                                 {
-                                  "message-count":1,
-                                  "messages":[
-                                    {
-                                      "to":"not-a-number",
-                                      "message-id":"",
-                                      "status":"0",
-                                      "remaining-balance":"26.43133450",
-                                      "message-price":"0.0330000",
-                                      "network":"12345",
-                                      "WHAT-IS-THIS":""
-                                    }
-                                  ]
-                                }"""
+                                  "to":"not-a-number",
+                                  "message-id":"",
+                                  "status":"0",
+                                  "remaining-balance":"26.43133450",
+                                  "message-price":"0.0330000",
+                                  "network":"12345",
+                                  "WHAT-IS-THIS":""
+                                }
+                              ]
+                            }
+                        """
                 );
                 assertEquals(MessageStatus.OK, rs.getMessages().getFirst().getStatus());
             }
@@ -334,14 +359,15 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
             void testParseResponseStatusThrottled() throws Exception {
                 SmsSubmissionResponse rs = parseResponse(
                         """
+                            {
+                              "message-count":1,
+                              "messages":[
                                 {
-                                  "message-count":1,
-                                  "messages":[
-                                    {
-                                      "status":"1"
-                                    }
-                                  ]
-                                }"""
+                                  "status":"1"
+                                }
+                              ]
+                            }
+                        """
                 );
                 SmsSubmissionResponseMessage r = rs.getMessages().getFirst();
                 assertEquals(MessageStatus.THROTTLED, r.getStatus());
@@ -351,14 +377,15 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
             void testParseResponseStatusInternalError() throws Exception {
                 SmsSubmissionResponse rs = parseResponse(
                         """
+                            {
+                              "message-count":1,
+                              "messages":[
                                 {
-                                  "message-count":1,
-                                  "messages":[
-                                    {
-                                      "status":"5"
-                                    }
-                                  ]
-                                }"""
+                                  "status":"5"
+                                }
+                              ]
+                            }
+                        """
                 );
                 SmsSubmissionResponseMessage r = rs.getMessages().getFirst();
                 assertEquals(MessageStatus.INTERNAL_ERROR, r.getStatus());
@@ -368,14 +395,15 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
             void testParseResponseStatusTooManyBinds() throws Exception {
                 SmsSubmissionResponse rs = parseResponse(
                         """
+                            {
+                              "message-count":1,
+                              "messages":[
                                 {
-                                  "message-count":1,
-                                  "messages":[
-                                    {
-                                      "status":"10"
-                                    }
-                                  ]
-                                }"""
+                                  "status":"10"
+                                }
+                              ]
+                            }
+                        """
                 );
                 SmsSubmissionResponseMessage r = rs.getMessages().getFirst();
                 assertEquals(MessageStatus.TOO_MANY_BINDS, r.getStatus());

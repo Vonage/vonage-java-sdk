@@ -16,14 +16,13 @@
 package com.vonage.client.sms.messages;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
+import com.vonage.client.AbstractQueryParamsRequest;
 import java.util.Map;
 
 /**
  * Represents the details common to any message that is to be submitted to the Vonage SMS API.
  */
-public abstract class Message implements QueryParamsRequest {
+public abstract class Message extends AbstractQueryParamsRequest {
 
     /**
      * Represents the type of message.
@@ -257,31 +256,21 @@ public abstract class Message implements QueryParamsRequest {
 
     @Override
     public Map<String, String> makeParams() {
-        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("from", getFrom());
-        params.put("to", getTo());
-        params.put("type", getType().toString());
+        Map<String, String> params = super.makeParams();
+        conditionalAdd("from", from);
+        conditionalAdd("to", to);
+        conditionalAdd("type", type);
         if (getStatusReportRequired()) {
-            params.put("status-report-req", "1");
+            conditionalAdd("status-report-req", "1");
         }
-        if (clientReference != null) {
-            params.put("client-ref", getClientReference());
-        }
-        if (timeToLive != null) {
-            params.put("ttl", getTimeToLive().toString());
-        }
-        if (callbackUrl != null) {
-            params.put("callback", getCallbackUrl());
-        }
+        conditionalAdd("client-ref", clientReference);
+        conditionalAdd("ttl", timeToLive);
+        conditionalAdd("callback", callbackUrl);
         if (messageClass != null) {
-            params.put("message-class", Integer.toString(getMessageClass().getMessageClass()));
+            conditionalAdd("message-class", messageClass.getMessageClass());
         }
-        if (entityId != null) {
-            params.put("entity-id", getEntityId());
-        }
-        if (contentId != null) {
-            params.put("content-id", getContentId());
-        }
+        conditionalAdd("entity-id", entityId);
+        conditionalAdd("content-id", contentId);
         return params;
     }
 

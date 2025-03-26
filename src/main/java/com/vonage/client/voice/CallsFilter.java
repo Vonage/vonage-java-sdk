@@ -85,11 +85,11 @@ public class CallsFilter extends HalFilterRequest {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
-        conditionalAdd(params, "status", status);
-        conditionalAdd(params, "date_start", startDate);
-        conditionalAdd(params, "date_end", endDate);
-        conditionalAdd(params, "record_index", recordIndex);
-        conditionalAdd(params, "conversation_uuid", conversationUuid);
+        conditionalAdd("status", status);
+        conditionalAdd("date_start", startDate);
+        conditionalAdd("date_end", endDate);
+        conditionalAdd("record_index", recordIndex);
+        conditionalAdd("conversation_uuid", conversationUuid);
         return params;
     }
 
