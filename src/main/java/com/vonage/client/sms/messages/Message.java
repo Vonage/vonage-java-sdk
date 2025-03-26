@@ -15,7 +15,6 @@
  */
 package com.vonage.client.sms.messages;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.vonage.client.AbstractQueryParamsRequest;
 import java.util.Map;
 
@@ -23,32 +22,6 @@ import java.util.Map;
  * Represents the details common to any message that is to be submitted to the Vonage SMS API.
  */
 public abstract class Message extends AbstractQueryParamsRequest {
-
-    /**
-     * Represents the type of message.
-     */
-    public enum MessageType {
-        /**
-         * Regular text SMS message.
-         */
-        TEXT,
-
-        /**
-         * Binary SMS message with a custom UDH and binary payload.
-         */
-        BINARY,
-
-        /**
-         * Unicode message, for sending messages in non-latin script to a supported handset.
-         */
-        UNICODE;
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-    }
-
     private final MessageType type;
     private final String from, to;
     private boolean statusReportRequired;
@@ -274,44 +247,4 @@ public abstract class Message extends AbstractQueryParamsRequest {
         return params;
     }
 
-    /**
-     * An enum of the valid values that may be supplied to as the message-class parameter of a rest submission.
-     */
-    public enum MessageClass {
-        /**
-         * Message Class 0
-         */
-        CLASS_0(0),
-
-        /**
-         * Message Class 1
-         */
-        CLASS_1(1),
-
-        /**
-         * Message Class 2
-         */
-        CLASS_2(2),
-
-        /**
-         * Message Class 3
-         */
-        CLASS_3(3);
-
-        private final int messageClass;
-
-        MessageClass(int messageClass) {
-            this.messageClass = messageClass;
-        }
-
-        /**
-         * Gets the message class as an integer.
-         *
-         * @return The message class number.
-         */
-        @JsonValue
-        public int getMessageClass() {
-            return messageClass;
-        }
-    }
 }

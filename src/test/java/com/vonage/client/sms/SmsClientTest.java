@@ -18,9 +18,8 @@ package com.vonage.client.sms;
 import com.vonage.client.AbstractClientTest;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageApiResponseException;
-import com.vonage.client.sms.messages.BinaryMessage;
-import com.vonage.client.sms.messages.Message;
-import com.vonage.client.sms.messages.TextMessage;
+import com.vonage.client.sms.messages.*;
+import com.vonage.client.sms.messages.MessageType;
 import org.apache.commons.codec.binary.Hex;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -107,7 +106,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
 
                 var message = new TextMessage(sender, recipient, text);
                 message.setClientReference(clientRef);
-                message.setMessageClass(Message.MessageClass.CLASS_3);
+                message.setMessageClass(MessageClass.CLASS_3);
                 message.setCallbackUrl(callback);
                 message.setStatusReportRequired(true);
 
@@ -115,7 +114,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
                 assertEquals(recipient, message.getTo());
                 assertEquals(text, message.getMessageBody());
                 assertEquals(clientRef, message.getClientReference());
-                assertEquals(Message.MessageClass.CLASS_3, message.getMessageClass());
+                assertEquals(MessageClass.CLASS_3, message.getMessageClass());
                 assertEquals(callback, message.getCallbackUrl());
                 assertTrue(message.getStatusReportRequired());
 
@@ -147,7 +146,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
 
             void testConstructParamsUnicode() {
                 var message = new TextMessage(sender, recipient, text, true);
-                assertEquals(Message.MessageType.UNICODE, message.getType());
+                assertEquals(MessageType.UNICODE, message.getType());
                 Map<String, String> params = new LinkedHashMap<>();
                 params.put("from", sender);
                 params.put("to", recipient);
@@ -177,7 +176,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
                 random.nextBytes(udh);
 
                 var message = new BinaryMessage(sender, recipient, body, udh);
-                assertEquals(Message.MessageType.BINARY, message.getType());
+                assertEquals(MessageType.BINARY, message.getType());
                 assertArrayEquals(body, message.getMessageBody());
                 assertArrayEquals(udh, message.getUdh());
 
