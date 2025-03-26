@@ -23,11 +23,11 @@ jobs:
       fail-fast: false
     steps:
     - name: Checkout repository
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@1bb15d06a6fbb5d9d9ffd228746bf8ee208caec8
+      uses: github/codeql-action/init@486ab5a2922b634015408a83e10f6867efb5922c
       with:
         languages: java-kotlin
         build-mode: none
@@ -37,6 +37,6 @@ jobs:
         # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
         # queries: security-extended,security-and-quality
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@1bb15d06a6fbb5d9d9ffd228746bf8ee208caec8
+      uses: github/codeql-action/analyze@486ab5a2922b634015408a83e10f6867efb5922c
       with:
         category: "/language:java-kotlin"
