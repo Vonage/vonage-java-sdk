@@ -56,7 +56,7 @@ public final class AdvancedInsightAsyncRequest extends BaseInsightRequest {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
-        params.put("callback", callback.toString());
+        conditionalAdd("callback", callback);
         return params;
     }
 

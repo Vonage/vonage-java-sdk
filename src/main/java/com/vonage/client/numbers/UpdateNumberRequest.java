@@ -97,24 +97,12 @@ public class UpdateNumberRequest extends BaseNumberRequest {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
-        if (applicationId != null) {
-            params.put("app_id", applicationId.toString());
-        }
-        if (moHttpUrl != null) {
-            params.put("moHttpUrl", moHttpUrl.toString());
-        }
-        if (moSmppSysType != null) {
-            params.put("moSmppSysType", moSmppSysType);
-        }
-        if (voiceCallbackType != null) {
-            params.put("voiceCallbackType", voiceCallbackType.toString());
-        }
-        if (voiceCallbackValue != null) {
-            params.put("voiceCallbackValue", voiceCallbackValue);
-        }
-        if (voiceStatusCallback != null) {
-            params.put("voiceStatusCallback", voiceStatusCallback.toString());
-        }
+        conditionalAdd("app_id", applicationId);
+        conditionalAdd("moHttpUrl", moHttpUrl);
+        conditionalAdd("moSmppSysType", moSmppSysType);
+        conditionalAdd("voiceCallbackType", voiceCallbackType);
+        conditionalAdd("voiceCallbackValue", voiceCallbackValue);
+        conditionalAdd("voiceStatusCallback", voiceStatusCallback);
         return params;
     }
 
