@@ -25,7 +25,7 @@ import com.vonage.client.common.HttpMethod;
 import java.util.Set;
 
 abstract class SimSwapEndpointTestSpec<R> extends DynamicEndpointTestSpec<SimSwapRequest, R> {
-	protected String msisdn = "346661113334";
+	protected final String msisdn = "346661113334";
 
 	@Override
 	protected Set<Class<? extends AuthMethod>> expectedAuthMethods() {

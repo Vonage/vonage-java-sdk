@@ -84,7 +84,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
         assertThrows(IllegalArgumentException.class, () -> new BackendAuthRequest("foo", scope));
 
         stubResponseAndAssertThrows(200, responseJson,
-                () -> client.buildOidcUrl((BackendAuthRequest) null),
+                () -> client.buildOidcUrl(null),
                 NullPointerException.class
         );
 

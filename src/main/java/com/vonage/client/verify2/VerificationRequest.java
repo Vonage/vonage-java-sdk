@@ -193,7 +193,7 @@ public class VerificationRequest implements Jsonable {
 		String brand, code, clientRef;
 		Integer timeout, codeLength;
 		Locale locale;
-		List<Workflow> workflows = new ArrayList<>(1);
+		final List<Workflow> workflows = new ArrayList<>(1);
 
 		private Builder() {}
 

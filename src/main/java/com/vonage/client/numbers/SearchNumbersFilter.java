@@ -56,7 +56,7 @@ public class SearchNumbersFilter extends BaseNumbersFilter {
         if (features != null && features.length > 0) {
             params.put("features", Arrays.stream(features).map(Feature::toString).collect(Collectors.joining(",")));
         }
-        conditionalAdd("type", type.toString());
+        conditionalAdd("type", type);
         return params;
     }
 

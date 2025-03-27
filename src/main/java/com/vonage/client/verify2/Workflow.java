@@ -24,7 +24,7 @@ import java.util.Objects;
  */
 public class Workflow extends JsonableBaseObject {
 	protected final Channel channel;
-	protected String to, from;
+	protected final String to, from;
 
 	protected Workflow(Builder<?, ?> builder) {
 		this(builder.channel, builder.to, builder.from);
@@ -41,7 +41,7 @@ public class Workflow extends JsonableBaseObject {
 	}
 
 	protected String validateTo(String to) {
-		if ((this.to = to) == null || to.trim().isEmpty()) {
+		if (to == null || to.trim().isEmpty()) {
 			throw new IllegalArgumentException("Recipient is required.");
 		}
 		return to;

@@ -16,7 +16,6 @@
 package com.vonage.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.vonage.client.Jsonable;
 import java.util.Arrays;
 
@@ -29,12 +28,6 @@ public enum Feature {
     SMS,
     MMS,
     VOICE;
-
-    @JsonValue
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 
     /**
      * Converts the string representation of the feature to its enum value.

@@ -309,7 +309,7 @@ public class VerifyClientSearchEndpointTest extends AbstractClientTest<VerifyCli
                 testSingleId();
             }
 
-            void testSingleId() throws Exception {
+            void testSingleId() {
                 String id = UUID.randomUUID().toString().replace("-", "");
                 assertRequestParams(Collections.singletonMap("request_id", id), new SearchRequest(id));
             }

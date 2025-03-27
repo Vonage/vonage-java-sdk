@@ -116,7 +116,7 @@ public class RequestSigningTest {
     }
 
     @Test
-    public void testVerifyRequestSignatureJson() throws Exception {
+    public void testVerifyRequestSignatureJson() {
         var params = constructDummyParams();
         var request = constructDummyRequestJson();
         assertTrue(verifyRequestSignature(APPLICATION_JSON, request, params, secret, 2100000, HMAC_SHA1));

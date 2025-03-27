@@ -21,7 +21,7 @@ import java.net.URI;
 import java.util.Objects;
 
 public final class Video extends MessagePayload {
-	URI thumbUrl;
+	final URI thumbUrl;
 
 	Video(String url, String thumbUrl, String caption) {
 		super(url, caption);

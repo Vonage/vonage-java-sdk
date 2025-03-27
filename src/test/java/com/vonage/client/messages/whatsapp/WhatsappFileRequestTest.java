@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.UUID;
 
 public class WhatsappFileRequestTest {
-	String from = "447900000001", to = "317900000002";
+	final String from = "447900000001", to = "317900000002";
 
 	@Test
 	public void testSerializeValid() {

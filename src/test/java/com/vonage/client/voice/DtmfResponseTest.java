@@ -20,7 +20,6 @@ import com.vonage.client.TestUtils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.*;
-import java.io.IOException;
 
 public class DtmfResponseTest {
     private DtmfResponse response;

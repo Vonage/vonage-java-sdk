@@ -4,7 +4,7 @@ then
   exit 1
 fi
 
-mvn versions:set -DnewVersion=$1
+mvn versions:set -DnewVersion="$1"
 mvn validate
 rm pom.xml.versionsBackup #pom.xml.releaseBackup
 #mvn versions:display-plugin-updates

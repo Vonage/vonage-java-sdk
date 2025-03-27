@@ -68,10 +68,6 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 		return null;
 	}
 
-	protected byte[] sampleRequestBodyBinary() {
-		return null;
-	}
-
 	protected String expectedAcceptHeader() {
 		return Jsonable.class.isAssignableFrom(expectedResponseType()) ?
 				ContentType.APPLICATION_JSON.getMimeType() : null;
@@ -136,7 +132,7 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 
 	protected void assertRequestUriAndBody() throws Exception {
 		assertRequestUriAndBody(sampleRequest(),
-				sampleRequestBodyString(), sampleQueryParams(), sampleRequestBodyBinary()
+				sampleRequestBodyString(), sampleQueryParams(), null
 		);
 	}
 

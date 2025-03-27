@@ -104,52 +104,52 @@ public class CallInfoTest {
 
 
     @Test
-    public void testStatusStarted() throws Exception {
+    public void testStatusStarted() {
         testStatus("started", CallStatus.STARTED);
     }
 
     @Test
-    public void testStatusRinging() throws Exception {
+    public void testStatusRinging() {
         testStatus("ringing", CallStatus.RINGING);
     }
 
     @Test
-    public void testStatusAnswered() throws Exception {
+    public void testStatusAnswered() {
         testStatus("answered", CallStatus.ANSWERED);
     }
 
     @Test
-    public void testStatusMachine() throws Exception {
+    public void testStatusMachine() {
         testStatus("machine", CallStatus.MACHINE);
     }
 
     @Test
-    public void testStatusCompleted() throws Exception {
+    public void testStatusCompleted() {
         testStatus("completed", CallStatus.COMPLETED);
     }
 
     @Test
-    public void testStatusTimeout() throws Exception {
+    public void testStatusTimeout() {
         testStatus("timeout", CallStatus.TIMEOUT);
     }
 
     @Test
-    public void testStatusFailed() throws Exception {
+    public void testStatusFailed() {
         testStatus("failed", CallStatus.FAILED);
     }
 
     @Test
-    public void testStatusRejected() throws Exception {
+    public void testStatusRejected() {
         testStatus("rejected", CallStatus.REJECTED);
     }
 
     @Test
-    public void testStatusBusy() throws Exception {
+    public void testStatusBusy() {
         testStatus("busy", CallStatus.BUSY);
     }
 
     @Test
-    public void testStatusCancelled() throws Exception {
+    public void testStatusCancelled() {
         testStatus("cancelled", CallStatus.CANCELLED);
     }
 

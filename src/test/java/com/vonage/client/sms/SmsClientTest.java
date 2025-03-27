@@ -79,8 +79,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
     @Test
     public void testSendMessageEndpoint() throws Exception {
         new SmsEndpointTestSpec(client) {
-            private final String sender = "TestSender", recipient = "not-a-number", text = "Test Hi",
-                    callback = "https://example.org/sms/cb", clientRef = "40 char reference", id = "abcd-1234";
+            private final String sender = "TestSender", recipient = "not-a-number", text = "Test Hi", id = "abcd-1234";
 
             @Override
             public void runTests() throws Exception {
@@ -105,8 +104,10 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
             void testConstructParamsText() {
 
                 var message = new TextMessage(sender, recipient, text);
+                String clientRef = "40 char reference";
                 message.setClientReference(clientRef);
                 message.setMessageClass(MessageClass.CLASS_3);
+                String callback = "https://example.org/sms/cb";
                 message.setCallbackUrl(callback);
                 message.setStatusReportRequired(true);
 
@@ -132,7 +133,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
                 assertRequestParams(params, message);
             }
 
-            void testStatusReportRequiredSetter() throws Exception {
+            void testStatusReportRequiredSetter() {
                 Message message = new TextMessage(sender, recipient, text);
                 message.setStatusReportRequired(true);
                 Map<String, String> params = new LinkedHashMap<>();
