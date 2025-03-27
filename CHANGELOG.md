@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   - Removed `UNKNOWN` enums where it is not an actual value
   - Invalid enums now return `null` instead of throwing `IllegalArgumentException` to facilitate parsing response data
 - Unified `Psd2Request.Workflow` and `VerifyRequest.Workflow` enums (moved to upper level)
+- Removed WhatsApp Interactive (Codeless) workflow support in Verify v2 API
 - Refactored Number Insight API to properly support Advanced insights
   - Removed `async` parameter from `AdvancedInsightRequest`
   - Added `AdvancedAsyncInsightRequest` and `AdvancedAsyncInsightResponse` classes

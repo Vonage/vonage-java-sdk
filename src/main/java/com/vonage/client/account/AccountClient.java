@@ -268,7 +268,7 @@ public class AccountClient {
      *
      * @throws AccountResponseException If there was an error making the request or retrieving the response.
      */
-    SettingsResponse updateSettings(SettingsRequest request) throws AccountResponseException {
+    public SettingsResponse updateSettings(SettingsRequest request) throws AccountResponseException {
         return settings.execute(Objects.requireNonNull(request, "Settings request cannot be null."));
     }
 }

@@ -19,9 +19,9 @@ import com.vonage.client.AbstractQueryParamsRequest;
 import java.util.Map;
 
 /**
- * Request wrapper for updating account settings.
+ * Request wrapper for updating account settings using {@linkplain AccountClient#updateSettings(SettingsRequest)}.
  */
-class SettingsRequest extends AbstractQueryParamsRequest {
+public class SettingsRequest extends AbstractQueryParamsRequest {
     private final String incomingSmsUrl, deliveryReceiptUrl;
 
     /**
