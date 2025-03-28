@@ -50,6 +50,6 @@ jobs:
       - name: Test with Maven
         run: mvn -e --batch-mode verify -T 1C
       - name: Run Codecov
-        uses: codecov/codecov-action@ea99328d1c4d5f39fda7cbffe104afd6906c50b0
+        uses: codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
