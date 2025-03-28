@@ -2,8 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# [9.0.0] - 2025-04-0?
+# [9.0.0] - 2025-04-08
 - Removed deprecations (classes, methods, constructors, packages etc.)
+  - Removed Meetings, Proactive Connect and Number Insight v2 APIs
 - Removed Pricing API (was contained in `com.vonage.client.account.*`)
 - Refactored `RequestSigning` and `com.vonage.client.auth.hashutils.*` classes (mostly internal changes)
 - Standardised handling of query parameters using `AbstractQueryParamsRequest` class
