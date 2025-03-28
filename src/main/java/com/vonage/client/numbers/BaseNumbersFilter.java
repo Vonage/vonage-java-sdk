@@ -15,8 +15,7 @@
  */
 package com.vonage.client.numbers;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
+import com.vonage.client.AbstractQueryParamsRequest;
 import java.util.Map;
 import java.util.Objects;
 
@@ -25,10 +24,10 @@ import java.util.Objects;
  *
  * @since 8.10.0
  */
-abstract class BaseNumbersFilter implements QueryParamsRequest {
-    private Integer index, size;
-    private String pattern, country;
-    private SearchPattern searchPattern;
+abstract class BaseNumbersFilter extends AbstractQueryParamsRequest {
+    private final Integer index, size;
+    private final String pattern, country;
+    private final SearchPattern searchPattern;
 
     BaseNumbersFilter(Builder<?, ?> builder) {
         if ((index = builder.index) != null && index < 1) {
@@ -37,9 +36,7 @@ abstract class BaseNumbersFilter implements QueryParamsRequest {
         if ((size = builder.size) != null && (size < 1 || size > 100)) {
             throw new IllegalArgumentException("'size' must be between 1 and 100.");
         }
-        if (builder.country != null) {
-            country = BaseNumberRequest.validateCountry(builder.country);
-        }
+        country = builder.country != null ? BaseNumberRequest.validateCountry(builder.country) : null;
         pattern = builder.pattern;
         searchPattern = builder.searchPattern;
     }
@@ -89,55 +86,16 @@ abstract class BaseNumbersFilter implements QueryParamsRequest {
         return searchPattern;
     }
 
-    @Deprecated
-    public void setIndex(Integer index) {
-        this.index = index;
-    }
-
-    /**
-     * Set the maximum number of matching results to be returned.
-     *
-     * @param size An Integer between 10 and 100 (inclusive) or null, to indicate that the default value should be
-     *             used.
-     */
-    @Deprecated
-    public void setSize(Integer size) {
-        this.size = size;
-    }
-
-    @Deprecated
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
-    }
-
-    /**
-     * @param searchPattern The pattern you want to search for. Use the * wildcard to match the start or end of the number.
-     *                      For example, *123* matches all numbers that contain the pattern 123.
-     * @deprecated Use {@link Builder#pattern(SearchPattern, String)}. This will be removed in the next major release.
-     */
-    @Deprecated
-    public void setSearchPattern(SearchPattern searchPattern) {
-        this.searchPattern = searchPattern;
-    }
-
     @Override
     public Map<String, String> makeParams() {
-        LinkedHashMap<String, String> params = new LinkedHashMap<>(8);
-        if (index != null) {
-            params.put("index", index.toString());
-        }
-        if (size != null) {
-            params.put("size", size.toString());
-        }
-        if (pattern != null) {
-            params.put("pattern", pattern);
-        }
+        Map<String, String> params = super.makeParams();
+        conditionalAdd("index", index);
+        conditionalAdd("size", size);
+        conditionalAdd("pattern", pattern);
         if (searchPattern != null) {
-            params.put("search_pattern", Integer.toString(searchPattern.getValue()));
+            conditionalAdd("search_pattern", searchPattern.getValue());
         }
-        if (country != null) {
-            params.put("country", country);
-        }
+        conditionalAdd("country", country);
         return params;
     }
 

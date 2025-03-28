@@ -17,6 +17,7 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the supported BCP-47 language codes for Live Captions.
@@ -84,15 +85,15 @@ public enum Language {
 	 */
 	TH_TH;
 
+	/**
+	 * Converts a string representation of a language to the corresponding enum value.
+	 *
+	 * @param name The language as a string.
+	 * @return The language enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static Language fromString(String name) {
-		if (name == null) return null;
-		try {
-			return valueOf(name.toUpperCase().replace('-', '_'));
-		}
-		catch (IllegalArgumentException ex) {
-			return null;
-		}
+		return Jsonable.fromString(name, Language.class);
 	}
 
 	@JsonValue

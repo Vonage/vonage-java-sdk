@@ -15,17 +15,17 @@
  */
 package com.vonage.client.insight;
 
-import com.vonage.client.TestUtils;
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageResponseParseException;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.math.BigDecimal;
 
 public class StandardInsightResponseTest {
 
     @Test
     public void testFromJson() {
-        StandardInsightResponse response = StandardInsightResponse.fromJson(
+        StandardInsightResponse response = Jsonable.fromJson(
                 "{\n" +
                 "    \"status\": 43,\n" +
                 "    \"status_message\": \"Lookup not returned\",\n" +
@@ -75,14 +75,14 @@ public class StandardInsightResponseTest {
         assertEquals("GB-FIXED-RESERVED", response.getCurrentCarrier().getNetworkCode());
         assertEquals("United Kingdom Landline Reserved", response.getCurrentCarrier().getName());
         assertEquals("GB", response.getCurrentCarrier().getCountry());
-        assertEquals(CarrierDetails.NetworkType.LANDLINE, response.getCurrentCarrier().getNetworkType());
+        assertEquals(NetworkType.LANDLINE, response.getCurrentCarrier().getNetworkType());
         assertEquals("landline", response.getCurrentCarrier().getNetworkType().toString());
         assertEquals(PortedStatus.ASSUMED_NOT_PORTED, response.getPorted());
         assertEquals("assumed_not_ported", response.getPorted().toString());
         assertEquals("GB-HAPPY-RESERVED", response.getOriginalCarrier().getNetworkCode());
         assertEquals("United Kingdom Mobile Reserved", response.getOriginalCarrier().getName());
         assertEquals("GB", response.getOriginalCarrier().getCountry());
-        assertEquals(CarrierDetails.NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
+        assertEquals(NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
         assertEquals("mobile", response.getOriginalCarrier().getNetworkType().toString());
         assertEquals(new BigDecimal("18.34408949"), response.getRemainingBalance());
         assertEquals(new BigDecimal("0.00500000"), response.getRequestPrice());
@@ -94,7 +94,7 @@ public class StandardInsightResponseTest {
 
     @Test
     public void testFromJsonUnknownInsightStatus() {
-        StandardInsightResponse response = StandardInsightResponse.fromJson("{\n" +
+        StandardInsightResponse response = Jsonable.fromJson("{\n" +
                 "    \"status\": 2147,\n" +
                 "    \"status_message\": \"Lookup not returned\"\n" +
                 "}");
@@ -105,7 +105,7 @@ public class StandardInsightResponseTest {
 
     @Test
     public void testFromJsonNullNetworkType() {
-        StandardInsightResponse response = StandardInsightResponse.fromJson("{\n" +
+        StandardInsightResponse response = Jsonable.fromJson("{\n" +
                 "    \"status\": 45,\n" +
                 "    \"status_message\": \"Lookup not returned\",\n" +
                 "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\",\n" +
@@ -125,7 +125,7 @@ public class StandardInsightResponseTest {
 
     @Test
     public void testFromBusyJson() {
-        StandardInsightResponse response = StandardInsightResponse.fromJson(
+        StandardInsightResponse response = Jsonable.fromJson(
                 "{\n" + "    \"status\": 1,\n" + "    \"status_message\": \"Back off\",\n"
                         + "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" + "}");
 
@@ -137,6 +137,8 @@ public class StandardInsightResponseTest {
 
     @Test
     public void testJsonError() {
-        assertThrows(VonageResponseParseException.class, () -> StandardInsightResponse.fromJson("blarg"));
+        assertThrows(VonageResponseParseException.class, () ->
+                Jsonable.fromJson("blarg", StandardInsightResponse.class)
+        );
     }
 }

@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MmsVcardRequestTest {
-	String from = "447900000001", to = "317900000002",
+	final String from = "447900000001", to = "317900000002",
 			url = "https://foo.tld/path/to/resource.vcf", caption = "!Alt text";
 
 	@Test

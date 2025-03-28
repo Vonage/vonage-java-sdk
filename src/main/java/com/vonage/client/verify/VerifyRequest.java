@@ -15,7 +15,6 @@
  */
 package com.vonage.client.verify;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -79,46 +78,13 @@ public class VerifyRequest extends BaseRequest {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
-        params.put("brand", brand);
-        if (from != null) {
-            params.put("sender_id", from);
-        }
-        if (pinCode != null) {
-            params.put("pin_code", pinCode);
-        }
+        conditionalAdd("brand", brand);
+        conditionalAdd("sender_id", from);
+        conditionalAdd("pin_code", pinCode);
         if (workflow != null) {
-            params.put("workflow_id", String.valueOf(workflow.id));
+            conditionalAdd("workflow_id", workflow.getId());
         }
         return params;
-    }
-
-    /**
-     * Enumeration representing different verification workflows.
-     * <p>
-     * See: <a href="https://developer.nexmo.com/verify/guides/workflows-and-events">https://developer.nexmo.com/verify/guides/workflows-and-events</a> for more details.
-     */
-    public enum Workflow {
-        /**
-         * The default workflow.
-         */
-        SMS_TTS_TTS(1),
-        SMS_SMS_TTS(2),
-        TTS_TTS(3),
-        SMS_SMS(4),
-        SMS_TTS(5),
-        SMS(6),
-        TTS(7);
-
-        private final int id;
-
-        Workflow(int id) {
-            this.id = id;
-        }
-
-        @JsonValue
-        public int getId() {
-            return id;
-        }
     }
 
     @Override
@@ -146,7 +112,8 @@ public class VerifyRequest extends BaseRequest {
      * @since 5.5.0
      */
     public static class Builder {
-        private String brand, senderId, number, country, pinCode;
+        private final String brand, number;
+        private String senderId, country, pinCode;
         private Integer length, pinExpiry, nextEventWait;
         private Workflow workflow;
         private Locale locale;

@@ -17,6 +17,7 @@ package com.vonage.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Enumeration representing the type of number.
@@ -24,19 +25,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum Type {
     LANDLINE,
     MOBILE_LVN,
-    LANDLINE_TOLL_FREE,
-    UNKNOWN;
-
-    /**
-     * Serialized name.
-     *
-     * @return The string value.
-     * @deprecated Use {@link #toString()}
-     */
-    @Deprecated
-    public String getType() {
-        return toString();
-    }
+    LANDLINE_TOLL_FREE;
 
     @JsonValue
     @Override
@@ -48,16 +37,11 @@ public enum Type {
      * Creates an instance of this enum from its serialized string representation.
      *
      * @param type The number type as a string.
-     * @return An enum representation of the number type.
+     *
+     * @return An enum representation of the number type, or {@code null} if invalid.
      */
     @JsonCreator
     public static Type fromString(String type) {
-        if (type == null) return null;
-        try {
-            return Type.valueOf(type.toUpperCase().replace('-', '_'));
-        }
-        catch (IllegalArgumentException ex) {
-            return UNKNOWN;
-        }
+        return Jsonable.fromString(type, Type.class);
     }
 }

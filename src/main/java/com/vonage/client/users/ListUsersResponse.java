@@ -27,10 +27,7 @@ import java.util.List;
 public class ListUsersResponse extends HalPageResponse {
     @JsonProperty("_embedded") private Embedded embedded;
 
-    @Deprecated
-    public ListUsersResponse() {
-        super();
-    }
+    ListUsersResponse() {}
 
     private static class Embedded extends JsonableBaseObject {
         @JsonProperty("users") List<BaseUser> users;

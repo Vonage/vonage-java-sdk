@@ -18,7 +18,7 @@ package com.vonage.client.messages.messenger;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.Channel;
-import com.vonage.client.messages.MessageType;
+import com.vonage.client.common.MessageType;
 
 public abstract class MessengerRequest extends MessageRequest {
 	protected final Messenger messenger;

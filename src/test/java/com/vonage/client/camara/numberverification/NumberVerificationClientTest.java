@@ -52,7 +52,7 @@ public class NumberVerificationClientTest extends AbstractClientTest<NumberVerif
         String code = "PERMISSION_DENIED", responseJson = "{\"status\": " +
                 status+", \"code\": \""+code+"\",\"message\":\""+TestUtils.TEST_REASON+"\"}";
 
-        var fromJsonEx = CamaraResponseException.fromJson(responseJson);
+        var fromJsonEx = Jsonable.fromJson(responseJson, CamaraResponseException.class);
 
         stubFrontendNetworkResponse(status, responseJson);
 

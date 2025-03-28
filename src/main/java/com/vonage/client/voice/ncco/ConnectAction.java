@@ -20,20 +20,21 @@ import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.voice.AdvancedMachineDetection;
 import com.vonage.client.voice.MachineDetection;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
 
 /**
- * An NCCO connect action that allows for the establishment of a connection to various {@link Endpoint}.
+ * An NCCO connect action that allows for the establishment of a connection to various {@link ConnectEndpoint}.
  */
 public class ConnectAction extends JsonableBaseObject implements Action {
-    private Collection<Endpoint> endpoint;
+    private Collection<ConnectEndpoint> endpoint;
     private String from;
     private EventType eventType;
     private Integer limit, timeOut;
     private MachineDetection machineDetection;
     private AdvancedMachineDetection advancedMachineDetection;
-    private Collection<String> eventUrl;
+    private Collection<URI> eventUrl;
     private EventMethod eventMethod;
     private Boolean randomFromNumber;
     private URI ringbackTone;
@@ -44,9 +45,7 @@ public class ConnectAction extends JsonableBaseObject implements Action {
     ConnectAction() {}
 
     private ConnectAction(Builder builder) {
-        if ((endpoint = builder.endpoint) == null || endpoint.isEmpty()) {
-            throw new IllegalStateException("An endpoint must be specified.");
-        }
+        endpoint = Collections.singleton(Objects.requireNonNull(builder.endpoint, "An endpoint must be specified."));
         if ((limit = builder.limit) != null && (limit < 1 || limit > 7200)) {
             throw new IllegalArgumentException("'limit' must be positive and less than 7200 seconds.");
         }
@@ -60,9 +59,9 @@ public class ConnectAction extends JsonableBaseObject implements Action {
         eventType = builder.eventType;
         machineDetection = builder.machineDetection;
         advancedMachineDetection = builder.advancedMachineDetection;
-        eventUrl = builder.eventUrl;
+        eventUrl = builder.eventUrl != null ? Collections.singleton(URI.create(builder.eventUrl)) : null;
         eventMethod = builder.eventMethod;
-        ringbackTone = builder.ringbackTone;
+        ringbackTone = builder.ringbackTone != null ? URI.create(builder.ringbackTone) : null;
     }
 
     @Override
@@ -76,7 +75,7 @@ public class ConnectAction extends JsonableBaseObject implements Action {
      * @return The endpoint wrapped in a collection.
      */
     @JsonProperty("endpoint")
-    public Collection<Endpoint> getEndpoint() {
+    public Collection<ConnectEndpoint> getEndpoint() {
         return endpoint;
     }
 
@@ -146,7 +145,7 @@ public class ConnectAction extends JsonableBaseObject implements Action {
      * @return The event URL wrapped in a collection, or {@code null} if unspecified.
      */
     @JsonProperty("eventUrl")
-    public Collection<String> getEventUrl() {
+    public Collection<URI> getEventUrl() {
         return eventUrl;
     }
 
@@ -183,69 +182,48 @@ public class ConnectAction extends JsonableBaseObject implements Action {
     /**
      * Entry point for constructing an instance of this class.
      *
-     * @param endpoint Connect the call to a specific #{@link Endpoint}.
+     * @param endpoint Connect the call to a specific {@linkplain ConnectEndpoint}.
      *
      * @return A new Builder.
-     * @deprecated Use {@link #builder(Endpoint...)}. This will be removed in the next major release.
      */
-    @Deprecated
-    public static Builder builder(Collection<Endpoint> endpoint) {
-        return new Builder(endpoint);
+    public static Builder builder(ConnectEndpoint endpoint) {
+        return builder().endpoint(endpoint);
     }
 
     /**
-     * Entry point for constructing an instance of this class.
-     *
-     * @param endpoint Connect the call to a specific {@linkplain Endpoint}.
+     * Entry point for constructing an instance of this class. You must specify at least one endpoint.
      *
      * @return A new Builder.
      */
-    public static Builder builder(Endpoint... endpoint) {
-        return builder(Arrays.asList(endpoint));
+    public static Builder builder() {
+        return new Builder();
     }
 
     /**
      * Builder to create a ConnectAction. The endpoint to connect to is mandatory.
      */
     public static class Builder {
-        private Collection<Endpoint> endpoint;
-        private String from;
+        private ConnectEndpoint endpoint;
+        private String from, eventUrl, ringbackTone;
         private EventType eventType;
         private Integer timeOut, limit;
         private MachineDetection machineDetection;
         private AdvancedMachineDetection advancedMachineDetection;
-        private Collection<String> eventUrl;
         private EventMethod eventMethod;
         private Boolean randomFromNumber;
-        private URI ringbackTone;
 
-        private Builder(Collection<Endpoint> endpoint) {
-            this.endpoint = endpoint;
-        }
+        Builder() {}
 
         /**
-         * Connect the call to a specific {@linkplain Endpoint}.
+         * Connect the call to a specific {@linkplain ConnectEndpoint}.
          *
-         * @param endpoint The endpoints to connect to.
+         * @param endpoint The endpoint to connect to.
          *
          * @return This builder.
-         * @deprecated Use {@link #endpoint(Endpoint...)}. This will be removed in the next major release.
          */
-        @Deprecated
-        public Builder endpoint(Collection<Endpoint> endpoint) {
+        public Builder endpoint(ConnectEndpoint endpoint) {
             this.endpoint = endpoint;
             return this;
-        }
-
-        /**
-         * Connect the call to a specific {@linkplain Endpoint}.
-         *
-         * @param endpoint The endpoint(s) to connect to.
-         *
-         * @return This builder.
-         */
-        public Builder endpoint(Endpoint... endpoint) {
-            return endpoint(Arrays.asList(endpoint));
         }
 
         /**
@@ -288,39 +266,9 @@ public class ConnectAction extends JsonableBaseObject implements Action {
          * @param timeOut The call timeout in seconds.
          *
          * @return This builder.
-         *
-         * @deprecated Use {@link #timeOut(int)}. This will be removed in the next major release.
-         */
-        @Deprecated
-        public Builder timeOut(Integer timeOut) {
-            this.timeOut = timeOut;
-            return this;
-        }
-
-        /**
-         * If the call is unanswered, set the number in seconds before Vonage stops ringing endpoint.
-         * The default value is 60, minimum is 3 and maximum is 7200 (2 hours).
-         *
-         * @param timeOut The call timeout in seconds.
-         *
-         * @return This builder.
          */
         public Builder timeOut(int timeOut) {
-            return timeOut(Integer.valueOf(timeOut));
-        }
-
-        /**
-         * Maximum length of the call in seconds. The default and maximum value is 7200 seconds (2 hours).
-         *
-         * @param limit The maximum call length as an int.
-         *
-         * @return This builder.
-         *
-         * @deprecated Use {@link #limit(int)}. This will be removed in the next major release.
-         */
-        @Deprecated
-        public Builder limit(Integer limit) {
-            this.limit = limit;
+            this.timeOut = timeOut;
             return this;
         }
 
@@ -332,7 +280,8 @@ public class ConnectAction extends JsonableBaseObject implements Action {
          * @return This builder.
          */
         public Builder limit(int limit) {
-            return limit(Integer.valueOf(limit));
+            this.limit = limit;
+            return this;
         }
 
         /**
@@ -368,47 +317,13 @@ public class ConnectAction extends JsonableBaseObject implements Action {
          * If eventType is set to synchronous the eventUrl can return an NCCO that overrides the current
          * NCCO when a timeout occurs.
          *
-         * @param eventUrl The event URLs.
-         *
-         * @return This builder.
-         *
-         * @deprecated Use {@link #eventUrl(String)}. This will be removed in the next major release.
-         */
-        @Deprecated
-        public Builder eventUrl(Collection<String> eventUrl) {
-            this.eventUrl = eventUrl;
-            return this;
-        }
-
-        /**
-         * Set the webhook endpoint that Vonage calls asynchronously on each of the possible
-         * <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flow#call-states">Call States</a>.
-         * If eventType is set to synchronous the eventUrl can return an NCCO that overrides the current
-         * NCCO when a timeout occurs.
-         *
-         * @param eventUrl The event URL(s).
-         *
-         * @return This builder.
-         *
-         * @deprecated Use {@link #eventUrl(String)}. This will be removed in the next major release.
-         */
-        @Deprecated
-        public Builder eventUrl(String... eventUrl) {
-            return eventUrl(Arrays.asList(eventUrl));
-        }
-
-        /**
-         * Set the webhook endpoint that Vonage calls asynchronously on each of the possible
-         * <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flow#call-states">Call States</a>.
-         * If eventType is set to synchronous the eventUrl can return an NCCO that overrides the current
-         * NCCO when a timeout occurs.
-         *
          * @param eventUrl The event URL as a string.
          *
          * @return This builder.
          */
         public Builder eventUrl(String eventUrl) {
-            return eventUrl(new String[]{eventUrl});
+            this.eventUrl = eventUrl;
+            return this;
         }
 
         /**
@@ -452,7 +367,7 @@ public class ConnectAction extends JsonableBaseObject implements Action {
          * @since 8.2.0
          */
         public Builder ringbackTone(String ringbackTone) {
-            this.ringbackTone = URI.create(ringbackTone);
+            this.ringbackTone = ringbackTone;
             return this;
         }
 

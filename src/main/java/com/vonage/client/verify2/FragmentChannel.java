@@ -17,6 +17,7 @@ package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the template channel type in a {@link TemplateFragment}.
@@ -36,12 +37,10 @@ public enum FragmentChannel {
 	 *
 	 * @param value The string to parse.
 	 *
-	 * @return The parsed channel, or {@code null} if the string is null.
-	 * @throws IllegalArgumentException If the string does not match a known channel.
+	 * @return The parsed channel, or {@code null} if invalid.
 	 */
 	@JsonCreator
 	public static FragmentChannel fromString(String value) {
-		if (value == null) return null;
-		return valueOf(value.toUpperCase());
+		return Jsonable.fromString(value, FragmentChannel.class);
 	}
 }

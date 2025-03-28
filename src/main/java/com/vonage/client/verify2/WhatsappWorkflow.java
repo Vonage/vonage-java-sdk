@@ -29,17 +29,6 @@ public final class WhatsappWorkflow extends AbstractWhatsappWorkflow {
 	}
 
 	/**
-	 * Constructs a new WhatsApp verification workflow.
-	 *
-	 * @param to The number to send the message to, in E.164 format.
-	 * @deprecated This no longer works and will be removed in a future release.
-	 */
-	@Deprecated
-	public WhatsappWorkflow(String to) {
-		this(to, null);
-	}
-
-	/**
 	 * Constructs a new WhatsApp verification workflow with a custom sender number.
 	 *
 	 * @param to The number to send the message to, in E.164 format.

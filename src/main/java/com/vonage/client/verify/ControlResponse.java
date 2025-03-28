@@ -16,27 +16,39 @@
 package com.vonage.client.verify;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
+/**
+ * Response returned from {@linkplain VerifyClient#advanceVerification(String)}.
+ */
 public class ControlResponse extends JsonableBaseObject {
-    private String status;
+    private VerifyStatus status;
     private VerifyControlCommand command;
     private String errorText;
 
     private ControlResponse() {
     }
 
-    public ControlResponse(String status, VerifyControlCommand command) {
+    public ControlResponse(VerifyStatus status, VerifyControlCommand command) {
         this.status = status;
         this.command = command;
     }
 
+    /**
+     * Status of the verification request.
+     *
+     * @return The verification status as an enum.
+     */
     @JsonProperty("status")
-    public String getStatus() {
+    public VerifyStatus getStatus() {
         return status;
     }
 
+    /**
+     * Action of the control request.
+     *
+     * @return The command as an enum.
+     */
     @JsonProperty("command")
     public VerifyControlCommand getCommand() {
         return command;
@@ -50,9 +62,5 @@ public class ControlResponse extends JsonableBaseObject {
     @JsonProperty("error_text")
     public String getErrorText() {
         return errorText;
-    }
-
-    public static ControlResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
     }
 }

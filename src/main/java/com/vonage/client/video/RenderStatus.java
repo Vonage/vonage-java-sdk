@@ -17,6 +17,7 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the possible states in {@link RenderResponse#getStatus()}.
@@ -49,14 +50,16 @@ public enum RenderStatus {
 	 */
 	FAILED;
 
+	/**
+	 * Convert a string to a RenderStatus enum.
+	 *
+	 * @param status The string to convert.
+	 *
+	 * @return The RenderStatus as an enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static RenderStatus fromString(String status) {
-		try {
-			return RenderStatus.valueOf(status.toUpperCase());
-		}
-		catch (NullPointerException | IllegalArgumentException e) {
-			return null;
-		}
+		return Jsonable.fromString(status, RenderStatus.class);
 	}
 
 	@JsonValue

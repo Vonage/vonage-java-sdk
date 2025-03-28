@@ -21,16 +21,15 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Represents HTTP Live Streaming (HLS) options for a {@link Broadcast}.
  */
-public class Hls extends JsonableBaseObject {
+public final class Hls extends JsonableBaseObject {
 	private Boolean dvr, lowLatency;
 
-	protected Hls() {
-	}
+	Hls() {}
 
-	protected Hls(Builder builder) {
+	Hls(Builder builder) {
 		// Non-short-circuiting for setter
 		if (((dvr = builder.dvr) != null && dvr) & ((lowLatency = builder.lowLatency) != null && lowLatency)) {
-			throw new IllegalArgumentException("Cannot set both dvr and lowLatency on HLS");
+			throw new IllegalArgumentException("Cannot set both DVR and Low Latency on HLS.");
 		}
 	}
 
@@ -40,7 +39,7 @@ public class Hls extends JsonableBaseObject {
 	 * @return {@code true} if DVR functionality is enabled, or {@code null} if unknown / unset.
 	 */
 	@JsonProperty("dvr")
-	public Boolean dvr() {
+	public Boolean getDvr() {
 		return dvr;
 	}
 
@@ -50,7 +49,7 @@ public class Hls extends JsonableBaseObject {
 	 * @return {@code true} if low latency mode is enabled, or {@code null} if unknown / unset.
 	 */
 	@JsonProperty("lowLatency")
-	public Boolean lowLatency() {
+	public Boolean getLowLatency() {
 		return lowLatency;
 	}
 
@@ -66,7 +65,7 @@ public class Hls extends JsonableBaseObject {
 	/**
 	 * Used to create the Hls object.
 	 */
-	public static class Builder {
+	public static final class Builder {
 		private Boolean dvr, lowLatency;
 
 		Builder() {}

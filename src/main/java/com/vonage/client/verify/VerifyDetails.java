@@ -28,7 +28,7 @@ public class VerifyDetails extends JsonableBaseObject {
     private Date dateSubmitted, dateFinalized, firstEventDate, lastEventDate;
     private Status status;
     private BigDecimal price, estimatedPriceMessagesSent;
-    private List<VerifyCheck> checks = new ArrayList<>(0);
+    private List<VerifyCheck> checks;
 
     /**
      * @return The {@code request_id} that you received in the response to the

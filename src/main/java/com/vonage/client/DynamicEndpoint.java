@@ -45,12 +45,12 @@ import java.util.logging.Logger;
 public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	protected final Logger logger = Logger.getLogger(getClass().getName());
 
-	protected Set<Class<? extends AuthMethod>> authMethods;
-	protected String contentType, accept;
-	protected HttpMethod requestMethod;
-	protected BiFunction<DynamicEndpoint<T, R>, ? super T, String> pathGetter;
-	protected Class<? extends VonageApiResponseException> responseExceptionType;
-	protected Class<R> responseType;
+	protected final Set<Class<? extends AuthMethod>> authMethods;
+	protected final String contentType, accept;
+	protected final HttpMethod requestMethod;
+	protected final BiFunction<DynamicEndpoint<T, R>, ? super T, String> pathGetter;
+	protected final Class<? extends VonageApiResponseException> responseExceptionType;
+	protected final Class<R> responseType;
 	protected T cachedRequestBody;
 
 	protected DynamicEndpoint(Builder<T, R> builder) {
@@ -61,11 +61,9 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		responseType = Objects.requireNonNull(builder.responseType, "Response type is required.");
 		responseExceptionType = builder.responseExceptionType;
 		contentType = builder.contentType;
-		if ((accept = builder.accept) == null &&
-				(Jsonable.class.isAssignableFrom(responseType) || isJsonableArrayResponse())
-		) {
-			accept = ContentType.APPLICATION_JSON.getMimeType();
-		}
+        accept = builder.accept == null &&
+				(Jsonable.class.isAssignableFrom(responseType) || isJsonableArrayResponse()) ?
+				ContentType.APPLICATION_JSON.getMimeType() : builder.accept;
 	}
 
 	/**
@@ -155,12 +153,11 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	static RequestBuilder createRequestBuilderFromRequestMethod(HttpMethod requestMethod) {
 		switch (requestMethod) {
-			case GET: return RequestBuilder.get();
+			default: return RequestBuilder.get();
 			case POST: return RequestBuilder.post();
 			case PATCH: return RequestBuilder.patch();
 			case DELETE: return RequestBuilder.delete();
 			case PUT: return RequestBuilder.put();
-			default: throw new IllegalStateException("Unknown request method.");
 		}
 	}
 

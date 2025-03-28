@@ -46,34 +46,6 @@ public final class SmsWorkflow extends AbstractNumberWorkflow {
 		this(builder(to));
 	}
 
-	/**
-	 * Constructs a new SMS verification workflow.
-	 *
-	 * @param to The number to send the message to, in E.164 format.
-	 * @param appHash Android Application Hash Key for automatic code detection on a user's device.
-	 *
-	 * @deprecated Use {@linkplain #builder(String)}.
-	 */
-	@Deprecated
-	public SmsWorkflow(String to, String appHash) {
-		this(builder(to).appHash(appHash));
-	}
-
-	/**
-	 * Constructs a new SMS verification workflow.
-	 *
-	 * @param to The number to send the message to, in E.164 format.
-	 * @param from The number or sender ID to send the SMS from.
-	 * @param appHash Android Application Hash Key for automatic code detection on a user's device.
-	 *
-	 * @since 8.1.0
-	 * @deprecated Use {@linkplain #builder(String)} instead.
-	 */
-	@Deprecated
-	public SmsWorkflow(String to, String from, String appHash) {
-		this(builder(to).from(from).appHash(appHash));
-	}
-
 	@Override
 	protected String validateFrom(String from) {
 		if ((from = super.validateFrom(from)) == null) {

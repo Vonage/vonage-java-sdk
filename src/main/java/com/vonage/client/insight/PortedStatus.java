@@ -16,6 +16,8 @@
 package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Enum representing whether the user has changed carrier for the number.
@@ -23,19 +25,22 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * explicitly reported that the number is ported. Note that this enum may be {@code null}.
  */
 public enum PortedStatus {
-	UNKNOWN, PORTED, NOT_PORTED, ASSUMED_NOT_PORTED, ASSUMED_PORTED;
+	@JsonEnumDefaultValue UNKNOWN,
+	PORTED,
+	NOT_PORTED,
+	ASSUMED_NOT_PORTED,
+	ASSUMED_PORTED;
 
+	/**
+	 * Convert a string value to a PortedStatus enum.
+	 *
+	 * @param name The string value to convert.
+	 *
+	 * @return The ported status as an enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static PortedStatus fromString(String name) {
-		if (name.equalsIgnoreCase("null")) {
-			return null;
-		}
-		try {
-			return PortedStatus.valueOf(name.toUpperCase());
-		}
-		catch (IllegalArgumentException ex) {
-			return UNKNOWN;
-		}
+		return Jsonable.fromString(name, PortedStatus.class);
 	}
 
 	@Override

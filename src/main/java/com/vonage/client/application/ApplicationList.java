@@ -16,7 +16,6 @@
 package com.vonage.client.application;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.common.HalPageResponse;
 import java.util.List;
 
@@ -30,8 +29,7 @@ public class ApplicationList extends HalPageResponse {
         @JsonProperty("applications") List<Application> applications;
     }
 
-    @Deprecated
-    public ApplicationList() {}
+    ApplicationList() {}
 
     /**
      * Retrieves the embedded resource contents.
@@ -40,10 +38,5 @@ public class ApplicationList extends HalPageResponse {
      */
     public List<Application> getApplications() {
         return embedded != null ? embedded.applications : null;
-    }
-
-    @Deprecated
-    public static ApplicationList fromJson(String json) {
-        return Jsonable.fromJson(json);
     }
 }

@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,8 +45,7 @@ public class BroadcastTest {
 		StreamMode streamMode = StreamMode.AUTO;
 		BroadcastStatus status = BroadcastStatus.STOPPED;
 		String stylesheet = "stream.instructor {position: absolute; width: 100%;  height:50%;}";
-		StreamCompositionLayout layout = StreamCompositionLayout.builder(ScreenLayoutType.CUSTOM)
-				.stylesheet(stylesheet).build();
+		StreamCompositionLayout layout = StreamCompositionLayout.customLayout(stylesheet);
 		Hls hls = Hls.builder().dvr(false).lowLatency(false).build();
 		URI hlsUrl = URI.create("https://example.com/path/to/playlist.m3u8");
 		Rtmp rtmp1 = Rtmp.builder().serverUrl("rtmps://myfooserver/myfooapp")
@@ -64,8 +64,8 @@ public class BroadcastTest {
 				stylesheet+"\"},\"maxBitrate\":"+maxBitrate+",\"multiBroadcastTag\":\""+multiBroadcastTag +
 				"\",\"maxDuration\":" + maxDuration+",\"outputs\":{" + "\"rtmp\":[{\"id\":\"" +
 				rtmp1.getId()+"\",\"streamName\":\""+rtmp1.getStreamName()+"\",\"serverUrl\":\"" +
-				rtmp1.getServerUrl()+"\"}],\"hls\":{\"dvr\":"+hls.dvr()+",\"lowLatency\":" +
-				hls.lowLatency()+"}}}", requestJson = request.toJson();
+				rtmp1.getServerUrl()+"\"}],\"hls\":{\"dvr\":"+hls.getDvr()+",\"lowLatency\":" +
+				hls.getLowLatency()+"}}}", requestJson = request.toJson();
 
 		assertEquals(expectedRequestedJson, requestJson);
 
@@ -82,12 +82,12 @@ public class BroadcastTest {
 				",\"streams\":[{}]," +
 				"\"resolution\":\""+resolution+"\"," +
 				"\"streamMode\":\""+streamMode+"\"," +
-				"\"settings\":{\"hls\":{\"lowLatency\":"+hls.lowLatency()+",\"dvr\":"+hls.dvr()+"}}," +
+				"\"settings\":{\"hls\":{\"lowLatency\":"+hls.getLowLatency()+",\"dvr\":"+hls.getDvr()+"}}," +
 				"\"broadcastUrls\":{\"hls\":\""+hlsUrl+"\",\"rtmp\":[{\"id\":\""+rtmp1.getId() +
 				"\",\"serverUrl\":\""+rtmp1.getServerUrl()+"\",\"streamName\":\""+rtmp1.getStreamName() +
 				"\",\"status\":\""+rtmp1Status+"\"}]}}";
 
-		Broadcast response = Broadcast.fromJson(responseJson);
+		Broadcast response = Jsonable.fromJson(responseJson);
 
 		assertEquals(id, response.getId());
 		assertEquals(sessionId, response.getSessionId());
@@ -124,7 +124,7 @@ public class BroadcastTest {
 		assertNull(stream1.hasAudio());
 		assertNull(stream1.hasVideo());
 
-		Broadcast parsedFromRequestJson = Broadcast.fromJson(requestJson);
+		Broadcast parsedFromRequestJson = Jsonable.fromJson(requestJson);
 		assertNotNull(parsedFromRequestJson);
 		assertEquals(request.toString(), parsedFromRequestJson.toString());
 
@@ -151,7 +151,7 @@ public class BroadcastTest {
 				jsonFromRequest = parsedFromRequestJson.toJson();
 		assertEquals(expectedJsonFromRequest, jsonFromRequest);
 
-		Broadcast requestFromResponseJson = Broadcast.fromJson(responseJson);
+		Broadcast requestFromResponseJson = Jsonable.fromJson(responseJson);
 		assertNotNull(requestFromResponseJson);
 		String expectedRequestFromResponseJsonToJson = "{" +
 				"\"id\":\""+id+"\"," +
@@ -171,7 +171,7 @@ public class BroadcastTest {
 				"\"broadcastUrls\":{\"hls\":\""+hlsUrl+"\"," +
 				"\"rtmp\":[{\"id\":\""+rtmp1.getId()+"\",\"streamName\":\""+rtmp1.getStreamName()+"\"," +
 				"\"serverUrl\":\""+rtmp1.getServerUrl()+"\",\"status\":\""+rtmp1Status+"\"}]}," +
-				"\"settings\":{\"hls\":{\"dvr\":"+hls.dvr()+",\"lowLatency\":"+hls.lowLatency()+"}}}";
+				"\"settings\":{\"hls\":{\"dvr\":"+hls.getDvr()+",\"lowLatency\":"+hls.getLowLatency()+"}}}";
 		String requestFromResponseJsonJson = requestFromResponseJson.toJson();
 		assertEquals(expectedRequestFromResponseJsonToJson, requestFromResponseJsonJson);
 	}
@@ -317,7 +317,7 @@ public class BroadcastTest {
 
 	@Test
 	public void testFromJsonEmpty() {
-		Broadcast response = Broadcast.fromJson("{}");
+		Broadcast response = Jsonable.fromJson("{}");
 		TestUtils.testJsonableBaseObject(response);
 		assertNull(response.getId());
 		assertNull(response.getSessionId());
@@ -339,7 +339,7 @@ public class BroadcastTest {
 
 	@Test
 	public void testFromJsonInvalid() {
-		assertThrows(VonageResponseParseException.class, () -> Broadcast.fromJson("{malformed]"));
+		assertThrows(VonageResponseParseException.class, () -> Jsonable.fromJson("{malformed]", Broadcast.class));
 	}
 
 	@Test

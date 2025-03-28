@@ -17,7 +17,6 @@ package com.vonage.client.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.users.channels.Channel;
 import com.vonage.client.users.channels.Channels;
@@ -85,17 +84,6 @@ public class User extends BaseUser {
      */
     public Channels getChannels() {
         return channels;
-    }
-
-    /**
-     * Constructs a user from the JSON payload.
-     *
-     * @param json The JSON structure containing the fields of this class.
-     *
-     * @return A new User instance.
-     */
-    public static User fromJson(String json) {
-        return Jsonable.fromJson(json);
     }
 
     /**

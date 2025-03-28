@@ -17,12 +17,13 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the audio recording file format in {@linkplain RecordAction}.
  */
 public enum RecordingFormat {
-    MP3, WAV, OGG, UNKNOWN;
+    MP3, WAV, OGG;
 
     @JsonValue
     @Override
@@ -35,15 +36,10 @@ public enum RecordingFormat {
      *
      * @param name The string value to convert.
      *
-     * @return The recording format as an enum, or {@code UNKNOWN} if an invalid value is provided.
+     * @return The recording format as an enum, or {@code null} if invalid.
      */
     @JsonCreator
     public static RecordingFormat fromString(String name) {
-        try {
-            return RecordingFormat.valueOf(name.toUpperCase());
-        }
-        catch (IllegalArgumentException ex) {
-            return UNKNOWN;
-        }
+        return Jsonable.fromString(name, RecordingFormat.class);
     }
 }

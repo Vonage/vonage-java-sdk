@@ -15,7 +15,6 @@
  */
 package com.vonage.client.insight;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.vonage.client.JsonableBaseObject;
@@ -28,30 +27,7 @@ public class RoamingDetails extends JsonableBaseObject {
     private final RoamingStatus status;
     private final String roamingCountryCode, roamingNetworkCode, roamingNetworkName;
 
-    /**
-     * Represents whether the number is outside its home carrier network, as an enum.
-     */
-    public enum RoamingStatus {
-        UNKNOWN, ROAMING, NOT_ROAMING;
-
-        @JsonCreator
-        public static RoamingStatus fromString(String name) {
-            try {
-                return RoamingStatus.valueOf(name.toUpperCase());
-            }
-            catch (IllegalArgumentException ex) {
-                return UNKNOWN;
-            }
-        }
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-    }
-
-    @Deprecated
-    public RoamingDetails(RoamingStatus status, String roamingCountryCode, String roamingNetworkCode, String roamingNetworkName) {
+    RoamingDetails(RoamingStatus status, String roamingCountryCode, String roamingNetworkCode, String roamingNetworkName) {
         this.status = status;
         this.roamingCountryCode = roamingCountryCode;
         this.roamingNetworkCode = roamingNetworkCode;

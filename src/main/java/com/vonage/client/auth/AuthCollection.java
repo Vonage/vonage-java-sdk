@@ -15,7 +15,7 @@
  */
 package com.vonage.client.auth;
 
-import com.vonage.client.auth.hashutils.HashUtil;
+import com.vonage.client.auth.hashutils.HashType;
 import java.util.*;
 
 /**
@@ -42,7 +42,7 @@ public class AuthCollection {
         authList = authMethods;
     }
 
-    public AuthCollection(UUID applicationId, byte[] privateKeyContents, String key, String secret, HashUtil.HashType hashType, String signature) {
+    public AuthCollection(UUID applicationId, byte[] privateKeyContents, String key, String secret, HashType hashType, String signature) {
         this();
 
         if (key != null && secret == null && signature == null) {

@@ -16,7 +16,6 @@
 package com.vonage.client.application.capabilities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.common.Webhook;
 
 /**
  * Rtc capability configuration settings.
@@ -58,17 +57,13 @@ public final class Rtc extends Capability {
         return new Builder();
     }
 
-    public static class Builder extends Capability.Builder<Rtc, Builder> {
+    public static final class Builder extends Capability.Builder<Rtc, Builder> {
         private Boolean signedCallbacks;
 
         /**
          * Constructs a new Builder.
-         *
-         * @deprecated Use {@link #builder()} instead. This constructor will be made private in a future release.
          */
-        @Deprecated
-        public Builder() {
-        }
+        private Builder() {}
 
         /**
          * Set whether to use signed webhooks. This is a way of verifying that the request is coming from Vonage.
@@ -82,14 +77,16 @@ public final class Rtc extends Capability {
             return this;
         }
 
-        @Override
-        public Builder addWebhook(Webhook.Type type, Webhook webhook) {
-            return super.addWebhook(type, webhook);
-        }
-
-        @Override
-        public Builder removeWebhook(Webhook.Type type) {
-            return super.removeWebhook(type);
+        /**
+         * Set the {@code event_url} webhook for this capability.
+         *
+         * @param webhook The webhook properties, or {@code null} to remove.
+         *
+         * @return This builder.
+         * @since 9.0.0
+         */
+        public Builder event(Webhook webhook) {
+            return webhook(Webhook.Type.EVENT, webhook);
         }
 
         /**

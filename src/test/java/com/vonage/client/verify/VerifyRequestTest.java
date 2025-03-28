@@ -25,7 +25,7 @@ public class VerifyRequestTest {
 	@Test
 	public void testPinLengthBoundaries() {
 		VerifyRequest.Builder builder = VerifyRequest.builder("4477990090090", "Brand.com")
-				.senderId("Your friend").length(4).locale(new Locale("en", "gb"));
+				.senderId("Your friend").length(4).locale(Locale.forLanguageTag("en-GB"));
 
 		assertEquals(4, builder.length(4).build().getLength().intValue());
 		assertEquals(6, builder.length(6).build().getLength().intValue());
@@ -38,7 +38,7 @@ public class VerifyRequestTest {
 	}
 
 	@Test
-	public void testConstructVerifyParamsMissingValues() throws Exception {
+	public void testConstructVerifyParamsMissingValues() {
 		VerifyRequest verifyRequest = VerifyRequest.builder("4477990090090", "Brand.com").build();
 
 		Map<String, ?> params = verifyRequest.makeParams();

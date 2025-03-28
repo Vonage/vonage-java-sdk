@@ -17,6 +17,7 @@ package com.vonage.client.common;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the various available channel types.
@@ -26,15 +27,17 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum ChannelType {
 	APP, PHONE, SMS, MMS, SIP, VBC, WEBSOCKET, VIBER, MESSENGER, WHATSAPP, WHATSAPP_VOICE;
 
+	/**
+	 * Convert a string value into a {@link ChannelType} object.
+	 *
+	 * @param name The string value to convert.
+	 *
+	 * @return The {@link ChannelType} object for the provided string value, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static ChannelType fromString(String name) {
-		try {
-			String normal = name.toUpperCase().replace('-', '_');
-			return "PSTN".equals(normal) ? PHONE : valueOf(normal);
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
-			return null;
-		}
+		if ("pstn".equalsIgnoreCase(name)) return PHONE;
+		return Jsonable.fromString(name, ChannelType.class);
 	}
 
 	@JsonValue

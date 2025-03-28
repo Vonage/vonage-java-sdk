@@ -16,6 +16,8 @@
 package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Enum representing the existence of a number.
@@ -26,16 +28,22 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * This is applicable to mobile numbers only.
  */
 public enum Validity {
-	UNKNOWN, VALID, NOT_VALID, INFERRED, INFERRED_NOT_VALID;
+	@JsonEnumDefaultValue UNKNOWN,
+	VALID,
+	NOT_VALID,
+	INFERRED,
+	INFERRED_NOT_VALID;
 
+	/**
+	 * Convert a string value to a Validity enum.
+	 *
+	 * @param name The string value to convert.
+	 *
+	 * @return The validity as an enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static Validity fromString(String name) {
-		try {
-			return Validity.valueOf(name.toUpperCase());
-		}
-		catch (IllegalArgumentException ex) {
-			return UNKNOWN;
-		}
+		return Jsonable.fromString(name, Validity.class);
 	}
 
 	@Override

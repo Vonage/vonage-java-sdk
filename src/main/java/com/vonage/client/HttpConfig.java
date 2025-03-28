@@ -101,50 +101,6 @@ public class HttpConfig {
         return proxy;
     }
 
-    @Deprecated
-    public boolean isDefaultApiBaseUri() {
-        return DEFAULT_API_BASE_URI.equals(apiBaseUri);
-    }
-
-    @Deprecated
-    public boolean isDefaultRestBaseUri() {
-        return DEFAULT_REST_BASE_URI.equals(restBaseUri);
-    }
-
-    @Deprecated
-    public boolean isDefaultApiEuBaseUri() {
-        return DEFAULT_API_EU_BASE_URI.equals(apiEuBaseUri);
-    }
-
-    @Deprecated
-    public boolean isDefaultVideoBaseUri() {
-        return DEFAULT_VIDEO_BASE_URI.equals(videoBaseUri);
-    }
-
-    @Deprecated
-    public String getVersionedApiBaseUri(String version) {
-        return appendVersionToUri(apiBaseUri, version);
-    }
-
-    @Deprecated
-    public String getVersionedRestBaseUri(String version) {
-        return appendVersionToUri(restBaseUri, version);
-    }
-
-    @Deprecated
-    public String getVersionedApiEuBaseUri(String version) {
-        return appendVersionToUri(apiEuBaseUri, version);
-    }
-
-    @Deprecated
-    public String getVersionedVideoBaseUri(String version) {
-        return appendVersionToUri(videoBaseUri, version);
-    }
-
-    private String appendVersionToUri(String uri, String version) {
-        return uri + "/" + version;
-    }
-
     /**
      * Creates a standard HttpConfig.
      *
@@ -166,7 +122,7 @@ public class HttpConfig {
     /**
      * Builder for configuring the base URI and timeout of the client.
      */
-    public static class Builder {
+    public static final class Builder {
         private int timeoutMillis = 60_000;
         private URI proxy;
         private Function<ApiRegion, String> regionalUriGetter = region -> "https://"+region+".vonage.com";
@@ -178,11 +134,8 @@ public class HttpConfig {
 
         /**
          * Constructor.
-         *
-         * @deprecated Will be made private in the next major version.
          */
-        @Deprecated
-        public Builder() {}
+        private Builder() {}
 
         private String sanitizeUri(String uri) {
             String sanitized = Objects.requireNonNull(uri, "URI must not be null");

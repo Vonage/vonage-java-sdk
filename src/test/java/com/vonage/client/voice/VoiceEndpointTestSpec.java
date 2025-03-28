@@ -19,14 +19,14 @@ import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 abstract class VoiceEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, R> {
 
 	@Override
 	protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-		return Arrays.asList(JWTAuthMethod.class);
+		return List.of(JWTAuthMethod.class);
 	}
 
 	@Override

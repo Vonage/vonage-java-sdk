@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.Jsonable;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +28,7 @@ public class ArchiveTest {
 	public void testSerializeAllParams() {
 		String sessionId = "flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN";
 		String name = "Test archive", multiArchiveTag = "DemoArchive_TagName";
-		StreamCompositionLayout layout = StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL).build();
+		StreamCompositionLayout layout = StreamCompositionLayout.standardLayout(ScreenLayoutType.VERTICAL);
 		int maxBitrate = 321400;
 
 		Archive request = Archive.builder(sessionId)
@@ -79,7 +80,7 @@ public class ArchiveTest {
 	@Test
 	public void testSerializeCustomLayout() {
 		String style = "stream.instructor {position: absolute; width: 100%;  height:50%;}";
-		StreamCompositionLayout layout = StreamCompositionLayout.builder(ScreenLayoutType.CUSTOM).stylesheet(style).build();
+		StreamCompositionLayout layout = StreamCompositionLayout.customLayout(style);
 
 		Archive request = Archive.builder("s1")
 				.hasAudio(false).resolution(Resolution.SD_PORTRAIT)
@@ -99,7 +100,7 @@ public class ArchiveTest {
 	@Test
 	public void testConstructCustomLayoutOnNonComposedArchive() {
 		assertThrows(IllegalStateException.class, () -> Archive.builder("sessionId")
-				.layout(StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT).build())
+				.layout(StreamCompositionLayout.standardLayout(ScreenLayoutType.BEST_FIT))
 				.outputMode(OutputMode.INDIVIDUAL).build()
 		);
 	}
@@ -133,12 +134,12 @@ public class ArchiveTest {
 
 	@Test
 	public void testFromJsonInvalid() {
-		assertThrows(VonageResponseParseException.class, () -> Archive.fromJson("{malformed]"));
+		assertThrows(VonageResponseParseException.class, () -> Jsonable.fromJson("{malformed]", Archive.class));
 	}
 
 	@Test
 	public void testFromJsonEmpty() {
-		var archive = Archive.fromJson("{}");
+		var archive = Jsonable.fromJson("{}", Archive.class);
 		assertNotNull(archive);
 		assertNull(archive.getSessionId());
 		assertNull(archive.getName());

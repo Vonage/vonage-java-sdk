@@ -16,7 +16,6 @@
 package com.vonage.client.subaccounts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.common.E164;
 
 public class NumberTransfer extends AbstractTransfer {
@@ -53,16 +52,6 @@ public class NumberTransfer extends AbstractTransfer {
 		return number;
 	}
 
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static NumberTransfer fromJson(String json) {
-		return Jsonable.fromJson(json);
-	}
-	
 	/**
 	 * Entry point for constructing an instance of this class.
 	 * 

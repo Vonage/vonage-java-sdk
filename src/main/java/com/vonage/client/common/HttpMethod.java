@@ -16,6 +16,7 @@
 package com.vonage.client.common;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.vonage.client.Jsonable;
 
 /**
  * Enumeration representing various HTTP request methods used in Vonage APIs.
@@ -25,16 +26,17 @@ public enum HttpMethod {
     POST,
     PUT,
     DELETE,
-    PATCH,
-    UNKNOWN;
+    PATCH;
 
+    /**
+     * Convert a string to an HttpMethod enum.
+     *
+     * @param name The string to convert.
+     *
+     * @return The HTTP method as an enum, or {@code null} if the name is null.
+     */
     @JsonCreator
     public static HttpMethod fromString(String name) {
-        try {
-            return HttpMethod.valueOf(name.toUpperCase());
-        }
-        catch (IllegalArgumentException ex) {
-            return UNKNOWN;
-        }
+        return Jsonable.fromString(name, HttpMethod.class);
     }
 }

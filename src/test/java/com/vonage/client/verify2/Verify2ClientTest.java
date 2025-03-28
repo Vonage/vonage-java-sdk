@@ -15,10 +15,11 @@
  */
 package com.vonage.client.verify2;
 
-import com.vonage.client.*;
+import com.vonage.client.AbstractClientTest;
+import com.vonage.client.HttpWrapper;
+import com.vonage.client.Jsonable;
+import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
-import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
-import com.vonage.client.auth.NoAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -131,8 +132,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 				new SmsWorkflow(toNumber),
 				new EmailWorkflow(toEmail, fromEmail),
 				new VoiceWorkflow(toNumber),
-				new WhatsappWorkflow(toNumber, fromNumber),
-				new WhatsappCodelessWorkflow(toNumber, fromNumber)
+				new WhatsappWorkflow(toNumber, fromNumber)
 		);
 		return VerificationRequest.builder()
 				.brand("Nexmo").fraudCheck(false)
@@ -229,7 +229,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 				}
 				catch (VerifyResponseException mrx) {
 					// The mock returns "OK"
-					VerifyResponseException expected = VerifyResponseException.fromJson("{\"title\":\"OK\"}");
+					VerifyResponseException expected = Jsonable.fromJson("{\"title\":\"OK\"}");
 					expected.setStatusCode(statusCode);
 					assertEquals(expected, mrx);
 				}
@@ -255,7 +255,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 					fail("Expected " + VerifyResponseException.class.getName());
 				}
 				catch (VerifyResponseException vrx) {
-					VerifyResponseException expected = VerifyResponseException.fromJson(json);
+					VerifyResponseException expected = Jsonable.fromJson(json);
 					expected.setStatusCode(statusCode);
 					assertEquals(expected, vrx);
 					assertEquals(statusCode, vrx.getStatusCode());
@@ -282,11 +282,17 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 		testJsonableBaseObject(parsed);
 		assertEquals(REQUEST_ID, parsed.getRequestId());
 		assertEquals(VerificationStatus.COMPLETED, parsed.getStatus());
+		assertTrue(client.isValidVerificationCode(REQUEST_ID, CODE));
 	}
 
 	@Test
 	public void testVerifyCodeFailure() throws Exception {
-		assert429ResponseException(() -> client.checkVerificationCode(REQUEST_ID, CODE));
+		stubResponse(400, VERIFICATION_RESPONSE);
+		assertFalse(client.isValidVerificationCode(REQUEST_ID, CODE));
+		stubResponse(410, VERIFICATION_RESPONSE);
+		assertFalse(client.isValidVerificationCode(REQUEST_ID, CODE));
+
+		assert429ResponseException(() -> client.isValidVerificationCode(REQUEST_ID, CODE));
 
 		stubResponseAndAssertThrows(204, () ->
 				client.checkVerificationCode(null, CODE),
@@ -354,7 +360,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 					fail("Expected "+ VerifyResponseException.class.getName());
 				}
 				catch (VerifyResponseException vrx) {
-					VerifyResponseException expected = VerifyResponseException.fromJson(json);
+					VerifyResponseException expected = Jsonable.fromJson(json);
 					expected.setStatusCode(statusCode);
 					assertEquals(expected, vrx);
 					assertEquals(statusCode, vrx.getStatusCode());
@@ -374,7 +380,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 				}
 				catch (VerifyResponseException mrx) {
 					// The mock returns "OK"
-					VerifyResponseException expected = VerifyResponseException.fromJson("{\"title\":\"OK\"}");
+					VerifyResponseException expected = Jsonable.fromJson("{\"title\":\"OK\"}");
 					expected.setStatusCode(statusCode);
 					assertEquals(expected, mrx);
 				}
@@ -444,7 +450,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 					fail("Expected "+ VerifyResponseException.class.getName());
 				}
 				catch (VerifyResponseException vrx) {
-					VerifyResponseException expected = VerifyResponseException.fromJson(json);
+					VerifyResponseException expected = Jsonable.fromJson(json);
 					expected.setStatusCode(statusCode);
 					assertEquals(expected, vrx);
 					assertEquals(statusCode, vrx.getStatusCode());

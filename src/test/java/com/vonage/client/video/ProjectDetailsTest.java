@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,7 +31,7 @@ public class ProjectDetailsTest {
 		ProjectEnvironment environment = ProjectEnvironment.STANDARD;
 		Long createdAt = 1414642898000L;
 	
-		ProjectDetails response = ProjectDetails.fromJson("{\n" +
+		ProjectDetails response = Jsonable.fromJson("{\n" +
 				"\"applicationId\":\""+applicationId+"\",\n" +
 				"\"status\":\""+status+"\",\n" +
 				"\"name\":\""+name+"\",\n" +
@@ -48,7 +49,7 @@ public class ProjectDetailsTest {
 
 	@Test
 	public void testFromJsonUnknownEnums() {
-		ProjectDetails response = ProjectDetails.fromJson("{\n" +
+		ProjectDetails response = Jsonable.fromJson("{\n" +
 				"\"status\":\"u\",\n" +
 				"\"environment\":\"e\",\n" +
 				"\"name\":\"\""+
@@ -62,12 +63,12 @@ public class ProjectDetailsTest {
 	
 	@Test
 	public void testFromJsonInvalid() {
-		assertThrows(VonageUnexpectedException.class, () -> ProjectDetails.fromJson("{malformed]"));
+		assertThrows(VonageUnexpectedException.class, () -> Jsonable.fromJson("{malformed]", ProjectDetails.class));
 	}
 
 	@Test
 	public void testFromJsonEmpty() {
-		ProjectDetails response = ProjectDetails.fromJson("{}");
+		ProjectDetails response = Jsonable.fromJson("{}");
 		TestUtils.testJsonableBaseObject(response);
 		assertNull(response.getApplicationId());
 		assertNull(response.getStatus());
@@ -78,7 +79,7 @@ public class ProjectDetailsTest {
 
 	@Test
 	public void testFromJsonNullAndEmptyString() {
-		assertNotNull(ProjectDetails.fromJson(""));
-		assertNotNull(ProjectDetails.fromJson(null));
+		assertNotNull(Jsonable.fromJson("", ProjectDetails.class));
+		assertNotNull(Jsonable.fromJson(null, ProjectDetails.class));
 	}
 }

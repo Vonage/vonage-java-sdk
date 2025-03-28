@@ -22,9 +22,9 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Objects;
 
-public class WebSocketEndpoint extends JsonableBaseObject implements Endpoint {
-    // TODO: Use stronger typing
-    private String uri, contentType;
+public class WebSocketEndpoint extends JsonableBaseObject implements CallEndpoint {
+    private URI uri;
+    private Websocket.ContentType contentType;
     @JsonProperty("headers") private Map<String, Object> headers;
 
     /**
@@ -58,14 +58,14 @@ public class WebSocketEndpoint extends JsonableBaseObject implements Endpoint {
      * @since 8.17.0
      */
     public WebSocketEndpoint(URI uri, Websocket.ContentType contentType, Map<String, Object> headers) {
-        this.uri = Objects.requireNonNull(uri, "URI is required.").toString();
-        this.contentType = contentType != null ? contentType.toString() : null;
+        this.uri = Objects.requireNonNull(uri, "URI is required.");
+        this.contentType = contentType;
         this.headers = headers;
     }
 
     @Override
-    public String getType() {
-        return EndpointType.WEBSOCKET.toString();
+    public EndpointType getType() {
+        return EndpointType.WEBSOCKET;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class WebSocketEndpoint extends JsonableBaseObject implements Endpoint {
      * @return The URI as a string.
      */
     @JsonProperty("uri")
-    public String getUri() {
+    public URI getUri() {
         return uri;
     }
 
@@ -89,7 +89,7 @@ public class WebSocketEndpoint extends JsonableBaseObject implements Endpoint {
      * @return The content type.
      */
     @JsonProperty("content-type")
-    public String getContentType() {
+    public Websocket.ContentType getContentType() {
         return contentType;
     }
 
@@ -99,7 +99,7 @@ public class WebSocketEndpoint extends JsonableBaseObject implements Endpoint {
      * @return A map of headers to be sent in the payload.
      */
     @JsonProperty("headers")
-    public Map<String, ?> getHeadersMap() {
+    public Map<String, Object> getHeadersMap() {
         return headers;
     }
 }

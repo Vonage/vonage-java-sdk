@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@85e6279
         with:
           ref: ${{ github.event.release.target_commitish }}
       - name: Setup Java
-        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12
+        uses: actions/setup-java@3b6c050358614dd082e53cdbc55580431fc4e437
         with:
           java-version: 21
           distribution: 'temurin'

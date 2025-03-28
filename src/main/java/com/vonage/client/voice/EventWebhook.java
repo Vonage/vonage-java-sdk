@@ -22,7 +22,6 @@ import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 import java.time.Instant;
-import java.util.UUID;
 
 /**
  * Represents all call events sent to the {@code event_url} webhook configured in your Voice application settings.

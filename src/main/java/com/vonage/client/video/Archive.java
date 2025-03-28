@@ -17,7 +17,6 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import java.net.URI;
 import java.time.Duration;
 
@@ -167,16 +166,6 @@ public class Archive extends StreamComposition {
     @JsonProperty("quantizationParameter")
     public Integer getQuantizationParameter() {
         return quantizationParameter;
-    }
-
-    /**
-     * Creates an instance of this class from a JSON payload.
-     *
-     * @param json The JSON string to parse.
-     * @return An instance of this class with the fields populated, if present.
-     */
-    public static Archive fromJson(String json) {
-        return Jsonable.fromJson(json);
     }
 
 

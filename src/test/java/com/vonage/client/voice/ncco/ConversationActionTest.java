@@ -190,7 +190,7 @@ public class ConversationActionTest {
         TranscriptionSettings transcription = TranscriptionSettings.builder()
                 .eventMethod(EventMethod.GET)
                 .eventUrl("https://example.com/events")
-                .language(SpeechSettings.Language.PERSIAN)
+                .language(Language.PERSIAN)
                 .sentimentAnalysis(true).build();
 
         ConversationAction.Builder builder = newBuilder().transcription(transcription);

@@ -15,23 +15,26 @@
  */
 package com.vonage.client;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import static com.vonage.client.TestUtils.*;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.NoAuthMethod;
-import com.vonage.client.auth.RequestQueryParams;
 import com.vonage.client.common.HttpMethod;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.net.URI;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DynamicEndpointTest {
     private static final HttpWrapper WRAPPER = new HttpWrapper(new NoAuthMethod());
+
+    static class SampleJsonable extends JsonableBaseObject {
+        @JsonProperty("field") String field;
+    }
+
+    static class SampleJsonableCollection extends ArrayList<SampleJsonable> { }
 
     @SuppressWarnings("unchecked")
     static <T, R> DynamicEndpoint<T, R> newEndpoint(R... responseType) {
@@ -66,6 +69,30 @@ public class DynamicEndpointTest {
     }
 
     @Test
+    public void testBinaryRequest() throws Exception {
+        class BinaryRequest implements com.vonage.client.BinaryRequest {
+            @Override
+            public byte[] toByteArray() {
+                return new byte[] { 0, 1, 2, 3, 4, 5 };
+            }
+        }
+
+        var endpoint = DynamicEndpointTest.<BinaryRequest, String> newEndpoint();
+        stubResponse(WRAPPER, 200, "OK");
+        assertEquals("OK", endpoint.execute(new BinaryRequest()));
+    }
+
+    @Test
+    public void testParseJsonableCollection() throws Exception {
+        var endpoint = DynamicEndpointTest.<Void, SampleJsonableCollection> newEndpoint();
+        stubResponse(WRAPPER, 200, "[{\"field\":\"Test value\"}]");
+        var response = endpoint.execute(null);
+        assertNotNull(response);
+        assertEquals(1, response.size());
+        assertEquals("Test value", response.getFirst().field);
+    }
+
+    @Test
     public void testIterableQueryParamsRequest() throws Exception {
         class IterableQueryParamsRequest implements QueryParamsRequest {
             @Override
@@ -80,19 +107,6 @@ public class DynamicEndpointTest {
         var endpoint = DynamicEndpointTest.<IterableQueryParamsRequest, String> newEndpoint();
         stubResponse(WRAPPER, 200, "OK");
         assertEquals("OK", endpoint.execute(new IterableQueryParamsRequest()));
-    }
-
-    @Test
-    public void testUnknownRequestMethod() {
-        @SuppressWarnings("unchecked")
-        var endpoint = DynamicEndpoint.builder(Void.class)
-                .wrapper(WRAPPER).authMethod(NoAuthMethod.class)
-                .pathGetter((de, req) -> TEST_BASE_URI + req)
-                .requestMethod(HttpMethod.UNKNOWN).build();
-
-        assertThrows(IllegalStateException.class, () -> endpoint.execute("rest"));
-
-        assertEquals(HttpMethod.UNKNOWN, HttpMethod.fromString("TELEPORT"));
     }
 
     @Test

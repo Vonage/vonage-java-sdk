@@ -16,6 +16,7 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.*;
+import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
 /**
@@ -47,16 +48,18 @@ public class AdvancedMachineDetection extends JsonableBaseObject {
 		 *
 		 * @since 8.2.0
 		 */
-		DEFAULT;
+		@JsonEnumDefaultValue DEFAULT;
 
+		/**
+		 * Convert a string value to a Mode enum.
+		 *
+		 * @param value The string value to convert.
+		 *
+		 * @return The mode as an enum, or {@code null} if invalid.
+		 */
 		@JsonCreator
 		public static Mode fromString(String value) {
-			try {
-				return Mode.valueOf(value.toUpperCase());
-			}
-			catch (NullPointerException | IllegalArgumentException ex) {
-				return null;
-			}
+			return Jsonable.fromString(value, Mode.class);
 		}
 
 		@JsonValue

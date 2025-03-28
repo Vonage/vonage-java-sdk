@@ -127,7 +127,7 @@ public class VerifyClientVerifyEndpointTest extends AbstractClientTest<VerifyCli
                         + "  \"error_text\": \"error\"\n" + "}"
         );
 
-        VerifyResponse response = client.verify("447900000000", "testBrand", VerifyRequest.Workflow.SMS);
+        VerifyResponse response = client.verify("447900000000", "testBrand", Workflow.SMS);
         assertEquals(VerifyStatus.INTERNAL_ERROR, response.getStatus());
         assertEquals("error", response.getErrorText());
         assertEquals("not-really-a-request-id", response.getRequestId());
@@ -139,7 +139,7 @@ public class VerifyClientVerifyEndpointTest extends AbstractClientTest<VerifyCli
         stubResponse(200, json);
 
         ControlResponse response = client.advanceVerification("a-request-id");
-        assertEquals("0", response.getStatus());
+        assertEquals(VerifyStatus.OK, response.getStatus());
         assertEquals(VerifyControlCommand.TRIGGER_NEXT_EVENT, response.getCommand());
     }
 
@@ -149,7 +149,7 @@ public class VerifyClientVerifyEndpointTest extends AbstractClientTest<VerifyCli
         stubResponse(200, json);
 
         ControlResponse response = client.cancelVerification("a-request-id");
-        assertEquals("0", response.getStatus());
+        assertEquals(VerifyStatus.OK, response.getStatus());
         assertEquals(VerifyControlCommand.CANCEL, response.getCommand());
     }
 
@@ -171,9 +171,9 @@ public class VerifyClientVerifyEndpointTest extends AbstractClientTest<VerifyCli
             protected VerifyRequest sampleRequest() {
                 return VerifyRequest.builder("4477990090090", "Brand.com")
                         .senderId("VERIFICATION").length(6).country("GB")
-                        .locale(new Locale("en", "gb"))
+                        .locale(Locale.forLanguageTag("en-GB"))
                         .pinExpiry(60).pinCode("a1b2C3").nextEventWait(90)
-                        .workflow(VerifyRequest.Workflow.TTS_TTS).build();
+                        .workflow(Workflow.TTS_TTS).build();
             }
 
             @Override

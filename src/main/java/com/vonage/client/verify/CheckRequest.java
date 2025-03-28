@@ -15,17 +15,13 @@
  */
 package com.vonage.client.verify;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
+import com.vonage.client.AbstractQueryParamsRequest;
 import java.util.Map;
 
 /**
- * Request used in {@link VerifyClient#check(CheckRequest)}.
- *
- * @deprecated This will be made package-private in the next major release.
+ * Request wrapper used in {@link VerifyClient#check(String, String)}.
  */
-@Deprecated
-public class CheckRequest implements QueryParamsRequest {
+class CheckRequest extends AbstractQueryParamsRequest {
     private final String requestId, code;
 
     /**
@@ -36,7 +32,7 @@ public class CheckRequest implements QueryParamsRequest {
      *
      * @param code The verification code entered by your user. Between 4 and 6 characters.
      */
-    public CheckRequest(String requestId, String code) {
+    CheckRequest(String requestId, String code) {
         if ((this.requestId = requestId) == null) {
             throw new IllegalArgumentException("request_id is required");
         }
@@ -71,9 +67,9 @@ public class CheckRequest implements QueryParamsRequest {
 
     @Override
     public Map<String, String> makeParams() {
-        Map<String, String> params = new LinkedHashMap<>(4);
-        params.put("request_id", requestId);
-        params.put("code", code);
+        Map<String, String> params = super.makeParams();
+        conditionalAdd("request_id", requestId);
+        conditionalAdd("code", code);
         return params;
     }
 }

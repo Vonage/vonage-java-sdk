@@ -20,7 +20,6 @@ import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
-import java.util.UUID;
 
 public class ListRendersResponseTest {
 

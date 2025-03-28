@@ -16,15 +16,17 @@
 package com.vonage.client.application;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.application.capabilities.*;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Represents a Vonage Application (both request and response).
  */
-public class Application extends JsonableBaseObject {
-    private String id, name;
+public final class Application extends JsonableBaseObject {
+    private UUID id;
+    private String name;
     private Keys keys;
     private Capabilities capabilities;
     private Privacy privacy;
@@ -43,10 +45,10 @@ public class Application extends JsonableBaseObject {
     /**
      * Unique application ID.
      *
-     * @return The application ID as a string, or {@code null} if unknown.
+     * @return The application UUID, or {@code null} if unknown.
      */
     @JsonProperty("id")
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -92,10 +94,6 @@ public class Application extends JsonableBaseObject {
         return privacy;
     }
 
-    public static Application fromJson(String json) {
-        return Jsonable.fromJson(json);
-    }
-
     /**
      * Entry point for creating an instance of this class.
      * 
@@ -110,21 +108,36 @@ public class Application extends JsonableBaseObject {
      *
      * @param application An existing application to modify.
      *
-     * @return A new Builder to start building.
+     * @return A new Builder.
      */
     public static Builder builder(Application application) {
         return new Builder(application);
     }
 
-    public static class Builder {
+    /**
+     * Work with an existing application, resetting its current values in the update with the ones specified here.
+     *
+     * @param id UUID of the application to update.
+     *
+     * @return A new Builder.
+     * @since 9.0.0
+     */
+    public static Builder builder(UUID id) {
+        Builder builder = new Builder();
+        builder.id = Objects.requireNonNull(id, "Application ID is required.");
+        return builder;
+    }
+
+    public static final class Builder {
+        UUID id;
         private Privacy privacy;
-        private String id, name;
+        private String name;
         private Keys keys;
         private Capabilities capabilities;
 
-        public Builder() {}
+        Builder() {}
 
-        public Builder(Application application) {
+        Builder(Application application) {
             id = application.id;
             name = application.name;
             keys = application.keys;

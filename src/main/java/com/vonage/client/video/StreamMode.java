@@ -2,6 +2,7 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Defines values for how streams will be selected for broadcasts and archives.
@@ -27,13 +28,15 @@ public enum StreamMode {
 		return name().toLowerCase();
 	}
 
+	/**
+	 * Parse a string to a StreamMode enum.
+	 *
+	 * @param value The string to convert.
+	 *
+	 * @return The StreamMode enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static StreamMode fromString(String value) {
-		try {
-			return StreamMode.valueOf(value.toUpperCase());
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
-			return null;
-		}
+		return Jsonable.fromString(value, StreamMode.class);
 	}
 }

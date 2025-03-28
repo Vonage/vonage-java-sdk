@@ -16,7 +16,6 @@
 package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import java.math.BigDecimal;
 
 /**
@@ -30,9 +29,7 @@ public class StandardInsightResponse extends BasicInsightResponse {
     private String callerName, firstName, lastName;
     private CallerType callerType;
 
-    public static StandardInsightResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
-    }
+    StandardInsightResponse() {}
 
     /**
      * @return The amount in EUR charged to your account.

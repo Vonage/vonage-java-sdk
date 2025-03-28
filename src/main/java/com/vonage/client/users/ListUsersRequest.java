@@ -15,17 +15,16 @@
  */
 package com.vonage.client.users;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.vonage.client.QueryParamsRequest;
+import com.vonage.client.AbstractQueryParamsRequest;
 import com.vonage.client.common.HalLinks;
+import com.vonage.client.common.SortOrder;
 import java.net.URI;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * Query parameters for {@link UsersClient#listUsers(ListUsersRequest)}.
  */
-public final class ListUsersRequest implements QueryParamsRequest {
+public final class ListUsersRequest extends AbstractQueryParamsRequest {
     private final int pageSize;
     private final SortOrder order;
     private final String name, cursor;
@@ -47,17 +46,11 @@ public final class ListUsersRequest implements QueryParamsRequest {
 
     @Override
     public Map<String, String> makeParams() {
-        LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
-        params.put("page_size", String.valueOf(pageSize));
-        if (order != null) {
-            params.put("order", order.toString());
-        }
-        if (name != null) {
-            params.put("name", name);
-        }
-        if (cursor != null) {
-            params.put("cursor", cursor);
-        }
+        Map<String, String> params = super.makeParams();
+        conditionalAdd("page_size", pageSize);
+        conditionalAdd("order", order);
+        conditionalAdd("name", name);
+        conditionalAdd("cursor", cursor);
         return params;
     }
 
@@ -108,7 +101,7 @@ public final class ListUsersRequest implements QueryParamsRequest {
 
     public static class Builder {
         private int pageSize = 10;
-        private SortOrder order = SortOrder.ASC;
+        private SortOrder order = SortOrder.ASCENDING;
         private String name;
         private URI cursor;
 
@@ -128,8 +121,8 @@ public final class ListUsersRequest implements QueryParamsRequest {
 
         /**
          * The order to return the results in. Users are sorted by their creation time.
-         * Default is ascending - i.e. newest to oldest. Use {@linkplain SortOrder#DESC} to sort
-         * the results from oldest to newest.
+         * Default is ascending - i.e. newest to oldest. Use {@linkplain SortOrder#DESCENDING}
+         * to sort the results from oldest to newest.
          *
          * @param order The sort order for results as an enum.
          *
@@ -176,30 +169,6 @@ public final class ListUsersRequest implements QueryParamsRequest {
          */
         public ListUsersRequest build() {
             return new ListUsersRequest(this);
-        }
-    }
-
-    /**
-     * Represents the sort order for events.
-     *
-     * @deprecated Will be replaced with {@linkplain com.vonage.client.common.SortOrder} in the next major release.
-     */
-    @Deprecated
-    public enum SortOrder {
-        /**
-         * Ascending
-         */
-        ASC,
-
-        /**
-         * Descending
-         */
-        DESC;
-
-        @JsonValue
-        @Override
-        public String toString() {
-            return name().toLowerCase();
         }
     }
 }

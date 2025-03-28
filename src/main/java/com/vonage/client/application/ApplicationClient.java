@@ -43,7 +43,7 @@ public class ApplicationClient {
                         .wrapper(wrapper).requestMethod(method)
                         .authMethod(ApiKeyHeaderAuthMethod.class)
                         .pathGetter((de, req) -> {
-                            String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v2");
+                            String base = de.getHttpWrapper().getHttpConfig().getApiBaseUri() + "/v2";
                             String path = base + "/applications";
                             if (pathGetter != null) {
                                 path += "/" + pathGetter.apply(req);
@@ -57,7 +57,7 @@ public class ApplicationClient {
         listApplications = new Endpoint<>(null, HttpMethod.GET);
         createApplication = new Endpoint<>(null, HttpMethod.POST);
         getApplication = new Endpoint<>(UUID::toString, HttpMethod.GET);
-        updateApplication = new Endpoint<>(Application::getId, HttpMethod.PUT);
+        updateApplication = new Endpoint<>(app -> app.getId().toString(), HttpMethod.PUT);
         deleteApplication = new Endpoint<>(UUID::toString, HttpMethod.DELETE);
     }
 
@@ -83,9 +83,11 @@ public class ApplicationClient {
     }
 
     /**
-     * Update an existing application.
+     * Update an existing application. Use {@link Application#builder(Application)} to modify an existing
+     * Application obtained via {@linkplain #getApplication(String)}, or to reset all properties and capabilities
+     * of an application, use {@link Application#builder(UUID)}.
      *
-     * @param application The application properties for the application to be updated with.
+     * @param application The properties for the application to be updated with.
      *
      * @return The application which has been updated.
      *

@@ -17,13 +17,11 @@ package com.vonage.client.verify;
 
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
-
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class VerifyClientPsd2EndpointTest extends AbstractClientTest<VerifyClient> {
 
@@ -49,7 +47,7 @@ public class VerifyClientPsd2EndpointTest extends AbstractClientTest<VerifyClien
                 "{" + "\"request_id\": \"abcdef0123456789abcdef0123456789\"," + " \"status\": 0" + "}"
         );
 
-        VerifyResponse response = client.psd2Verify("447700900999", 10.31, "Ebony", Psd2Request.Workflow.SMS);
+        VerifyResponse response = client.psd2Verify("447700900999", 10.31, "Ebony", Workflow.SMS);
 
         assertEquals(VerifyStatus.OK, response.getStatus());
         assertEquals("abcdef0123456789abcdef0123456789", response.getRequestId());
@@ -83,7 +81,7 @@ public class VerifyClientPsd2EndpointTest extends AbstractClientTest<VerifyClien
             @Override
             protected Psd2Request sampleRequest() {
                 return Psd2Request.builder("4477990090090", 43.21, "Ebony")
-                        .workflow(Psd2Request.Workflow.SMS).length(4).locale(Locale.UK)
+                        .workflow(Workflow.SMS).length(4).locale(Locale.UK)
                         .country("GB").pinExpiry(60).nextEventWait(90).build();
             }
 

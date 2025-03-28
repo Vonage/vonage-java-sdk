@@ -18,17 +18,19 @@ package com.vonage.client.auth;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.auth.hashutils.HashType;
 import com.vonage.client.auth.hashutils.HashUtil;
-import org.apache.http.NameValuePair;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Instant;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * A helper class for generating or verifying MD5 signatures when signing REST requests for submission to Vonage.
@@ -41,62 +43,7 @@ public class RequestSigning {
     public static final String PARAM_TIMESTAMP = "timestamp";
     public static final String APPLICATION_JSON = "application/json";
 
-    /**
-     * Signs a set of request parameters.
-     * <p>
-     * Generates additional parameters to represent the timestamp and generated signature.
-     * Uses the supplied pre-shared secret key to generate the signature.
-     * Uses the default hash strategy of MD5.
-     *
-     * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
-     * @param secretKey the pre-shared secret key held by the client
-     *
-     * @deprecated Use {@link #getSignatureForRequestParameters(Map, String, HashUtil.HashType)}.
-     */
-    @Deprecated
-    public static void constructSignatureForRequestParameters(List<NameValuePair> params, String secretKey) {
-        constructSignatureForRequestParameters(params, secretKey, HashUtil.HashType.HMAC_MD5);
-    }
-
-    /**
-     * Signs a set of request parameters.
-     * <p>
-     * Generates additional parameters to represent the timestamp and generated signature.
-     * Uses the supplied pre-shared secret key to generate the signature.
-     *
-     * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
-     * @param secretKey the pre-shared secret key held by the client.
-     * @param hashType The type of hash that is to be used in construction.
-     * @deprecated Use {@link #constructSignatureForRequestParameters(Map, String, HashUtil.HashType)}.
-     */
-    @Deprecated
-    public static void constructSignatureForRequestParameters(List<NameValuePair> params, String secretKey, HashUtil.HashType hashType) {
-        Map<String, String> sortedParams = params.stream().collect(Collectors.toMap(
-                NameValuePair::getName,
-                NameValuePair::getValue,
-                (v1, v2) -> v1,
-                TreeMap::new
-        ));
-        constructSignatureForRequestParameters(sortedParams, secretKey, hashType);
-    }
-
-    /**
-     * Signs a set of request parameters.
-     * <p>
-     * Generates additional parameters to represent the timestamp and generated signature.
-     * Uses the supplied pre-shared secret key to generate the signature.
-     * This method modifies the input params.
-     *
-     * @param params Query parameters for the request that is to be signed.
-     * @param secretKey the pre-shared secret key held by the client.
-     * @param hashType The type of hash that is to be used in construction.
-     *
-     * @deprecated Use {@link #getSignatureForRequestParameters(Map, String, HashUtil.HashType)}.
-     */
-    @Deprecated
-    public static void constructSignatureForRequestParameters(Map<String, String> params, String secretKey, HashUtil.HashType hashType) {
-        params.putAll(getSignatureForRequestParameters(params, secretKey, hashType));
-    }
+    private RequestSigning() {}
 
     /**
      * Signs a set of request parameters.
@@ -111,18 +58,15 @@ public class RequestSigning {
      *
      * @return A new Map with the signature query parameters.
      */
-    public static Map<String, String> getSignatureForRequestParameters(Map<String, String> params, String secretKey, HashUtil.HashType hashType) {
+    public static Map<String, String> getSignatureForRequestParameters(Map<String, String> params, String secretKey, HashType hashType) {
         return constructSignatureForRequestParameters(params, secretKey, Instant.now().getEpochSecond(), hashType);
     }
 
     private static String clean(String str) {
-        return str == null ? null : str.replaceAll("[=&]", "_");
+        return str.replaceAll("[=&]", "_");
     }
 
-    static String generateParamsString(Map<String, String> params) {
-        SortedMap<String, String> sortedParams = params instanceof SortedMap ?
-                (SortedMap<String, String>) params : new TreeMap<>(params);
-
+    static String generateParamsString(SortedMap<String, String> sortedParams) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> param : sortedParams.entrySet()) {
             String name = param.getKey(), value = param.getValue();
@@ -149,16 +93,16 @@ public class RequestSigning {
     static Map<String, String> constructSignatureForRequestParameters(Map<String, String> inputParams,
                                                                  String secretKey,
                                                                  long currentTimeSeconds,
-                                                                 HashUtil.HashType hashType) {
+                                                                 HashType hashType) {
 
         // First, inject a 'timestamp=' parameter containing the current time in seconds since Jan 1st 1970
         String timestampStr = Long.toString(currentTimeSeconds);
-        Map<String, String> tempParams = new TreeMap<>(inputParams);
+        SortedMap<String, String> tempParams = new TreeMap<>(inputParams);
         tempParams.put(PARAM_TIMESTAMP, timestampStr);
 
-        String hashed, str = generateParamsString(tempParams);
+        String str = generateParamsString(tempParams), hashed;
         try {
-            hashed = HashUtil.calculate(str, secretKey, "UTF-8", hashType);
+            hashed = HashUtil.calculate(str, secretKey, hashType);
         }
         catch (Exception ex) {
             LOGGER.log(Level.WARNING, "error...", ex);
@@ -209,7 +153,7 @@ public class RequestSigning {
                                                      String secretKey,
                                                      long currentTimeMillis) {
         return verifyRequestSignature(contentType, inputStream, parameterMap,
-                secretKey, currentTimeMillis, HashUtil.HashType.MD5
+                secretKey, currentTimeMillis, HashType.MD5
         );
     }
 
@@ -230,7 +174,7 @@ public class RequestSigning {
                                                     Map<String, String[]> parameterMap,
                                                     String secretKey,
                                                     long currentTimeMillis,
-                                                    HashUtil.HashType hashType) {
+                                                    HashType hashType) {
 
         // Construct a sorted list of the name-value pair parameters supplied in the request, excluding the signature parameter
         Map<String, String> sortedParams = new TreeMap<>();
@@ -242,9 +186,6 @@ public class RequestSigning {
                     String name = entry.getKey();
                     String value = entry.getValue();
                     LOGGER.info(name + " = " + value);
-                    if (value == null || value.trim().isEmpty()) {
-                        continue;
-                    }
                     sortedParams.put(name, value);
                 }
             }
@@ -271,13 +212,16 @@ public class RequestSigning {
         // Extract the timestamp parameter and verify that it is within 5 minutes of 'current time'
         String timeString = sortedParams.get(PARAM_TIMESTAMP);
         long time = -1;
-        try {
-            if (timeString != null)
+        if (timeString != null) {
+            try {
                 time = Long.parseLong(timeString) * 1000;
-        } catch (NumberFormatException e) {
-            LOGGER.log(Level.WARNING, "Error parsing 'time' parameter [ " + timeString + " ]", e);
-            time = 0;
+            }
+            catch (NumberFormatException e) {
+                LOGGER.log(Level.WARNING, "Error parsing 'time' parameter [ " + timeString + " ]", e);
+                time = 0;
+            }
         }
+
         long diff = currentTimeMillis - time;
         if (diff > MAX_ALLOWABLE_TIME_DELTA || diff < -MAX_ALLOWABLE_TIME_DELTA) {
             LOGGER.log(Level.WARNING, "SECURITY-KEY-VERIFICATION -- BAD-TIMESTAMP ... Timestamp [ " +
@@ -285,7 +229,6 @@ public class RequestSigning {
             );
             return false;
         }
-
 
         // Walk this sorted list of parameters and construct a string
         StringBuilder sb = new StringBuilder();
@@ -296,11 +239,9 @@ public class RequestSigning {
             sb.append("&").append(clean(name)).append("=").append(clean(value));
         }
 
-        String str = sb.toString();
-
-        String hashed;
+        String str = sb.toString(), hashed;
         try {
-            hashed = HashUtil.calculate(str, secretKey, "UTF-8", hashType);
+            hashed = HashUtil.calculate(str, secretKey, hashType);
         }
         catch (Exception ex) {
             LOGGER.log(Level.WARNING, "error...", ex);

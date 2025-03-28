@@ -20,6 +20,7 @@ import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import com.vonage.client.common.MessageType;
 import com.vonage.client.messages.messenger.*;
 import com.vonage.client.messages.mms.*;
 import com.vonage.client.messages.rcs.*;
@@ -134,7 +135,7 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 	}
 
 	@Test
-	public void testSensSmsSandboxFailure() throws Exception {
+	public void testSensSmsSandboxFailure() {
 		assertThrows(MessageResponseException.class, () -> client.useSandboxEndpoint()
 				.sendMessage(SmsTextRequest.builder()
 					.text(TEXT).from("447700900001").to("447700900002").build()
@@ -330,7 +331,7 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 					fail("Expected "+ MessageResponseException.class.getName());
 				}
 				catch (MessageResponseException mrx) {
-					MessageResponseException expected = MessageResponseException.fromJson(json);
+					MessageResponseException expected = Jsonable.fromJson(json);
 					expected.setStatusCode(statusCode);
 					assertEquals(expected, mrx);
 					assertEquals(statusCode, mrx.getStatusCode());

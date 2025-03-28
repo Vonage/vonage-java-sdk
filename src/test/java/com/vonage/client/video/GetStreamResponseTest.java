@@ -15,11 +15,11 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,9 +31,9 @@ public class GetStreamResponseTest {
 		assertEquals("camera", videoType.toString());
 		String name = "";
 		UUID id = UUID.fromString("8b732909-0a06-46a2-8ea8-074e64d43422");
-		List<String> layoutClassList = Arrays.asList("full");
+		List<String> layoutClassList = List.of("full");
 	
-		GetStreamResponse response = GetStreamResponse.fromJson("{\n" +
+		GetStreamResponse response = Jsonable.fromJson("{\n" +
 				"\"videoType\":\""+videoType+"\",\n" +
 				"\"name\":\""+name+"\",\n" +
 				"\"id\":\""+id+"\",\n" +
@@ -49,12 +49,12 @@ public class GetStreamResponseTest {
 	
 	@Test
 	public void testFromJsonInvalid() {
-		assertThrows(VonageResponseParseException.class, () -> GetStreamResponse.fromJson("{malformed]"));
+		assertThrows(VonageResponseParseException.class, () -> Jsonable.fromJson("{malformed]", GetStreamResponse.class));
 	}
 
 	@Test
 	public void testFromJsonEmpty() {
-		GetStreamResponse response = GetStreamResponse.fromJson("{}");
+		GetStreamResponse response = Jsonable.fromJson("{}");
 		TestUtils.testJsonableBaseObject(response);
 		assertNull(response.getVideoType());
 		assertNull(response.getName());
@@ -64,8 +64,9 @@ public class GetStreamResponseTest {
 
 	@Test
 	public void testInvalidVideoType() {
-		assertEquals(VideoType.CUSTOM, GetStreamResponse.fromJson("{\"videoType\":\"custom\"}").getVideoType());
-		GetStreamResponse gsr = GetStreamResponse.fromJson("{\"videoType\":\"Dashcam\"}");
+		GetStreamResponse gsr = Jsonable.fromJson("{\"videoType\":\"custom\"}");
+		assertEquals(VideoType.CUSTOM, gsr.getVideoType());
+		gsr = Jsonable.fromJson("{\"videoType\":\"Dashcam\"}");
 		assertNull(gsr.getVideoType());
 	}
 }

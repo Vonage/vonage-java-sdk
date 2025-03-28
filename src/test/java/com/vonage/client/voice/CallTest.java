@@ -15,9 +15,10 @@
  */
 package com.vonage.client.voice;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
-import com.vonage.client.common.HttpMethod;
+import com.vonage.client.users.channels.Websocket;
 import com.vonage.client.voice.ncco.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -26,7 +27,7 @@ import java.util.*;
 public class CallTest {
 
     @Test
-    public void testToJson() throws Exception {
+    public void testToJson() {
         Call call = new Call("4477999000", "44111222333", "https://callback.example.com/");
         assertEquals(
                 "{\"to\":[{\"number\":\"4477999000\",\"type\":\"phone\"}]," +
@@ -37,9 +38,9 @@ public class CallTest {
     }
 
     @Test
-    public void testToJsonRandomNumber() throws Exception {
+    public void testToJsonRandomNumber() {
         Call call = Call.builder().to(new PhoneEndpoint("4477999000"))
-                .fromRandomNumber(true).answerMethod(HttpMethod.GET)
+                .fromRandomNumber(true).answerMethod(EventMethod.GET)
                 .answerUrl("https://callback.example.com/").build();
 
         assertEquals("{\"to\":[{\"number\":\"4477999000\",\"type\":\"phone\"}],"
@@ -48,7 +49,7 @@ public class CallTest {
     }
 
     @Test
-    public void testToJsonMachineDetection() throws Exception {
+    public void testToJsonMachineDetection() {
         Call call = Call.builder()
                 .to(new PhoneEndpoint("4477999000"))
                 .from(new PhoneEndpoint("44111222333"))
@@ -95,7 +96,7 @@ public class CallTest {
         headers.put("address", address);
         headers.put("system_roles", Arrays.asList(183493, 1038492, 22));
         headers.put("enable_auditing", false);
-        com.vonage.client.voice.Endpoint[] endpoints = {
+        CallEndpoint[] endpoints = {
                 new PhoneEndpoint("441632960960"),
                 new SipEndpoint("sip:sip@example.com"),
                 new VbcEndpoint("123"),
@@ -105,17 +106,17 @@ public class CallTest {
                         headers
                 )
         };
-        com.vonage.client.voice.Endpoint fromEndpoint = new com.vonage.client.voice.AppEndpoint("nexmo");
-        Call expectedCall = new Call(endpoints, fromEndpoint, "http://example.com/answer");
-        String jsonString = toFromJsonStart + ",\"answer_method\":\"GET\",\"answer_url\":\"http://example.com/answer\"}";
-        Call fromJson = Call.fromJson(jsonString);
+        CallEndpoint fromEndpoint = new com.vonage.client.voice.AppEndpoint("nexmo");
+        Call expectedCall = Call.builder().to(endpoints).from(fromEndpoint).answerUrl("http://example.com/answer").build();
+        String jsonString = toFromJsonStart + ",\"answer_method\":\"GET\",\"answer_url\":[\"http://example.com/answer\"]}";
+        Call fromJson = Jsonable.fromJson(jsonString, Call.class);
         assertEquals(expectedCall.toJson(), fromJson.toJson());
 
         jsonString = toFromJsonStart + ",\n   \"ncco\":[\n" +
                 "      {\n" +
                 "         \"action\":\"record\",\n" +
                 "         \"eventUrl\":[\n" +
-                "            \"http://voice1.yellowfin.npe:9087/callback/verify/{userId}\"\n" +
+                "            \"http://voice1.yellowfin.npe:9087/callback/verify/userId\"\n" +
                 "         ],\n" +
                 "         \"endOnKey\":\"#\",\n" +
                 "         \"timeOut\":5,\n" +
@@ -167,20 +168,20 @@ public class CallTest {
                 "   ]\n" +
                 "}";
 
-        fromJson = Call.fromJson(jsonString);
+        fromJson = Jsonable.fromJson(jsonString);
         TestUtils.testJsonableBaseObject(fromJson);
 
         assertEquals(4, fromJson.getTo().length);
-        assertEquals("phone", fromJson.getTo()[0].getType());
+        assertEquals(EndpointType.PHONE, fromJson.getTo()[0].getType());
         assertEquals("441632960960", ((PhoneEndpoint) fromJson.getTo()[0]).getNumber());
-        assertEquals("sip", fromJson.getTo()[1].getType());
+        assertEquals(EndpointType.SIP, fromJson.getTo()[1].getType());
         assertEquals("sip:sip@example.com", ((SipEndpoint) fromJson.getTo()[1]).getUri());
-        assertEquals("vbc", fromJson.getTo()[2].getType());
+        assertEquals(EndpointType.VBC, fromJson.getTo()[2].getType());
         assertEquals("123", ((VbcEndpoint) fromJson.getTo()[2]).getExtension());
-        assertEquals("websocket", fromJson.getTo()[3].getType());
-        assertEquals("ws://example.com/socket", ((WebSocketEndpoint) fromJson.getTo()[3]).getUri());
-        assertEquals("audio/l16;rate=16000", ((WebSocketEndpoint) fromJson.getTo()[3]).getContentType());
-        assertEquals("app", fromJson.getFrom().getType());
+        assertEquals(EndpointType.WEBSOCKET, fromJson.getTo()[3].getType());
+        assertEquals("ws://example.com/socket", ((WebSocketEndpoint) fromJson.getTo()[3]).getUri().toString());
+        assertEquals(Websocket.ContentType.AUDIO_L16_16K, ((WebSocketEndpoint) fromJson.getTo()[3]).getContentType());
+        assertEquals(EndpointType.APP, fromJson.getFrom().getType());
         assertEquals("nexmo", ((AppEndpoint) fromJson.getFrom()).getUser());
         Collection<? extends Action> ncco = fromJson.getNcco();
         assertEquals(7, ncco.size());
@@ -226,9 +227,9 @@ public class CallTest {
     }
 
     @Test
-    public void testMalformedJson() throws Exception {
+    public void testMalformedJson() {
         try {
-            Call.fromJson("{ bad Jason: \"unknown\"\n" + "}");
+            Jsonable.fromJson("{ bad Jason: \"unknown\"\n" + "}", Call.class);
             fail("Expected a VonageUnexpectedException to be thrown");
         } catch (VonageResponseParseException e) {
             assertEquals("Failed to produce Call from JSON.", e.getMessage());
@@ -310,7 +311,7 @@ public class CallTest {
                     RecordAction.builder().build(),
                     ConnectAction.builder(com.vonage.client.voice.ncco.VbcEndpoint.builder("123").build()).build()
                 )
-                .answerMethod(HttpMethod.POST).eventMethod(HttpMethod.GET)
+                .answerMethod(EventMethod.POST).eventMethod(EventMethod.GET)
                 .eventUrl("https://example.com/voice/event")
                 .answerUrl("https://example.com/voice/answer")
                 .fromRandomNumber(false).machineDetection(MachineDetection.HANGUP)
@@ -320,17 +321,17 @@ public class CallTest {
         assertEquals(55, call.getRingingTimer().intValue());
         assertNotNull(call.getAnswerUrl());
         assertNotNull(call.getEventUrl());
-        assertEquals("POST", call.getAnswerMethod());
-        assertEquals("GET", call.getEventMethod());
+        assertEquals(EventMethod.POST, call.getAnswerMethod());
+        assertEquals(EventMethod.GET, call.getEventMethod());
         assertFalse(call.getFromRandomNumber());
         assertEquals(MachineDetection.HANGUP, call.getMachineDetection());
-        assertEquals("phone", call.getFrom().getType());
-        Endpoint[] to = call.getTo();
+        assertEquals(EndpointType.PHONE, call.getFrom().getType());
+        CallEndpoint[] to = call.getTo();
         assertEquals(6, to.length);
-        assertEquals("app", to[0].getType());
-        assertEquals("sip", to[1].getType());
-        assertEquals("vbc", to[2].getType());
-        assertEquals("websocket", to[3].getType());
+        assertEquals(EndpointType.APP, to[0].getType());
+        assertEquals(EndpointType.SIP, to[1].getType());
+        assertEquals(EndpointType.VBC, to[2].getType());
+        assertEquals(EndpointType.WEBSOCKET, to[3].getType());
         assertEquals(sipUri, ((SipEndpoint) to[4]).getUri());
         assertEquals(sipUser2User, ((SipEndpoint) to[4])
                 .getStandardHeaders().get(SipHeader.fromString("User-to-User"))
@@ -369,14 +370,14 @@ public class CallTest {
         assertEquals("123", call.getTo()[0].toLog());
         assertThrows(IllegalStateException.class, () -> Call.builder().build());
         assertThrows(IllegalStateException.class, () -> Call.builder().to().build());
-        assertThrows(IllegalStateException.class, () -> Call.builder().to((Endpoint) null).build());
+        assertThrows(IllegalStateException.class, () -> Call.builder().to((CallEndpoint) null).build());
     }
 
     @Test
     public void testConstructDefaultAnswerMethod() {
         Call call = Call.builder().to(new VbcEndpoint("123"))
                 .answerUrl("http://example.com/answer").build();
-        assertEquals("GET", call.getAnswerMethod());
+        assertEquals(EventMethod.GET, call.getAnswerMethod());
     }
 
     @Test
@@ -386,17 +387,6 @@ public class CallTest {
             Call.builder().to(vbc).from("447900000001").fromRandomNumber(true).build()
         );
         assertTrue(Call.builder().to(vbc).fromRandomNumber(true).build().getFromRandomNumber());
-    }
-
-    @Test
-    public void testConstructInvalidMethod() {
-        VbcEndpoint vbc = new VbcEndpoint("789");
-        assertThrows(IllegalArgumentException.class, () ->
-                Call.builder().to(vbc).answerMethod(HttpMethod.PATCH).build()
-        );
-        assertThrows(IllegalArgumentException.class, () ->
-                Call.builder().to(vbc).eventMethod(HttpMethod.PATCH).build()
-        );
     }
 
     @Test

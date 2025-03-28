@@ -69,6 +69,6 @@ public class WhatsappReactionRequestTest {
 		assertEquals(Action.REACT, Action.fromString("react"));
 		assertEquals(Action.UNREACT, Action.fromString("unreact"));
 		assertNull(Action.fromString(null));
-		assertThrows(IllegalArgumentException.class, () -> Action.fromString("test unknown"));
+		assertNull(Action.fromString("test unknown"));
 	}
 }

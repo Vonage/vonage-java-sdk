@@ -17,6 +17,7 @@ package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the type of webhook in {@link VerificationCallback#getType()}.
@@ -32,14 +33,16 @@ public enum CallbackType {
 	 */
 	SUMMARY;
 
+	/**
+	 * Convert a string to a CallbackType enum.
+	 *
+	 * @param name The string to convert.
+	 *
+	 * @return The CallbackType as an enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static CallbackType fromString(String name) {
-		try {
-			return CallbackType.valueOf(name.toUpperCase());
-		}
-		catch (IllegalArgumentException ex) {
-			return null;
-		}
+		return Jsonable.fromString(name, CallbackType.class);
 	}
 
 	@JsonValue

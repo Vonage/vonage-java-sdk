@@ -16,6 +16,8 @@
 package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the type of the number's owner as an enum.
@@ -27,16 +29,18 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 public enum CallerType {
     BUSINESS,
     CONSUMER,
-    UNKNOWN;
+    @JsonEnumDefaultValue UNKNOWN;
 
+    /**
+     * Convert a string value to a CallerType enum.
+     *
+     * @param name The string value to convert.
+     *
+     * @return The caller type as an enum, or {@code null} if invalid.
+     */
     @JsonCreator
     public static CallerType fromString(String name) {
-        try {
-            return CallerType.valueOf(name.toUpperCase());
-        }
-        catch (IllegalArgumentException iax) {
-            return UNKNOWN;
-        }
+        return Jsonable.fromString(name, CallerType.class);
     }
 
     @Override

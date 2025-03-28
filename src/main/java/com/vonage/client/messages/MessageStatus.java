@@ -39,10 +39,16 @@ public class MessageStatus extends JsonableBaseObject {
 		UNDELIVERABLE,
 		READ;
 
+		/**
+		 * Convert a string value to a Status enum.
+		 *
+		 * @param value The string value to convert.
+		 *
+		 * @return The status as an enum, or {@code null} if invalid.
+		 */
 		@JsonCreator
 		public static Status fromString(String value) {
-			if (value == null) return null;
-			return Status.valueOf(value.toUpperCase());
+			return Jsonable.fromString(value, Status.class);
 		}
 
 		@JsonValue
@@ -55,7 +61,7 @@ public class MessageStatus extends JsonableBaseObject {
 	/**
 	 * Describes the error that was encountered when sending the message.
 	 */
-		public static final class Error extends JsonableBaseObject {
+	public static final class Error extends JsonableBaseObject {
 		@JsonProperty("type") URI type;
 		@JsonProperty("title") String title;
 		@JsonProperty("detail") String detail;

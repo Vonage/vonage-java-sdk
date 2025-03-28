@@ -102,9 +102,9 @@ public class BinaryMessage extends Message {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
-        params.put("udh", toHexString(getUdh()));
-        params.put("body", toHexString(getMessageBody()));
-        params.put("protocol-id", Integer.toString(getProtocolId()));
+        conditionalAdd("udh", toHexString(getUdh()));
+        conditionalAdd("body", toHexString(getMessageBody()));
+        conditionalAdd("protocol-id", getProtocolId());
         return params;
     }
 

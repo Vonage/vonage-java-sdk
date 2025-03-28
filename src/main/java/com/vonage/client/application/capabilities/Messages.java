@@ -15,23 +15,37 @@
  */
 package com.vonage.client.application.capabilities;
 
-import com.vonage.client.common.Webhook;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.MessagesVersion;
 
 /**
  * Messages capability configuration settings.
  */
 public final class Messages extends Capability {
+    private MessagesVersion version;
 
     private Messages() {
     }
 
     private Messages(Builder builder) {
         super(builder);
+        version = builder.version;
     }
 
     @Override
     public Type getType() {
         return Type.MESSAGES;
+    }
+
+    /**
+     * Gets the Messages API version for the application.
+     *
+     * @return The version as an enum, or {@code null} if unknown.
+     * @since 9.0.0
+     */
+    @JsonProperty("version")
+    public MessagesVersion getVersion() {
+        return version;
     }
 
     /**
@@ -44,15 +58,45 @@ public final class Messages extends Capability {
     }
 
     public static class Builder extends Capability.Builder<Messages, Builder> {
+        private MessagesVersion version;
 
-        @Override
-        public Builder addWebhook(Webhook.Type type, Webhook webhook) {
-            return super.addWebhook(type, webhook);
+        private Builder() {}
+
+        /**
+         * Set the Messages API version for the application.
+         *
+         * @param version The version as an enum.
+         *
+         * @return This builder.
+         * @since 9.0.0
+         */
+        public Builder version(MessagesVersion version) {
+            this.version = version;
+            return this;
         }
 
-        @Override
-        public Builder removeWebhook(Webhook.Type type) {
-            return super.removeWebhook(type);
+        /**
+         * Set the {@code inbound_url} webhook for this capability.
+         *
+         * @param webhook The webhook properties, or {@code null} to remove.
+         *
+         * @return This builder.
+         * @since 9.0.0
+         */
+        public Builder inbound(Webhook webhook) {
+            return webhook(Webhook.Type.INBOUND, webhook);
+        }
+
+        /**
+         * Set the {@code status_url} webhook for this capability.
+         *
+         * @param webhook The webhook properties, or {@code null} to remove.
+         *
+         * @return This builder.
+         * @since 9.0.0
+         */
+        public Builder status(Webhook webhook) {
+            return webhook(Webhook.Type.STATUS, webhook);
         }
 
         /**

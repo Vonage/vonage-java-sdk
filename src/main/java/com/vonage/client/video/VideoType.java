@@ -17,6 +17,7 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the video types returned in {@link GetStreamResponse#getVideoType()}.
@@ -37,14 +38,16 @@ public enum VideoType {
 	 */
 	CUSTOM;
 
+	/**
+	 * Convert a string to a VideoType enum.
+	 *
+	 * @param value The string to convert.
+	 *
+	 * @return The VideoType as an enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static VideoType fromString(String value) {
-		try {
-			return valueOf(value.toUpperCase());
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
-			return null;
-		}
+		return Jsonable.fromString(value, VideoType.class);
 	}
 
 	@JsonValue

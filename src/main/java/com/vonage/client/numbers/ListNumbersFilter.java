@@ -32,25 +32,6 @@ public class ListNumbersFilter extends BaseNumbersFilter {
     }
 
     /**
-     * Old constructor.
-     *
-     * @deprecated Use {@link #builder()}. This will be removed in the next major release.
-     */
-    @Deprecated
-    public ListNumbersFilter() {
-        this(null, null, null, null);
-    }
-
-    @Deprecated
-    public ListNumbersFilter(
-            Integer index,
-            Integer size,
-            String pattern,
-            SearchPattern searchPattern) {
-        this(builder(index, size, pattern, searchPattern));
-    }
-
-    /**
      * Application to return the numbers for.
      *
      * @return The selected application ID to list numbers from, or {@code null} if unspecified.
@@ -76,31 +57,9 @@ public class ListNumbersFilter extends BaseNumbersFilter {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
-        if (applicationId != null) {
-            params.put("application_id", applicationId.toString());
-        }
-        if (hasApplication != null) {
-            params.put("has_application", hasApplication.toString());
-        }
+        conditionalAdd("application_id", applicationId);
+        conditionalAdd("has_application", hasApplication);
         return params;
-    }
-
-    @Deprecated
-    private static Builder builder(Integer index,
-                                   Integer size,
-                                   String pattern,
-                                   SearchPattern searchPattern) {
-        Builder builder = builder();
-        if (index != null) {
-            builder.index(index);
-        }
-        if (size != null) {
-            builder.size(size);
-        }
-        if (pattern != null) {
-            builder.pattern(searchPattern, pattern);
-        }
-        return builder;
     }
 
     /**

@@ -32,8 +32,8 @@ public class NotifyActionTest {
         NotifyAction.Builder builder = NotifyAction.builder();
         assertNotSame(builder.build(), builder.build());
         assertNotSame(
-                NotifyAction.builder(map, new String[]{url}),
-                NotifyAction.builder(map, Collections.singleton(url))
+                NotifyAction.builder(map, url),
+                NotifyAction.builder(map, url)
         );
     }
 

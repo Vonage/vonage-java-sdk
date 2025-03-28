@@ -15,9 +15,9 @@
  */
 package com.vonage.client.voice.ncco;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
-import java.util.Collections;
 
 public class StreamActionTest {
 
@@ -29,11 +29,7 @@ public class StreamActionTest {
 
         assertNotSame(
                 StreamAction.builder(url),
-                StreamAction.builder(url, url)
-        );
-        assertNotSame(
-                StreamAction.builder(Collections.singletonList(url)),
-                StreamAction.builder(new String[]{url})
+                StreamAction.builder(url)
         );
     }
 
@@ -41,7 +37,7 @@ public class StreamActionTest {
     public void testAllFields() {
         StreamAction stream = StreamAction.builder("http://example.com")
                 .streamUrl("http://example.org")
-                .level(0.33f)
+                .level(0.33)
                 .bargeIn(true)
                 .loop(3)
                 .build();
@@ -66,7 +62,7 @@ public class StreamActionTest {
 
     @Test
     public void testLevelField() {
-        StreamAction stream = StreamAction.builder("http://example.com").level(-0.35f).build();
+        StreamAction stream = StreamAction.builder("http://example.com").level(-0.35).build();
 
         String expectedJson = "[{\"streamUrl\":[\"http://example.com\"],\"level\":-0.35,\"action\":\"stream\"}]";
         assertEquals(expectedJson, new Ncco(stream).toJson());

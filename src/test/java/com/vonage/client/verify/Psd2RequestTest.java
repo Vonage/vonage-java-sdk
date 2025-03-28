@@ -24,7 +24,7 @@ public class Psd2RequestTest {
 	@Test
 	public void testToStringAllParameters() {
 		Psd2Request request = Psd2Request.builder("447700900999", 10.31, "Ebony")
-				.workflow(Psd2Request.Workflow.SMS)
+				.workflow(Workflow.SMS)
 				.length(4)
 				.locale(Locale.UK)
 				.country("GB")

@@ -16,7 +16,6 @@
 package com.vonage.client.application.capabilities;
 
 import com.vonage.client.common.HttpMethod;
-import com.vonage.client.common.Webhook;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,7 +32,7 @@ public class RtcTest {
     @Test
     public void testEventWebhook() {
         Rtc rtc = Rtc.builder()
-                .addWebhook(Webhook.Type.EVENT, new Webhook("https://example.com/event", HttpMethod.GET))
+                .event(new Webhook("https://example.com/event", HttpMethod.GET))
                 .signedCallbacks(true).build();
 
         assertEquals(Capability.Type.RTC, rtc.getType());
@@ -45,8 +44,8 @@ public class RtcTest {
     @Test
     public void testRemoveWebhook() {
         Rtc rtc = Rtc.builder()
-                .addWebhook(Webhook.Type.EVENT, new Webhook("https://example.com/event", HttpMethod.POST))
-                .removeWebhook(Webhook.Type.EVENT)
+                .event(new Webhook("https://example.com/event", HttpMethod.POST))
+                .event(null)
                 .signedCallbacks(false).build();
 
         assertEquals(Capability.Type.RTC, rtc.getType());

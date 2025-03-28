@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.HttpMethod;
-import com.vonage.client.common.Webhook;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -101,31 +100,23 @@ public abstract class Capability extends JsonableBaseObject {
         Map<Webhook.Type, Webhook> webhooks;
 
         /**
-         * Add a webhook for the Vonage API to use. Each Capability can only have a single webhook of each type.
+         * Add or remove a webhook for the API. Each Capability can only have a single webhook of each type.
          * See <a href="https://developer.vonage.com/concepts/guides/webhooks"> the webhooks guide</a> for details.
          *
-         * @param type    The {@link Webhook.Type} of webhook to add.
-         * @param webhook The webhook containing the URL and {@link HttpMethod}.
+         * @param type    The {@link Webhook.Type} of webhook to set.
+         * @param webhook The webhook containing the URL and {@link HttpMethod}. Set to {@code null} to remove.
          *
          * @return This builder.
+         * @since 9.0.0 Refactored to include removal if {@code webhook} is {@code null}.
          */
-        B addWebhook(Webhook.Type type, Webhook webhook) {
+        final B webhook(Webhook.Type type, Webhook webhook) {
             if (webhooks == null) {
                 webhooks = new LinkedHashMap<>();
             }
-            webhooks.put(type, webhook);
-            return (B) this;
-        }
-
-        /**
-         * Remove a webhook.
-         *
-         * @param type The {@link Webhook.Type} to remove.
-         *
-         * @return This builder.
-         */
-        B removeWebhook(Webhook.Type type) {
-            if (webhooks != null) {
+            if (webhook != null) {
+                webhooks.put(type, webhook);
+            }
+            else {
                 webhooks.remove(type);
                 if (webhooks.isEmpty()) {
                     webhooks = null;

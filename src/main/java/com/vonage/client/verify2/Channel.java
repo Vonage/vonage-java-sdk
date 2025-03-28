@@ -15,7 +15,9 @@
  */
 package com.vonage.client.verify2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the verification channel type in a Workflow.
@@ -30,11 +32,6 @@ public enum Channel {
 	 * WhatsApp text message.
 	 */
 	WHATSAPP,
-
-	/**
-	 * WhatsApp Yes/No prompt message (codeless).
-	 */
-	WHATSAPP_INTERACTIVE,
 
 	/**
 	 * Telephone voice call.
@@ -55,5 +52,17 @@ public enum Channel {
 	@Override
 	public String toString() {
 		return name().toLowerCase();
+	}
+
+	/**
+	 * Convert a string to a Channel enum.
+	 *
+	 * @param value The string to convert.
+	 *
+	 * @return The Channel as an enum, or {@code null} if invalid.
+	 */
+	@JsonCreator
+	public static Channel fromString(String value) {
+		return Jsonable.fromString(value, Channel.class);
 	}
 }

@@ -16,7 +16,6 @@
 package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
 /**
@@ -27,9 +26,7 @@ public class BasicInsightResponse extends JsonableBaseObject {
     private String statusMessage, requestId, internationalFormatNumber, nationalFormatNumber,
             countryCode, countryCodeIso3, countryName, countryPrefix;
 
-    public static BasicInsightResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
-    }
+    BasicInsightResponse() {}
 
     /**
      * @return The status code of the message, as an enum.

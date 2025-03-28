@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.E164;
+import com.vonage.client.common.MessageType;
 import com.vonage.client.messages.internal.MessagePayload;
 import java.net.URI;
 import java.util.LinkedHashMap;

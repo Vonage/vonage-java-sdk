@@ -45,7 +45,7 @@ public class ConversionClient {
     /**
      * Submit a request to the Conversion API indicating whether or not a message was delivered.
      *
-     * @param type      The {@link ConversionRequest.Type} type of com.vonage.client.conversion.
+     * @param type      The {@link Type} type of com.vonage.client.conversion.
      * @param messageId The id of the message that was sent.
      * @param delivered A boolean indicating whether or not it was delivered.
      * @param timestamp A timestamp of when it was known to be delivered.
@@ -53,7 +53,7 @@ public class ConversionClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public void submitConversion(ConversionRequest.Type type,
+    public void submitConversion(Type type,
                                  String messageId,
                                  boolean delivered,
                                  Date timestamp) throws VonageResponseParseException, VonageClientException {

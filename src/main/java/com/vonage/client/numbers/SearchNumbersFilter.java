@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
  * This class encapsulates a request to search for available Vonage Virtual Numbers.
  */
 public class SearchNumbersFilter extends BaseNumbersFilter {
-    private Feature[] features;
-    private Type type;
+    private final Feature[] features;
+    private final Type type;
 
     private SearchNumbersFilter(Builder builder) {
         super(builder);
@@ -33,33 +33,12 @@ public class SearchNumbersFilter extends BaseNumbersFilter {
     }
 
     /**
-     * Construct a request with the only required parameter, the country code.
+     * Desired capabilities as an array of enums.
      *
-     * @param country A String containing a two-character country code.
-     * @deprecated Use {@link #builder()}. This will be removed in the next major release.
+     * @return The capabilities to search for as an enum array, or {@code null} if unspecified.
      */
-    @Deprecated
-    public SearchNumbersFilter(String country) {
-        this(builder().country(country));
-    }
-
-    @Deprecated
-    public void setFeatures(String[] features) {
-        this.features = Feature.setFromString(features);
-    }
-
-    @Deprecated
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    /**
-     * Desired capabilities as an array of strings. In a future release, these will be enums.
-     *
-     * @return The capabilities to search for as a string array, or {@code null} if unspecified.
-     */
-    public String[] getFeatures() {
-        return Feature.getToString(features);
+    public Feature[] getFeatures() {
+        return features;
     }
 
     /**
@@ -77,9 +56,7 @@ public class SearchNumbersFilter extends BaseNumbersFilter {
         if (features != null && features.length > 0) {
             params.put("features", Arrays.stream(features).map(Feature::toString).collect(Collectors.joining(",")));
         }
-        if (type != null) {
-            params.put("type", type.toString());
-        }
+        conditionalAdd("type", type);
         return params;
     }
 

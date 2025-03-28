@@ -19,9 +19,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.auth.*;
-import com.vonage.client.auth.hashutils.HashUtil;
+import com.vonage.client.auth.hashutils.HashType;
 import org.apache.http.*;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -154,7 +153,7 @@ public class TestUtils {
         return new HttpWrapper(new NoAuthMethod(),
                 new ApiKeyHeaderAuthMethod(API_KEY, API_SECRET),
                 new ApiKeyQueryParamsAuthMethod(API_KEY, API_SECRET),
-                new SignatureAuthMethod(API_KEY, SIGNATURE_SECRET, HashUtil.HashType.HMAC_SHA256),
+                new SignatureAuthMethod(API_KEY, SIGNATURE_SECRET, HashType.HMAC_SHA256),
                 new JWTAuthMethod(APPLICATION_ID_STR, new byte[0])
         );
     }

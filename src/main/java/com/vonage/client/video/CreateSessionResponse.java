@@ -32,6 +32,8 @@ public class CreateSessionResponse extends JsonableBaseObject {
 	}
 
 	/**
+	 * Gets the session ID.
+	 *
 	 * @return The session ID.
 	 */
 	@JsonProperty("session_id")
@@ -40,6 +42,8 @@ public class CreateSessionResponse extends JsonableBaseObject {
 	}
 
 	/**
+	 * Gets the application ID.
+	 *
 	 * @return The application ID.
 	 */
 	@JsonProperty("application_id")
@@ -48,7 +52,9 @@ public class CreateSessionResponse extends JsonableBaseObject {
 	}
 
 	/**
-	 * @return The creation date.
+	 * Gets the creation date.
+	 *
+	 * @return The creation date as a string.
 	 */
 	@JsonProperty("create_dt")
 	public String getCreateDt() {
@@ -56,6 +62,8 @@ public class CreateSessionResponse extends JsonableBaseObject {
 	}
 
 	/**
+	 * Gets the URL of the Media Router used by the session.
+	 *
 	 * @return The URL of the Media Router used by the session.
 	 */
 	@JsonProperty("media_server_url")

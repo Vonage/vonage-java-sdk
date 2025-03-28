@@ -18,7 +18,6 @@ package com.vonage.client.auth.camara;
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.RestEndpoint;
-import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.*;
 import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.CHECK_SIM_SWAP;
 import static com.vonage.client.auth.camara.FraudPreventionDetectionScope.RETRIEVE_SIM_SWAP_DATE;
@@ -26,7 +25,6 @@ import com.vonage.client.common.HttpMethod;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.function.Executable;
-import java.net.URI;
 import java.util.Map;
 import java.util.UUID;
 
@@ -86,7 +84,7 @@ public class NetworkAuthClientTest extends AbstractClientTest<NetworkAuthClient>
         assertThrows(IllegalArgumentException.class, () -> new BackendAuthRequest("foo", scope));
 
         stubResponseAndAssertThrows(200, responseJson,
-                () -> client.buildOidcUrl((BackendAuthRequest) null),
+                () -> client.buildOidcUrl(null),
                 NullPointerException.class
         );
 

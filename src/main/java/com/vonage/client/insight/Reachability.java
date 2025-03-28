@@ -16,6 +16,7 @@
 package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.vonage.client.Jsonable;
 
 /**
  * Enum representing whether you can call number now. This is applicable to mobile numbers only.
@@ -24,17 +25,16 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 public enum Reachability {
 	UNKNOWN, REACHABLE, UNDELIVERABLE, ABSENT, BAD_NUMBER, BLACKLISTED;
 
+	/**
+	 * Convert a string value to a Reachability enum.
+	 *
+	 * @param name The string value to convert.
+	 *
+	 * @return The reachability as an enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static Reachability fromString(String name) {
-		if (name.equalsIgnoreCase("null")) {
-			return null;
-		}
-		try {
-			return Reachability.valueOf(name.toUpperCase());
-		}
-		catch (IllegalArgumentException ex) {
-			return UNKNOWN;
-		}
+		return Jsonable.fromString(name, Reachability.class);
 	}
 
 	@Override

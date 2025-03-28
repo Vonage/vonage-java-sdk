@@ -64,7 +64,7 @@ public class VerifyClient {
         control = new Endpoint<ControlRequest, ControlResponse>("/control", true) {
             @Override
             public ControlResponse postProcessParsedResponse(ControlResponse parsed) {
-                if (parsed.getStatus().equals("0")) {
+                if (VerifyStatus.OK.equals(parsed.getStatus())) {
                     return parsed;
                 }
                 else {
@@ -107,7 +107,7 @@ public class VerifyClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @since 5.5.0
      */
-    public VerifyResponse verify(final String number, final String brand, VerifyRequest.Workflow workflow)
+    public VerifyResponse verify(final String number, final String brand, Workflow workflow)
             throws VonageResponseParseException, VonageClientException {
         return verify(new VerifyRequest.Builder(number, brand).workflow(workflow).build());
     }
@@ -180,21 +180,6 @@ public class VerifyClient {
     /**
      * Validate a code provided by a user in response to a call from {@link #verify}.
      *
-     * @param request The request to send for validation.
-     * @return a CheckResponse representing the response received from the API call.
-     *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @deprecated Use {@link #check(String, String)}.
-     */
-    @Deprecated
-    public CheckResponse check(CheckRequest request) throws VonageClientException, VonageResponseParseException {
-        return check.execute(request);
-    }
-
-    /**
-     * Validate a code provided by a user in response to a call from {@link #verify}.
-     *
      * @param requestId (required) The requestId returned by the {@code verify} call.
      * @param code      (required) The code entered by the user.
      *
@@ -204,7 +189,7 @@ public class VerifyClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public CheckResponse check(final String requestId, final String code) throws VonageClientException, VonageResponseParseException {
-        return check(new CheckRequest(requestId, code));
+        return check.execute(new CheckRequest(requestId, code));
     }
 
     /**
@@ -298,7 +283,7 @@ public class VerifyClient {
      *
      * @since 5.5.0
      */
-    public VerifyResponse psd2Verify(String number, Double amount, String payee, Psd2Request.Workflow workflow)
+    public VerifyResponse psd2Verify(String number, Double amount, String payee, Workflow workflow)
             throws VonageClientException, VonageResponseParseException {
         return psd2Verify(new Psd2Request.Builder(number, amount, payee).workflow(workflow).build());
     }

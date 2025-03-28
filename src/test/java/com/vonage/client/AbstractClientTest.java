@@ -115,10 +115,11 @@ public abstract class AbstractClientTest<T> {
     @SuppressWarnings("unchecked")
     protected <E extends VonageApiResponseException> E assertApiResponseException(
             int statusCode, String response, Class<E> exClass, Executable invocation) throws Exception {
-        E expectedResponse = (E) exClass.getDeclaredMethod("fromJson", String.class).invoke(exClass, response);
+        E expectedResponse = (E) Jsonable.class.getDeclaredMethod("fromJson", String.class, Class.class)
+                .invoke(Jsonable.class, response, exClass);
         String expectedJson = expectedResponse.toJson();
         stubResponse(statusCode, expectedJson);
-        java.lang.reflect.Method setStatusCode = exClass.getDeclaredMethod("setStatusCode", int.class);
+        var setStatusCode = VonageApiResponseException.class.getDeclaredMethod("setStatusCode", int.class);
         setStatusCode.setAccessible(true);
         setStatusCode.invoke(expectedResponse, statusCode);
         String failPrefix = "Expected "+exClass.getSimpleName()+", but got ";

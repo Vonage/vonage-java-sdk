@@ -18,15 +18,16 @@ package com.vonage.client.verify;
 import com.vonage.client.VonageClientException;
 
 public class VerifyException extends VonageClientException {
-    private final String status, errorText;
+    private final VerifyStatus status;
+    private final String errorText;
 
-    public VerifyException(String status, String errorText) {
+    public VerifyException(VerifyStatus status, String errorText) {
         super(String.format("Status %s: %s", status, errorText));
         this.status = status;
         this.errorText = errorText;
     }
 
-    public String getStatus() {
+    public VerifyStatus getStatus() {
         return status;
     }
 

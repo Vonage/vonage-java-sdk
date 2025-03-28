@@ -15,14 +15,15 @@
  */
 package com.vonage.client.application;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.vonage.client.Jsonable;
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ApplicationListTest {
 
     @Test
     public void testEmptyApplications() {
-        var al = ApplicationList.fromJson("{\"_embedded\":{\"applications\":[]}}");
+        var al = Jsonable.fromJson("{\"_embedded\":{\"applications\":[]}}", ApplicationList.class);
         assertNotNull(al);
         var applications = al.getApplications();
         assertNotNull(applications);
@@ -31,14 +32,14 @@ public class ApplicationListTest {
 
     @Test
     public void testNoApplications() {
-        var al = ApplicationList.fromJson("{\"_embedded\":{}}");
+        var al = Jsonable.fromJson("{\"_embedded\":{}}", ApplicationList.class);
         assertNotNull(al);
         assertNull(al.getApplications());
     }
 
     @Test
     public void testEmptyJson() {
-        var al = ApplicationList.fromJson("{}");
+        var al = Jsonable.fromJson("{}", ApplicationList.class);
         assertNotNull(al);
         assertNull(al.getApplications());
     }

@@ -37,17 +37,32 @@ import java.util.UUID;
 public class HttpWrapper {
     private static final String
             CLIENT_NAME = "vonage-java-sdk",
-            CLIENT_VERSION = "8.20.1",
+            CLIENT_VERSION = "9.0.0",
             JAVA_VERSION = System.getProperty("java.version"),
             USER_AGENT = String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION);
 
-    private AuthCollection authCollection;
     private CloseableHttpClient httpClient;
     private HttpConfig httpConfig;
+    private final AuthCollection authCollection;
 
-    public HttpWrapper(HttpConfig httpConfig, AuthCollection authCollection) {
+    /**
+     * Creates a new instance of the HttpWrapper class.
+     *
+     * @param httpConfig The HTTP configuration settings to use.
+     * @param authCollection The authentication settings to use.
+     * @param httpClient The HTTP client to use.
+     *
+     * @since 9.0.0
+     */
+    HttpWrapper(HttpConfig httpConfig, AuthCollection authCollection, HttpClient httpClient) {
         this.authCollection = authCollection;
         this.httpConfig = httpConfig;
+        this.httpClient = httpClient instanceof CloseableHttpClient ?
+                (CloseableHttpClient) httpClient : createHttpClient();
+    }
+
+    public HttpWrapper(HttpConfig httpConfig, AuthCollection authCollection) {
+        this(httpConfig, authCollection, null);
     }
 
     public HttpWrapper(AuthCollection authCollection) {
@@ -62,15 +77,20 @@ public class HttpWrapper {
         this(httpConfig, new AuthCollection(authMethods));
     }
 
+    void setHttpClient(CloseableHttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+
+    void setHttpConfig(HttpConfig httpConfig) {
+        this.httpConfig = httpConfig;
+    }
+
     /**
      * Gets the underlying {@link HttpClient} instance used by the SDK.
      *
      * @return The Apache HTTP client instance.
      */
     public CloseableHttpClient getHttpClient() {
-        if (httpClient == null) {
-            httpClient = createHttpClient();
-        }
         return httpClient;
     }
 
@@ -104,16 +124,6 @@ public class HttpWrapper {
         }
     }
 
-    @Deprecated
-    public void setHttpClient(HttpClient httpClient) {
-        this.httpClient = (CloseableHttpClient) httpClient;
-    }
-
-    @Deprecated
-    public void setHttpConfig(HttpConfig httpConfig) {
-        this.httpConfig = httpConfig;
-    }
-
     /**
      * Gets the authentication settings used by the client.
      *
@@ -121,11 +131,6 @@ public class HttpWrapper {
      */
     public AuthCollection getAuthCollection() {
         return authCollection;
-    }
-
-    @Deprecated
-    public void setAuthCollection(AuthCollection authCollection) {
-        this.authCollection = authCollection;
     }
 
     protected CloseableHttpClient createHttpClient() {

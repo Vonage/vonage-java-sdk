@@ -16,7 +16,6 @@
 package com.vonage.client.verify;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import java.math.BigDecimal;
@@ -103,16 +102,5 @@ public class CheckResponse extends JsonableBaseObject {
         if (status == null) {
             throw new VonageResponseParseException("Response status is missing.");
         }
-    }
-
-    /**
-     * Constructs a CheckResponse with the fields populated from the JSON payload.
-     *
-     * @param json The JSON string.
-     *
-     * @return A new instance of this class.
-     */
-    public static CheckResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
     }
 }

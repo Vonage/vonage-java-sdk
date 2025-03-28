@@ -17,6 +17,7 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Defines values returned by the {@link Broadcast#getStatus} method.
@@ -39,13 +40,15 @@ public enum BroadcastStatus {
 		return name().toLowerCase();
 	}
 
+	/**
+	 * Convert a string to a BroadcastStatus enum.
+	 *
+	 * @param value The string to convert.
+	 *
+	 * @return The BroadcastStatus enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static BroadcastStatus fromString(String value) {
-		try {
-			return BroadcastStatus.valueOf(value.toUpperCase());
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
-			return null;
-		}
+		return Jsonable.fromString(value, BroadcastStatus.class);
 	}
 }

@@ -15,7 +15,6 @@
  */
 package com.vonage.client.insight;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
@@ -57,35 +56,4 @@ public class CarrierDetails extends JsonableBaseObject {
         return networkType;
     }
 
-    /**
-     * Enum representing the type of network that the number is associated with.
-     * Note that this enum may be {@code null}.
-     */
-    public enum NetworkType {
-        MOBILE,
-        LANDLINE,
-        LANDLINE_PREMIUM,
-        LANDLINE_TOLLFREE,
-        VIRTUAL,
-        UNKNOWN,
-        PAGER;
-
-        @JsonCreator
-        public static NetworkType fromString(String name) {
-            if (name.equalsIgnoreCase("null")) {
-                return null;
-            }
-            try {
-                return NetworkType.valueOf(name.toUpperCase());
-            }
-            catch (IllegalArgumentException iax) {
-                return UNKNOWN;
-            }
-        }
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-    }
 }

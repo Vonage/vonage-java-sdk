@@ -15,31 +15,23 @@
  */
 package com.vonage.client.numbers;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Represents a number that is available to buy.
  */
 public class AvailableNumber extends JsonableNumber {
     private String cost;
 
-    /**
-     * Constructor.
-     *
-     * @deprecated This will be made package-private in a future release.
-     */
-    @Deprecated
-    public AvailableNumber() {}
+    AvailableNumber() {}
 
     /**
      * The monthly rental cost for this number, in Euros.
      *
      * @return The rental cost as a string.
      */
+    @JsonProperty("cost")
     public String getCost() {
         return cost;
-    }
-
-    @Deprecated
-    public void setCost(String cost) {
-        this.cost = cost;
     }
 }

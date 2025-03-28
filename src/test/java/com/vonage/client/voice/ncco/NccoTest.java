@@ -15,29 +15,13 @@
  */
 package com.vonage.client.voice.ncco;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.vonage.client.Jsonable;
-import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.voice.TextToSpeechLanguage;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 public class NccoTest {
-
-    @Test
-    public void testUnableToSerializeJson() throws Exception {
-        ObjectWriter writer = mock(ObjectWriter.class);
-        when(writer.writeValueAsString(any())).thenThrow(JsonProcessingException.class);
-        Ncco ncco = new Ncco(writer);
-        assertThrows(VonageUnexpectedException.class, ncco::toJson);
-    }
 
     @SuppressWarnings("unchecked")
     @Test
@@ -74,7 +58,7 @@ public class NccoTest {
     public void testSerializeMultipleActions() {
         TalkAction talk = TalkAction.builder("Test message").language(TextToSpeechLanguage.BASQUE).build();
         var dtmfSettings = DtmfSettings.builder().maxDigits(5).build();
-        InputAction input = InputAction.builder().dtmf(dtmfSettings).type(Collections.singletonList("dtmf")).build();
+        InputAction input = InputAction.builder().dtmf(dtmfSettings).build();
         RecordAction record = RecordAction.builder().beepStart(true).build();
         ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build()).build();
 
@@ -85,19 +69,6 @@ public class NccoTest {
         assertEquals(expectedJson, new Ncco(talk, input, record, connect).toJson());
 
         Ncco ncco = new Ncco(talk, input, record, connect);
-        assertEquals(expectedJson, ncco.toJson());
-    }
-
-    @Test
-    public void testObjectWriterAndActionConstruction() {
-        ObjectWriter writer = Jsonable.createDefaultObjectMapper().writer().withDefaultPrettyPrinter();
-        TalkAction talk = TalkAction.builder("Test message").build();
-
-        Ncco ncco = new Ncco(writer, talk);
-
-        // Json w/ pretty print
-        String expectedJson = "[ {" + System.lineSeparator() + "  \"text\" : \"Test message\"," + System.lineSeparator()
-            + "  \"action\" : \"talk\"" + System.lineSeparator() + "} ]";
         assertEquals(expectedJson, ncco.toJson());
     }
 }

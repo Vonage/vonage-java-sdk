@@ -17,13 +17,12 @@ package com.vonage.client.verify;
 
 import com.vonage.client.AbstractClientTest;
 import com.vonage.client.RestEndpoint;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.*;
 
 public class VerifyClientVerifyControlEndpointTest extends AbstractClientTest<VerifyClient> {
 
@@ -38,7 +37,7 @@ public class VerifyClientVerifyControlEndpointTest extends AbstractClientTest<Ve
         stubResponse(200, json);
 
         ControlResponse response = client.advanceVerification("a-request-id");
-        assertEquals("0", response.getStatus());
+        assertEquals(VerifyStatus.OK, response.getStatus());
         assertEquals(VerifyControlCommand.TRIGGER_NEXT_EVENT, response.getCommand());
     }
 
@@ -48,7 +47,7 @@ public class VerifyClientVerifyControlEndpointTest extends AbstractClientTest<Ve
         stubResponse(200, json);
 
         ControlResponse response = client.cancelVerification("a-request-id");
-        assertEquals("0", response.getStatus());
+        assertEquals(VerifyStatus.OK, response.getStatus());
         assertEquals(VerifyControlCommand.CANCEL, response.getCommand());
     }
 
@@ -64,7 +63,7 @@ public class VerifyClientVerifyControlEndpointTest extends AbstractClientTest<Ve
             fail("Parsing an error response should throw an exception.");
         }
         catch (VerifyException exc) {
-            assertEquals("2", exc.getStatus());
+            assertEquals(VerifyStatus.MISSING_PARAMS, exc.getStatus());
             assertEquals("Missing username", exc.getErrorText());
         }
     }

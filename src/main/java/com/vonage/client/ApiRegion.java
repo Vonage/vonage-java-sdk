@@ -49,11 +49,10 @@ public enum ApiRegion {
      * Converts a string representation of a region to the corresponding enum value.
      *
      * @param region The region as a string.
-     * @return The region enum, or {@code null} if the input is {@code null}.
+     * @return The region enum, or {@code null} if invalid.
      */
     @JsonCreator
     public static ApiRegion fromString(String region) {
-        if (region == null) return null;
-        return valueOf(region.toUpperCase().replace("-", "_"));
+        return Jsonable.fromString(region, ApiRegion.class);
     }
 }

@@ -15,41 +15,13 @@
  */
 package com.vonage.client.sms.messages;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
+import com.vonage.client.AbstractQueryParamsRequest;
 import java.util.Map;
 
 /**
  * Represents the details common to any message that is to be submitted to the Vonage SMS API.
  */
-public abstract class Message implements QueryParamsRequest {
-
-    /**
-     * Represents the type of message.
-     */
-    public enum MessageType {
-        /**
-         * Regular text SMS message.
-         */
-        TEXT,
-
-        /**
-         * Binary SMS message with a custom UDH and binary payload.
-         */
-        BINARY,
-
-        /**
-         * Unicode message, for sending messages in non-latin script to a supported handset.
-         */
-        UNICODE;
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-    }
-
+public abstract class Message extends AbstractQueryParamsRequest {
     private final MessageType type;
     private final String from, to;
     private boolean statusReportRequired;
@@ -257,72 +229,22 @@ public abstract class Message implements QueryParamsRequest {
 
     @Override
     public Map<String, String> makeParams() {
-        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("from", getFrom());
-        params.put("to", getTo());
-        params.put("type", getType().toString());
+        Map<String, String> params = super.makeParams();
+        conditionalAdd("from", from);
+        conditionalAdd("to", to);
+        conditionalAdd("type", type);
         if (getStatusReportRequired()) {
-            params.put("status-report-req", "1");
+            conditionalAdd("status-report-req", "1");
         }
-        if (clientReference != null) {
-            params.put("client-ref", getClientReference());
-        }
-        if (timeToLive != null) {
-            params.put("ttl", getTimeToLive().toString());
-        }
-        if (callbackUrl != null) {
-            params.put("callback", getCallbackUrl());
-        }
+        conditionalAdd("client-ref", clientReference);
+        conditionalAdd("ttl", timeToLive);
+        conditionalAdd("callback", callbackUrl);
         if (messageClass != null) {
-            params.put("message-class", Integer.toString(getMessageClass().getMessageClass()));
+            conditionalAdd("message-class", messageClass.getMessageClass());
         }
-        if (entityId != null) {
-            params.put("entity-id", getEntityId());
-        }
-        if (contentId != null) {
-            params.put("content-id", getContentId());
-        }
+        conditionalAdd("entity-id", entityId);
+        conditionalAdd("content-id", contentId);
         return params;
     }
 
-    /**
-     * An enum of the valid values that may be supplied to as the message-class parameter of a rest submission.
-     */
-    public enum MessageClass {
-        /**
-         * Message Class 0
-         */
-        CLASS_0(0),
-
-        /**
-         * Message Class 1
-         */
-        CLASS_1(1),
-
-        /**
-         * Message Class 2
-         */
-        CLASS_2(2),
-
-        /**
-         * Message Class 3
-         */
-        CLASS_3(3);
-
-        private final int messageClass;
-
-        MessageClass(int messageClass) {
-            this.messageClass = messageClass;
-        }
-
-        /**
-         * Gets the message class as an integer.
-         *
-         * @return The message class number.
-         */
-        @JsonValue
-        public int getMessageClass() {
-            return messageClass;
-        }
-    }
 }

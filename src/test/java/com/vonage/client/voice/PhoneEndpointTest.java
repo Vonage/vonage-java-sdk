@@ -23,7 +23,7 @@ import org.junit.jupiter.api.*;
 public class PhoneEndpointTest {
 
     @Test
-    public void testConstructor() throws Exception {
+    public void testConstructor() {
         PhoneEndpoint e = new PhoneEndpoint("number", "dtmf");
         TestUtils.testJsonableBaseObject(e);
         assertEquals("number", e.getNumber());
@@ -31,7 +31,7 @@ public class PhoneEndpointTest {
     }
 
     @Test
-    public void testComparison() throws Exception {
+    public void testComparison() {
 
         PhoneEndpoint e1 = new PhoneEndpoint("number");
         PhoneEndpoint e2 = new PhoneEndpoint("number");

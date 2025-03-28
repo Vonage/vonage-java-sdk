@@ -2,6 +2,7 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Defines values used in the {@link Archive.Builder#outputMode(OutputMode)} method and returned by the
@@ -23,13 +24,15 @@ public enum OutputMode {
 		return name().toLowerCase();
 	}
 
+	/**
+	 * Parse a string to an OutputMode enum.
+	 *
+	 * @param value The string to convert.
+	 *
+	 * @return The OutputMode enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static OutputMode fromString(String value) {
-		try {
-			return OutputMode.valueOf(value.toUpperCase());
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
-			return null;
-		}
+		return Jsonable.fromString(value, OutputMode.class);
 	}
 }

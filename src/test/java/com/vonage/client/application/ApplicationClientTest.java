@@ -16,11 +16,11 @@
 package com.vonage.client.application;
 
 import com.vonage.client.AbstractClientTest;
+import com.vonage.client.Jsonable;
 import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.application.capabilities.*;
 import com.vonage.client.common.HttpMethod;
-import com.vonage.client.common.Webhook;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
@@ -31,10 +31,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ApplicationClientTest extends AbstractClientTest<ApplicationClient> {
-    static final UUID SAMPLE_APPLICATION_ID = UUID.randomUUID();
+    static final UUID SAMPLE_APPLICATION_ID = UUID.fromString("78d335fa-323d-0114-9c3d-d6f0d48968cf");
 
     static final String SAMPLE_APPLICATION = "{\n" +
-            "  \"id\": \"78d335fa-323d-0114-9c3d-d6f0d48968cf\",\n" +
+            "  \"id\": \""+SAMPLE_APPLICATION_ID+"\",\n" +
             "  \"name\": \"My Application\",\n" +
             "  \"capabilities\": {\n" +
             "    \"voice\": {\n" +
@@ -114,7 +114,7 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
 
     static void assertEqualsSampleApplication(Application response) {
         testJsonableBaseObject(response);
-        assertEquals("78d335fa-323d-0114-9c3d-d6f0d48968cf", response.getId());
+        assertEquals(SAMPLE_APPLICATION_ID, response.getId());
         assertEquals("My Application", response.getName());
 
         Application.Capabilities capabilities = response.getCapabilities();
@@ -194,10 +194,16 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
     @Test
     public void testUpdateApplication() throws Exception {
         stubResponse(200, SAMPLE_APPLICATION);
-        Application request = Application.builder().name("Test app").build();
-        assertEqualsSampleApplication(client.updateApplication(request));
+        Application existing = Jsonable.fromJson("{\"id\":\""+SAMPLE_APPLICATION_ID+"\"}", Application.class);
+        Application request1 = Application.builder(existing).name("Test app").build();
+        assertEqualsSampleApplication(client.updateApplication(request1));
+
         assertThrows(NullPointerException.class, () -> client.updateApplication(null));
-        assert400ResponseException(() -> client.updateApplication(request));
+        assert400ResponseException(() -> client.updateApplication(request1));
+
+        stubResponse(200, SAMPLE_APPLICATION);
+        Application request2 = Application.builder(SAMPLE_APPLICATION_ID).name(request1.getName()).build();
+        assertEqualsSampleApplication(client.updateApplication(request2));
     }
 
     @Test
@@ -229,7 +235,7 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
                 "  \"_embedded\": {\n" +
                 "    \"applications\": [\n" +
                 "      {\n" +
-                "        \"id\": \"78d335fa323d01149c3dd6f0d48968cf\",\n" +
+                "        \"id\": \""+SAMPLE_APPLICATION_ID+"\",\n" +
                 "        \"name\": \"My Application\",\n" +
                 "        \"capabilities\": {\n" +
                 "          \"voice\": {\n" +
@@ -282,7 +288,8 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
 
     @Test
     public void testListApplicationsWithMultipleResults() throws Exception {
-        String json = "{\n" +
+        final UUID id1 = UUID.randomUUID(), id2 = UUID.randomUUID();
+        final String json = "{\n" +
                 "  \"page_size\": 10,\n" +
                 "  \"page\": 1,\n" +
                 "  \"total_items\": 12,\n" +
@@ -290,7 +297,7 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
                 "  \"_embedded\": {\n" +
                 "    \"applications\": [\n" +
                 "      {\n" +
-                "        \"id\": \"1\",\n" +
+                "        \"id\": \""+id1+"\",\n" +
                 "        \"name\": \"My Application\",\n" +
                 "        \"capabilities\": {\n" +
                 "          \"voice\": {\n" +
@@ -308,7 +315,7 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
                 "        }\n" +
                 "      },\n" +
                 "      {\n" +
-                "        \"id\": \"2\",\n" +
+                "        \"id\": \""+id2+"\",\n" +
                 "        \"name\": \"My Second Application\",\n" +
                 "        \"capabilities\": {\n" +
                 "          \"voice\": {\n" +
@@ -342,6 +349,9 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
 
         assertEquals("My Application", applications.get(0).getName());
         assertEquals("My Second Application", applications.get(1).getName());
+
+        assertEquals(id1, applications.get(0).getId());
+        assertEquals(id2, applications.get(1).getId());
 
         applications = stubResponseAndGet(json, client::listAllApplications);
         assertEquals(2, applications.size());
@@ -458,7 +468,7 @@ public class ApplicationClientTest extends AbstractClientTest<ApplicationClient>
 
             @Override
             protected Application sampleRequest() {
-                return Application.fromJson(sampleRequestBodyString());
+                return Jsonable.fromJson(sampleRequestBodyString(), Application.class);
             }
 
             @Override

@@ -27,7 +27,7 @@ import java.util.Map;
  * <a href=https://developer.vonage.com/voice/voice-api/ncco-reference#websocket-endpoint>the documentation</a>
  * for an example.
  */
-public class WebSocketEndpoint extends JsonableBaseObject implements Endpoint {
+public class WebSocketEndpoint extends JsonableBaseObject implements ConnectEndpoint {
     private final URI uri;
     private final String contentType;
     private final Map<String, ?> headers;
@@ -39,8 +39,8 @@ public class WebSocketEndpoint extends JsonableBaseObject implements Endpoint {
     }
 
     @Override
-    public String getType() {
-        return EndpointType.WEBSOCKET.toString();
+    public EndpointType getType() {
+        return EndpointType.WEBSOCKET;
     }
 
     /**

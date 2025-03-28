@@ -15,11 +15,10 @@
  */
 package com.vonage.client.insight;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
+import com.vonage.client.AbstractQueryParamsRequest;
 import java.util.Map;
 
-public abstract class BaseInsightRequest implements QueryParamsRequest {
+public abstract class BaseInsightRequest extends AbstractQueryParamsRequest {
     protected final String number, country;
     Boolean cnam;
 
@@ -42,14 +41,10 @@ public abstract class BaseInsightRequest implements QueryParamsRequest {
 
     @Override
     public Map<String, String> makeParams() {
-        Map<String, String> params = new LinkedHashMap<>(8);
-        params.put("number", number);
-        if (country != null) {
-            params.put("country", country);
-        }
-        if (cnam != null) {
-            params.put("cnam", cnam.toString());
-        }
+        Map<String, String> params = super.makeParams();
+        conditionalAdd("number", number);
+        conditionalAdd("country", country);
+        conditionalAdd("cnam", cnam);
         return params;
     }
 }

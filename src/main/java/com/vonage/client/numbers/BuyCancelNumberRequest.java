@@ -44,9 +44,7 @@ class BuyCancelNumberRequest extends BaseNumberRequest {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
-        if (targetApiKey != null) {
-            params.put("target_api_key", targetApiKey);
-        }
+        conditionalAdd("target_api_key", targetApiKey);
         return params;
     }
 }

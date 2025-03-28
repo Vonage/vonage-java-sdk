@@ -15,13 +15,12 @@
  */
 package com.vonage.client.redact;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.vonage.client.Jsonable;
 
 /**
  * Represents a request to the Redact API.
  */
-public class RedactRequest implements Jsonable {
+class RedactRequest implements Jsonable {
     private final String id;
     private final Product product;
     private Type type;
@@ -51,35 +50,5 @@ public class RedactRequest implements Jsonable {
 
     public void setType(Type type) {
         this.type = type;
-    }
-
-    public enum Product {
-        SMS("sms"),
-        VOICE("voice"),
-        NUMBER_INSIGHTS("number-insight"),
-        VERIFY("verify"),
-        VERIFY_SDK("verify-sdk"),
-        MESSAGES("messages"),
-        WORKFLOW("workflow");
-
-        private final String value;
-
-        Product(String value) {
-            this.value = value;
-        }
-
-        @JsonValue
-        public String getValue() {
-            return value;
-        }
-    }
-
-    public enum Type {
-        INBOUND, OUTBOUND;
-
-        @JsonValue
-        public String getValue() {
-            return name().toLowerCase();
-        }
     }
 }

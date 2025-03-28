@@ -252,12 +252,12 @@ public class VerifyClientSearchEndpointTest extends AbstractClientTest<VerifyCli
     }
 
     @Test
-    public void testNoSearchRequests() throws Exception {
+    public void testNoSearchRequests() {
         assertThrows(IllegalArgumentException.class, client::search);
     }
 
     @Test
-    public void testTooManySearchRequests() throws Exception {
+    public void testTooManySearchRequests() {
         String[] requestIds = new String[11];
         for (int i = 1; i <= requestIds.length; i++) {
             requestIds[i-1] = "request-id-"+i;
@@ -309,7 +309,7 @@ public class VerifyClientSearchEndpointTest extends AbstractClientTest<VerifyCli
                 testSingleId();
             }
 
-            void testSingleId() throws Exception {
+            void testSingleId() {
                 String id = UUID.randomUUID().toString().replace("-", "");
                 assertRequestParams(Collections.singletonMap("request_id", id), new SearchRequest(id));
             }

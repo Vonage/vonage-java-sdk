@@ -15,20 +15,10 @@
  */
 package com.vonage.client;
 
-
 /**
  * VonageUnexpectedException indicates an exception that should not happen in an ideal world.
  */
 public class VonageUnexpectedException extends RuntimeException {
-
-    @Deprecated
-    public VonageUnexpectedException() {
-        super();
-    }
-
-    public VonageUnexpectedException(String message) {
-        super(message);
-    }
 
     public VonageUnexpectedException(String message, Throwable cause) {
         super(message, cause);

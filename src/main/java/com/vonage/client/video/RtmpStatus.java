@@ -17,6 +17,7 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the status of an RTMP stream.
@@ -56,13 +57,15 @@ public enum RtmpStatus {
 		return name().toLowerCase();
 	}
 
+	/**
+	 * Convert a string to an RtmpStatus enum.
+	 *
+	 * @param value The string to convert.
+	 *
+	 * @return The RtmpStatus as an enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
 	public static RtmpStatus fromString(String value) {
-		try {
-			return RtmpStatus.valueOf(value.toUpperCase());
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
-			return null;
-		}
+		return Jsonable.fromString(value, RtmpStatus.class);
 	}
 }

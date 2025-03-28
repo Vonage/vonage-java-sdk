@@ -16,22 +16,23 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
-import com.vonage.client.common.HttpMethod;
 import com.vonage.client.voice.ncco.Action;
+import com.vonage.client.voice.ncco.EventMethod;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Call encapsulates the information required to create a call using {@link VoiceClient#createCall(Call)}
  */
 public class Call extends JsonableBaseObject {
-    private Endpoint[] to;
-    private Endpoint from;
-    private HttpMethod answerMethod, eventMethod;
-    private String answerUrl, eventUrl;
+    private CallEndpoint[] to;
+    private CallEndpoint from;
+    private EventMethod answerMethod, eventMethod;
+    private Collection<URI> answerUrl, eventUrl;
     private MachineDetection machineDetection;
     private AdvancedMachineDetection advancedMachineDetection;
     private Integer lengthTimer, ringingTimer;
@@ -54,22 +55,16 @@ public class Call extends JsonableBaseObject {
         if ((ringingTimer = builder.ringingTimer) != null && (ringingTimer > 120 || ringingTimer < 1)) {
             throw new IllegalArgumentException("Ringing timer must be between 1 and 120.");
         }
-        if ((answerMethod = builder.answerMethod) != null) switch (answerMethod) {
-            case GET: case POST: break;
-            default: throw new IllegalArgumentException("Answer method must be GET or POST.");
-        }
-        if ((eventMethod = builder.eventMethod) != null) switch (eventMethod) {
-            case GET: case POST: break;
-            default: throw new IllegalArgumentException("Event method must be GET or POST.");
-        }
         if ((from = builder.from) == null) {
             fromRandomNumber = true;
         }
         else if ((fromRandomNumber = builder.fromRandomNumber) != null && fromRandomNumber) {
             throw new IllegalStateException("From number shouldn't be set if using random.");
         }
-        answerUrl = builder.answerUrl;
-        eventUrl = builder.eventUrl;
+        answerMethod = builder.answerMethod;
+        eventMethod = builder.eventMethod;
+        answerUrl = builder.answerUrl != null ? Collections.singletonList(URI.create(builder.answerUrl)) : null;
+        eventUrl = builder.eventUrl != null ? Collections.singletonList(URI.create(builder.eventUrl)) : null;
         ncco = builder.ncco;
         advancedMachineDetection = builder.advancedMachineDetection;
         if ((machineDetection = builder.machineDetection) != null && advancedMachineDetection != null) {
@@ -97,8 +92,8 @@ public class Call extends JsonableBaseObject {
      * @param from The caller endpoint.
      * @param answerUrl The URL to fetch the NCCO from.
      */
-    public Call(Endpoint to, Endpoint from, String answerUrl) {
-        this(new Endpoint[]{to}, from, answerUrl);
+    public Call(CallEndpoint to, CallEndpoint from, String answerUrl) {
+        this(builder().to(to).from(from).answerUrl(answerUrl));
     }
 
     /**
@@ -119,35 +114,7 @@ public class Call extends JsonableBaseObject {
      * @param from The caller endpoint.
      * @param ncco The NCCO actions to take.
      */
-    public Call(Endpoint to, Endpoint from, Collection<? extends Action> ncco) {
-        this(new Endpoint[]{to}, from, ncco);
-    }
-
-    /**
-     * Create a new Call.
-     *
-     * @param to The recipient endpoint in an array.
-     * @param from The caller endpoint.
-     * @param answerUrl The URL to fetch the NCCO from.
-     *
-     * @deprecated This will be removed in the next major release.
-     */
-    @Deprecated
-    public Call(Endpoint[] to, Endpoint from, String answerUrl) {
-        this(builder().to(to).from(from).answerUrl(answerUrl));
-    }
-
-    /**
-     * Create a new Call.
-     *
-     * @param to The recipient endpoint in an array.
-     * @param from The caller endpoint.
-     * @param ncco The NCCO actions to take.
-     *
-     * @deprecated This will be removed in the next major release.
-     */
-    @Deprecated
-    public Call(Endpoint[] to, Endpoint from, Collection<? extends Action> ncco) {
+    public Call(CallEndpoint to, CallEndpoint from, Collection<? extends Action> ncco) {
         this(builder().to(to).from(from).ncco(ncco));
     }
 
@@ -157,7 +124,7 @@ public class Call extends JsonableBaseObject {
      * @return The callee endpoint wrapped in an array.
      */
     @JsonProperty("to")
-    public Endpoint[] getTo() {
+    public CallEndpoint[] getTo() {
         return to;
     }
 
@@ -167,53 +134,50 @@ public class Call extends JsonableBaseObject {
      * @return The caller number / URI, or {@code null} if unspecified.
      */
     @JsonProperty("from")
-    public Endpoint getFrom() {
+    public CallEndpoint getFrom() {
         return from;
     }
 
     /**
      * URL that Vonage makes a request to when the call is answered to retrieve NCCOs.
      *
-     * @return The publicly accessible NCCO URL, or {@code null} if unspecified.
+     * @return The publicly accessible NCCO URL wrapped in a collection, or {@code null} if unspecified.
      */
     @JsonProperty("answer_url")
-    public String[] getAnswerUrl() {
-        return (answerUrl != null) ? new String[]{answerUrl} : null;
+    public Collection<URI> getAnswerUrl() {
+        return answerUrl;
     }
 
     /**
      * HTTP method used to send event information to {@code answer_url}.
      *
-     * @return The HTTP answer method type as a string, or {@code null} if not set.
+     * @return The HTTP answer method type as an enum, or {@code null} if not set.
      */
     @JsonProperty("answer_method")
-    public String getAnswerMethod() {
+    public EventMethod getAnswerMethod() {
         // Hide the answer method if the answer url isn't defined
         if (answerUrl == null || answerMethod == null) return null;
-        return answerMethod.toString();
+        return answerMethod;
     }
 
     /**
      * URL to send event information to.
      *
-     * @return The event URL wrapped in a string, or {@code null} if not set.
+     * @return The event URL wrapped in a collection, or {@code null} if not set.
      */
     @JsonProperty("event_url")
-    public String[] getEventUrl() {
-        if (eventUrl == null) {
-            return null;
-        }
-        return new String[]{eventUrl};
+    public Collection<URI> getEventUrl() {
+        return eventUrl;
     }
 
     /**
      * HTTP method used to send event information to {@code event_url}.
      *
-     * @return The HTTP event method type as a string, or {@code null} if unspecified (the default).
+     * @return The HTTP event method type as an enum, or {@code null} if unspecified (the default).
      */
     @JsonProperty("event_method")
-    public String getEventMethod() {
-        return eventMethod != null ? eventMethod.toString() : null;
+    public EventMethod getEventMethod() {
+        return eventMethod;
     }
 
     /**
@@ -279,17 +243,6 @@ public class Call extends JsonableBaseObject {
     }
 
     /**
-     * Creates an instance of this class from a JSON payload.
-     *
-     * @param json The JSON string to parse.
-     *
-     * @return An instance of this class with the fields populated, if present.
-     */
-    public static Call fromJson(String json) {
-        return Jsonable.fromJson(json);
-    }
-
-    /**
      * Entrypoint for constructing an instance of this class.
      *
      * @return A new Builder.
@@ -305,9 +258,9 @@ public class Call extends JsonableBaseObject {
      * @since 7.3.0
      */
     public static class Builder {
-        private Endpoint[] to;
-        private Endpoint from;
-        private HttpMethod answerMethod = HttpMethod.GET, eventMethod;
+        private CallEndpoint[] to;
+        private CallEndpoint from;
+        private EventMethod answerMethod = EventMethod.GET, eventMethod;
         private String answerUrl, eventUrl;
         private MachineDetection machineDetection;
         private AdvancedMachineDetection advancedMachineDetection;
@@ -324,7 +277,7 @@ public class Call extends JsonableBaseObject {
          *
          * @return This builder.
          */
-        public Builder to(Endpoint... endpoints) {
+        public Builder to(CallEndpoint... endpoints) {
             to = endpoints;
             return this;
         }
@@ -347,7 +300,7 @@ public class Call extends JsonableBaseObject {
          *
          * @return This builder.
          */
-        Builder from(Endpoint from) {
+        Builder from(CallEndpoint from) {
             this.from = from;
             return this;
         }
@@ -359,7 +312,7 @@ public class Call extends JsonableBaseObject {
          *
          * @return This builder.
          */
-        public Builder eventMethod(HttpMethod eventMethod) {
+        public Builder eventMethod(EventMethod eventMethod) {
             this.eventMethod = eventMethod;
             return this;
         }
@@ -371,7 +324,7 @@ public class Call extends JsonableBaseObject {
          *
          * @return This builder.
          */
-        public Builder answerMethod(HttpMethod answerMethod) {
+        public Builder answerMethod(EventMethod answerMethod) {
             this.answerMethod = answerMethod;
             return this;
         }

@@ -20,14 +20,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class RecordingFormatTest {
     @Test
-    public void testFromString() throws Exception {
+    public void testFromString() {
         assertEquals(RecordingFormat.MP3, RecordingFormat.fromString("mp3"));
         assertEquals(RecordingFormat.WAV, RecordingFormat.fromString("wav"));
-        assertEquals(RecordingFormat.UNKNOWN, RecordingFormat.fromString("test unknown"));
+        assertNull(RecordingFormat.fromString("test unknown"));
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() {
         assertEquals("mp3", RecordingFormat.MP3.toString());
         assertEquals("wav", RecordingFormat.WAV.toString());
     }

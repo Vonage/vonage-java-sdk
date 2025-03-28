@@ -176,10 +176,7 @@ public class VerificationRequest implements Jsonable {
 	 */
 	@JsonIgnore
 	public boolean isCodeless() {
-		return workflows.stream().allMatch(type ->
-				type instanceof WhatsappCodelessWorkflow ||
-				type instanceof SilentAuthWorkflow
-		);
+		return workflows.stream().allMatch(type -> type instanceof SilentAuthWorkflow);
 	}
 
 	/**
@@ -196,7 +193,7 @@ public class VerificationRequest implements Jsonable {
 		String brand, code, clientRef;
 		Integer timeout, codeLength;
 		Locale locale;
-		List<Workflow> workflows = new ArrayList<>(1);
+		final List<Workflow> workflows = new ArrayList<>(1);
 
 		private Builder() {}
 

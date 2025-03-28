@@ -15,13 +15,11 @@
  */
 package com.vonage.client.subaccounts;
 
-import com.vonage.client.QueryParamsRequest;
+import com.vonage.client.AbstractQueryParamsRequest;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ListTransfersFilter implements QueryParamsRequest {
+public class ListTransfersFilter extends AbstractQueryParamsRequest {
 	private final Instant startDate, endDate;
 	private final String subaccount;
 
@@ -33,20 +31,12 @@ public class ListTransfersFilter implements QueryParamsRequest {
 		}
 	}
 
-	private static String formatTime(Instant timestamp) {
-		return timestamp.truncatedTo(ChronoUnit.SECONDS).toString();
-	}
-
 	@Override
 	public Map<String, String> makeParams() {
-		Map<String, String> params = new LinkedHashMap<>(4);
-		params.put("start_date", formatTime(startDate));
-		if (endDate != null) {
-			params.put("end_date", formatTime(endDate));
-		}
-		if (subaccount != null) {
-			params.put("subaccount", subaccount);
-		}
+		Map<String, String> params = super.makeParams();
+		conditionalAdd("start_date", startDate);
+		conditionalAdd("end_date", endDate);
+		conditionalAdd("subaccount", subaccount);
 		return params;
 	}
 

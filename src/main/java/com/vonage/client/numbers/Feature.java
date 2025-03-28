@@ -16,7 +16,7 @@
 package com.vonage.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 import java.util.Arrays;
 
 /**
@@ -29,26 +29,16 @@ public enum Feature {
     MMS,
     VOICE;
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
     /**
      * Converts the string representation of the feature to its enum value.
      *
      * @param feature The feature as a string.
-     * @return The enum value of the feature.
+     *
+     * @return The enum value of the feature, or {@code null} if invalid.
      */
     @JsonCreator
     public static Feature fromString(String feature) {
-        if (feature == null) return null;
-        return valueOf(feature.toUpperCase());
-    }
-
-    static Feature[] setFromString(String[] features) {
-        return features == null ? null : Arrays.stream(features).map(Feature::fromString).toArray(Feature[]::new);
+        return Jsonable.fromString(feature, Feature.class);
     }
 
     static String[] getToString(Feature[] features) {

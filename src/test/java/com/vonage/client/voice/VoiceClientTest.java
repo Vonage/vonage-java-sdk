@@ -16,9 +16,11 @@
 package com.vonage.client.voice;
 
 import com.vonage.client.AbstractClientTest;
+import com.vonage.client.Jsonable;
 import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.common.HttpMethod;
+import com.vonage.client.voice.ncco.EventMethod;
 import com.vonage.client.voice.ncco.Ncco;
 import com.vonage.client.voice.ncco.TalkAction;
 import static org.junit.jupiter.api.Assertions.*;
@@ -64,12 +66,12 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
                 + "  \"status\": \"started\",\n" + "  \"direction\": \"outbound\"\n" + "}";
         stubResponse(200, expectedJson);
         CallEvent evt = client.createCall(new Call("447700900903", "447700900904", "http://api.example.com/answer"));
-        assertEquals(CallEvent.fromJson(expectedJson), evt);
+        assertEquals(Jsonable.fromJson(expectedJson, CallEvent.class), evt);
         assertEquals("63f61863-4a51-4f6b-86e1-46edebio0391", evt.getConversationUuid());
         assertEquals(SAMPLE_CALL_ID, evt.getUuid());
         assertEquals(CallDirection.OUTBOUND, evt.getDirection());
         assert401Response(() -> client.createCall(Call.builder()
-                .to(new VbcEndpoint("123")).eventMethod(HttpMethod.POST).build())
+                .to(new VbcEndpoint("123")).eventMethod(EventMethod.POST).build())
         );
     }
 
@@ -697,6 +699,13 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
             @Override
             protected String sampleRequestBodyString() {
                 return "{\"action\":\""+action.name().toLowerCase()+"\"}";
+            }
+
+            @Override
+            public void runTests() throws Exception {
+                super.runTests();
+                assertNull(ModifyCallAction.fromString("not_an_action"));
+                assertNull(ModifyCallAction.fromString(null));
             }
         }
         .runTests();

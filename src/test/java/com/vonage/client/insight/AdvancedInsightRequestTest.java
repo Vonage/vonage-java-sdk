@@ -35,28 +35,6 @@ public class AdvancedInsightRequestTest {
     }
 
     @Test
-    public void testAsync() {
-        AdvancedInsightRequest request = AdvancedInsightRequest.builder("12345")
-                .async(true).callback("https://example.com").build();
-        assertTrue(request.isAsync());
-        assertEquals("https://example.com", request.getCallback());
-    }
-
-    @Test
-    public void testAsyncWithoutCallbackThrowsIllegalStateException() {
-        assertThrows(IllegalStateException.class, () ->
-                AdvancedInsightRequest.builder("12345").async(true).build()
-        );
-    }
-
-    @Test
-    public void testAsyncWithBlankCallbackThrowsIllegalStateException() {
-        assertThrows(IllegalStateException.class, () ->
-                AdvancedInsightRequest.builder("12345").async(true).callback("").build()
-        );
-    }
-
-    @Test
     public void testBuildWithoutNumberThrowsException() {
         assertThrows(IllegalStateException.class, () -> AdvancedInsightRequest.builder().build());
     }
@@ -79,26 +57,18 @@ public class AdvancedInsightRequestTest {
     @Test
     public void testBuildWithAllFields() {
         AdvancedInsightRequest request = AdvancedInsightRequest.builder("12345")
-                .country("GB").cnam(true).async(true)
-                .callback("https://example.com")
-                .realTimeData(false).build();
+                .country("GB").cnam(true).build();
 
         assertEquals("12345", request.getNumber());
         assertEquals("GB", request.getCountry());
         assertTrue(request.getCnam());
-        Boolean realTimeData = request.getRealTimeData();
-        assertTrue(realTimeData == null || !realTimeData);
 
         request = AdvancedInsightRequest.builder("12345")
                 .number("98765").country("GB").cnam(false)
-                .async(false).callback("https://example.com")
-                .realTimeData(true).build();
+                .build();
 
         assertEquals("98765", request.getNumber());
         assertEquals("GB", request.getCountry());
         assertFalse(request.getCnam());
-        assertFalse(request.isAsync());
-        assertTrue(request.getRealTimeData());
-        assertEquals("https://example.com", request.getCallback());
     }
 }

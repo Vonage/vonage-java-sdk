@@ -17,6 +17,7 @@ package com.vonage.client.messages.sms;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the encoding type for an SMS text message.
@@ -28,10 +29,16 @@ public enum EncodingType {
     UNICODE,
     AUTO;
 
+    /**
+     * Convert a string value to an EncodingType enum.
+     *
+     * @param value The string value to convert.
+     *
+     * @return The encoding type as an enum, or {@code null} if invalid.
+     */
     @JsonCreator
     public static EncodingType fromString(String value) {
-        if (value == null) return null;
-        return EncodingType.valueOf(value.toUpperCase());
+        return Jsonable.fromString(value, EncodingType.class);
     }
 
     @JsonValue

@@ -15,7 +15,7 @@
  */
 package com.vonage.client.messages.viber;
 
-import com.vonage.client.messages.MessageType;
+import com.vonage.client.common.MessageType;
 import com.vonage.client.messages.TextMessageRequest;
 
 public final class ViberTextRequest extends ViberRequest implements TextMessageRequest {

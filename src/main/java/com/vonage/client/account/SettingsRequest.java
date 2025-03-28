@@ -15,17 +15,13 @@
  */
 package com.vonage.client.account;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
+import com.vonage.client.AbstractQueryParamsRequest;
 import java.util.Map;
 
 /**
- * Request wrapper for updating account settings.
- *
- * @deprecated This will be made package-private in the next major release.
+ * Request wrapper for updating account settings using {@linkplain AccountClient#updateSettings(SettingsRequest)}.
  */
-@Deprecated
-public class SettingsRequest implements QueryParamsRequest {
+public class SettingsRequest extends AbstractQueryParamsRequest {
     private final String incomingSmsUrl, deliveryReceiptUrl;
 
     /**
@@ -42,56 +38,30 @@ public class SettingsRequest implements QueryParamsRequest {
     }
 
     /**
-     * @param incomingSmsUrl The URL where Vonage will send a webhook when an incoming SMS is received when a
-     *                       number-specific URL is not configured. Set to an empty string to unset the value.
+     * URL where Vonage will send a webhook when an incoming SMS is received when a
+     * number-specific URL is not configured.
      *
-     * @return An SettingsRequest with only the incoming SMS URL set.
-     * @deprecated This will be removed in the next major release.
+     * @return The incoming SMS URL, or {@code null} if unspecified.
      */
-    @Deprecated
-    public static SettingsRequest withIncomingSmsUrl(String incomingSmsUrl) {
-        return new SettingsRequest(incomingSmsUrl, null);
-    }
-
-    /**
-     * @param deliveryReceiptUrl The URL where Vonage will send a webhook when an incoming SMS is received when a
-     *                           number-specific URL is not configured. Set to an empty string to unset the value.
-     *
-     * @return An SettingsRequest with only the delivery receipt URL set.
-     * @deprecated This will be removed in the next major release.
-     */
-    @Deprecated
-    public static SettingsRequest withDeliveryReceiptUrl(String deliveryReceiptUrl) {
-        return new SettingsRequest(null, deliveryReceiptUrl);
-    }
-
-    /**
-     * @return The URL where Vonage will send a webhook when an incoming SMS is received when a number-specific URL is
-     * not configured.
-     */
-    @Deprecated
     public String getIncomingSmsUrl() {
         return incomingSmsUrl;
     }
 
     /**
-     * @return The URL where Vonage will send a webhook when a delivery receipt is received when a number-specific URL is
-     * not configured.
+     * URL where Vonage will send a webhook when a delivery receipt is received when a
+     * number-specific URL is not configured.
+     *
+     * @return The delivery receipt URL, or {@code null} if unspecified.
      */
-    @Deprecated
     public String getDeliveryReceiptUrl() {
         return deliveryReceiptUrl;
     }
 
     @Override
     public Map<String, String> makeParams() {
-        Map<String, String> params = new LinkedHashMap<>(4);
-        if (incomingSmsUrl != null) {
-            params.put("moCallBackUrl", incomingSmsUrl);
-        }
-        if (deliveryReceiptUrl != null) {
-            params.put("drCallBackUrl", deliveryReceiptUrl);
-        }
+        Map<String, String> params = super.makeParams();
+        conditionalAdd("moCallBackUrl", incomingSmsUrl);
+        conditionalAdd("drCallBackUrl", deliveryReceiptUrl);
         return params;
     }
 }

@@ -18,6 +18,7 @@ package com.vonage.client.messages;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.common.MessageType;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.Order;
 import com.vonage.client.messages.whatsapp.*;
@@ -156,6 +157,8 @@ public class InboundMessageTest {
 		assertNull(im.getImageUrl());
 		assertNull(im.getReaction());
 		assertNull(im.getButton());
+		assertNull(im.getWhatsappReferral());
+		assertNull(im.getWhatsappReferredProduct());
 		assertNull(im.getWhatsappContext());
 		assertNull(im.getWhatsappReply());
 		assertNull(im.getWhatsappLocation());
@@ -199,6 +202,8 @@ public class InboundMessageTest {
 		assertNull(im.getWhatsappReply());
 		assertNull(im.getWhatsappLocation());
 		assertNull(im.getWhatsappOrder());
+		assertNull(im.getWhatsappReferredProduct());
+		assertNull(im.getWhatsappReferral());
 		assertNull(im.getProviderMessage());
 		assertNull(im.getUsage());
 		assertNull(im.getSmsMetadata());
@@ -402,10 +407,6 @@ public class InboundMessageTest {
 		assertNotNull(context);
 		assertEquals(messageId, context.getMessageUuid());
 		assertEquals(from, context.getMessageFrom());
-		ReferredProduct wrp = context.getReferredProduct();
-		assertNotNull(wrp);
-		assertEquals(cid, wrp.getCatalogId());
-		assertEquals(pid, wrp.getProductRetailerId());
 	}
 
 	@Test
@@ -478,6 +479,24 @@ public class InboundMessageTest {
 		json = "{\"whatsapp\":{}}";
 		im = InboundMessage.fromJson(json);
 		assertNull(im.getWhatsappReferral());
+	}
+
+	@Test
+	public void testWhatsappReferredProductOnly() {
+		String cid = "1267260820787549", pid = "r07qei73l7", json = "{\n" +
+				"  \"whatsapp\": {\n" +
+				"     \"whatsapp_referred_product\": {\n" +
+				"         \"catalog_id\": \""+cid+"\",\n" +
+				"         \"product_retailer_id\": \""+pid+"\"\n" +
+				"     }\n" +
+				"   }\n" +
+				"}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		testJsonableBaseObject(im);
+		ReferredProduct product = im.getWhatsappReferredProduct();
+		assertNotNull(product);
+		assertEquals(cid, product.getCatalogId());
+		assertEquals(pid, product.getProductRetailerId());
 	}
 
 	@Test

@@ -17,12 +17,13 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Enum representing call modification actions.
  */
 enum ModifyCallAction {
-    HANGUP, MUTE, UNMUTE, EARMUFF, UNEARMUFF, TRANSFER, UNKNOWN;
+    HANGUP, MUTE, UNMUTE, EARMUFF, UNEARMUFF, TRANSFER;
 
     @JsonValue
     @Override
@@ -35,15 +36,10 @@ enum ModifyCallAction {
      *
      * @param name The call modification action as a string.
      *
-     * @return The call modification action as an enum, or {@link #UNKNOWN} if an invalid value was passed in.
+     * @return The call modification action as an enum, or {@code null} if invalid.
      */
     @JsonCreator
     public static ModifyCallAction fromString(String name) {
-        try {
-            return ModifyCallAction.valueOf(name.toUpperCase());
-        }
-        catch (IllegalArgumentException ex) {
-            return UNKNOWN;
-        }
+        return Jsonable.fromString(name, ModifyCallAction.class);
     }
 }

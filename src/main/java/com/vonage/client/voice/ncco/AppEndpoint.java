@@ -26,7 +26,7 @@ import com.vonage.client.voice.EndpointType;
  *
  * @since 5.4.0
  */
-public class AppEndpoint extends JsonableBaseObject implements Endpoint {
+public class AppEndpoint extends JsonableBaseObject implements ConnectEndpoint {
     private final String user;
 
     private AppEndpoint(Builder builder) {
@@ -34,8 +34,8 @@ public class AppEndpoint extends JsonableBaseObject implements Endpoint {
     }
 
     @Override
-    public String getType() {
-        return EndpointType.APP.toString();
+    public EndpointType getType() {
+        return EndpointType.APP;
     }
 
     /**
@@ -63,16 +63,10 @@ public class AppEndpoint extends JsonableBaseObject implements Endpoint {
      * Builder for constructing an instance of this class.
      */
     public static class Builder {
-        private String user;
+        private final String user;
 
         Builder(String user) {
             this.user = user;
-        }
-
-        @Deprecated
-        public Builder user(String user) {
-            this.user = user;
-            return this;
         }
 
         /**

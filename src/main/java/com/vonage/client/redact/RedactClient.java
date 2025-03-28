@@ -47,12 +47,11 @@ public class RedactClient {
      * Submit a request to the Redact API to redact a transaction.
      *
      * @param id      The transaction id to redact.
-     * @param product The {@link RedactRequest.Product} which corresponds to the transaction.
+     * @param product The {@link Product} which corresponds to the transaction.
      *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws RedactResponseException If the API response indicates a failure.
      */
-    public void redactTransaction(String id, RedactRequest.Product product) throws VonageResponseParseException, VonageClientException {
+    public void redactTransaction(String id, Product product) throws VonageResponseParseException, VonageClientException {
         redactTransaction(new RedactRequest(id, product));
     }
 
@@ -60,13 +59,12 @@ public class RedactClient {
      * Submit a request to the Redact API to redact a transaction.
      *
      * @param id      The transaction id to redact.
-     * @param product The {@link RedactRequest.Product} which corresponds to the transaction.
-     * @param type    The {@link RedactRequest.Type} which is required if redacting SMS data.
+     * @param product The {@link Product} which corresponds to the transaction.
+     * @param type    The {@link Type} which is required if redacting SMS data.
      *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws RedactResponseException If the API response indicates a failure.
      */
-    public void redactTransaction(String id, RedactRequest.Product product, RedactRequest.Type type) throws VonageResponseParseException, VonageClientException {
+    public void redactTransaction(String id, Product product, Type type) throws VonageResponseParseException, VonageClientException {
         RedactRequest request = new RedactRequest(id, product);
         request.setType(type);
         redactTransaction(request);
@@ -77,14 +75,13 @@ public class RedactClient {
      *
      * @param redactRequest a {@link RedactRequest} object which contains the request parameters.
      *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws RedactResponseException If the API response indicates a failure.
      */
-    public void redactTransaction(RedactRequest redactRequest) throws VonageResponseParseException, VonageClientException {
+    void redactTransaction(RedactRequest redactRequest) throws VonageResponseParseException, VonageClientException {
         if (redactRequest.getId() == null || redactRequest.getProduct() == null) {
             throw new IllegalArgumentException("Redact transaction id and product are required.");
         }
-        if (redactRequest.getProduct() == RedactRequest.Product.SMS && redactRequest.getType() == null) {
+        if (redactRequest.getProduct() == Product.SMS && redactRequest.getType() == null) {
             throw new IllegalArgumentException("Redacting SMS requires a type.");
         }
         redactTransaction.execute(redactRequest);

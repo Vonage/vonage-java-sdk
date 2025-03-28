@@ -17,6 +17,7 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the timeout reason in {@link SpeechResults#getTimeoutReason()}.
@@ -37,12 +38,7 @@ public enum SpeechTimeoutReason {
     /**
      * User didn't say anything.
      */
-    START_TIMEOUT,
-
-    /**
-     * Unknown reason.
-     */
-    UNKNOWN;
+    START_TIMEOUT;
 
     @JsonValue
     @Override
@@ -51,19 +47,14 @@ public enum SpeechTimeoutReason {
     }
 
     /**
-     * Convert a string to a SpeechTimeoutReason enum.
+     * Convert a string value to a SpeechTimeoutReason enum.
      *
-     * @param name The speech timeout reason as a string.
+     * @param name The string value to convert.
      *
-     * @return The speech timeout reason as an enum, or {@link #UNKNOWN} if an invalid value was provided.
+     * @return The speech timeout reason as an enum, or {@code null} if invalid.
      */
     @JsonCreator
     public static SpeechTimeoutReason fromString(String name) {
-        try {
-            return SpeechTimeoutReason.valueOf(name.toUpperCase());
-        }
-        catch (IllegalArgumentException ex) {
-            return UNKNOWN;
-        }
+        return Jsonable.fromString(name, SpeechTimeoutReason.class);
     }
 }

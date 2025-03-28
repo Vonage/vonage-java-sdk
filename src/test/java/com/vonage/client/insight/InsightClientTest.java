@@ -132,9 +132,7 @@ public class InsightClientTest extends AbstractClientTest<InsightClient> {
     @Test
     public void testAdvancedInsightWithNumberAndCountry() throws Exception {
         stubResponse(200, ADVANCED_RESPONSE_JSON);
-
         AdvancedInsightResponse response = client.getAdvancedNumberInsight("1234", "GB");
-
         assertAdvancedInsightResponse(response);
     }
 
@@ -142,18 +140,14 @@ public class InsightClientTest extends AbstractClientTest<InsightClient> {
     public void testAsyncAdvancedInsight() throws Exception {
         stubResponse(200, ASYNC_ADVANCED_RESPONSE_JSON);
 
-        AdvancedInsightResponse response = client.getAdvancedNumberInsight(AdvancedInsightRequest.builder("1234")
-                .async(true)
-                .callback("https://example.com")
-                .build());
+        AdvancedAsyncInsightResponse response = client.getAdvancedAsyncNumberInsight(
+                AdvancedInsightAsyncRequest.builder()
+                    .number("447700900000")
+                    .callback("https://example.com")
+                    .build()
+        );
 
-        assertAsyncInsightResponse(response);
-    }
-
-    private void assertAsyncInsightResponse(AdvancedInsightResponse response) {
-        assertEquals(InsightStatus.SUCCESS, response.getStatus());
-        assertEquals(new BigDecimal("1.23456789"), response.getRemainingBalance());
-        assertEquals(new BigDecimal("0.01500000"), response.getRequestPrice());
+        assertAdvancedAsyncInsightResponse(response);
     }
 
     private void assertBasicResponse(BasicInsightResponse response) {
@@ -177,12 +171,12 @@ public class InsightClientTest extends AbstractClientTest<InsightClient> {
         assertEquals("12345", response.getCurrentCarrier().getNetworkCode());
         assertEquals("Acme Inc", response.getCurrentCarrier().getName());
         assertEquals("GB", response.getCurrentCarrier().getCountry());
-        assertEquals(CarrierDetails.NetworkType.MOBILE, response.getCurrentCarrier().getNetworkType());
+        assertEquals(NetworkType.MOBILE, response.getCurrentCarrier().getNetworkType());
 
         assertEquals("98765", response.getOriginalCarrier().getNetworkCode());
         assertEquals("Foo Bar", response.getOriginalCarrier().getName());
         assertEquals("US", response.getOriginalCarrier().getCountry());
-        assertEquals(CarrierDetails.NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
+        assertEquals(NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
 
         assertEquals(CallerType.CONSUMER, response.getCallerIdentity().getType());
         assertEquals("John Smith", response.getCallerIdentity().getName());
@@ -196,10 +190,18 @@ public class InsightClientTest extends AbstractClientTest<InsightClient> {
 
         assertEquals(PortedStatus.NOT_PORTED, response.getPorted());
 
-        assertEquals(RoamingDetails.RoamingStatus.ROAMING, response.getRoaming().getStatus());
+        assertEquals(RoamingStatus.ROAMING, response.getRoaming().getStatus());
         assertEquals("US", response.getRoaming().getRoamingCountryCode());
         assertEquals("12345", response.getRoaming().getRoamingNetworkCode());
         assertEquals("Acme Inc", response.getRoaming().getRoamingNetworkName());
+    }
+
+    private void assertAdvancedAsyncInsightResponse(AdvancedAsyncInsightResponse response) {
+        assertEquals("aaaaaaaa-bbbb-cccc-dddd-0123456789ab", response.getRequestId());
+        assertEquals("447700900000", response.getNumber());
+        assertEquals(new BigDecimal("1.23456789"), response.getRemainingBalance());
+        assertEquals(new BigDecimal("0.01500000"), response.getRequestPrice());
+        assertEquals(InsightStatus.SUCCESS, response.getStatus());
     }
 
     // ENDPOINT TESTS
@@ -279,7 +281,6 @@ public class InsightClientTest extends AbstractClientTest<InsightClient> {
                 params.put("number", request.getNumber());
                 params.put("country", request.getCountry());
                 params.put("cnam", String.valueOf(request.getCnam()));
-                params.put("callback", request.getCallback());
                 return params;
             }
 
@@ -290,31 +291,46 @@ public class InsightClientTest extends AbstractClientTest<InsightClient> {
 
             @Override
             protected String expectedEndpointUri(AdvancedInsightRequest request) {
-                return request.isAsync() ? "/ni/advanced/async/json" : "/ni/advanced/json";
+                return "/ni/advanced/json";
             }
 
             @Override
             protected AdvancedInsightRequest sampleRequest() {
-                return AdvancedInsightRequest.builder("15555551234")
-                        .cnam(false).country("US").async(true).realTimeData(false)
-                        .callback("https://example.com/cb").build();
+                return AdvancedInsightRequest.builder("15555551234").cnam(false).country("US").build();
+            }
+        }
+        .runTests();
+    }
+
+    @Test
+    public void testAdvancedInsightAsyncEndpoint() throws Exception {
+        new InsightEndpointTestSpec<AdvancedInsightAsyncRequest, AdvancedAsyncInsightResponse>() {
+
+            @Override
+            protected Map<String, String> sampleQueryParams() {
+                AdvancedInsightAsyncRequest request = sampleRequest();
+                Map<String, String> params = new LinkedHashMap<>(8);
+                params.put("number", request.getNumber());
+                params.put("country", request.getCountry());
+                params.put("cnam", String.valueOf(request.getCnam()));
+                params.put("callback", request.getCallback().toString());
+                return params;
             }
 
             @Override
-            public void runTests() throws Exception {
-                super.runTests();
-                testSyncRealTimeDataParams();
+            protected RestEndpoint<AdvancedInsightAsyncRequest, AdvancedAsyncInsightResponse> endpoint() {
+                return client.advancedAsync;
             }
 
-            void testSyncRealTimeDataParams() throws Exception {
-                AdvancedInsightRequest request = AdvancedInsightRequest.builder()
-                        .number("1234").realTimeData(true).build();
-                Map<String, String> params = new LinkedHashMap<>(2);
-                params.put("number", "1234");
-                params.put("real_time_data", "true");
-                assertFalse(request.isAsync());
-                assertTrue(request.getRealTimeData());
-                assertRequestUriAndBody(request, params);
+            @Override
+            protected String expectedEndpointUri(AdvancedInsightAsyncRequest request) {
+                return "/ni/advanced/async/json";
+            }
+
+            @Override
+            protected AdvancedInsightAsyncRequest sampleRequest() {
+                return AdvancedInsightAsyncRequest.builder().number("15555551234")
+                        .cnam(false).country("US").callback("https://example.com").build();
             }
         }
         .runTests();

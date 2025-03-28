@@ -81,7 +81,7 @@ public class TextMessage extends Message {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
-        params.put("text", getMessageBody());
+        conditionalAdd("text", getMessageBody());
         return params;
     }
 }

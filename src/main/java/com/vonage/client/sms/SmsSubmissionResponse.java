@@ -16,7 +16,6 @@
 package com.vonage.client.sms;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 
@@ -27,17 +26,13 @@ import java.util.List;
  * {@link SmsSubmissionResponseMessage} for each corresponding message that was submitted.
  */
 public class SmsSubmissionResponse extends JsonableBaseObject {
-    private int messageCount;
+    private Integer messageCount;
     private List<SmsSubmissionResponseMessage> messages;
 
     /**
-     * Default constructor.
-     *
-     * @deprecated This will be made private in the next major release.
+     * Default constructor used by Jackson.
      */
-    @Deprecated
-    public SmsSubmissionResponse() {
-    }
+    SmsSubmissionResponse() {}
 
     /**
      * Message count.
@@ -45,7 +40,7 @@ public class SmsSubmissionResponse extends JsonableBaseObject {
      * @return The number of messages in the request.
      */
     @JsonProperty("message-count")
-    public int getMessageCount() {
+    public Integer getMessageCount() {
         return messageCount;
     }
 
@@ -57,9 +52,5 @@ public class SmsSubmissionResponse extends JsonableBaseObject {
     @JsonProperty("messages")
     public List<SmsSubmissionResponseMessage> getMessages() {
         return messages;
-    }
-
-    public static SmsSubmissionResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
     }
 }

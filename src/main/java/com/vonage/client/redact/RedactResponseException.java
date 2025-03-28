@@ -15,7 +15,6 @@
  */
 package com.vonage.client.redact;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.vonage.client.VonageApiResponseException;
 
 /**
@@ -24,19 +23,5 @@ import com.vonage.client.VonageApiResponseException;
  * @since 8.14.0
  */
 public final class RedactResponseException extends VonageApiResponseException {
-
-	void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
-
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
-	 */
-	@JsonCreator
-	public static RedactResponseException fromJson(String json) {
-		return fromJson(RedactResponseException.class, json);
-	}
+	RedactResponseException() {}
 }
