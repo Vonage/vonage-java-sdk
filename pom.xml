@@ -164,6 +164,24 @@
                         match="CLIENT_VERSION = &quot;.+&quot;"
                         replace="CLIENT_VERSION = &quot;${project.version}&quot;"
                 />
+                <replaceregexp
+                        file="README.md"
+                        match="\/server-sdk\/([0-9\.]+)\/"
+                        replace="\/server-sdk\/${project.version}\/"
+                        flags="g"
+                />
+                <replaceregexp
+                        file="README.md"
+                        match="vonage:server-sdk:.+&quot;"
+                        replace="vonage:server-sdk:${project.version}&quot;"
+                        flags="g"
+                />
+                <replaceregexp
+                        file="README.md"
+                        match="&lt;version&gt;.+&lt;/version&gt;"
+                        replace="&lt;version&gt;${project.version}&lt;\/version&gt;"
+                        flags="g"
+                />
               </target>
             </configuration>
           </execution>

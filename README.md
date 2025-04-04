@@ -6,7 +6,7 @@
 ![CodeQL](https://github.com/Vonage/vonage-java-sdk/actions/workflows/codeql.yml/badge.svg)
 [![codecov](https://codecov.io/gh/vonage/vonage-java-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/vonage/vonage-java-sdk)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Vonage/vonage-java-sdk/badge)](https://scorecard.dev/viewer/?uri=github.com/Vonage/vonage-java-sdk)
-![SLOC](https://sloc.xyz/github/vonage/vonage-java-sdk?)
+![SLOC](https://sloc.xyz/github/vonage/vonage-java-sdk)
 [![Snyk](https://snyk.io/test/github/vonage/vonage-java-sdk/badge.svg)](https://snyk.io/test/github/vonage/vonage-java-sdk)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.1%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE.txt)
@@ -65,6 +65,28 @@ We *strongly recommend* that you use a tool that supports dependency management,
 such as [Maven](https://maven.apache.org/), [Gradle](https://gradle.org/) or [Ivy](http://ant.apache.org/ivy/).
 
 Release notes for each version can be found in the [changelog](CHANGELOG.md).
+
+Here are the instructions for including the SDK in your project:
+
+### Gradle
+Add the following to your `build.gradle` or `build.gradle.kts` file:
+
+```groovy
+dependencies {
+    implementation("com.vonage:server-sdk:9.0.0")
+}
+```
+
+### Maven
+Add the following to the `<dependencies>` section of your `pom.xml` file:
+
+```xml
+<dependency>
+    <groupId>com.vonage</groupId>
+    <artifactId>server-sdk</artifactId>
+    <version>9.0.0</version>
+</dependency>
+```
 
 ### Build It Yourself
 
