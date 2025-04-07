@@ -95,7 +95,7 @@ public class CallInfoPageTest {
         assertEquals("/v1/calls?page_size=10", links.getFirstUrl().toString());
         assertEquals("/v1/calls?page_size=10&record_index=20&order=asc", links.getSelfUrl().toString());
         assertEquals("/v1/calls/1452dad1b27b4e71a90fb18af2656948", links.getPrevUrl().toString());
-        assertEquals("447700900549", page.getCallInfos()[0].getTo().toLog());
+        assertEquals("447700900549", page.getCallInfos().getFirst().getTo().toLog());
         assertEquals(10, page.getPageSize());
         assertEquals(0, page.getRecordIndex());
     }

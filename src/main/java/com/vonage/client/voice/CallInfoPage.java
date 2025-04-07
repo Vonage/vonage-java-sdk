@@ -17,10 +17,10 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.util.ArrayIterator;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.HalPageResponse;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Response from {@link VoiceClient#listCalls(CallsFilter)}.
@@ -31,7 +31,7 @@ public class CallInfoPage extends HalPageResponse implements Iterable<CallInfo> 
     @JsonProperty("_embedded") private Embedded embedded;
 
     static class Embedded extends JsonableBaseObject {
-        @JsonProperty("calls") private CallInfo[] callInfos;
+        @JsonProperty("calls") private List<CallInfo> callInfos;
     }
 
     /**
@@ -62,17 +62,17 @@ public class CallInfoPage extends HalPageResponse implements Iterable<CallInfo> 
     /**
      * Gets the call details.
      *
-     * @return The CallInfos from the embedded object as an array.
+     * @return The list of CallInfos from the embedded object.
      *
      * @since 9.0.0
      */
     @JsonIgnore
-    public CallInfo[] getCallInfos() {
+    public List<CallInfo> getCallInfos() {
         return embedded.callInfos;
     }
     
     @Override
     public Iterator<CallInfo> iterator() {
-        return new ArrayIterator<>(getCallInfos());
+        return getCallInfos().iterator();
     }
 }

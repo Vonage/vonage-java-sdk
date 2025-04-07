@@ -29,6 +29,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Renamed `com.vonage.client.voice.Endpoint` to `CallEndpoint`
 - Renamed `com.vonage.client.voice.ncco.Endpoint` to `ConnectEndpoint`
 - Refactored `CallInfoPage` to be aligned with other HAL responses (now extends `HalPageResponse`)
+  - Now returns the embedded calls directly as a list rather than array
 - Added `get` prefix to `VideoStream` and `HlsSettings` accessors
 - `NumbersClient#listNumbers` now returns `List<OwnedNumber>` instead of `ListNumbersResponse`
 - `NumbersClient#linkNumber` now assigns the number to the application by ID
