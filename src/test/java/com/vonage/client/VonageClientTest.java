@@ -198,7 +198,7 @@ public class VonageClientTest extends AbstractClientTest<VonageClient> {
     public void testApplicationIdWithCertPathAsString() {
       VonageClient vonageClient = VonageClient.builder()
                 .applicationId(APPLICATION_ID)
-                .privateKeyPath(privateKeyPath)
+                .privateKeyPath(privateKeyPath.toString())
                 .build();
         AuthCollection authCollection = vonageClient.httpWrapper.getAuthCollection();
         assertTrue(authCollection.hasAuthMethod(JWTAuthMethod.class));

@@ -43,7 +43,7 @@ jobs:
       - name: Send to Slack channels
         uses: slackapi/slack-github-action@79ad3a9d89410e5b0d961a0e7422f18c62c81bfb
         with:
-          webhook: ${{ secrets[matrix.url]}}
+          webhook: ${{ secrets[matrix.url] }}
           webhook-type: incoming-webhook
           errors: true
           payload: |
@@ -56,9 +56,8 @@ jobs:
                 text:
                   type: "mrkdwn"
                   text: "${{ github.event.release.body }}"
-                  emoji: true
               - type: "divider"
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "View the full change log <${{github.event.release.html_url }}|here>."
+                  text: "View the full change log <${{ github.event.release.html_url }}|here>."
