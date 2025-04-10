@@ -44,28 +44,8 @@ public class CustomClient {
     /**
      * Wrapper for converting Map to JSON and vice versa.
      */
-    static final class JsonableMap implements Jsonable {
-        private Map<String, ?> body;
-
-        /**
-         * Gets the body of the request.
-         *
-         * @return The request body as a Map.
-         */
-        @JsonAnyGetter
-        Map<String, ?> getBody() {
-            return body;
-        }
-
-        /**
-         * Sets the body of the request.
-         *
-         * @param body The request body as a Map.
-         */
-        @JsonAnySetter
-        public void setBody(Map<String, ?> body) {
-            this.body = body;
-        }
+    static final class JsonableMap extends JsonableBaseObject {
+        @JsonAnyGetter @JsonAnySetter Map<String, Object> body;
     }
 
     /**
@@ -196,11 +176,11 @@ public class CustomClient {
      * @return The response body converted from JSON into a Map.
      * @throws VonageApiResponseException If the HTTP response code is >= 400.
      */
-    public Map<String, ?> postJson(String url, Map<String, ?> requestBody) {
+    public Map<String, ?> postJson(String url, Map<String, Object> requestBody) {
         JsonableMap map = new JsonableMap();
-        map.setBody(requestBody);
+        map.body = requestBody;
         map = post(url, map);
-        return map.getBody();
+        return map.body;
     }
 
     /**
@@ -213,7 +193,7 @@ public class CustomClient {
      */
     public Map<String, ?> getJson(String url) {
         JsonableMap map = get(url);
-        return map.getBody();
+        return map.body;
     }
 
     /**
@@ -225,11 +205,11 @@ public class CustomClient {
      * @return The response body converted from JSON into a Map.
      * @throws VonageApiResponseException If the HTTP response code is >= 400.
      */
-    public Map<String, ?> putJson(String url, Map<String, ?> requestBody) {
+    public Map<String, ?> putJson(String url, Map<String, Object> requestBody) {
         JsonableMap map = new JsonableMap();
-        map.setBody(requestBody);
+        map.body = requestBody;
         map = put(url, map);
-        return map.getBody();
+        return map.body;
     }
 
     /**
@@ -241,10 +221,10 @@ public class CustomClient {
      * @return The response body converted from JSON into a Map.
      * @throws VonageApiResponseException If the HTTP response code is >= 400.
      */
-    public Map<String, ?> patchJson(String url, Map<String, ?> requestBody) {
+    public Map<String, ?> patchJson(String url, Map<String, Object> requestBody) {
         JsonableMap map = new JsonableMap();
-        map.setBody(requestBody);
+        map.body = requestBody;
         map = patch(url, map);
-        return map.getBody();
+        return map.body;
     }
 }

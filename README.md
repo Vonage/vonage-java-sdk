@@ -112,6 +112,25 @@ the dependency co-ordinates and add `mavenLocal()` to the `repositories` block i
 * For a searchable list of code snippets examples, see [**SNIPPETS.md**](https://github.com/Vonage/vonage-java-code-snippets/blob/main/SNIPPETS.md).
 * For Video API usage instructions, see [the guide on our developer portal](https://developer.vonage.com/en/video/server-sdks/java).
 
+### Custom Requests
+Beginning with v9.1.0, you can now make customisable requests to any Vonage API endpoint using the `CustomClient` class,
+obtained from the `VonageClient#getCustomClient()` method. This will take care of auth and serialisation for you.
+You can use existing data models from the SDK or create your own by extending `com.vonage.client.JsonableBaseObject`
+or implementing the `com.vonage.client.Jsonable` interface. For example, you can check your account balance using
+the following code, which will send a `get` request to the specified URL and return a `BalanceResponse` object:
+
+```java
+BalanceResponse response = client.getCustomClient().get("https://rest.nexmo.com/account/get-balance");
+```
+
+You can also parse the response into a `Map<String, ?>` which represents the JSON response body as a tree like so:
+
+```java
+Map<String, ?> response = client.getCustomClient().getJson("https://api-eu.vonage.com/v3/media?order=ascending&page_size=50");
+```
+
+The same applies for POST, PUT and PATCH requests when sending data.
+
 ## Configuration
 
 ## Typical Instantiation
