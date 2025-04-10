@@ -19,9 +19,11 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.vonage.client.auth.ApiKeyAuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.auth.NoAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import org.apache.http.HttpResponse;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Client for making custom requests to Vonage APIs unsupported by this SDK.
@@ -45,11 +47,21 @@ public class CustomClient {
     static final class JsonableMap implements Jsonable {
         private Map<String, ?> body;
 
+        /**
+         * Gets the body of the request.
+         *
+         * @return The request body as a Map.
+         */
         @JsonAnyGetter
         Map<String, ?> getBody() {
             return body;
         }
 
+        /**
+         * Sets the body of the request.
+         *
+         * @param body The request body as a Map.
+         */
         @JsonAnySetter
         public void setBody(Map<String, ?> body) {
             this.body = body;
@@ -81,10 +93,10 @@ public class CustomClient {
      * @param <R> The response body type.
      */
     public <T, R> R makeRequest(HttpMethod requestMethod, String url, T requestBody, R... responseType) {
-        return DynamicEndpoint.<T, R> builder(responseType)
-                .wrapper(httpWrapper)
-                .authMethod(JWTAuthMethod.class, ApiKeyAuthMethod.class)
-                .requestMethod(requestMethod)
+        return DynamicEndpoint.<T, R> builder(
+                    Objects.requireNonNull(responseType, "Do not pass anything for responseType, omit it instead.")
+                ).wrapper(httpWrapper).requestMethod(requestMethod)
+                .authMethod(JWTAuthMethod.class, ApiKeyAuthMethod.class, NoAuthMethod.class)
                 .pathGetter((de, req) -> url)
                 .build().execute(requestBody);
     }
@@ -92,62 +104,98 @@ public class CustomClient {
     /**
      * Convenience method for making DELETE requests.
      *
-     * @param url Absolute URL to send the request to as a string.
+     * @param url URL to send the request to as a string.
      * @param responseType Hack for type inference. Do not provide this field (especially, DO NOT pass {@code null}).
-     * @return The parsed response object, or {@code null} if absent / not applicable.
      *
-     * @param <R> The response body type. Most likely {@code Void} for most DELETE calls.
+     * @return The parsed response object, or {@code null} if absent / not applicable.
+     * @throws VonageApiResponseException If the HTTP response code is >= 400.
+     *
+     * @param <R> The response body type.
      */
     public <R> R delete(String url, R... responseType) {
         return makeRequest(HttpMethod.DELETE, url, null, responseType);
     }
 
-    public <R> R delete(String url, QueryParamsRequest queryParams, R... responseType) {
-        return makeRequest(HttpMethod.DELETE, url, queryParams, responseType);
-    }
-
+    /**
+     * Convenience method for making DELETE requests.
+     *
+     * @param url URL to send the request to as a string.
+     *
+     * @throws VonageApiResponseException If the HTTP response code is >= 400.
+     */
     public void delete(String url) {
         delete(url, new Void[0]);
     }
 
-    public void delete(String url, QueryParamsRequest queryParams) {
-        delete(url, queryParams, new Void[0]);
-    }
-
-
-
+    /**
+     * Convenience method for making GET requests.
+     *
+     * @param url URL to send the request to as a string.
+     * @param responseType Hack for type inference. Do not provide this field (especially, DO NOT pass {@code null}).
+     *
+     * @return The parsed response object.
+     * @throws VonageApiResponseException If the HTTP response code is >= 400.
+     *
+     * @param <R> The response body type.
+     */
     public <R> R get(String url, R... responseType) {
         return makeRequest(HttpMethod.GET, url, null, responseType);
     }
 
-    public <R> R get(String url, QueryParamsRequest queryParams, R... responseType) {
-        return makeRequest(HttpMethod.GET, url, queryParams, responseType);
-    }
-
+    /**
+     * Convenience method for making POST requests.
+     *
+     * @param url URL to send the request to as a string.
+     * @param requestBody The payload to send in the request body.
+     * @param responseType Hack for type inference. Do not provide this field (especially, DO NOT pass {@code null}).
+     *
+     * @return The parsed response object, or {@code null} if absent / not applicable.
+     * @throws VonageApiResponseException If the HTTP response code is >= 400.
+     *
+     * @param <R> The response body type.
+     */
     public <R> R post(String url, Jsonable requestBody, R... responseType) {
         return makeRequest(HttpMethod.POST, url, requestBody, responseType);
     }
 
-    public <R> R post(String url, QueryParamsRequest queryParams, R... responseType) {
-        return makeRequest(HttpMethod.POST, url, queryParams, responseType);
-    }
-
+    /**
+     * Convenience method for making PUT requests.
+     *
+     * @param url URL to send the request to as a string.
+     * @param requestBody The payload to send in the request body.
+     * @param responseType Hack for type inference. Do not provide this field (especially, DO NOT pass {@code null}).
+     *
+     * @throws VonageApiResponseException If the HTTP response code is >= 400.
+     */
     public <R> R put(String url, Jsonable requestBody, R... responseType) {
         return makeRequest(HttpMethod.PUT, url, requestBody, responseType);
     }
 
-    public <R> R put(String url, QueryParamsRequest queryParams, R... responseType) {
-        return makeRequest(HttpMethod.PUT, url, queryParams, responseType);
-    }
-
+    /**
+     * Convenience method for making PATCH requests.
+     *
+     * @param url URL to send the request to as a string.
+     * @param requestBody The payload to send in the request body.
+     * @param responseType Hack for type inference. Do not provide this field (especially, DO NOT pass {@code null}).
+     *
+     * @return The parsed response object, or {@code null} if absent / not applicable.
+     * @throws VonageApiResponseException If the HTTP response code is >= 400.
+     *
+     * @param <R> The response body type.
+     */
     public <R> R patch(String url, Jsonable requestBody, R... responseType) {
         return makeRequest(HttpMethod.PATCH, url, requestBody, responseType);
     }
 
-    public <R> R patch(String url, QueryParamsRequest queryParams, R... responseType) {
-        return makeRequest(HttpMethod.PATCH, url, queryParams, responseType);
-    }
-
+    /**
+     * Convenience method for making JSON-based POST requests.
+     *
+     * @param url URL to send the request to as a string.
+     * @param requestBody The payload to convert to JSON and send in the request body.
+     *
+     * @return The response body converted from JSON into a Map.
+     * @throws VonageApiResponseException If the HTTP response code is >= 400.
+     */
     public Map<String, ?> postJson(String url, Map<String, ?> requestBody) {
         JsonableMap map = new JsonableMap();
         map.setBody(requestBody);
@@ -155,11 +203,28 @@ public class CustomClient {
         return map.getBody();
     }
 
+    /**
+     * Convenience method for making JSON-based GET requests.
+     *
+     * @param url URL to send the request to as a string.
+     *
+     * @return The response body converted from JSON into a Map.
+     * @throws VonageApiResponseException If the HTTP response code is >= 400.
+     */
     public Map<String, ?> getJson(String url) {
         JsonableMap map = get(url);
         return map.getBody();
     }
 
+    /**
+     * Convenience method for making JSON-based PUT requests.
+     *
+     * @param url URL to send the request to as a string.
+     * @param requestBody The payload to convert to JSON and send in the request body.
+     *
+     * @return The response body converted from JSON into a Map.
+     * @throws VonageApiResponseException If the HTTP response code is >= 400.
+     */
     public Map<String, ?> putJson(String url, Map<String, ?> requestBody) {
         JsonableMap map = new JsonableMap();
         map.setBody(requestBody);
@@ -167,6 +232,15 @@ public class CustomClient {
         return map.getBody();
     }
 
+    /**
+     * Convenience method for making JSON-based PATCH requests.
+     *
+     * @param url URL to send the request to as a string.
+     * @param requestBody The payload to convert to JSON and send in the request body.
+     *
+     * @return The response body converted from JSON into a Map.
+     * @throws VonageApiResponseException If the HTTP response code is >= 400.
+     */
     public Map<String, ?> patchJson(String url, Map<String, ?> requestBody) {
         JsonableMap map = new JsonableMap();
         map.setBody(requestBody);

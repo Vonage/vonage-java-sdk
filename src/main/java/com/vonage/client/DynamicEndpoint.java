@@ -58,7 +58,12 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		authMethods = Objects.requireNonNull(builder.authMethods, "At least one auth method must be defined.");
 		requestMethod = Objects.requireNonNull(builder.requestMethod, "HTTP request method is required.");
 		pathGetter = Objects.requireNonNull(builder.pathGetter, "Path function is required.");
-		responseType = Objects.requireNonNull(builder.responseType, "Response type is required.");
+		if ((responseType = builder.responseType) == null || responseType == Object.class) {
+			throw new IllegalStateException(
+					"Could not infer the response type." +
+					"Please provide it explicitly, or do not use var when assigning the result."
+			);
+		}
 		responseExceptionType = builder.responseExceptionType;
 		contentType = builder.contentType;
         accept = builder.accept == null &&
