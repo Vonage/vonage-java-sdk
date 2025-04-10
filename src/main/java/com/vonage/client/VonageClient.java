@@ -56,7 +56,7 @@ public class VonageClient {
      * The HTTP wrapper for this client and its sub-clients.
      */
     final HttpWrapper httpWrapper;
-
+    private final CustomClient custom;
     private final AccountClient account;
     private final ApplicationClient application;
     private final InsightClient insight;
@@ -83,6 +83,7 @@ public class VonageClient {
     private VonageClient(Builder builder) {
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection, builder.httpClient);
 
+        custom = new CustomClient(httpWrapper);
         account = new AccountClient(httpWrapper);
         application = new ApplicationClient(httpWrapper);
         insight = new InsightClient(httpWrapper);
@@ -100,6 +101,16 @@ public class VonageClient {
         conversations = new ConversationsClient(httpWrapper);
         simSwap = new SimSwapClient(httpWrapper);
         numberVerification = new NumberVerificationClient(httpWrapper);
+    }
+
+    /**
+     * Returns a client for making custom HTTP requests.
+     *
+     * @return The {@linkplain CustomClient}.
+     * @since 9.1.0
+     */
+    public CustomClient getCustomClient() {
+        return custom;
     }
 
     /**
