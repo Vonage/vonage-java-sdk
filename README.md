@@ -126,7 +126,7 @@ BalanceResponse response = client.getCustomClient().get("https://rest.nexmo.com/
 You can also parse the response into a `Map<String, ?>` which represents the JSON response body as a tree like so:
 
 ```java
-Map<String, ?> response = client.getCustomClient().getJson("https://api-eu.vonage.com/v3/media?order=ascending&page_size=50");
+Map<String, ?> response = client.getCustomClient().get("https://api-eu.vonage.com/v3/media?order=ascending&page_size=50");
 ```
 
 The same applies for POST, PUT and PATCH requests when sending data.

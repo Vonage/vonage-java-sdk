@@ -75,15 +75,6 @@ public class CustomClientTest extends AbstractClientTest<CustomClient> {
     }
 
     @Test
-    public void testJsonMethods() throws Exception {
-        stubResponse(PAYLOAD_STR);
-        assertEquals(PAYLOAD_MAP, client.getJson(URL));
-        assertEquals(PAYLOAD_MAP, client.postJson(URL, PAYLOAD_MAP));
-        assertEquals(PAYLOAD_MAP, client.putJson(URL, PAYLOAD_MAP));
-        assertEquals(PAYLOAD_MAP, client.patchJson(URL, PAYLOAD_MAP));
-    }
-
-    @Test
     public void testDelete() throws Exception {
         stubResponse(204);
         client.delete(URL);
@@ -101,6 +92,9 @@ public class CustomClientTest extends AbstractClientTest<CustomClient> {
         stubResponse(PAYLOAD_STR);
         TestResponse responseBody = client.get(URL);
         assertEquals(TEST_JSONABLE, responseBody);
+        stubResponse(PAYLOAD_STR);
+        Map<String, ?> responseBodyMap = client.get(URL);
+        assertEquals(PAYLOAD_MAP, responseBodyMap);
         stubResponse(404);
         assertThrows(VonageApiResponseException.class, () -> client.get(URL));
     }
@@ -108,8 +102,11 @@ public class CustomClientTest extends AbstractClientTest<CustomClient> {
     @Test
     public void testPost() throws Exception {
         stubResponse(PAYLOAD_STR);
-        TestResponse responseBody = client.post(URL, new OrderedMap());
+        TestResponse responseBody = client.post(URL, (Jsonable) new OrderedMap());
         assertEquals(TEST_JSONABLE, responseBody);
+        stubResponse(PAYLOAD_STR);
+        Map<String, ?> responseBodyMap = client.post(URL, (Map<String, ?>) new OrderedMap());
+        assertEquals(PAYLOAD_MAP, responseBodyMap);
         stubResponse(201);
         client.post(URL, TEST_JSONABLE);
         assertNull(client.post(URL, TEST_JSONABLE, (Object) null));
@@ -121,8 +118,11 @@ public class CustomClientTest extends AbstractClientTest<CustomClient> {
     @Test
     public void testPut() throws Exception {
         stubResponse(PAYLOAD_STR);
-        TestResponse responseBody = client.put(URL, new OrderedMap());
+        TestResponse responseBody = client.put(URL, (Map<String, ?>) new OrderedMap());
         assertEquals(TEST_JSONABLE, responseBody);
+        stubResponse(PAYLOAD_STR);
+        Map<String, ?> responseBodyMap = client.put(URL, (Jsonable) new OrderedMap());
+        assertEquals(PAYLOAD_MAP, responseBodyMap);
         stubResponse(202);
         client.put(URL, TEST_JSONABLE);
         assertNull(client.put(URL, TEST_JSONABLE, (Object) null));
@@ -134,8 +134,11 @@ public class CustomClientTest extends AbstractClientTest<CustomClient> {
     @Test
     public void testPatch() throws Exception {
         stubResponse(PAYLOAD_STR);
-        TestResponse responseBody = client.patch(URL, new OrderedMap());
+        TestResponse responseBody = client.patch(URL, (Jsonable) new OrderedMap());
         assertEquals(TEST_JSONABLE, responseBody);
+        stubResponse(PAYLOAD_STR);
+        Map<String, ?> responseBodyMap = client.patch(URL, (Map<String, ?>) new OrderedMap());
+        assertEquals(PAYLOAD_MAP, responseBodyMap);
         stubResponse(204);
         client.patch(URL, TEST_JSONABLE);
         assertNull(client.patch(URL, TEST_JSONABLE, (Object) null));

@@ -22,6 +22,7 @@ import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.NoAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import org.apache.http.HttpResponse;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -33,6 +34,16 @@ import java.util.Map;
  * The supported request and response types (i.e. the {@code <T>} and {@code <R>} generics)
  * should be instances of {@link Jsonable}. See the {@linkplain DynamicEndpoint#parseResponse(HttpResponse)}
  * method for how deserialisation is handled.
+ * <p>
+ * The valid types for the return type parameter {@code <R>} are generally:
+ * <ul>
+ *     <li>{@link Jsonable} - for parsing the response body into a JSON object</li>
+ *     <li>{@link Map} - for parsing the response body as JSON into a tree structure</li>
+ *     <li>{@link Collection} - for parsing the response body as JSON into a list of objects</li>
+ *     <li>{@link Void} - for ignoring the response body</li>
+ *     <li>{@code byte[]} - for parsing the response body as binary</li>
+ *     <li>{@link String} - for returning the response body directly as a string</li>
+ * </ul>
  *
  * @since 9.1.0
  */
@@ -45,6 +56,10 @@ public class CustomClient {
      */
     static final class JsonableMap extends JsonableBaseObject {
         @JsonAnyGetter @JsonAnySetter Map<String, Object> body;
+
+        JsonableMap(Map<String, ?> body) {
+            this.body = (Map<String, Object>) body;
+        }
     }
 
     /**
@@ -132,16 +147,51 @@ public class CustomClient {
     }
 
     /**
+     * Convenience method for making JSON-based POST requests.
+     *
+     * @param url URL to send the request to as a string.
+     * @param requestBody The payload to convert to JSON and send in the request body.
+     * @param responseType Hack for type inference. Do not provide this field (especially, DO NOT pass {@code null}).
+     *
+     * @return The parsed response object, or {@code null} if absent / not applicable.
+     * @throws VonageApiResponseException If the HTTP response code is >= 400.
+     *
+     * @param <R> The response body type.
+     */
+    public <R> R post(String url, Map<String, ?> requestBody, R... responseType) {
+        return post(url, new JsonableMap(requestBody), responseType);
+    }
+
+    /**
      * Convenience method for making PUT requests.
      *
      * @param url URL to send the request to as a string.
      * @param requestBody The payload to send in the request body.
      * @param responseType Hack for type inference. Do not provide this field (especially, DO NOT pass {@code null}).
      *
+     * @return The parsed response object, or {@code null} if absent / not applicable.
      * @throws VonageApiResponseException If the HTTP response code is >= 400.
+     *
+     * @param <R> The response body type.
      */
     public <R> R put(String url, Jsonable requestBody, R... responseType) {
         return makeRequest(HttpMethod.PUT, url, requestBody, responseType);
+    }
+
+    /**
+     * Convenience method for making JSON-based PUT requests.
+     *
+     * @param url URL to send the request to as a string.
+     * @param requestBody The payload to convert to JSON and send in the request body.
+     * @param responseType Hack for type inference. Do not provide this field (especially, DO NOT pass {@code null}).
+     *
+     * @return The parsed response object, or {@code null} if absent / not applicable.
+     * @throws VonageApiResponseException If the HTTP response code is >= 400.
+     *
+     * @param <R> The response body type.
+     */
+    public <R> R put(String url, Map<String, ?> requestBody, R... responseType) {
+        return put(url, new JsonableMap(requestBody), responseType);
     }
 
     /**
@@ -161,63 +211,18 @@ public class CustomClient {
     }
 
     /**
-     * Convenience method for making JSON-based GET requests.
-     *
-     * @param url URL to send the request to as a string.
-     *
-     * @return The response body converted from JSON into a Map.
-     * @throws VonageApiResponseException If the HTTP response code is >= 400.
-     */
-    public Map<String, ?> getJson(String url) {
-        JsonableMap map = get(url);
-        return map.body;
-    }
-
-    /**
-     * Convenience method for making JSON-based POST requests.
-     *
-     * @param url URL to send the request to as a string.
-     * @param requestBody The payload to convert to JSON and send in the request body.
-     *
-     * @return The response body converted from JSON into a Map.
-     * @throws VonageApiResponseException If the HTTP response code is >= 400.
-     */
-    public Map<String, ?> postJson(String url, Map<String, ?> requestBody) {
-        JsonableMap map = new JsonableMap();
-        map.body = (Map<String, Object>) requestBody;
-        map = post(url, map);
-        return map.body;
-    }
-
-    /**
-     * Convenience method for making JSON-based PUT requests.
-     *
-     * @param url URL to send the request to as a string.
-     * @param requestBody The payload to convert to JSON and send in the request body.
-     *
-     * @return The response body converted from JSON into a Map.
-     * @throws VonageApiResponseException If the HTTP response code is >= 400.
-     */
-    public Map<String, ?> putJson(String url, Map<String, ?> requestBody) {
-        JsonableMap map = new JsonableMap();
-        map.body = (Map<String, Object>) requestBody;
-        map = put(url, map);
-        return map.body;
-    }
-
-    /**
      * Convenience method for making JSON-based PATCH requests.
      *
      * @param url URL to send the request to as a string.
      * @param requestBody The payload to convert to JSON and send in the request body.
+     * @param responseType Hack for type inference. Do not provide this field (especially, DO NOT pass {@code null}).
      *
-     * @return The response body converted from JSON into a Map.
+     * @return The parsed response object, or {@code null} if absent / not applicable.
      * @throws VonageApiResponseException If the HTTP response code is >= 400.
+     *
+     * @param <R> The response body type.
      */
-    public Map<String, ?> patchJson(String url, Map<String, ?> requestBody) {
-        JsonableMap map = new JsonableMap();
-        map.body = (Map<String, Object>) requestBody;
-        map = patch(url, map);
-        return map.body;
+    public <R> R patch(String url, Map<String, ?> requestBody, R... responseType) {
+        return patch(url, new JsonableMap(requestBody), responseType);
     }
 }

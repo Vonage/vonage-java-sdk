@@ -314,7 +314,11 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			if (Jsonable.class.isAssignableFrom(responseType)) {
 				return (R) Jsonable.fromJson(deser, (Class<? extends Jsonable>) responseType);
 			}
-			else if (Collection.class.isAssignableFrom(responseType) || isJsonableArrayResponse()) {
+			else if (
+					Map.class.isAssignableFrom(responseType) ||
+					Collection.class.isAssignableFrom(responseType) ||
+					isJsonableArrayResponse()
+			) {
 				return Jsonable.createDefaultObjectMapper().readValue(deser, responseType);
 			}
 			else {
