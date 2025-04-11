@@ -23,7 +23,6 @@ import com.vonage.client.auth.NoAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import org.apache.http.HttpResponse;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Client for making custom requests to Vonage APIs unsupported by this SDK.
@@ -73,16 +72,21 @@ public class CustomClient {
      * @param <R> The response body type.
      */
     public <T, R> R makeRequest(HttpMethod requestMethod, String url, T requestBody, R... responseType) {
-        return DynamicEndpoint.<T, R> builder(
-                    Objects.requireNonNull(responseType, "Do not pass anything for responseType, omit it instead.")
-                ).wrapper(httpWrapper).requestMethod(requestMethod)
+        return DynamicEndpoint.<T, R> builder(fixResponseType(responseType))
+                .wrapper(httpWrapper).requestMethod(requestMethod)
                 .authMethod(JWTAuthMethod.class, ApiKeyAuthMethod.class, NoAuthMethod.class)
                 .pathGetter((de, req) -> url)
                 .build().execute(requestBody);
     }
 
+    private <R> R[] fixResponseType(R... responseType) {
+        return responseType == null || Object.class.equals(responseType.getClass().getComponentType()) ?
+                (R[]) new Void[0] : responseType;
+    }
+
     /**
      * Convenience method for making DELETE requests.
+     * In most cases, you should assign the return value to Void.
      *
      * @param url URL to send the request to as a string.
      * @param responseType Hack for type inference. Do not provide this field (especially, DO NOT pass {@code null}).
@@ -90,21 +94,10 @@ public class CustomClient {
      * @return The parsed response object, or {@code null} if absent / not applicable.
      * @throws VonageApiResponseException If the HTTP response code is >= 400.
      *
-     * @param <R> The response body type.
+     * @param <R> The response body type, most likely {@linkplain Void}.
      */
     public <R> R delete(String url, R... responseType) {
         return makeRequest(HttpMethod.DELETE, url, null, responseType);
-    }
-
-    /**
-     * Convenience method for making DELETE requests.
-     *
-     * @param url URL to send the request to as a string.
-     *
-     * @throws VonageApiResponseException If the HTTP response code is >= 400.
-     */
-    public void delete(String url) {
-        delete(url, new Void[0]);
     }
 
     /**
@@ -168,22 +161,6 @@ public class CustomClient {
     }
 
     /**
-     * Convenience method for making JSON-based POST requests.
-     *
-     * @param url URL to send the request to as a string.
-     * @param requestBody The payload to convert to JSON and send in the request body.
-     *
-     * @return The response body converted from JSON into a Map.
-     * @throws VonageApiResponseException If the HTTP response code is >= 400.
-     */
-    public Map<String, ?> postJson(String url, Map<String, Object> requestBody) {
-        JsonableMap map = new JsonableMap();
-        map.body = requestBody;
-        map = post(url, map);
-        return map.body;
-    }
-
-    /**
      * Convenience method for making JSON-based GET requests.
      *
      * @param url URL to send the request to as a string.
@@ -197,6 +174,22 @@ public class CustomClient {
     }
 
     /**
+     * Convenience method for making JSON-based POST requests.
+     *
+     * @param url URL to send the request to as a string.
+     * @param requestBody The payload to convert to JSON and send in the request body.
+     *
+     * @return The response body converted from JSON into a Map.
+     * @throws VonageApiResponseException If the HTTP response code is >= 400.
+     */
+    public Map<String, ?> postJson(String url, Map<String, ?> requestBody) {
+        JsonableMap map = new JsonableMap();
+        map.body = (Map<String, Object>) requestBody;
+        map = post(url, map);
+        return map.body;
+    }
+
+    /**
      * Convenience method for making JSON-based PUT requests.
      *
      * @param url URL to send the request to as a string.
@@ -205,9 +198,9 @@ public class CustomClient {
      * @return The response body converted from JSON into a Map.
      * @throws VonageApiResponseException If the HTTP response code is >= 400.
      */
-    public Map<String, ?> putJson(String url, Map<String, Object> requestBody) {
+    public Map<String, ?> putJson(String url, Map<String, ?> requestBody) {
         JsonableMap map = new JsonableMap();
-        map.body = requestBody;
+        map.body = (Map<String, Object>) requestBody;
         map = put(url, map);
         return map.body;
     }
@@ -221,9 +214,9 @@ public class CustomClient {
      * @return The response body converted from JSON into a Map.
      * @throws VonageApiResponseException If the HTTP response code is >= 400.
      */
-    public Map<String, ?> patchJson(String url, Map<String, Object> requestBody) {
+    public Map<String, ?> patchJson(String url, Map<String, ?> requestBody) {
         JsonableMap map = new JsonableMap();
-        map.body = requestBody;
+        map.body = (Map<String, Object>) requestBody;
         map = patch(url, map);
         return map.body;
     }

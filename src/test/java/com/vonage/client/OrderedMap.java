@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class OrderedMap extends LinkedHashMap<String, Object> {
+public class OrderedMap extends LinkedHashMap<String, Object> implements Jsonable {
 
     public OrderedMap() {
         super();
