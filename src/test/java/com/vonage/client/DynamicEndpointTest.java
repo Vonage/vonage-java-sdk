@@ -46,6 +46,14 @@ public class DynamicEndpointTest {
         return endpoint;
     }
 
+
+    @Test
+    public void testUntypedEndpoint() {
+        assertThrows(IllegalStateException.class, DynamicEndpointTest::newEndpoint);
+        assertThrows(IllegalStateException.class, () -> newEndpoint((Object) null));
+        assertThrows(NullPointerException.class, () -> newEndpoint((Object[]) null));
+    }
+
     @Test
     public void testRedirectHandling() throws Exception {
         DynamicEndpoint<byte[], URI> uriEndpoint = newEndpoint();
@@ -56,14 +64,14 @@ public class DynamicEndpointTest {
         stubResponse(WRAPPER, 302, TEST_REDIRECT_URI);
         assertEquals(TEST_REDIRECT_URI, stringEndpoint.execute("bar"));
 
-        DynamicEndpoint<String, Object> objectEndpoint = newEndpoint();
+        DynamicEndpoint<String, DynamicEndpointTest> unsupportedReturnEndpoint = newEndpoint();
         stubResponse(WRAPPER, 302, TEST_REDIRECT_URI);
-        assertThrows(IllegalStateException.class, () -> objectEndpoint.execute("foo"));
+        assertThrows(IllegalStateException.class, () -> unsupportedReturnEndpoint.execute("foo"));
     }
 
     @Test
     public void testInformationalResponse() throws Exception {
-        var endpoint = newEndpoint();
+        DynamicEndpoint<byte[], Void> endpoint = newEndpoint();
         stubResponse(WRAPPER, 100, "Continue");
         assertNull(endpoint.execute(new byte[0]));
     }
