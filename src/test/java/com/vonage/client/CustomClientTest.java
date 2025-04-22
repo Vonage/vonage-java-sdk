@@ -111,6 +111,9 @@ public class CustomClientTest extends AbstractClientTest<CustomClient> {
         client.post(URL, TEST_JSONABLE);
         assertNull(client.post(URL, TEST_JSONABLE, (Object) null));
         assertNull(client.post(URL, TEST_JSONABLE, (Object[]) null));
+        stubResponse(PAYLOAD_STR);
+        responseBody = client.post(URL, (Jsonable) null);
+        assertEquals(TEST_JSONABLE, responseBody);
         stubResponse(400);
         assertThrows(VonageApiResponseException.class, () -> client.post(URL, TEST_JSONABLE));
     }
