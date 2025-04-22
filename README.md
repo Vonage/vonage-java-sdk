@@ -134,7 +134,6 @@ You can mix and match between `java.util.Map` and `com.vonage.client.Jsonable` i
 For example, to create an application, you can use any of the following (all are equivalent):
 
 #### Map request, Map response
-
 ```java
 Map<String, ?> response = client.getCustomClient().post(
         "https://api.nexmo.com/v2/applications",
@@ -143,7 +142,6 @@ Map<String, ?> response = client.getCustomClient().post(
 ```
 
 #### Map request, Jsonable response
-
 ```java
 Application response = client.getCustomClient().post(
         "https://api.nexmo.com/v2/applications",
@@ -152,7 +150,6 @@ Application response = client.getCustomClient().post(
 ```
 
 #### Jsonable request, Map response
-
 ```java
 Map<String, ?> response = client.getCustomClient().post(
         "https://api.nexmo.com/v2/applications",
@@ -161,7 +158,6 @@ Map<String, ?> response = client.getCustomClient().post(
 ```
 
 #### Jsonable request, Jsonable response
-
 ```java
 Application response = client.getCustomClient().post(
         "https://api.nexmo.com/v2/applications",
@@ -169,6 +165,13 @@ Application response = client.getCustomClient().post(
 );
 ```
 
+#### Supported response types
+The `<R>` parameter in the response type methods does not have to be a `Map<String, ?>` or `Jsonable`; it can also
+be a `String`, `byte[]` (for binary types) or `Collection` (for JSON arrays). The following will work, for example:
+
+```java
+String response = client.getCustomClient().get("https://example.com");
+```
 
 #### Advanced Usage
 The `CustomClient` provides preset methods for the supported HTTP request types and JSON-based request bodies.
@@ -182,7 +185,7 @@ which the SDK provides for Vonage APIs. Furthermore, you may notice your IDE giv
 varargs parameter for the response type as a way to infer the response type without you having to explicitly provide
 the `Class<R>` parameter. This is a known limitation of Java generics and is not a problem with the SDK itself, it is
 implemented this way for your convenience. As per the documentation, it is important to not pass any value for this
-varargs parameter - just omit it. If you do pass a value, the SDK will not be able to infer the response type.
+varargs parameter — just omit it. If you do pass a value, the SDK will not be able to infer the response type.
 You should also always use explicit assignment for the `CustomClient` methods, as the SDK will not be able to infer the return type if you use `var` or `Object`.
 If you do not assign the response to a typed variable explicitly, `Void` will be inferred and the method will return `null`.
 
