@@ -17,9 +17,7 @@ package com.vonage.client;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.vonage.client.auth.ApiKeyAuthMethod;
-import com.vonage.client.auth.JWTAuthMethod;
-import com.vonage.client.auth.NoAuthMethod;
+import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.common.HttpMethod;
 import org.apache.http.HttpResponse;
 import java.util.Collection;
@@ -89,7 +87,7 @@ public class CustomClient {
     public <T, R> R makeRequest(HttpMethod requestMethod, String url, T requestBody, R... responseType) {
         return DynamicEndpoint.<T, R> builder(fixResponseType(responseType))
                 .wrapper(httpWrapper).requestMethod(requestMethod)
-                .authMethod(JWTAuthMethod.class, ApiKeyAuthMethod.class, NoAuthMethod.class)
+                .authMethod(AuthMethod.class)   // All available methods are acceptable
                 .pathGetter((de, req) -> url)
                 .build().execute(requestBody);
     }
