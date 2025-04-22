@@ -129,7 +129,62 @@ You can also parse the response into a `Map<String, ?>` which represents the JSO
 Map<String, ?> response = client.getCustomClient().get("https://api-eu.vonage.com/v3/media?order=ascending&page_size=50");
 ```
 
-The same applies for POST, PUT and PATCH requests when sending data.
+The same applies for `POST`, `PUT` and `PATCH` requests when sending data.
+You can mix and match between `java.util.Map` and `com.vonage.client.Jsonable` interfaces for request and response bodies.
+For example, to create an application, you can use any of the following (all are equivalent):
+
+#### Map request, Map response
+
+```java
+Map<String, ?> response = client.getCustomClient().post(
+        "https://api.nexmo.com/v2/applications",
+        Map.of("name", "Demo Application")
+);
+```
+
+#### Map request, Jsonable response
+
+```java
+Application response = client.getCustomClient().post(
+        "https://api.nexmo.com/v2/applications",
+        Map.of("name", "Demo Application")
+);
+```
+
+#### Jsonable request, Map response
+
+```java
+Map<String, ?> response = client.getCustomClient().post(
+        "https://api.nexmo.com/v2/applications",
+        Application.builder().name("Demo Application").build()
+);
+```
+
+#### Jsonable request, Jsonable response
+
+```java
+Application response = client.getCustomClient().post(
+        "https://api.nexmo.com/v2/applications",
+        Application.builder().name("Demo Application").build()
+);
+```
+
+
+#### Advanced Usage
+The `CustomClient` provides preset methods for the supported HTTP request types and JSON-based request bodies.
+However, if you would like to make a request with non-JSON body (e.g. binary data), you can use the `makeRequest` method.
+This is a more convenient way of using `com.vonage.client.DynamicEndpoint` which takes care of most of the setup for you.
+
+#### Caveats
+Whilst the `CustomClient` class is a powerful tool, it is not intended to be a replacement for dedicated support
+which the SDK provides for Vonage APIs. Furthermore, you may notice your IDE giving warnings like
+"Unchecked generics array creation for varargs parameter". This is because all methods in `CustomClient` use a 
+varargs parameter for the response type as a way to infer the response type without you having to explicitly provide
+the `Class<R>` parameter. This is a known limitation of Java generics and is not a problem with the SDK itself, it is
+implemented this way for your convenience. As per the documentation, it is important to not pass any value for this
+varargs parameter - just omit it. If you do pass a value, the SDK will not be able to infer the response type.
+You should also always use explicit assignment for the `CustomClient` methods, as the SDK will not be able to infer the return type if you use `var` or `Object`.
+If you do not assign the response to a typed variable explicitly, `Void` will be inferred and the method will return `null`.
 
 ## Configuration
 
