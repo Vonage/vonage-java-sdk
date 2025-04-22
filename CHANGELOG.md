@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.1.0] - 2025-04-22
+- Added custom HTTP requests support via `CustomClient` (see [README](README.md#custom-requests) for details)
+
 # [9.0.0] - 2025-04-08
 - Removed deprecations (classes, methods, constructors, packages etc.)
   - Removed Meetings, Proactive Connect and Number Insight v2 APIs
