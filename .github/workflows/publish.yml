@@ -41,7 +41,7 @@ jobs:
         url: [SLACK_WEBHOOK_ASK_DEVREL_URL, SLACK_WEBHOOK_DEVREL_TOOLING_URL, SLACK_WEBHOOK_DEVREL_PRIVATE_URL, SLACK_WEBHOOK_COMMUNITY]
     steps:
       - name: Send to Slack channels
-        uses: slackapi/slack-github-action@79ad3a9d89410e5b0d961a0e7422f18c62c81bfb
+        uses: slackapi/slack-github-action@v2.0.0
         with:
           webhook: ${{ secrets[matrix.url] }}
           webhook-type: incoming-webhook
