@@ -54,18 +54,39 @@ public class HttpConfig {
         return timeoutMillis;
     }
 
+    /**
+     * Returns the base URI for the "api" endpoints.
+     *
+     * @return The base URI for the "api" endpoints.
+     */
     public String getApiBaseUri() {
         return apiBaseUri;
     }
 
+    /**
+     * Returns the base URI for the "rest" endpoints.
+     *
+     * @return The base URI for the "rest" endpoints.
+     */
     public String getRestBaseUri() {
         return restBaseUri;
     }
 
+    /**
+     * Returns the base URI for the "video" endpoints.
+     *
+     * @return The base URI for the "video" endpoints.
+     * @since 8.0.0
+     */
     public String getVideoBaseUri() {
         return videoBaseUri;
     }
 
+    /**
+     * Returns the base URI for the "api-eu" endpoints.
+     *
+     * @return The base URI for the "api-eu" endpoints.
+     */
     public String getApiEuBaseUri() {
         return apiEuBaseUri;
     }
@@ -240,12 +261,11 @@ public class HttpConfig {
          */
         public Builder baseUri(String baseUri) {
             String sanitizedUri = sanitizeUri(baseUri);
-            regionalUriGetter(region -> sanitizedUri.replace("://", "://" + region + '.'));
             apiBaseUri = sanitizedUri;
             restBaseUri = sanitizedUri;
             apiEuBaseUri = sanitizedUri;
             videoBaseUri = sanitizedUri;
-            return this;
+            return regionalUriGetter(region -> sanitizedUri.replace("://", "://" + region + '.'));
         }
 
         /**

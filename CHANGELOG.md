@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.1.1] - 2025-04-30
+- Allow setting `HttpClient` on `HttpWrapper`
+- Bumped Jackson version to 2.19.0
+
 # [9.1.0] - 2025-04-22
 - Added custom HTTP requests support via `CustomClient` (see [README](README.md#custom-requests) for details)
 

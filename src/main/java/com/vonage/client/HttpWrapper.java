@@ -37,7 +37,7 @@ import java.util.UUID;
 public class HttpWrapper {
     private static final String
             CLIENT_NAME = "vonage-java-sdk",
-            CLIENT_VERSION = "9.1.0",
+            CLIENT_VERSION = "9.1.1",
             JAVA_VERSION = System.getProperty("java.version"),
             USER_AGENT = String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION);
 
@@ -54,33 +54,65 @@ public class HttpWrapper {
      *
      * @since 9.0.0
      */
-    HttpWrapper(HttpConfig httpConfig, AuthCollection authCollection, HttpClient httpClient) {
+    public HttpWrapper(HttpConfig httpConfig, AuthCollection authCollection, HttpClient httpClient) {
         this.authCollection = authCollection;
         this.httpConfig = httpConfig;
         this.httpClient = httpClient instanceof CloseableHttpClient ?
                 (CloseableHttpClient) httpClient : createHttpClient();
     }
 
+    /**
+     * Creates a new instance of the HttpWrapper class.
+     *
+     * @param httpConfig The HTTP configuration settings to use.
+     * @param authCollection The authentication settings to use.
+     */
     public HttpWrapper(HttpConfig httpConfig, AuthCollection authCollection) {
         this(httpConfig, authCollection, null);
     }
 
+    /**
+     * Creates a new instance of the HttpWrapper class.
+     *
+     * @param authCollection The authentication settings to use.
+     */
     public HttpWrapper(AuthCollection authCollection) {
         this(HttpConfig.builder().build(), authCollection);
     }
 
+    /**
+     * Creates a new instance of the HttpWrapper class.
+     *
+     * @param authMethods The authentication methods to use.
+     */
     public HttpWrapper(AuthMethod... authMethods) {
         this(HttpConfig.builder().build(), authMethods);
     }
 
+    /**
+     * Creates a new instance of the HttpWrapper class.
+     *
+     * @param httpConfig The HTTP configuration settings to use.
+     * @param authMethods The authentication methods to use.
+     */
     public HttpWrapper(HttpConfig httpConfig, AuthMethod... authMethods) {
         this(httpConfig, new AuthCollection(authMethods));
     }
 
-    void setHttpClient(CloseableHttpClient httpClient) {
+    /**
+     * Sets the HTTP client to be used by the SDK.
+     *
+     * @param httpClient The custom HTTP client instance to use.
+     */
+    public void setHttpClient(CloseableHttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
+    /**
+     * Sets the HTTP configuration options for the client.
+     *
+     * @param httpConfig The HTTP configuration settings to use.
+     */
     void setHttpConfig(HttpConfig httpConfig) {
         this.httpConfig = httpConfig;
     }
