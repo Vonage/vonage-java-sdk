@@ -16,6 +16,7 @@
 package com.vonage.client;
 
 import java.net.URI;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -30,6 +31,7 @@ public class HttpConfig {
     private final String customUserAgent, apiBaseUri, restBaseUri, apiEuBaseUri, videoBaseUri;
     private final Function<ApiRegion, String> regionalUriGetter;
     private final URI proxy;
+    private final Map<String, String> customHeaders;
 
     private HttpConfig(Builder builder) {
         if ((timeoutMillis = builder.timeoutMillis) < 10) {
@@ -42,6 +44,7 @@ public class HttpConfig {
         apiEuBaseUri = builder.apiEuBaseUri;
         regionalUriGetter = builder.regionalUriGetter;
         customUserAgent = builder.customUserAgent;
+        customHeaders = builder.customHeaders;
     }
 
     /**
@@ -113,6 +116,16 @@ public class HttpConfig {
     }
 
     /**
+     * Returns the additional headers to be included in all requests.
+     *
+     * @return A map of custom headers, or {@code null} if not set.
+     * @since 9.2.0
+     */
+    public Map<String, String> getCustomHeaders() {
+        return customHeaders;
+        }
+
+    /**
      * Returns the proxy URL to use for the underlying HTTP client configuration.
      *
      * @return The proxy URI, or {@code null} if not set.
@@ -146,6 +159,7 @@ public class HttpConfig {
     public static final class Builder {
         private int timeoutMillis = 60_000;
         private URI proxy;
+        private Map<String, String> customHeaders;
         private Function<ApiRegion, String> regionalUriGetter = region -> "https://"+region+".vonage.com";
         private String customUserAgent,
                 apiBaseUri = DEFAULT_API_BASE_URI,
@@ -205,6 +219,18 @@ public class HttpConfig {
          */
         public Builder proxy(URI proxy) {
             this.proxy = proxy;
+            return this;
+        }
+
+        /**
+         * Sets additional headers to be included in all requests.
+         *
+         * @param customHeaders A map of header names and values.
+         * @return This builder.
+         * @since 9.2.0
+         */
+        public Builder customHeaders(Map<String, String> customHeaders) {
+            this.customHeaders = Objects.requireNonNull(customHeaders);
             return this;
         }
 

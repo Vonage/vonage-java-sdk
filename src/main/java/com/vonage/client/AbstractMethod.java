@@ -25,6 +25,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
  * Abstract class to assist in implementing a call against a REST endpoint.
  * <p>
  * Concrete implementations must implement {@link #makeRequest(Object)} to construct a {@link RequestBuilder} from the
- * provided parameterized request object, and {@link #parseResponse(HttpResponse)} to construct the parameterized
+ * provided parameterised request object, and {@link #parseResponse(HttpResponse)} to construct the parameterized
  * {@link HttpResponse} object.
  * <p>
  * The REST call is executed by calling {@link #execute(Object)}.
@@ -86,9 +87,15 @@ public abstract class AbstractMethod<REQ, RES> implements RestEndpoint<REQ, RES>
         return response;
     }
 
-    private HttpUriRequest createFullHttpRequest(REQ request) throws VonageClientException {
-        return applyAuth(makeRequest(request))
-                .setHeader(HttpHeaders.USER_AGENT, httpWrapper.getUserAgent())
+    HttpUriRequest createFullHttpRequest(REQ request) throws VonageClientException {
+        RequestBuilder rqb = applyAuth(makeRequest(request));
+        Map<String, String> customHeaders = httpWrapper.getHttpConfig().getCustomHeaders();
+        if (customHeaders != null) {
+            for (Map.Entry<String, String> entry : customHeaders.entrySet()) {
+                rqb.setHeader(entry.getKey(), entry.getValue());
+            }
+        }
+        return rqb.setHeader(HttpHeaders.USER_AGENT, httpWrapper.getUserAgent())
                 .setCharset(StandardCharsets.UTF_8).build();
     }
 

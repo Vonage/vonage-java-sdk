@@ -39,6 +39,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.Executors;
@@ -119,6 +120,9 @@ public class AbstractMethodTest {
         AuthCollection mockAuthMethods = mock(AuthCollection.class);
         mockAuthMethod = mock(AuthMethod.class);
         mockHttpClient = mock(CloseableHttpClient.class);
+        var httpConfig = HttpConfig.builder().build();
+        when(mockWrapper.getHttpConfig()).thenReturn(httpConfig);
+        when(mockAuthMethod.getSortKey()).thenReturn(0);
         when(mockAuthMethods.getAcceptableAuthMethod(any())).thenReturn(mockAuthMethod);
         when(mockWrapper.getHttpClient()).thenReturn(mockHttpClient);
         when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(basicResponse);
@@ -157,6 +161,24 @@ public class AbstractMethodTest {
         String result = method.execute("url");
         String expected = "User-Agent: "+userAgent;
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void testCustomHeaderDoesNotOverrideUserAgent() {
+        var overridenUa = "my-custom-agent Should not be possible";
+        var cm = new ConcreteMethod(new HttpWrapper(
+                HttpConfig.builder().customHeaders(Map.of(
+                        "X-Correlation-Id", "aaaa-bbbb-cccc-dddd",
+                        "User-Agent", overridenUa
+                )).build(),
+                new NoAuthMethod()
+        ));
+        var request = cm.createFullHttpRequest("https://example.com");
+        var userAgentHeaders = request.getHeaders("User-Agent");
+        assertNotNull(userAgentHeaders);
+        assertEquals(1, userAgentHeaders.length);
+        assertNotEquals(overridenUa, userAgentHeaders[0].getValue());
+        assertEquals("aaaa-bbbb-cccc-dddd", request.getFirstHeader("X-Correlation-Id").getValue());
     }
 
     @Test

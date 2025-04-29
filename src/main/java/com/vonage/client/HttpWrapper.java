@@ -37,7 +37,7 @@ import java.util.UUID;
 public class HttpWrapper {
     private static final String
             CLIENT_NAME = "vonage-java-sdk",
-            CLIENT_VERSION = "9.1.1",
+            CLIENT_VERSION = "9.2.0",
             JAVA_VERSION = System.getProperty("java.version"),
             USER_AGENT = String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION);
 
@@ -103,7 +103,9 @@ public class HttpWrapper {
      * Sets the HTTP client to be used by the SDK.
      *
      * @param httpClient The custom HTTP client instance to use.
+     * @deprecated Please use {@linkplain HttpConfig} options where possible.
      */
+    @Deprecated
     public void setHttpClient(CloseableHttpClient httpClient) {
         this.httpClient = httpClient;
     }
@@ -113,7 +115,7 @@ public class HttpWrapper {
      *
      * @param httpConfig The HTTP configuration settings to use.
      */
-    void setHttpConfig(HttpConfig httpConfig) {
+    public void setHttpConfig(HttpConfig httpConfig) {
         this.httpConfig = httpConfig;
     }
 
