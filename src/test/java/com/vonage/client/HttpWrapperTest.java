@@ -20,8 +20,8 @@ import static com.vonage.client.TestUtils.API_SECRET;
 import com.vonage.client.application.ApplicationClient;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.AuthCollection;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
 public class HttpWrapperTest {
     private HttpWrapper wrapper;
@@ -34,6 +34,11 @@ public class HttpWrapperTest {
     @Test
     public void basicTest() {
         assertNotNull(wrapper.getHttpClient());
+        var config = wrapper.getHttpConfig();
+        assertNotNull(config);
+        assertNull(config.getProxy());
+        assertNull(config.getCustomUserAgent());
+        assertEquals(0, config.getCustomHeaders().size());
     }
 
     @Test

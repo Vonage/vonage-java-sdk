@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * Abstract class to assist in implementing a call against a REST endpoint.
  * <p>
  * Concrete implementations must implement {@link #makeRequest(Object)} to construct a {@link RequestBuilder} from the
- * provided parameterized request object, and {@link #parseResponse(HttpResponse)} to construct the parameterized
+ * provided parameterised request object, and {@link #parseResponse(HttpResponse)} to construct the parameterized
  * {@link HttpResponse} object.
  * <p>
  * The REST call is executed by calling {@link #execute(Object)}.
@@ -86,9 +86,10 @@ public abstract class AbstractMethod<REQ, RES> implements RestEndpoint<REQ, RES>
         return response;
     }
 
-    private HttpUriRequest createFullHttpRequest(REQ request) throws VonageClientException {
-        return applyAuth(makeRequest(request))
-                .setHeader(HttpHeaders.USER_AGENT, httpWrapper.getUserAgent())
+    HttpUriRequest createFullHttpRequest(REQ request) throws VonageClientException {
+        RequestBuilder rqb = applyAuth(makeRequest(request));
+        httpWrapper.getHttpConfig().getCustomHeaders().forEach(rqb::setHeader);
+        return rqb.setHeader(HttpHeaders.USER_AGENT, httpWrapper.getUserAgent())
                 .setCharset(StandardCharsets.UTF_8).build();
     }
 

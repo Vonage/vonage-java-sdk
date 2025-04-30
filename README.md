@@ -74,7 +74,7 @@ Add the following to your `build.gradle` or `build.gradle.kts` file:
 
 ```groovy
 dependencies {
-    implementation("com.vonage:server-sdk:9.1.0")
+    implementation("com.vonage:server-sdk:9.2.0")
 }
 ```
 
@@ -85,7 +85,7 @@ Add the following to the `<dependencies>` section of your `pom.xml` file:
 <dependency>
     <groupId>com.vonage</groupId>
     <artifactId>server-sdk</artifactId>
-    <version>9.1.0</version>
+    <version>9.2.0</version>
 </dependency>
 ```
 
@@ -245,6 +245,35 @@ VonageClient client = VonageClient.builder()
         .applicationId(APPLICATION_ID)
         .privateKeyPath(PRIVATE_KEY_PATH)
         .httpConfig(HttpConfig.builder().timeoutMillis(12_000).build())
+        .build();
+```
+
+### Proxy
+
+You can set a proxy server for requests using the `proxy` method on `HttpConfig.Builder`.
+
+```java
+VonageClient client = VonageClient.builder()
+        .applicationId(APPLICATION_ID)
+        .privateKeyPath(PRIVATE_KEY_PATH)
+        .httpConfig(HttpConfig.builder().proxy("https://myserver.example.com").build())
+        .build();
+```
+
+
+### Request Headers
+
+With the `HttpConfig` class, you can also set custom request headers for all requests made by the SDK.
+
+```java
+VonageClient client = VonageClient.builder()
+        .applicationId(APPLICATION_ID)
+        .privateKeyPath(PRIVATE_KEY_PATH)
+        .httpConfig(HttpConfig.builder()
+                .addRequestHeader("X-My-Header", "MyValue")
+                .addRequestHeader("Correlation-Id", "123-456-789")
+                .build()
+        )
         .build();
 ```
 

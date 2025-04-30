@@ -16,6 +16,8 @@
 package com.vonage.client;
 
 import java.net.URI;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -30,6 +32,7 @@ public class HttpConfig {
     private final String customUserAgent, apiBaseUri, restBaseUri, apiEuBaseUri, videoBaseUri;
     private final Function<ApiRegion, String> regionalUriGetter;
     private final URI proxy;
+    private final Map<String, String> customHeaders;
 
     private HttpConfig(Builder builder) {
         if ((timeoutMillis = builder.timeoutMillis) < 10) {
@@ -42,6 +45,7 @@ public class HttpConfig {
         apiEuBaseUri = builder.apiEuBaseUri;
         regionalUriGetter = builder.regionalUriGetter;
         customUserAgent = builder.customUserAgent;
+        customHeaders = builder.customHeaders;
     }
 
     /**
@@ -54,18 +58,39 @@ public class HttpConfig {
         return timeoutMillis;
     }
 
+    /**
+     * Returns the base URI for the "api" endpoints.
+     *
+     * @return The base URI for the "api" endpoints.
+     */
     public String getApiBaseUri() {
         return apiBaseUri;
     }
 
+    /**
+     * Returns the base URI for the "rest" endpoints.
+     *
+     * @return The base URI for the "rest" endpoints.
+     */
     public String getRestBaseUri() {
         return restBaseUri;
     }
 
+    /**
+     * Returns the base URI for the "video" endpoints.
+     *
+     * @return The base URI for the "video" endpoints.
+     * @since 8.0.0
+     */
     public String getVideoBaseUri() {
         return videoBaseUri;
     }
 
+    /**
+     * Returns the base URI for the "api-eu" endpoints.
+     *
+     * @return The base URI for the "api-eu" endpoints.
+     */
     public String getApiEuBaseUri() {
         return apiEuBaseUri;
     }
@@ -89,6 +114,16 @@ public class HttpConfig {
      */
     public String getCustomUserAgent() {
         return customUserAgent;
+    }
+
+    /**
+     * Returns the additional headers to be included in all requests.
+     *
+     * @return A map of custom headers (may be empty if none are set).
+     * @since 9.2.0
+     */
+    public Map<String, String> getCustomHeaders() {
+        return customHeaders;
     }
 
     /**
@@ -125,6 +160,7 @@ public class HttpConfig {
     public static final class Builder {
         private int timeoutMillis = 60_000;
         private URI proxy;
+        private Map<String, String> customHeaders = new LinkedHashMap<>(4);
         private Function<ApiRegion, String> regionalUriGetter = region -> "https://"+region+".vonage.com";
         private String customUserAgent,
                 apiBaseUri = DEFAULT_API_BASE_URI,
@@ -188,6 +224,20 @@ public class HttpConfig {
         }
 
         /**
+         * Add a custom HTTP header to all requests made with this client.
+         *
+         * @param name The header name.
+         * @param value The header value.
+         *
+         * @return This builder.
+         * @since 9.2.0
+         */
+        public Builder addRequestHeader(String name, String value) {
+            customHeaders.put(name, value);
+            return this;
+        }
+
+        /**
          * Replaces the URI used in "api" endpoints.
          *
          * @param apiBaseUri The base uri to use.
@@ -240,12 +290,11 @@ public class HttpConfig {
          */
         public Builder baseUri(String baseUri) {
             String sanitizedUri = sanitizeUri(baseUri);
-            regionalUriGetter(region -> sanitizedUri.replace("://", "://" + region + '.'));
             apiBaseUri = sanitizedUri;
             restBaseUri = sanitizedUri;
             apiEuBaseUri = sanitizedUri;
             videoBaseUri = sanitizedUri;
-            return this;
+            return regionalUriGetter(region -> sanitizedUri.replace("://", "://" + region + '.'));
         }
 
         /**

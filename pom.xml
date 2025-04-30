@@ -5,7 +5,7 @@
 
   <groupId>com.vonage</groupId>
   <artifactId>server-sdk</artifactId>
-  <version>9.1.0</version>
+  <version>9.2.0</version>
 
   <name>Vonage Java Server SDK</name>
   <description>Java client for Vonage APIs</description>
@@ -45,7 +45,7 @@
     <java.testVersion>21</java.testVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <nexusUrl>https://oss.sonatype.org</nexusUrl>
-    <jackson.version>2.18.3</jackson.version>
+    <jackson.version>2.19.0</jackson.version>
     <mockito.version>5.17.0</mockito.version>
     <jjwt.version>0.12.6</jjwt.version>
   </properties>

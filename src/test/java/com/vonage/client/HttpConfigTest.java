@@ -18,6 +18,7 @@ package com.vonage.client;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.net.URI;
+import java.util.Map;
 
 public class HttpConfigTest {
     static final String
@@ -34,6 +35,9 @@ public class HttpConfigTest {
         assertEquals(EXPECTED_DEFAULT_API_EU_BASE_URI, config.getApiEuBaseUri());
         assertEquals(EXPECTED_DEFAULT_VIDEO_BASE_URI, config.getVideoBaseUri());
         assertEquals(URI.create(EXPECTED_DEFAULT_API_EU_BASE_URI), config.getRegionalBaseUri(ApiRegion.API_EU));
+        assertNull(config.getProxy());
+        assertNotNull(config.getCustomHeaders());
+        assertEquals(0, config.getCustomHeaders().size());
     }
 
     @Test
@@ -111,6 +115,18 @@ public class HttpConfigTest {
             assertEquals(region, ApiRegion.fromString(toString));
         }
         assertNull(ApiRegion.fromString(null));
+    }
+
+    @Test
+    public void testCustomHeaders() {
+        var customHeaders = Map.of(
+                "Correlation-Id", "1234567890",
+                "X-My-Header", "MyValue"
+        );
+        var configBuilder = HttpConfig.builder();
+        customHeaders.forEach(configBuilder::addRequestHeader);
+        var config = configBuilder.build();
+        assertEquals(customHeaders, config.getCustomHeaders());
     }
 
     @Test
