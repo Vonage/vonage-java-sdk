@@ -20,7 +20,10 @@ import static com.vonage.client.TestUtils.*;
 import com.vonage.client.auth.*;
 import com.vonage.client.auth.hashutils.HashType;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.*;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
@@ -34,12 +37,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.Executors;
@@ -166,12 +171,10 @@ public class AbstractMethodTest {
     @Test
     public void testCustomHeaderDoesNotOverrideUserAgent() {
         var overridenUa = "my-custom-agent Should not be possible";
-        var cm = new ConcreteMethod(new HttpWrapper(
-                HttpConfig.builder().customHeaders(Map.of(
-                        "X-Correlation-Id", "aaaa-bbbb-cccc-dddd",
-                        "User-Agent", overridenUa
-                )).build(),
-                new NoAuthMethod()
+        var cm = new ConcreteMethod(new HttpWrapper(HttpConfig.builder()
+                    .addRequestHeader("X-Correlation-Id", "aaaa-bbbb-cccc-dddd")
+                    .addRequestHeader("User-Agent", overridenUa)
+                .build(), new NoAuthMethod()
         ));
         var request = cm.createFullHttpRequest("https://example.com");
         var userAgentHeaders = request.getHeaders("User-Agent");

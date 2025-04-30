@@ -25,7 +25,6 @@ import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,12 +88,7 @@ public abstract class AbstractMethod<REQ, RES> implements RestEndpoint<REQ, RES>
 
     HttpUriRequest createFullHttpRequest(REQ request) throws VonageClientException {
         RequestBuilder rqb = applyAuth(makeRequest(request));
-        Map<String, String> customHeaders = httpWrapper.getHttpConfig().getCustomHeaders();
-        if (customHeaders != null) {
-            for (Map.Entry<String, String> entry : customHeaders.entrySet()) {
-                rqb.setHeader(entry.getKey(), entry.getValue());
-            }
-        }
+        httpWrapper.getHttpConfig().getCustomHeaders().forEach(rqb::setHeader);
         return rqb.setHeader(HttpHeaders.USER_AGENT, httpWrapper.getUserAgent())
                 .setCharset(StandardCharsets.UTF_8).build();
     }

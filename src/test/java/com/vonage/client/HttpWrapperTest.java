@@ -38,7 +38,7 @@ public class HttpWrapperTest {
         assertNotNull(config);
         assertNull(config.getProxy());
         assertNull(config.getCustomUserAgent());
-        assertNull(config.getCustomHeaders());
+        assertEquals(0, config.getCustomHeaders().size());
     }
 
     @Test

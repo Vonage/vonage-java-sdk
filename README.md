@@ -248,6 +248,35 @@ VonageClient client = VonageClient.builder()
         .build();
 ```
 
+### Proxy
+
+You can set a proxy server for requests using the `proxy` method on `HttpConfig.Builder`.
+
+```java
+VonageClient client = VonageClient.builder()
+        .applicationId(APPLICATION_ID)
+        .privateKeyPath(PRIVATE_KEY_PATH)
+        .httpConfig(HttpConfig.builder().proxy("https://myserver.example.com").build())
+        .build();
+```
+
+
+### Request Headers
+
+With the `HttpConfig` class, you can also set custom request headers for all requests made by the SDK.
+
+```java
+VonageClient client = VonageClient.builder()
+        .applicationId(APPLICATION_ID)
+        .privateKeyPath(PRIVATE_KEY_PATH)
+        .httpConfig(HttpConfig.builder()
+                .addRequestHeader("X-My-Header", "MyValue")
+                .addRequestHeader("Correlation-Id", "123-456-789")
+                .build()
+        )
+        .build();
+```
+
 ### Logging
 
 The SDK uses [Java's built-in logging library (`java.util.logging`)](https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html) to log requests and responses.

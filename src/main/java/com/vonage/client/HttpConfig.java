@@ -16,6 +16,7 @@
 package com.vonage.client;
 
 import java.net.URI;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -118,12 +119,12 @@ public class HttpConfig {
     /**
      * Returns the additional headers to be included in all requests.
      *
-     * @return A map of custom headers, or {@code null} if not set.
+     * @return A map of custom headers (may be empty if none are set).
      * @since 9.2.0
      */
     public Map<String, String> getCustomHeaders() {
         return customHeaders;
-        }
+    }
 
     /**
      * Returns the proxy URL to use for the underlying HTTP client configuration.
@@ -159,7 +160,7 @@ public class HttpConfig {
     public static final class Builder {
         private int timeoutMillis = 60_000;
         private URI proxy;
-        private Map<String, String> customHeaders;
+        private Map<String, String> customHeaders = new LinkedHashMap<>(4);
         private Function<ApiRegion, String> regionalUriGetter = region -> "https://"+region+".vonage.com";
         private String customUserAgent,
                 apiBaseUri = DEFAULT_API_BASE_URI,
@@ -223,14 +224,16 @@ public class HttpConfig {
         }
 
         /**
-         * Sets additional headers to be included in all requests.
+         * Add a custom HTTP header to all requests made with this client.
          *
-         * @param customHeaders A map of header names and values.
+         * @param name The header name.
+         * @param value The header value.
+         *
          * @return This builder.
          * @since 9.2.0
          */
-        public Builder customHeaders(Map<String, String> customHeaders) {
-            this.customHeaders = Objects.requireNonNull(customHeaders);
+        public Builder addRequestHeader(String name, String value) {
+            customHeaders.put(name, value);
             return this;
         }
 

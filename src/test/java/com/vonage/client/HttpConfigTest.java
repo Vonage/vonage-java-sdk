@@ -36,7 +36,8 @@ public class HttpConfigTest {
         assertEquals(EXPECTED_DEFAULT_VIDEO_BASE_URI, config.getVideoBaseUri());
         assertEquals(URI.create(EXPECTED_DEFAULT_API_EU_BASE_URI), config.getRegionalBaseUri(ApiRegion.API_EU));
         assertNull(config.getProxy());
-        assertNull(config.getCustomHeaders());
+        assertNotNull(config.getCustomHeaders());
+        assertEquals(0, config.getCustomHeaders().size());
     }
 
     @Test
@@ -122,7 +123,9 @@ public class HttpConfigTest {
                 "Correlation-Id", "1234567890",
                 "X-My-Header", "MyValue"
         );
-        var config = HttpConfig.builder().customHeaders(customHeaders).build();
+        var configBuilder = HttpConfig.builder();
+        customHeaders.forEach(configBuilder::addRequestHeader);
+        var config = configBuilder.build();
         assertEquals(customHeaders, config.getCustomHeaders());
     }
 
