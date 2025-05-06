@@ -5,7 +5,7 @@
 
   <groupId>com.vonage</groupId>
   <artifactId>server-sdk</artifactId>
-  <version>9.2.0</version>
+  <version>9.3.0</version>
 
   <name>Vonage Java Server SDK</name>
   <description>Java client for Vonage APIs</description>

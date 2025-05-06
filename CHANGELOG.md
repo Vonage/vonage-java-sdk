@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.3.0] - 2025-05-07
+- Added support for native failover in Messages API
+
 # [9.2.0] - 2025-04-30
 - Added support for setting additional request headers in `HttpConfig`
 - Allow setting `HttpClient` and `HttpConfig` on `HttpWrapper`

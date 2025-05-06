@@ -48,13 +48,21 @@ public class MessageRequestTest {
 	}
 
 	@Test
-	public void testSerializeAllFields() {
+	public void testSerializeAllFieldsWithFailover() {
 		MessageRequest smr = ConcreteMessageRequest.builder(MessageType.VIDEO, Channel.MMS)
 				.from("447900000009").to("12002009000")
 				.url("https://example.com/video.mp4")
 				.clientRef("<40 character string")
 				.webhookUrl("https://example.com/status")
-				.webhookVersion(MessagesVersion.V1).build();
+				.webhookVersion(MessagesVersion.V1)
+				.failover(ConcreteMessageRequest.builder(MessageType.IMAGE, Channel.RCS)
+							.from("12002009001").to("44790000002")
+							.url("https://example.org/image.jpg").build(),
+						ConcreteMessageRequest.builder(MessageType.TEXT, Channel.SMS)
+								.from("SenderID").to("44790000004")
+								.text("Fallback text message").build()
+				)
+				.build();
 
 		String generatedJson = smr.toJson();
 		assertTrue(generatedJson.contains("\"client_ref\":\"<40 character string\""));
@@ -64,6 +72,11 @@ public class MessageRequestTest {
 		assertTrue(generatedJson.contains("\"to\":\"12002009000\""));
 		assertTrue(generatedJson.contains("\"channel\":\"mms\""));
 		assertTrue(generatedJson.contains("\"message_type\":\"video\""));
+		assertTrue(generatedJson.contains("\"failover\":[" +
+				"{\"message_type\":\"image\",\"channel\":\"rcs\",\"from\":\"12002009001\",\"to\":\"44790000002\"}," +
+				"{\"message_type\":\"text\",\"channel\":\"sms\",\"from\":\"SenderID\",\"to\":\"44790000004\"," +
+				"\"text\":\"Fallback text message\"}]"
+		));
 		assertFalse(generatedJson.contains("https://example.com/video.mp4"));
 	}
 
@@ -200,9 +213,7 @@ public class MessageRequestTest {
 	@Test
 	public void testConstructLongClientRef() {
 		StringBuilder clientRef = new StringBuilder(41);
-		for (int i = 0; i < 99; i++) {
-			clientRef.append('c');
-		}
+        clientRef.append("c".repeat(99));
 
 		ConcreteMessageRequest.Builder builder = ConcreteMessageRequest
 				.builder(MessageType.FILE, Channel.RCS)

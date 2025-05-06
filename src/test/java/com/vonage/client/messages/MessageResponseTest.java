@@ -27,8 +27,10 @@ public class MessageResponseTest {
 	@Test
 	public void testConstructFromValidJson() {
 		UUID uuid = UUID.randomUUID();
-		MessageResponse response = Jsonable.fromJson("{\"message_uuid\":\""+uuid+"\"}");
+		String workflowId = "3TcNjguphQTKshBPRJUVYx6sREpqvhgghJza6sWMk9ztEQQdiW9vwGG";
+		MessageResponse response = Jsonable.fromJson("{\"message_uuid\":\""+uuid+"\",\"workflow_id\":\""+workflowId+"\"}");
 		assertEquals(uuid, response.getMessageUuid());
+		assertEquals(workflowId, response.getWorkflowId());
 		String toString = response.toString();
 		assertTrue(toString.contains("MessageResponse"));
 		assertTrue(toString.contains(uuid.toString()));
@@ -39,6 +41,7 @@ public class MessageResponseTest {
 	public void testConstructFromEmptyJson() {
 		MessageResponse response = Jsonable.fromJson("{}");
 		assertNull(response.getMessageUuid());
+		assertNull(response.getWorkflowId());
 		TestUtils.testJsonableBaseObject(response);
 	}
 
