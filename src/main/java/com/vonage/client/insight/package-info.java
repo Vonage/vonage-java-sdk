@@ -15,8 +15,8 @@
  */
 
 /**
- * Implementation of the <a href=https://developer.vonage.com/en/api/voice>Voice API</a>.
- * See the <a href=https://developer.vonage.com/en/voice/voice-api/overview>Vonage developer portal</a>
+ * Implementation of the <a href=https://developer.vonage.com/en/api/number-insight>Number Insight v1 API</a>.
+ * See the <a href=https://developer.vonage.com/en/number-insight/overview>Vonage developer portal</a>
  * for an overview and documentation.
  */
-package com.vonage.client.voice;
+package com.vonage.client.insight;

@@ -15,8 +15,6 @@
  */
 
 /**
- * Implementation of the <a href=https://developer.vonage.com/en/api/voice>Voice API</a>.
- * See the <a href=https://developer.vonage.com/en/voice/voice-api/overview>Vonage developer portal</a>
- * for an overview and documentation.
+ * Provides hashing algorithms for signed SMS messages.
  */
-package com.vonage.client.voice;
+package com.vonage.client.auth.hashutils;

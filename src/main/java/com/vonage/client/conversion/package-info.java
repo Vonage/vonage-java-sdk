@@ -15,8 +15,8 @@
  */
 
 /**
- * Implementation of the <a href=https://developer.vonage.com/en/api/voice>Voice API</a>.
- * See the <a href=https://developer.vonage.com/en/voice/voice-api/overview>Vonage developer portal</a>
+ * Implementation of the <a href=https://developer.vonage.com/en/api/conversion>Conversion API</a>.
+ * See the <a href=https://developer.vonage.com/en/messaging/conversion-api/overview>Vonage developer portal</a>
  * for an overview and documentation.
  */
-package com.vonage.client.voice;
+package com.vonage.client.conversion;
