@@ -59,6 +59,44 @@ public class MessageStatus extends JsonableBaseObject {
 	}
 
 	/**
+	 * Represents the {@code workflow} object in the status webhook for native failover.
+	 *
+	 * @since 9.3.0
+	 */
+	public static final class Workflow extends  JsonableBaseObject {
+		@JsonProperty("id") String id;
+		@JsonProperty("item_number") Integer itemNumber;
+		@JsonProperty("items_total") @JsonAlias("total_items") Integer totalItems;
+
+		/**
+		 * ID of the workflow.
+		 *
+		 * @return The workflow type as a string.
+		 */
+		public String getId() {
+			return id;
+		}
+
+		/**
+		 * The message number (sequence) in the workflow.
+		 *
+		 * @return The index of this message in the workflow as integer.
+		 */
+		public Integer getItemNumber() {
+			return itemNumber;
+		}
+
+		/**
+		 * Total number of messages in this workflow.
+		 *
+		 * @return The number of messages (including failover) in the workflow as integer.
+		 */
+		public Integer getTotalItems() {
+			return totalItems;
+		}
+	}
+
+	/**
 	 * Describes the error that was encountered when sending the message.
 	 */
 	public static final class Error extends JsonableBaseObject {
@@ -174,6 +212,7 @@ public class MessageStatus extends JsonableBaseObject {
 	@JsonProperty("channel") protected Channel channel;
 	@JsonProperty("client_ref") protected String clientRef;
 	@JsonProperty("error") protected Error error;
+	@JsonProperty("workflow") protected Workflow workflow;
 	@JsonProperty("usage") protected Usage usage;
 
 	@JsonProperty("destination") private Destination destination;
@@ -252,6 +291,17 @@ public class MessageStatus extends JsonableBaseObject {
 	 */
 	public Error getError() {
 		return error;
+	}
+
+	/**
+	 * If the message was sent with a failover workflow, the details of this will be returned here.
+	 *
+	 * @return The workflow object, or {@code null} if absent / not applicable.
+	 *
+	 * @since 9.3.0
+	 */
+	public Workflow getWorkflow() {
+		return workflow;
 	}
 
 	/**

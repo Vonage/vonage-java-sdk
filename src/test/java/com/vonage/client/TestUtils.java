@@ -159,13 +159,11 @@ public class TestUtils {
     }
 
 
-    // TODO make package-private after removing Meetings
-    public static CloseableHttpClient stubHttpClient(int statusCode) throws Exception {
+    static CloseableHttpClient stubHttpClient(int statusCode) throws Exception {
         return stubHttpClient(statusCode, "");
     }
 
-    // TODO make package-private after removing Meetings
-    public static CloseableHttpClient stubHttpClient(int statusCode, String content, String... additionalReturns) throws Exception {
+    static CloseableHttpClient stubHttpClient(int statusCode, String content, String... additionalReturns) throws Exception {
         CloseableHttpClient result = mock(CloseableHttpClient.class);
 
         CloseableHttpResponse response = mock(CloseableHttpResponse.class);

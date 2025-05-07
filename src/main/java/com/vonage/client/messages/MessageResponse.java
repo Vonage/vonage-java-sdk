@@ -24,7 +24,8 @@ import java.util.UUID;
  * the returned response (HTTP 202 payload) is always the same format.
  */
 public class MessageResponse extends JsonableBaseObject {
-	protected UUID messageUuid;
+	private UUID messageUuid;
+	private String workflowId;
 
 	/**
 	 * Protected to prevent users from explicitly creating this object.
@@ -40,5 +41,17 @@ public class MessageResponse extends JsonableBaseObject {
 	@JsonProperty("message_uuid")
 	public UUID getMessageUuid() {
 		return messageUuid;
+	}
+
+	/**
+	 * Returns the workflow ID of the message that was sent to track the failover (if applicable).
+	 *
+	 * @return The failover workflow ID, or {@code null} if absent / not applicable.
+	 *
+	 * @since 9.3.0
+	 */
+	@JsonProperty("workflow_id")
+	public String getWorkflowId() {
+		return workflowId;
 	}
 }

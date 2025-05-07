@@ -48,6 +48,11 @@ public class MessageStatusTest {
 		error.title = String.valueOf(title);
 		error.detail = detail;
 		error.instance = instance;
+		MessageStatus.Workflow workflow = new MessageStatus.Workflow();
+		workflow.id = "1001";
+		workflow.itemNumber = 2;
+		workflow.totalItems = 3;
+
 		MessageStatus.Usage usage = new MessageStatus.Usage();
 		usage.price = price;
 		usage.currency = currency;
@@ -77,6 +82,11 @@ public class MessageStatusTest {
 				"    \"title\": "+title+",\n" +
 				"    \"detail\": \""+detail+"\",\n" +
 				"    \"instance\": \""+instance+"\"\n" +
+				"  },\n" +
+				"  \"workflow\": {\n" +
+				"     \"id\": \"1001\",\n" +
+				"     \"item_number\": \"2\",\n" +
+				"     \"total_items\": \"3\"\n" +
 				"  },\n" +
 				"  \"usage\": {\n" +
 				"    \"currency\": \""+currency+"\",\n" +
@@ -111,6 +121,8 @@ public class MessageStatusTest {
 		assertEquals("sms", channel.toString());
 		assertEquals(error, ms.getError());
 		assertEquals(error.toString(), ms.getError().toString());
+		assertEquals(workflow, ms.getWorkflow());
+		assertEquals(workflow.toString(), ms.getWorkflow().toString());
 		assertEquals(usage, ms.getUsage());
 		assertEquals(usage.toString(), ms.getUsage().toString());
 		assertEquals(networkCode, ms.getDestinationNetworkCode());
@@ -148,6 +160,7 @@ public class MessageStatusTest {
 		assertEquals("undeliverable", status.toString());
 		assertEquals(channel, ms.getChannel());
 		assertEquals("mms", channel.toString());
+		assertNull(ms.getWorkflow());
 		assertNull(ms.getSmsTotalCount());
 		assertNull(ms.getDestinationNetworkCode());
 		assertNull(ms.getWhatsappConversationType());
@@ -173,6 +186,7 @@ public class MessageStatusTest {
 				"      \"currency\": \"EUR\",\n" +
 				"      \"price\": \"0.0333\"\n" +
 				"   },\n" +
+				"   \"workflow\": {},\n" +
 				"   \"client_ref\": \"string\",\n" +
 				"   \"channel\": \"whatsapp\",\n" +
 				"   \"wubwub\": {\n" +
@@ -186,6 +200,12 @@ public class MessageStatusTest {
 				"}";
 		MessageStatus ms = MessageStatus.fromJson(json);
 		testJsonableBaseObject(ms);
+
+		MessageStatus.Workflow workflow = ms.getWorkflow();
+		assertNotNull(workflow);
+		assertNull(workflow.getId());
+		assertNull(workflow.getItemNumber());
+		assertNull(workflow.getTotalItems());
 
 		Map<String, ?> unknown = ms.getAdditionalProperties();
 		assertNotNull(unknown);

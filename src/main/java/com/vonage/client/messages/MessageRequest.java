@@ -22,9 +22,7 @@ import com.vonage.client.common.E164;
 import com.vonage.client.common.MessageType;
 import com.vonage.client.messages.internal.MessagePayload;
 import java.net.URI;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Abstract base class of all Messages sent via the Messages v1 API. All subclasses follow a
@@ -43,6 +41,7 @@ public abstract class MessageRequest extends JsonableBaseObject {
 	final String clientRef;
 	final URI webhookUrl;
 	final MessagesVersion webhookVersion;
+	final List<MessageRequest> failover;
 	protected final Integer ttl;
 	final String text;
 	protected final Map<String, Object> custom;
@@ -71,6 +70,7 @@ public abstract class MessageRequest extends JsonableBaseObject {
 		clientRef = validateClientReference(builder.clientRef);
 		webhookUrl = builder.webhookUrl;
 		webhookVersion = builder.webhookVersion;
+		failover = builder.failover;
 
 		MessagePayload media = null;
 		Map<String, Object> custom = null;
@@ -180,6 +180,11 @@ public abstract class MessageRequest extends JsonableBaseObject {
 		return webhookVersion;
 	}
 
+	@JsonProperty("failover")
+	public List<MessageRequest> getFailover() {
+		return failover;
+	}
+
 	@JsonProperty("ttl")
 	protected Integer getTtl() {
 		return ttl;
@@ -210,6 +215,7 @@ public abstract class MessageRequest extends JsonableBaseObject {
 		private String from, to, clientRef, text, url, caption, name;
 		private URI webhookUrl;
 		private MessagesVersion webhookVersion;
+		private List<MessageRequest> failover;
 		private Integer ttl;
 		private Map<String, Object> custom;
 
@@ -378,6 +384,33 @@ public abstract class MessageRequest extends JsonableBaseObject {
 		 */
 		protected B name(String name) {
 			this.name = name;
+			return (B) this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Sets the failover messages to be sent if the primary message fails.
+		 *
+		 * @param failover The failover message(s).
+		 * @return This builder.
+		 *
+		 * @since 9.3.0
+		 */
+		public B failover(MessageRequest... failover) {
+			return failover(Arrays.asList(failover));
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Sets the failover messages to be sent if the primary message fails.
+		 *
+		 * @param failover The list of failover messages.
+		 * @return This builder.
+		 *
+		 * @since 9.3.0
+		 */
+		public B failover(List<MessageRequest> failover) {
+			this.failover = failover;
 			return (B) this;
 		}
 
