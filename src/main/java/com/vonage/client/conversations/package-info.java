@@ -13,8 +13,11 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+
 /**
- * Implementation of the <a href=https://developer.vonage.com/en/conversation/overview>Conversation API</a>.
+ * Implementation of the <a href=https://developer.vonage.com/en/api/conversation>Conversation API</a>.
+ * See the <a href=https://developer.vonage.com/en/conversation/overview>Vonage developer portal</a>
+ * for an overview and documentation.
  *
  * @since 8.4.0
  */

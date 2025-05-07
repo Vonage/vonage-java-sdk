@@ -19,4 +19,5 @@
  * See the <a href=https://developer.vonage.com/en/verify/verify-v1/overview>Vonage developer portal</a>
  * for an overview and documentation.
  */
+@Deprecated
 package com.vonage.client.verify;

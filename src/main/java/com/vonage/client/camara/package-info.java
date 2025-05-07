@@ -20,4 +20,5 @@
  *
  * @since 8.8.0
  */
+@Deprecated
 package com.vonage.client.camara;

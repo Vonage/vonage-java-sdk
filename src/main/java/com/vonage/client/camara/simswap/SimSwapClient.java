@@ -32,7 +32,10 @@ import java.time.Instant;
 /**
  * A client for communicating with the Vonage SIM Swap API. The standard way to obtain an instance
  * of this class is to use {@link VonageClient#getSimSwapClient()}.
+ *
+ * @deprecated This API will be removed in the next major release.
  */
+@Deprecated
 public class SimSwapClient extends NetworkApiClient {
     final RestEndpoint<SimSwapRequest, CheckSimSwapResponse> check;
     final RestEndpoint<SimSwapRequest, SimSwapDateResponse> retrieveDate;
