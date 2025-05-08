@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.3.1] - 2025-05-08
+- Fixed `CustomClient` return type validation (normalise to `Void` if unknown)
+- Deprecated Verify v1, SIM Swap and Number Verification APIs
+
 # [9.3.0] - 2025-05-07
 - Added support for native failover in Messages API
 

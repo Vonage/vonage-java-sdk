@@ -16,8 +16,9 @@
 package com.vonage.client;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.junit.jupiter.api.*;
+import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.util.List;
 import java.util.Map;
 
@@ -79,7 +80,7 @@ public class CustomClientTest extends AbstractClientTest<CustomClient> {
         stubResponse(204);
         client.delete(URL);
         assertNull(client.delete(URL, (Object) null));
-        assertNull(client.delete(URL, (Object[]) null));
+        assertThrows(NullPointerException.class, () -> client.delete(URL, (Object[]) null));
         stubResponse(204, PAYLOAD_STR);
         TestResponse responseBody = client.delete(URL);
         assertEquals(TEST_JSONABLE, responseBody);
@@ -110,7 +111,7 @@ public class CustomClientTest extends AbstractClientTest<CustomClient> {
         stubResponse(201);
         client.post(URL, TEST_JSONABLE);
         assertNull(client.post(URL, TEST_JSONABLE, (Object) null));
-        assertNull(client.post(URL, TEST_JSONABLE, (Object[]) null));
+        assertThrows(NullPointerException.class, () -> client.post(URL, TEST_JSONABLE, (Object[]) null));
         stubResponse(PAYLOAD_STR);
         responseBody = client.post(URL, (Jsonable) null);
         assertEquals(TEST_JSONABLE, responseBody);
@@ -129,7 +130,7 @@ public class CustomClientTest extends AbstractClientTest<CustomClient> {
         stubResponse(202);
         client.put(URL, TEST_JSONABLE);
         assertNull(client.put(URL, TEST_JSONABLE, (Object) null));
-        assertNull(client.put(URL, TEST_JSONABLE, (Object[]) null));
+        assertThrows(NullPointerException.class, () -> client.put(URL, TEST_JSONABLE, (Object[]) null));
         stubResponse(409);
         assertThrows(VonageApiResponseException.class, () -> client.put(URL, TEST_JSONABLE));
     }
@@ -145,8 +146,54 @@ public class CustomClientTest extends AbstractClientTest<CustomClient> {
         stubResponse(204);
         client.patch(URL, TEST_JSONABLE);
         assertNull(client.patch(URL, TEST_JSONABLE, (Object) null));
-        assertNull(client.patch(URL, TEST_JSONABLE, (Object[]) null));
+        assertThrows(NullPointerException.class, () -> client.patch(URL, TEST_JSONABLE, (Object[]) null));
         stubResponse(406);
         assertThrows(VonageApiResponseException.class, () -> client.patch(URL, TEST_JSONABLE));
+    }
+
+    @Test
+    public void testVarResponse() throws Exception {
+        stubResponse(PAYLOAD_STR);
+        var var = client.makeRequest(HttpMethod.GET, URL, TEST_JSONABLE);
+        assertNull(var);
+    }
+
+    @Test
+    public void testUnassignedResponse() throws Exception {
+        stubResponse(PAYLOAD_STR);
+        client.makeRequest(HttpMethod.GET, URL, TEST_JSONABLE);
+    }
+
+    @Test
+    public void testUnknownObjectResponse() throws Exception {
+        stubResponse(PAYLOAD_STR);
+        class MyClass {}
+        MyClass object = client.makeRequest(HttpMethod.GET, URL, TEST_JSONABLE);
+        assertNull(object);
+    }
+
+    @Test
+    public void testByteArrayResponse() throws Exception {
+        stubResponse(PAYLOAD_STR);
+        byte[] binary = client.makeRequest(HttpMethod.GET, URL, TEST_JSONABLE);
+        assertNotNull(binary);
+        assertEquals(PAYLOAD_STR, new String(binary));
+    }
+
+    @Test
+    public void testCollectionResponse() throws Exception {
+        stubResponse("[ " + PAYLOAD_STR + ", {}]");
+        List<Map<String, ?>> list = client.makeRequest(HttpMethod.GET, URL, TEST_JSONABLE);
+        assertNotNull(list);
+        assertEquals(2, list.size());
+        assertEquals(PAYLOAD_MAP, list.getFirst());
+        assertEquals(Map.of(), list.get(1));
+    }
+
+    @Test
+    public void testStringResponse() throws Exception {
+        stubResponse(PAYLOAD_STR);
+        String str = client.makeRequest(HttpMethod.GET, URL, TEST_JSONABLE);
+        assertEquals(PAYLOAD_STR, str);
     }
 }

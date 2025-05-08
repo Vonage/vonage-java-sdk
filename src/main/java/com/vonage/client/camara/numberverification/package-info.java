@@ -22,4 +22,5 @@
  *
  * @since 8.9.0
  */
+@Deprecated
 package com.vonage.client.camara.numberverification;

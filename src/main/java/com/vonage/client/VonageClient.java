@@ -162,7 +162,10 @@ public class VonageClient {
      * Returns the Verify v1 API client.
      *
      * @return The {@linkplain VerifyClient}.
+     *
+     * @deprecated Please migrate to using {@linkplain #getVerify2Client()} instead.
      */
+    @Deprecated
     public VerifyClient getVerifyClient() {
         return verify;
     }
@@ -259,7 +262,10 @@ public class VonageClient {
      *
      * @return The {@linkplain SimSwapClient}.
      * @since 8.8.0
+     *
+     * @deprecated This API will be removed in the next major release.
      */
+    @Deprecated
     public SimSwapClient getSimSwapClient() {
         return simSwap;
     }
@@ -269,7 +275,10 @@ public class VonageClient {
      *
      * @return The {@linkplain NumberVerificationClient}.
      * @since 8.9.0
+     *
+     * @deprecated This API will be removed in the next major release.
      */
+    @Deprecated
     public NumberVerificationClient getNumberVerificationClient() {
         return numberVerification;
     }

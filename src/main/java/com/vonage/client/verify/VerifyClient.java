@@ -29,7 +29,10 @@ import java.util.Locale;
  * <p>
  * More information on method parameters can be found on the
  * <a href="https://developer.vonage.com/verify/overview">Vonage developer portal</a>.
+ *
+ * @deprecated Please migrate to {@link com.vonage.client.verify2}.
  */
+@Deprecated
 public class VerifyClient {
     final RestEndpoint<CheckRequest, CheckResponse> check;
     final RestEndpoint<VerifyRequest, VerifyResponse> verify;

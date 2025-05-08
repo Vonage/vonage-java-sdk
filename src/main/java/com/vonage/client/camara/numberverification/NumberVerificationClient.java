@@ -31,7 +31,10 @@ import java.util.UUID;
 /**
  * A client for communicating with the Vonage Number Verification API. The standard way to obtain an instance
  * of this class is to use {@link VonageClient#getNumberVerificationClient()}.
+ *
+ * @deprecated This API will be removed in the next major release.
  */
+@Deprecated
 public class NumberVerificationClient extends NetworkApiClient {
     final RestEndpoint<VerifyNumberRequest, VerifyNumberResponse> verifyNumber;
     private final UUID appId;
