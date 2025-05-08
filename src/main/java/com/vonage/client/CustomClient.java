@@ -92,9 +92,28 @@ public class CustomClient {
                 .build().execute(requestBody);
     }
 
+    /**
+     * Normalises the response type to {@linkplain Void} if unknown.
+     *
+     * @param responseType Response type parameter (not provided directly).
+     *
+     * @return The updated response type parameter (to be provided downstream as varargs).
+     * @param <R> The type parameter.
+     */
     private <R> R[] fixResponseType(R... responseType) {
-        return responseType == null || Object.class.equals(responseType.getClass().getComponentType()) ?
-                (R[]) new Void[0] : responseType;
+        Class<R> componentType = (Class<R>) responseType.getClass().getComponentType();
+        if (
+            String.class.equals(componentType) ||
+            byte[].class.equals(componentType) ||
+            Jsonable.class.isAssignableFrom(componentType) ||
+            Map.class.isAssignableFrom(componentType) ||
+            Collection.class.isAssignableFrom(componentType)
+        ) {
+            return responseType;
+        }
+        else {
+            return (R[]) new Void[0];
+        }
     }
 
     /**
