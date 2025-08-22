@@ -1966,20 +1966,24 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 						.sessionId(sessionId).token(token)
 						.uri(wssUri).streams(streamId)
 						.audioRate(Websocket.AudioRate.L16_8K)
-						.headers(headers).build();
+						.headers(headers)
+						.bidirectional(true)
+						.build();
 			}
 
 			@Override
 			protected String sampleRequestBodyString() {
 				return "{\"sessionId\":\""+sessionId+"\",\"token\":\""+token+"\",\"websocket\":{" +
 						"\"uri\":\""+wssUri+"\",\"streams\":[\""+streamId+"\"]," +
-						"\"headers\":"+mapToJson(headers)+",\"audioRate\":8000}}";
+						"\"headers\":"+mapToJson(headers)+",\"audioRate\":8000,\"bidirectional\":true}}";
 			}
 
 			@Override
 			public void runTests() throws Exception {
 				super.runTests();
-				testJsonableBaseObject(sampleRequest());
+				ConnectRequest req = sampleRequest();
+				testJsonableBaseObject(req);
+				assertEquals(Boolean.TRUE, req.getWebsocket().getBidirectional());
 			}
 		}
 		.runTests();
