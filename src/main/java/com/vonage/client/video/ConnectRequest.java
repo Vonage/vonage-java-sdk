@@ -62,6 +62,18 @@ public final class ConnectRequest extends AbstractSessionTokenRequest {
         Collection<String> streams;
         Map<String, String> headers;
         Websocket.AudioRate audioRate;
+        Boolean bidirectional;
+        /**
+         * (OPTIONAL)
+         * Whether the websocket is bidirectional.
+         *
+         * @param bidirectional True for bidirectional, false for unidirectional.
+         * @return This builder.
+         */
+        public Builder bidirectional(Boolean bidirectional) {
+            this.bidirectional = bidirectional;
+            return this;
+        }
 
         private Builder() {
         }
