@@ -74,7 +74,7 @@ Add the following to your `build.gradle` or `build.gradle.kts` file:
 
 ```groovy
 dependencies {
-    implementation("com.vonage:server-sdk:9.3.1")
+    implementation("com.vonage:server-sdk:9.4.0")
 }
 ```
 
@@ -85,7 +85,7 @@ Add the following to the `<dependencies>` section of your `pom.xml` file:
 <dependency>
     <groupId>com.vonage</groupId>
     <artifactId>server-sdk</artifactId>
-    <version>9.3.1</version>
+    <version>9.4.0</version>
 </dependency>
 ```
 
