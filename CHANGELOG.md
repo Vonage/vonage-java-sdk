@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.4.2] - 2025-10-23
+- Added missing supported languages (Lithuanian and Marathi) to `TextToSpeechLanguage` enum
+
 # [9.4.1] - 2025-08-22
 - Fixed typo for verify to correct the call to next workflow
 
