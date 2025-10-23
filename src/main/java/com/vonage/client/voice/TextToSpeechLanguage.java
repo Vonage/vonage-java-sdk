@@ -90,6 +90,8 @@ public enum TextToSpeechLanguage {
     UKRAINIAN("uk-UA"),
     VIETNAMESE("vi-VN"),
     CHINESE_YUE("yue-CN"),
+    LITHUANIAN("lt-LT"),
+    MARATHI("mr-IN"),
 
     @JsonEnumDefaultValue
     UNKNOWN("Unknown");

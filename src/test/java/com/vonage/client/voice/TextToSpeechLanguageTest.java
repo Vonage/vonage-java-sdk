@@ -90,6 +90,8 @@ public class TextToSpeechLanguageTest {
         assertEquals(UKRAINIAN, fromString("uk-UA"));
         assertEquals(VIETNAMESE, fromString("vi-VN"));
         assertEquals(CHINESE_YUE, fromString("yue-CN"));
+        assertEquals(LITHUANIAN, fromString("lt-LT"));
+        assertEquals(MARATHI, fromString("mr-IN"));
         assertEquals(UNKNOWN, fromString("Klingon"));
     }
 
