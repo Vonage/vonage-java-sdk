@@ -255,7 +255,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
                 params.put("to", "not-a-number");
                 params.put("type", "text");
                 params.put("text", "Test");
-                params.put("trusted-number", "flase");
+                params.put("trusted-number", "false");
                 assertRequestContainsParams(params, message);
             }
 

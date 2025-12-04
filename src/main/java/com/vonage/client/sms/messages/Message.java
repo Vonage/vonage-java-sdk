@@ -264,7 +264,9 @@ public abstract class Message extends AbstractQueryParamsRequest {
         }
         conditionalAdd("entity-id", entityId);
         conditionalAdd("content-id", contentId);
-        conditionalAdd("trusted-number", trustedNumber ? "true" : "false");
+        if (trustedNumber != null) {
+            conditionalAdd("trusted-number", trustedNumber ? "true" : "false");
+        }
         return params;
     }
 
