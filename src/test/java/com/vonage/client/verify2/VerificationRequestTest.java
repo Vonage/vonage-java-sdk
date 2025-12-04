@@ -23,6 +23,7 @@ import org.junit.jupiter.api.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.UUID;
 
 public class VerificationRequestTest {
 	static final boolean SANDBOX = true;
@@ -39,6 +40,7 @@ public class VerificationRequestTest {
 			CONTENT_ID = "1107158078772563946",
 			ENTITY_ID = "1101407360000017170",
 			REDIRECT_URL = "https://acme-app.com/sa/redirect";
+	static final UUID TEMPLATE_ID = UUID.fromString("8f35a1a7-eb2f-4552-8fdf-fffdaee41bc9");
 
 	Builder newBuilder() {
 		return VerificationRequest.builder().brand(BRAND);
@@ -370,5 +372,42 @@ public class VerificationRequestTest {
 		assertThrows(VonageUnexpectedException.class, () -> new SelfRefrencing(VerificationRequest.builder()
 				.addWorkflow(new SmsWorkflow(TO_NUMBER)).brand("Test")).toJson()
 		);
+	}
+
+	@Test
+	public void testTemplateId() {
+		Builder builder = getBuilderRequiredParamsSingleWorkflow(Channel.SMS);
+		VerificationRequest request = builder.build();
+		assertNull(request.getTemplateId());
+		
+		builder.templateId(TEMPLATE_ID);
+		request = builder.build();
+		assertEquals(TEMPLATE_ID, request.getTemplateId());
+		
+		String json = request.toJson();
+		assertTrue(json.contains("\"template_id\":\"" + TEMPLATE_ID + "\""));
+	}
+
+	@Test
+	public void testTemplateIdInJson() {
+		for (Channel channel : Channel.values()) {
+			Builder builder = getBuilderRequiredParamsSingleWorkflow(channel);
+			builder.templateId(TEMPLATE_ID);
+			VerificationRequest request = builder.build();
+			String json = request.toJson();
+			assertTrue(json.contains("\"template_id\":\"" + TEMPLATE_ID + "\""),
+					"template_id should be included in JSON for " + channel);
+		}
+	}
+
+	@Test
+	public void testTemplateIdNotIncludedWhenNull() {
+		for (Channel channel : Channel.values()) {
+			Builder builder = getBuilderRequiredParamsSingleWorkflow(channel);
+			VerificationRequest request = builder.build();
+			String json = request.toJson();
+			assertFalse(json.contains("\"template_id\""),
+					"template_id should not be included in JSON when null for " + channel);
+		}
 	}
 }
