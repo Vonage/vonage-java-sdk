@@ -92,6 +92,9 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
                 testConstructParamsValidityPeriodTTL();
                 testConstructParamsContentId();
                 testConstructParamsEntityId();
+                testConstructParamsTrustedNumberTrue();
+                testConstructParamsTrustedNumberFalse();
+                testConstructParamsTrustedNumberNull();
                 testParseResponse();
                 testParseResponseInvalidStatus();
                 testParseResponseError();
@@ -226,6 +229,47 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
                 params.put("text", "Test");
                 params.put("entity-id", id);
                 assertRequestContainsParams(params, message);
+            }
+
+            void testConstructParamsTrustedNumberTrue() {
+                Message message = new TextMessage("TestSender", "not-a-number", "Test");
+                message.setTrustedNumber(true);
+                assertEquals(true, message.getTrustedNumber());
+
+                Map<String, String> params = new LinkedHashMap<>();
+                params.put("from", "TestSender");
+                params.put("to", "not-a-number");
+                params.put("type", "text");
+                params.put("text", "Test");
+                params.put("trusted-number", "true");
+                assertRequestContainsParams(params, message);
+            }
+
+            void testConstructParamsTrustedNumberFalse() {
+                Message message = new TextMessage("TestSender", "not-a-number", "Test");
+                message.setTrustedNumber(false);
+                assertEquals(false, message.getTrustedNumber());
+
+                Map<String, String> params = new LinkedHashMap<>();
+                params.put("from", "TestSender");
+                params.put("to", "not-a-number");
+                params.put("type", "text");
+                params.put("text", "Test");
+                params.put("trusted-number", "flase");
+                assertRequestContainsParams(params, message);
+            }
+
+            void testConstructParamsTrustedNumberNull() {
+                Message message = new TextMessage("TestSender", "not-a-number", "Test");
+                assertNull(message.getTrustedNumber());
+
+                Map<String, String> params = new LinkedHashMap<>();
+                params.put("from", "TestSender");
+                params.put("to", "not-a-number");
+                params.put("type", "text");
+                params.put("text", "Test");
+                // trusted-number should not be in params when null
+                assertRequestParams(params, message);
             }
 
             void testParseResponse() throws Exception {
