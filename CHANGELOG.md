@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [Unreleased]
+- Added `templateId` support to `VerificationRequest` for Verify v2 API to allow using custom templates
+
 # [9.7.0] - 2025-12-04
 - Added native RCS message types (card, carousel) and suggestions support to eliminate need for custom message type
 

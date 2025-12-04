@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -41,11 +42,13 @@ public class VerificationRequest implements Jsonable {
 	protected final Integer channelTimeout, codeLength;
 	protected final Boolean fraudCheck;
 	protected final String brand, code, clientRef;
+	protected final UUID templateId;
 	protected final List<Workflow> workflows;
 
 	VerificationRequest(Builder builder) {
 		locale = builder.locale;
 		clientRef = builder.clientRef;
+		templateId = builder.templateId;
 		fraudCheck = builder.fraudCheck != null && !builder.fraudCheck ? false : null;
 		if ((brand = builder.brand) == null || brand.trim().isEmpty()) {
 			throw new IllegalArgumentException("Brand name is required.");
@@ -180,6 +183,17 @@ public class VerificationRequest implements Jsonable {
 	}
 
 	/**
+	 * A custom template ID to use for the verification request.
+	 * This allows you to use a pre-configured template instead of the default verification message.
+	 *
+	 * @return The template ID, or {@code null} if not set.
+	 */
+	@JsonProperty("template_id")
+	public UUID getTemplateId() {
+		return templateId;
+	}
+
+	/**
 	 * Entry point for constructing an instance of this class.
 	 *
 	 * @return A new Builder.
@@ -193,6 +207,7 @@ public class VerificationRequest implements Jsonable {
 		String brand, code, clientRef;
 		Integer timeout, codeLength;
 		Locale locale;
+		UUID templateId;
 		final List<Workflow> workflows = new ArrayList<>(1);
 
 		private Builder() {}
@@ -362,6 +377,20 @@ public class VerificationRequest implements Jsonable {
 		 */
 		public Builder fraudCheck() {
 			return fraudCheck(false);
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * A custom template ID to use for the verification request.
+		 * This allows you to use a pre-configured template instead of the default verification message.
+		 *
+		 * @param templateId The UUID of the template to use.
+		 *
+		 * @return This builder.
+		 */
+		public Builder templateId(UUID templateId) {
+			this.templateId = templateId;
+			return this;
 		}
 
 		/**
