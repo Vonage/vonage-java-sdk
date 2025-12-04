@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.5.0] - 2025-12-04
+- Added `trusted-number` to SMS
+
 # [9.4.2] - 2025-10-23
 - Added missing supported languages (Lithuanian and Marathi) to `TextToSpeechLanguage` enum
 
