@@ -50,7 +50,7 @@ public class Content extends JsonableBaseObject {
             default: throw new IllegalArgumentException("Unsupported media type: " + type);
         }
         MessagePayload payload = new MessagePayload(url, caption);
-        payload.validateCaptionLength(2000);
+        payload.validateCaptionLength(3000);
         this.url = payload.getUrl();
         this.caption = payload.getCaption();
     }

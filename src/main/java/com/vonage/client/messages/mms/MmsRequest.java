@@ -25,7 +25,7 @@ public abstract class MmsRequest extends MessageRequest {
 	protected MmsRequest(Builder<?, ?> builder, MessageType messageType) {
 		super(builder, Channel.MMS, messageType);
 		if (media != null) {
-			media.validateCaptionLength(2000);
+			media.validateCaptionLength(3000);
 		}
 		int min = 300, max = 259200;
 		if (ttl != null && (ttl < min || ttl > max)) {

@@ -26,9 +26,11 @@ import com.vonage.client.common.MessageType;
  * @since 8.11.0
  */
 public abstract class RcsRequest extends MessageRequest {
+	protected Rcs rcs;
 
 	protected RcsRequest(Builder<?, ?> builder, MessageType messageType) {
 		super(builder, Channel.RCS, messageType);
+		this.rcs = builder.rcs;
 	}
 
 	@JsonProperty("ttl")
@@ -36,7 +38,41 @@ public abstract class RcsRequest extends MessageRequest {
 		return ttl;
 	}
 
+	@JsonProperty("rcs")
+	public Rcs getRcs() {
+		return rcs;
+	}
+
+	@SuppressWarnings("unchecked")
 	protected abstract static class Builder<M extends RcsRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
+		protected Rcs rcs;
+
+		/**
+		 * (OPTIONAL)
+		 * Sets RCS-specific parameters.
+		 *
+		 * @param rcs The RCS options object.
+		 * @return This builder.
+		 *
+		 * @since 9.5.0
+		 */
+		public B rcs(Rcs rcs) {
+			this.rcs = rcs;
+			return (B) this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Sets the RCS message category.
+		 *
+		 * @param category The RCS category.
+		 * @return This builder.
+		 *
+		 * @since 9.5.0
+		 */
+		public B rcsCategory(String category) {
+			return rcs(new Rcs(category));
+		}
 
 		@Override
 		protected B ttl(int ttl) {

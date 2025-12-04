@@ -76,9 +76,11 @@ public class MmsFileRequestTest {
 			assertEquals("V", builder.caption("V").build().getFile().getCaption());
 		}
 
-		StringBuilder sb = new StringBuilder(2001);
-        sb.append("*".repeat(1999));
-		assertEquals(1999, sb.length());
+		StringBuilder sb = new StringBuilder(3001);
+		for (int i = 0; i < 2999; i++) {
+			sb.append('*');
+		}
+		assertEquals(2999, sb.length());
 
 		assertEquals(sb.toString(), builder.caption(sb.toString()).build().getFile().getCaption());
 		try {
@@ -86,7 +88,7 @@ public class MmsFileRequestTest {
 			fail("Expected exception for caption length");
 		}
 		catch (IllegalArgumentException ex) {
-			assertEquals(2001, sb.length());
+			assertEquals(3001, sb.length());
 		}
 	}
 }

@@ -69,11 +69,11 @@ public class MmsVideoRequestTest {
 			assertEquals("V", builder.caption("V").build().getVideo().getCaption());
 		}
 
-		StringBuilder sb = new StringBuilder(2001);
-		for (int i = 0; i < 1999; i++) {
+		StringBuilder sb = new StringBuilder(3001);
+		for (int i = 0; i < 2999; i++) {
 			sb.append('*');
 		}
-		assertEquals(1999, sb.length());
+		assertEquals(2999, sb.length());
 
 		assertEquals(sb.toString(), builder.caption(sb.toString()).build().getVideo().getCaption());
 		try {
@@ -81,7 +81,7 @@ public class MmsVideoRequestTest {
 			fail("Expected exception for caption length");
 		}
 		catch (IllegalArgumentException ex) {
-			assertEquals(2001, sb.length());
+			assertEquals(3001, sb.length());
 		}
 	}
 }

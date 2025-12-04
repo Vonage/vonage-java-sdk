@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.6.0] - 2025-12-04
+- MMS caption length increased on 3000
+- Added new RCS param for messages to set the category
+- Added additional whatsapp information for deserializing incoming messages that contain pricing.
+
 # [9.5.0] - 2025-12-04
 - Added `trusted-number` to SMS
 
