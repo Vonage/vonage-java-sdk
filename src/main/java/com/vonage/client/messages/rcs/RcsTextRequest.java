@@ -15,8 +15,12 @@
  */
 package com.vonage.client.messages.rcs;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.common.MessageType;
 import com.vonage.client.messages.TextMessageRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * {@link com.vonage.client.messages.Channel#RCS}, {@link MessageType#TEXT} request.
@@ -24,9 +28,16 @@ import com.vonage.client.messages.TextMessageRequest;
  * @since 8.11.0
  */
 public final class RcsTextRequest extends RcsRequest implements TextMessageRequest {
+	private List<RcsSuggestion> suggestions;
 
 	RcsTextRequest(Builder builder) {
 		super(builder, MessageType.TEXT);
+		if (builder.suggestions != null && !builder.suggestions.isEmpty()) {
+			if (builder.suggestions.size() > 11) {
+				throw new IllegalArgumentException("A text message can have a maximum of 11 suggestions.");
+			}
+			this.suggestions = builder.suggestions;
+		}
 	}
 
 	@Override
@@ -39,11 +50,23 @@ public final class RcsTextRequest extends RcsRequest implements TextMessageReque
 		return super.getText();
 	}
 
+	/**
+	 * An array of suggestion objects to include with the message. You can include up to 11 suggestions per message.
+	 *
+	 * @return The list of suggestions, or {@code null} if none are set.
+	 */
+	@JsonProperty("suggestions")
+	public List<RcsSuggestion> getSuggestions() {
+		return suggestions;
+	}
+
 	public static Builder builder() {
 		return new Builder();
 	}
 
 	public static final class Builder extends RcsRequest.Builder<RcsTextRequest, Builder> implements TextMessageRequest.Builder<Builder> {
+		private List<RcsSuggestion> suggestions;
+
 		Builder() {}
 
 		/**
@@ -56,6 +79,44 @@ public final class RcsTextRequest extends RcsRequest implements TextMessageReque
 		@Override
 		public Builder text(String text) {
 			return super.text(text);
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * An array of suggestion objects to include with the message. You can include up to 11 suggestions per message.
+		 *
+		 * @param suggestions The list of suggestions.
+		 * @return This builder.
+		 */
+		public Builder suggestions(List<RcsSuggestion> suggestions) {
+			this.suggestions = suggestions;
+			return this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * An array of suggestion objects to include with the message. You can include up to 11 suggestions per message.
+		 *
+		 * @param suggestions The suggestions as varargs.
+		 * @return This builder.
+		 */
+		public Builder suggestions(RcsSuggestion... suggestions) {
+			return suggestions(Arrays.asList(suggestions));
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Add a single suggestion to the message. You can include up to 11 suggestions per message.
+		 *
+		 * @param suggestion The suggestion to add.
+		 * @return This builder.
+		 */
+		public Builder addSuggestion(RcsSuggestion suggestion) {
+			if (this.suggestions == null) {
+				this.suggestions = new ArrayList<>(11);
+			}
+			this.suggestions.add(suggestion);
+			return this;
 		}
 
 		@Override
