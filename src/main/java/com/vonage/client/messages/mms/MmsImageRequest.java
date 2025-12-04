@@ -54,7 +54,7 @@ public final class MmsImageRequest extends MmsRequest implements CaptionMediaMes
 
 		/**
 		 * (OPTIONAL)
-		 * Additional text to accompany the image. Must be between 1 and 2000 characters.
+		 * Additional text to accompany the image. Must be between 1 and 3000 characters.
 		 *
 		 * @param caption The caption string.
 		 * @return This builder.
