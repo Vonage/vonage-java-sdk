@@ -147,8 +147,8 @@ public final class SmsTextRequest extends MessageRequest implements TextMessageR
 		 * (OPTIONAL)
 		 * Indicates whether the recipient is a trusted recipient.
 		 *
-		 * @param trustedRecipient
-		 * @return
+		 * @param trustedRecipient {@code true} if the recipient is considered a trusted recipient, {@code false} otherwise.
+		 * @return This builder.
 		 * 
 		 * @since 9.8.0
 		 */
