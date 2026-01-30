@@ -18,6 +18,7 @@ package com.vonage.client.voice.ncco;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.users.channels.Websocket;
+import com.vonage.client.voice.Authorization;
 import com.vonage.client.voice.EndpointType;
 import java.net.URI;
 import java.util.Map;
@@ -31,11 +32,13 @@ public class WebSocketEndpoint extends JsonableBaseObject implements ConnectEndp
     private final URI uri;
     private final String contentType;
     private final Map<String, ?> headers;
+    private final Authorization authorization;
 
     private WebSocketEndpoint(Builder builder) {
         uri = builder.uri;
         contentType = builder.contentType;
         headers = builder.headers;
+        authorization = builder.authorization;
     }
 
     @Override
@@ -74,6 +77,18 @@ public class WebSocketEndpoint extends JsonableBaseObject implements ConnectEndp
     }
 
     /**
+     * Optional configuration defining how the Authorization HTTP header is set
+     * in the WebSocket opening handshake.
+     *
+     * @return The authorization configuration, or {@code null} if unspecified.
+     * @since 9.1.0
+     */
+    @JsonProperty("authorization")
+    public Authorization getAuthorization() {
+        return authorization;
+    }
+
+    /**
      * Entry point for constructing an instance of this class.
      *
      * @param uri The websocket URI.
@@ -92,6 +107,7 @@ public class WebSocketEndpoint extends JsonableBaseObject implements ConnectEndp
         private URI uri;
         private String contentType;
         private Map<String, ?> headers;
+        private Authorization authorization;
 
         Builder(String uri, String contentType) {
             this.uri = URI.create(uri);
@@ -155,6 +171,20 @@ public class WebSocketEndpoint extends JsonableBaseObject implements ConnectEndp
          */
         public Builder headers(Map<String, ?> headers) {
             this.headers = headers;
+            return this;
+        }
+
+        /**
+         * Optional configuration defining how the Authorization HTTP header is set
+         * in the WebSocket opening handshake.
+         *
+         * @param authorization The authorization configuration.
+         *
+         * @return This builder.
+         * @since 9.1.0
+         */
+        public Builder authorization(Authorization authorization) {
+            this.authorization = authorization;
             return this;
         }
 

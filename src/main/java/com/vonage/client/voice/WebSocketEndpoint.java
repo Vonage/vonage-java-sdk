@@ -26,6 +26,7 @@ public class WebSocketEndpoint extends JsonableBaseObject implements CallEndpoin
     private URI uri;
     private Websocket.ContentType contentType;
     @JsonProperty("headers") private Map<String, Object> headers;
+    @JsonProperty("authorization") private Authorization authorization;
 
     /**
      * Constructor used reflectively by Jackson for instantiation.
@@ -44,7 +45,8 @@ public class WebSocketEndpoint extends JsonableBaseObject implements CallEndpoin
         this(
             URI.create(uri),
             contentType != null ? Websocket.ContentType.fromString(contentType) : null,
-            headers
+            headers,
+            null
         );
     }
 
@@ -58,9 +60,45 @@ public class WebSocketEndpoint extends JsonableBaseObject implements CallEndpoin
      * @since 8.17.0
      */
     public WebSocketEndpoint(URI uri, Websocket.ContentType contentType, Map<String, Object> headers) {
+        this(uri, contentType, headers, null);
+    }
+
+    /**
+     * Create a new WebSocket Endpoint
+     *
+     * @param uri URI to the websocket, starting with {@code ws://} or {@code wss://}.
+     * @param contentType The audio MIME type as a string.
+     * @param headers Additional headers to be sent with the request.
+     * @param authorization Optional authorization configuration for the WebSocket handshake.
+     *
+     * @since 9.1.0
+     */
+    public WebSocketEndpoint(String uri, String contentType, 
+                           Map<String, Object> headers, Authorization authorization) {
+        this(
+            URI.create(uri),
+            contentType != null ? Websocket.ContentType.fromString(contentType) : null,
+            headers,
+            authorization
+        );
+    }
+
+    /**
+     * Create a new WebSocket Endpoint
+     *
+     * @param uri URI to the websocket, starting with {@code ws://} or {@code wss://}.
+     * @param contentType The audio MIME type.
+     * @param headers Additional headers to be sent with the request.
+     * @param authorization Optional authorization configuration for the WebSocket handshake.
+     *
+     * @since 9.1.0
+     */
+    public WebSocketEndpoint(URI uri, Websocket.ContentType contentType, 
+                           Map<String, Object> headers, Authorization authorization) {
         this.uri = Objects.requireNonNull(uri, "URI is required.");
         this.contentType = contentType;
         this.headers = headers;
+        this.authorization = authorization;
     }
 
     @Override
@@ -101,5 +139,17 @@ public class WebSocketEndpoint extends JsonableBaseObject implements CallEndpoin
     @JsonProperty("headers")
     public Map<String, Object> getHeadersMap() {
         return headers;
+    }
+
+    /**
+     * Optional configuration defining how the Authorization HTTP header is set
+     * in the WebSocket opening handshake.
+     *
+     * @return The authorization configuration, or {@code null} if unspecified.
+     * @since 9.1.0
+     */
+    @JsonProperty("authorization")
+    public Authorization getAuthorization() {
+        return authorization;
     }
 }
