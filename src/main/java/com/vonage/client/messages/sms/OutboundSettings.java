@@ -26,15 +26,21 @@ import com.vonage.client.JsonableBaseObject;
 public final class OutboundSettings extends JsonableBaseObject {
     final EncodingType encodingType;
     final String contentId, entityId;
+    final Boolean trustedRecipient;
 
-    private OutboundSettings(EncodingType encodingType, String contentId, String entityId) {
+    private OutboundSettings(EncodingType encodingType, String contentId, String entityId, Boolean trustedRecipient) {
         this.encodingType = encodingType;
         this.contentId = contentId;
         this.entityId = entityId;
+        this.trustedRecipient = trustedRecipient;
     }
 
     static OutboundSettings construct(EncodingType encodingType, String contentId, String entityId) {
-        if (encodingType == null && contentId == null && entityId == null) {
+        return construct(encodingType, contentId, entityId, null);
+    }
+
+    static OutboundSettings construct(EncodingType encodingType, String contentId, String entityId, Boolean trustedRecipient) {
+        if (encodingType == null && contentId == null && entityId == null && trustedRecipient == null) {
             return null;
         }
         if (contentId != null && contentId.trim().isEmpty()) {
@@ -43,7 +49,7 @@ public final class OutboundSettings extends JsonableBaseObject {
         if (entityId != null && entityId.trim().isEmpty()) {
             throw new IllegalArgumentException("Entity ID cannot be blank.");
         }
-        return new OutboundSettings(encodingType, contentId, entityId);
+        return new OutboundSettings(encodingType, contentId, entityId, trustedRecipient);
     }
 
     @JsonProperty("encoding_type")
@@ -59,5 +65,10 @@ public final class OutboundSettings extends JsonableBaseObject {
     @JsonProperty("entity_id")
     public String getEntityId() {
         return entityId;
+    }
+
+    @JsonProperty("trusted_recipient")
+    public Boolean getTrustedRecipient() {
+        return trustedRecipient;
     }
 }

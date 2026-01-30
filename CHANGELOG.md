@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.8.0] - 2025-01-29
+- Added `trusted_recipient` to SMS, MMS, and MMS
+
 # [9.7.0] - 2025-12-04
 - Added native RCS message types (card, carousel) and suggestions support to eliminate need for custom message type
 

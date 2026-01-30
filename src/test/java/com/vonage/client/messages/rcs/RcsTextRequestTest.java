@@ -193,4 +193,35 @@ public class RcsTextRequestTest {
 		String json = rcsText.toJson();
 		assertFalse(json.contains("\"suggestions\""));
 	}
+
+	@Test
+	public void testWithTrustedRecipient() {
+		RcsTextRequest rcs = RcsTextRequest.builder()
+				.from(from).to(to).text(message)
+				.trustedRecipient(true).build();
+
+		String json = rcs.toJson();
+		assertTrue(json.contains("\"trusted_recipient\":true"));
+		assertTrue(json.contains("\"rcs\":"));
+	}
+
+	@Test
+	public void testTrustedRecipientFalse() {
+		RcsTextRequest rcs = RcsTextRequest.builder()
+				.from(from).to(to).text(message)
+				.trustedRecipient(false).build();
+
+		String json = rcs.toJson();
+		assertTrue(json.contains("\"trusted_recipient\":false"));
+		assertTrue(json.contains("\"rcs\":"));
+	}
+
+	@Test
+	public void testWithoutTrustedRecipient() {
+		RcsTextRequest rcs = RcsTextRequest.builder()
+				.from(from).to(to).text(message).build();
+
+		String json = rcs.toJson();
+		assertFalse(json.contains("\"trusted_recipient\""));
+	}
 }

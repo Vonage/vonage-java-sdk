@@ -185,4 +185,33 @@ public class SmsTextRequestTest {
 		assertEquals(EncodingType.AUTO, EncodingType.fromString("auto"));
 		assertNull(EncodingType.fromString(null));
 	}
+
+	@Test
+	public void testWithTrustedRecipient() {
+		SmsTextRequest sms = SmsTextRequest.builder()
+			.from(from).to(to).text(msg)
+			.trustedRecipient(true).build();
+	
+		String json = sms.toJson();
+		assertTrue(json.contains("\"trusted_recipient\":true"));
+	}
+	
+	@Test
+	public void testTrustedRecipientFalse() {
+		SmsTextRequest sms = SmsTextRequest.builder()
+			.from(from).to(to).text(msg)
+			.trustedRecipient(false).build();
+	
+		String json = sms.toJson();
+		assertTrue(json.contains("\"trusted_recipient\":false"));
+	}
+	
+	@Test
+	public void testWithoutTrustedRecipient() {
+		SmsTextRequest sms = SmsTextRequest.builder()
+			.from(from).to(to).text(msg).build();
+	
+		String json = sms.toJson();
+		assertFalse(json.contains("\"trusted_recipient\""));
+	}
 }
