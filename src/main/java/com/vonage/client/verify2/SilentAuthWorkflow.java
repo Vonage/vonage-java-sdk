@@ -24,6 +24,7 @@ import java.net.URI;
  * for an overview of how this works.
  */
 public final class SilentAuthWorkflow extends AbstractNumberWorkflow {
+	@Deprecated
 	private final Boolean sandbox;
 	private final URI redirectUrl;
 
@@ -46,10 +47,25 @@ public final class SilentAuthWorkflow extends AbstractNumberWorkflow {
 	 * Constructs a new Silent Auth verification workflow.
 	 *
 	 * @param to The number to registered to the device on the network to authenticate.
+	 * @param redirectUrl Optional final redirect added at the end of the check_url request/response lifecycle.
+	 *                    Will contain the request_id and code as a URL fragment after the URL.
+	 *
+	 * @since 8.14.0
+	 */
+	public SilentAuthWorkflow(String to, String redirectUrl) {
+		this(builder(to).redirectUrl(redirectUrl));
+	}
+
+	/**
+	 * Constructs a new Silent Auth verification workflow.
+	 *
+	 * @param to The number to registered to the device on the network to authenticate.
 	 * @param sandbox Whether the Vonage Sandbox should be used (for testing purposes).
 	 *
 	 * @since 7.10.0
+	 * @deprecated The sandbox parameter is deprecated and will be removed in a future release.
 	 */
+	@Deprecated
 	public SilentAuthWorkflow(String to, boolean sandbox) {
 		this(builder(to).sandbox(sandbox));
 	}
@@ -63,7 +79,9 @@ public final class SilentAuthWorkflow extends AbstractNumberWorkflow {
 	 *                    Will contain the request_id and code as a URL fragment after the URL.
 	 *
 	 * @since 8.0.0
+	 * @deprecated The sandbox parameter is deprecated and will be removed in a future release.
 	 */
+	@Deprecated
 	public SilentAuthWorkflow(String to, boolean sandbox, String redirectUrl) {
 		this(builder(to).redirectUrl(redirectUrl).sandbox(sandbox));
 	}
@@ -74,7 +92,9 @@ public final class SilentAuthWorkflow extends AbstractNumberWorkflow {
 	 * @return Whether the Vonage Sandbox will be used, or {@code null} if not specified (the default).
 	 *
 	 * @since 7.10.0
+	 * @deprecated The sandbox parameter is deprecated and will be removed in a future release.
 	 */
+	@Deprecated
 	@JsonProperty("sandbox")
 	public Boolean getSandbox() {
 		return sandbox;
@@ -110,6 +130,7 @@ public final class SilentAuthWorkflow extends AbstractNumberWorkflow {
 	 * @since 8.2.0
 	 */
 	public static final class Builder extends AbstractNumberWorkflow.Builder<SilentAuthWorkflow, Builder> {
+		@Deprecated
 		private Boolean sandbox;
 		private String redirectUrl;
 
@@ -123,7 +144,9 @@ public final class SilentAuthWorkflow extends AbstractNumberWorkflow {
 		 * @param sandbox {@code true} to use the Vonage sandbox.
 		 *
 		 * @return This builder.
+		 * @deprecated The sandbox parameter is deprecated and will be removed in a future release.
 		 */
+		@Deprecated
 		public Builder sandbox(boolean sandbox) {
 			this.sandbox = sandbox;
 			return this;
