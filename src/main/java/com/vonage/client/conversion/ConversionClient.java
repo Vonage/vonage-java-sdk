@@ -16,8 +16,7 @@
 package com.vonage.client.conversion;
 
 import com.vonage.client.*;
-import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
-import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.Date;
 
@@ -38,7 +37,7 @@ public class ConversionClient {
                 .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig().getApiBaseUri() +
                         "/conversions/" + req.getType().name().toLowerCase()
                 )
-                .authMethod(SignatureAuthMethod.class, ApiKeyQueryParamsAuthMethod.class)
+                .authMethod(ApiKeyHeaderAuthMethod.class)
                 .requestMethod(HttpMethod.POST).wrapper(wrapper).build();
     }
 

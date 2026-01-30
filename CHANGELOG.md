@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Number Insights: Internally switched to supporting only Basic Authorization header authentication
 - Accounts: Internally switched to supporting only Basic Authorization header authentication
 - Verify v1: Internally switched to supporting only Basic Authorization header authentication
+- Conversion: Internally switched to supporting only Basic Authorization header authentication
 
 # [9.7.0] - 2025-12-04
 - Added native RCS message types (card, carousel) and suggestions support to eliminate need for custom message type
