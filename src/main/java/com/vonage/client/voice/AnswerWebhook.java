@@ -39,6 +39,7 @@ public class AnswerWebhook extends JsonableBaseObject {
     @JsonProperty("uuid") private String uuid;
     @JsonProperty("region_url") private URI regionUrl;
     @JsonProperty("custom_data") private Map<String, ?> customData;
+    @JsonProperty("SipHeader_User-to-User") private String sipHeaderUserToUser;
 
     protected AnswerWebhook() {}
 
@@ -109,6 +110,23 @@ public class AnswerWebhook extends JsonableBaseObject {
      */
     public Map<String, ?> getCustomData() {
         return customData;
+    }
+
+    /**
+     * The User-to-User header allows you to send contextual data during a call from your SIP equipment
+     * to your Voice API application. This header is received when your SIP equipment sends a User-to-User
+     * header to your Programmable SIP domain. The header format is: {@code 1234567890abcdef;encoding=hex}.
+     * <p>
+     * The User-to-User header is validated only to ensure it contains valid characters and does not exceed 256
+     * characters. The content itself is not otherwise validated.
+     *
+     * @return The User-to-User header content, or {@code null} if not present.
+     * @since 8.20.0
+     * @see <a href="https://developer.vonage.com/en/voice/voice-api/concepts/programmable-sip#user-to-user-header">
+     *      User-to-User Header Documentation</a>
+     */
+    public String getSipHeaderUserToUser() {
+        return sipHeaderUserToUser;
     }
 
     /**

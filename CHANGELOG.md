@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Messages: Added `trusted_recipient` to SMS, MMS, and MMS
 - Messages: Added support for Typing Indicators in WhatsApp
 - Voice: Websocket Connections can now include custom authorization headers
+- Voice: Answer Webhook adds support for SIP User-To-User incoming headers
 
 # [9.7.0] - 2025-12-04
 - Added native RCS message types (card, carousel) and suggestions support to eliminate need for custom message type
