@@ -19,6 +19,7 @@ import com.vonage.client.*;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import com.vonage.client.messages.whatsapp.ReplyingIndicator;
 import com.vonage.jwt.Jwt;
 import java.util.function.Function;
 
@@ -134,7 +135,34 @@ public class MessagesClient {
 	 * @since 8.11.0
 	 */
 	public void ackInboundMessage(String messageId, ApiRegion region) throws MessageResponseException {
-		updateMessage.execute(new UpdateStatusRequest("read", messageId, region));
+		ackInboundMessage(messageId, region, null);
+	}
+
+	/**
+	 * Marks an inbound message as "read" and optionally displays a typing indicator.
+	 * Currently, this only applies to WhatsApp messages.
+	 * <p>
+	 * Use this method to show typing indicators (three successively blinking dots) which is a good practice
+	 * to let the user know that a response is being prepared.
+	 *
+	 * @param messageId UUID of the message to acknowledge.
+	 * @param region The regional server to use for this request. This must match the region of the message.
+	 * @param replyingIndicator Optional typing indicator settings. Use {@link ReplyingIndicator#builder()} to construct.
+	 *
+	 * @throws MessageResponseException If the acknowledgement fails. This could be for the following reasons:
+	 * <ul>
+	 *     <li><b>401:</b> Missing or invalid credentials.</li>
+	 *     <li><b>404:</b> Message not found.</li>
+	 *     <li><b>422:</b> Operation not supported for this channel.</li>
+	 *     <li><b>429:</b> Rate limit hit. Please wait and try again.</li>
+	 *     <li><b>500:</b> Internal server error.</li>
+	 * </ul>
+	 *
+	 * @since 9.8.0
+	 */
+	public void ackInboundMessage(String messageId, ApiRegion region, ReplyingIndicator replyingIndicator) 
+			throws MessageResponseException {
+		updateMessage.execute(new UpdateStatusRequest("read", messageId, region, replyingIndicator));
 	}
 
 	/**
