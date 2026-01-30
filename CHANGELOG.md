@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Voice: Add support for `shaken` signing on calls
 - Voice: Added support for `sip_code` on incoming event webhooks
 - Voice: Added support for Transfer NCCO action
+- Voice: Added support for Wait NCCO action
 - Verify: Deprecates the `sandbox` parameter
 - Number Insights: Internally switched to supporting only Basic Authorization header authentication
 - Accounts: Internally switched to supporting only Basic Authorization header authentication
