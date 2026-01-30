@@ -19,7 +19,6 @@ import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.AuthMethod;
-import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.Collection;
 import java.util.List;
@@ -34,7 +33,7 @@ abstract class InsightEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, 
 
 	@Override
 	protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-		return List.of(SignatureAuthMethod.class, ApiKeyHeaderAuthMethod.class);
+		return List.of(ApiKeyHeaderAuthMethod.class);
 	}
 
 	@Override
