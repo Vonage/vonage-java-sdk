@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Accounts: Internally switched to supporting only Basic Authorization header authentication
 - Conversion: Internally switched to supporting only Basic Authorization header authentication
 - Identity Insights: Added new API, covers Formatting, SimSwap, Original and Current Carrier checks
-- Messages: Added `trusted_recipient` to SMS, MMS, and MMS
+- Messages: Added `trusted_recipient` to SMS, MMS, and RCS
 - Messages: Added support for Typing Indicators in WhatsApp
 - Messages: Added `pool_id` support
 - Number Insights: Internally switched to supporting only Basic Authorization header authentication
