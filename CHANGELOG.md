@@ -11,7 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Messages: Added support for Typing Indicators in WhatsApp
 - Messages: Added `pool_id` support
 - Number Insights: Internally switched to supporting only Basic Authorization header authentication
-- Verify v1: Internally switched to supporting only Basic Authorization header authenticatio
+- Verify v1: Internally switched to supporting only Basic Authorization header authentication
 - Verify: Deprecates the `sandbox` parameter
 - Voice: Websocket Connections can now include custom authorization headers
 - Voice: Answer Webhook adds support for SIP User-To-User incoming headers
