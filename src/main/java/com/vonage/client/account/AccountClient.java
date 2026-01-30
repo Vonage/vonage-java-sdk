@@ -17,7 +17,6 @@ package com.vonage.client.account;
 
 import com.vonage.client.*;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
-import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.List;
 import java.util.Objects;
@@ -58,15 +57,15 @@ public class AccountClient {
                 this(pathGetter, method, false, method == HttpMethod.POST, type);
             }
             Endpoint(Function<T, String> pathGetter, HttpMethod method,
-                     boolean signatureAuth, boolean formEncoded, R... type
+                     boolean useApiBaseUri, boolean formEncoded, R... type
             ) {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .wrapper(wrapper).requestMethod(method)
-                        .authMethod(ApiKeyHeaderAuthMethod.class, signatureAuth ? SignatureAuthMethod.class : null)
+                        .authMethod(ApiKeyHeaderAuthMethod.class)
                         .responseExceptionType(AccountResponseException.class)
                         .urlFormEncodedContentType(formEncoded).pathGetter((de, req) -> {
                                 HttpConfig config = de.getHttpWrapper().getHttpConfig();
-                                String base = signatureAuth ? config.getApiBaseUri() : config.getRestBaseUri();
+                                String base = useApiBaseUri ? config.getApiBaseUri() : config.getRestBaseUri();
                                 return base + "/account" + pathGetter.apply(req);
                         })
                 );
