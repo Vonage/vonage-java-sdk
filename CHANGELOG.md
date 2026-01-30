@@ -4,21 +4,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 # [9.8.0] - 2025-01-29
 - Added deprecation notice for Java 8/1.8 users. Version 9.x will be the final version to support Java 8.
+- Accounts: Internally switched to supporting only Basic Authorization header authentication
+- Conversion: Internally switched to supporting only Basic Authorization header authentication
+- Identity Insights: Added new API, covers Formatting, SimSwap, Original and Current Carrier checks
 - Messages: Added `trusted_recipient` to SMS, MMS, and MMS
 - Messages: Added support for Typing Indicators in WhatsApp
 - Messages: Added `pool_id` support
+- Number Insights: Internally switched to supporting only Basic Authorization header authentication
+- Verify v1: Internally switched to supporting only Basic Authorization header authenticatio
+- Verify: Deprecates the `sandbox` parameter
 - Voice: Websocket Connections can now include custom authorization headers
 - Voice: Answer Webhook adds support for SIP User-To-User incoming headers
 - Voice: Add support for `shaken` signing on calls
 - Voice: Added support for `sip_code` on incoming event webhooks
 - Voice: Added support for Transfer NCCO action
 - Voice: Added support for Wait NCCO action
-- Verify: Deprecates the `sandbox` parameter
-- Number Insights: Internally switched to supporting only Basic Authorization header authentication
-- Accounts: Internally switched to supporting only Basic Authorization header authentication
-- Verify v1: Internally switched to supporting only Basic Authorization header authentication
-- Conversion: Internally switched to supporting only Basic Authorization header authentication
-- Identity Insights: Added new API, covers Formatting, SimSwap, Original and Current Carrier checks
 
 # [9.7.0] - 2025-12-04
 - Added native RCS message types (card, carousel) and suggestions support to eliminate need for custom message type
