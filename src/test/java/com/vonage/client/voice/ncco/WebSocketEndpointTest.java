@@ -88,5 +88,29 @@ public class WebSocketEndpointTest {
         String json = new Ncco(ConnectAction.builder(endpoint).build()).toJson();
         assertFalse(json.contains("\"authorization\""));
     }
+
+    @Test
+    public void test24KAudioRate() {
+        WebSocketEndpoint endpoint = WebSocketEndpoint.builder("wss://example.com", "audio/l16;rate=24000")
+                .headers(Collections.singletonMap("foo", "bar"))
+                .build();
+        ConnectAction connect = ConnectAction.builder(endpoint).build();
+
+        String expectedJson = "[{\"endpoint\":[{\"uri\":\"wss://example.com\",\"content-type\":\"audio/l16;rate=24000\"," +
+                "\"headers\":{\"foo\":\"bar\"},\"type\":\"websocket\"}],\"action\":\"connect\"}]";
+        assertEquals(expectedJson, new Ncco(connect).toJson());
+    }
+
+    @Test
+    public void test24KAudioRateWithEnum() {
+        WebSocketEndpoint endpoint = WebSocketEndpoint.builder("wss://example.com", "some-content")
+                .contentType(Websocket.ContentType.AUDIO_L16_24K)
+                .build();
+        ConnectAction connect = ConnectAction.builder(endpoint).build();
+
+        String json = new Ncco(connect).toJson();
+        assertTrue(json.contains("\"uri\":\"wss://example.com\""));
+        assertTrue(json.contains("\"content-type\":\"audio/l16;rate=24000\""));
+    }
 }
 

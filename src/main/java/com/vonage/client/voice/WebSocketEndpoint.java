@@ -122,7 +122,7 @@ public class WebSocketEndpoint extends JsonableBaseObject implements CallEndpoin
     }
 
     /**
-     * Content type of the audio stream; either {@code audio/l16;rate=16000} or {@code audio/l16;rate=8000}.
+     * Content type of the audio stream; either {@code audio/l16;rate=8000}, {@code audio/l16;rate=16000}, or {@code audio/l16;rate=24000}.
      *
      * @return The content type.
      */

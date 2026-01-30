@@ -139,7 +139,7 @@ public class WebSocketEndpoint extends JsonableBaseObject implements ConnectEndp
 
         /**
          * The internet media type for the audio you are streaming. Possible values are:
-         * {@code audio/l16;rate=16000} or {@code audio/l16;rate=8000}.
+         * {@code audio/l16;rate=8000}, {@code audio/l16;rate=16000}, or {@code audio/l16;rate=24000}.
          *
          * @param contentType The content type as a string.
          *
