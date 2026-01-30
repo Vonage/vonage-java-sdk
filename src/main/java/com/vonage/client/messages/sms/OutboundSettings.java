@@ -25,22 +25,31 @@ import com.vonage.client.JsonableBaseObject;
  */
 public final class OutboundSettings extends JsonableBaseObject {
     final EncodingType encodingType;
-    final String contentId, entityId;
+    final String contentId, entityId, poolId;
     final Boolean trustedRecipient;
 
     private OutboundSettings(EncodingType encodingType, String contentId, String entityId, Boolean trustedRecipient) {
+        this(encodingType, contentId, entityId, null, trustedRecipient);
+    }
+
+    private OutboundSettings(EncodingType encodingType, String contentId, String entityId, String poolId, Boolean trustedRecipient) {
         this.encodingType = encodingType;
         this.contentId = contentId;
         this.entityId = entityId;
+        this.poolId = poolId;
         this.trustedRecipient = trustedRecipient;
     }
 
     static OutboundSettings construct(EncodingType encodingType, String contentId, String entityId) {
-        return construct(encodingType, contentId, entityId, null);
+        return construct(encodingType, contentId, entityId, null, null);
     }
 
     static OutboundSettings construct(EncodingType encodingType, String contentId, String entityId, Boolean trustedRecipient) {
-        if (encodingType == null && contentId == null && entityId == null && trustedRecipient == null) {
+        return construct(encodingType, contentId, entityId, null, trustedRecipient);
+    }
+
+    static OutboundSettings construct(EncodingType encodingType, String contentId, String entityId, String poolId, Boolean trustedRecipient) {
+        if (encodingType == null && contentId == null && entityId == null && poolId == null && trustedRecipient == null) {
             return null;
         }
         if (contentId != null && contentId.trim().isEmpty()) {
@@ -49,7 +58,10 @@ public final class OutboundSettings extends JsonableBaseObject {
         if (entityId != null && entityId.trim().isEmpty()) {
             throw new IllegalArgumentException("Entity ID cannot be blank.");
         }
-        return new OutboundSettings(encodingType, contentId, entityId, trustedRecipient);
+        if (poolId != null && poolId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Pool ID cannot be blank.");
+        }
+        return new OutboundSettings(encodingType, contentId, entityId, poolId, trustedRecipient);
     }
 
     @JsonProperty("encoding_type")
@@ -65,6 +77,11 @@ public final class OutboundSettings extends JsonableBaseObject {
     @JsonProperty("entity_id")
     public String getEntityId() {
         return entityId;
+    }
+
+    @JsonProperty("pool_id")
+    public String getPoolId() {
+        return poolId;
     }
 
     @JsonProperty("trusted_recipient")

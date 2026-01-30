@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added deprecation notice for Java 8/1.8 users. Version 9.x will be the final version to support Java 8.
 - Messages: Added `trusted_recipient` to SMS, MMS, and MMS
 - Messages: Added support for Typing Indicators in WhatsApp
+- Messages: Added `pool_id` support
 - Voice: Websocket Connections can now include custom authorization headers
 - Voice: Answer Webhook adds support for SIP User-To-User incoming headers
 - Voice: Add support for `shaken` signing on calls
