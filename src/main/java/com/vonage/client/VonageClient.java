@@ -25,6 +25,7 @@ import com.vonage.client.auth.hashutils.HashType;
 import com.vonage.client.camara.numberverification.NumberVerificationClient;
 import com.vonage.client.camara.simswap.SimSwapClient;
 import com.vonage.client.conversations.ConversationsClient;
+import com.vonage.client.identityinsights.IdentityInsightsClient;
 import com.vonage.client.conversion.ConversionClient;
 import com.vonage.client.insight.InsightClient;
 import com.vonage.client.messages.MessagesClient;
@@ -83,6 +84,7 @@ public class VonageClient {
     private final ConversationsClient conversations;
     private final SimSwapClient simSwap;
     private final NumberVerificationClient numberVerification;
+    private final IdentityInsightsClient identityInsights;
 
     /**
      * Constructor which uses the builder pattern for instantiation.
@@ -111,6 +113,7 @@ public class VonageClient {
         conversations = new ConversationsClient(httpWrapper);
         simSwap = new SimSwapClient(httpWrapper);
         numberVerification = new NumberVerificationClient(httpWrapper);
+        identityInsights = new IdentityInsightsClient(httpWrapper);
     }
 
     /**
@@ -314,6 +317,16 @@ public class VonageClient {
     @Deprecated
     public NumberVerificationClient getNumberVerificationClient() {
         return numberVerification;
+    }
+
+    /**
+     * Returns the Identity Insights API client.
+     *
+     * @return The {@linkplain IdentityInsightsClient}.
+     * @since 9.1.0
+     */
+    public IdentityInsightsClient getIdentityInsightsClient() {
+        return identityInsights;
     }
 
     /**

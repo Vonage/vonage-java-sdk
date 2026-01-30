@@ -18,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Accounts: Internally switched to supporting only Basic Authorization header authentication
 - Verify v1: Internally switched to supporting only Basic Authorization header authentication
 - Conversion: Internally switched to supporting only Basic Authorization header authentication
+- Identity Insights: Added new API, covers Formatting, SimSwap, Original and Current Carrier checks
 
 # [9.7.0] - 2025-12-04
 - Added native RCS message types (card, carousel) and suggestions support to eliminate need for custom message type

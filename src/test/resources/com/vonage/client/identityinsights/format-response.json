@@ -1,0 +1,19 @@
+{
+  "request_id": "REQUEST_ID_PLACEHOLDER",
+  "insights": {
+    "format": {
+      "country_code": "US",
+      "country_name": "United States",
+      "country_prefix": "1",
+      "offline_location": "California",
+      "time_zones": ["America/Los_Angeles"],
+      "number_international": "+14155552671",
+      "number_national": "(415) 555-2671",
+      "is_format_valid": true,
+      "status": {
+        "code": "OK",
+        "message": "Success"
+      }
+    }
+  }
+}
