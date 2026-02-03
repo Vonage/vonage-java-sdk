@@ -5,7 +5,7 @@
 
   <groupId>com.vonage</groupId>
   <artifactId>server-sdk</artifactId>
-  <version>9.7.0</version>
+  <version>9.8.0</version>
 
   <name>Vonage Java Server SDK</name>
   <description>Java client for Vonage APIs</description>
@@ -306,6 +306,8 @@
                 <arg>--pinentry-mode</arg>
                 <arg>loopback</arg>
               </gpgArguments>
+              <keyname>${gpg.keyname}</keyname>
+              <homedir>${gpg.homedir}</homedir>
             </configuration>
           </plugin>
           <plugin>

@@ -109,4 +109,36 @@ public class MmsImageRequestTest {
 			assertEquals(3001, sb.length());
 		}
 	}
+
+	@Test
+	public void testWithTrustedRecipient() {
+		MmsImageRequest mms = MmsImageRequest.builder()
+				.from("447900000001").to("317900000002")
+				.url("https://example.com/image.jpg")
+				.trustedRecipient(true).build();
+
+		String json = mms.toJson();
+		assertTrue(json.contains("\"trusted_recipient\":true"));
+	}
+
+	@Test
+	public void testTrustedRecipientFalse() {
+		MmsImageRequest mms = MmsImageRequest.builder()
+				.from("447900000001").to("317900000002")
+				.url("https://example.com/image.jpg")
+				.trustedRecipient(false).build();
+
+		String json = mms.toJson();
+		assertTrue(json.contains("\"trusted_recipient\":false"));
+	}
+
+	@Test
+	public void testWithoutTrustedRecipient() {
+		MmsImageRequest mms = MmsImageRequest.builder()
+				.from("447900000001").to("317900000002")
+				.url("https://example.com/image.jpg").build();
+
+		String json = mms.toJson();
+		assertFalse(json.contains("\"trusted_recipient\""));
+	}
 }

@@ -1,0 +1,13 @@
+{
+  "request_id": "REQUEST_ID_PLACEHOLDER",
+  "insights": {
+    "sim_swap": {
+      "latest_sim_swap_at": "2024-07-08T09:30:27.504Z",
+      "is_swapped": true,
+      "status": {
+        "code": "OK",
+        "message": "Success"
+      }
+    }
+  }
+}

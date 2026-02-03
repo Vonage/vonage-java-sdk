@@ -20,6 +20,7 @@ import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import com.vonage.client.messages.whatsapp.ReplyingIndicator;
 import com.vonage.client.common.MessageType;
 import com.vonage.client.messages.messenger.*;
 import com.vonage.client.messages.mms.*;
@@ -223,6 +224,29 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 	}
 
 	@Test
+	public void testAckInboundMessageWithTypingIndicator() throws Exception {
+		ReplyingIndicator indicator = ReplyingIndicator.builder()
+				.show(true)
+				.type("text")
+				.build();
+		
+		stubResponseAndRun(200, () -> client.ackInboundMessage(MESSAGE_ID, null, indicator));
+		stubResponseAndAssertThrows(() -> client.ackInboundMessage(null, ApiRegion.API_US, indicator), NullPointerException.class);
+		stubResponseAndAssertThrows(() -> client.ackInboundMessage("not-an-id", null, indicator), IllegalArgumentException.class);
+		stubResponseAndRun(200, () -> client.ackInboundMessage(MESSAGE_ID, ApiRegion.API_EU, indicator));
+		
+		// Test with show=false
+		ReplyingIndicator indicatorFalse = ReplyingIndicator.builder()
+				.show(false)
+				.type("text")
+				.build();
+		stubResponseAndRun(200, () -> client.ackInboundMessage(MESSAGE_ID, null, indicatorFalse));
+		
+		// Test with null indicator (should work same as original method)
+		stubResponseAndRun(200, () -> client.ackInboundMessage(MESSAGE_ID, null, null));
+	}
+
+	@Test
 	public void testRevokeOutboundMessage() throws Exception {
 		stubResponseAndRun(200, () -> client.ackInboundMessage(MESSAGE_ID, null));
 		stubResponseAndAssertThrows(() -> client.revokeOutboundMessage(null, ApiRegion.API_EU), NullPointerException.class);
@@ -399,6 +423,68 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 				super.runTests();
 				assertEquals("https://api-eu.vonage.com", expectedDefaultBaseUri());
 
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testUpdateMessageEndpointWithTypingIndicator() throws Exception {
+		new DynamicEndpointTestSpec<UpdateStatusRequest, Void>() {
+
+			@Override
+			protected RestEndpoint<UpdateStatusRequest, Void> endpoint() {
+				return client.updateMessage;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.PATCH;
+			}
+
+			@Override
+			protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
+				return List.of(JWTAuthMethod.class);
+			}
+
+			@Override
+			protected Class<? extends Exception> expectedResponseExceptionType() {
+				return MessageResponseException.class;
+			}
+
+			@Override
+			protected String expectedDefaultBaseUri() {
+				return wrapper.getHttpConfig().getRegionalBaseUri(sampleRequest().region).toString();
+			}
+
+			@Override
+			protected String expectedCustomBaseUri() {
+				return expectedDefaultBaseUri().replace("vonage", "example");
+			}
+
+			@Override
+			protected String expectedEndpointUri(UpdateStatusRequest request) {
+				return "/v1/messages/" + request.messageId;
+			}
+
+			@Override
+			protected UpdateStatusRequest sampleRequest() {
+				ReplyingIndicator indicator = ReplyingIndicator.builder()
+						.show(true)
+						.type("text")
+						.build();
+				return new UpdateStatusRequest("read", MESSAGE_ID, null, indicator);
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"status\":\"read\",\"replying_indicator\":{\"show\":true,\"type\":\"text\"}}";
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				assertEquals("https://api-eu.vonage.com", expectedDefaultBaseUri());
 			}
 		}
 		.runTests();

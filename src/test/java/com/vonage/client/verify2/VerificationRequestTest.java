@@ -337,6 +337,14 @@ public class VerificationRequestTest {
 	}
 
 	@Test
+	public void testSilentAuthConstructorWithRedirectUrl() {
+		SilentAuthWorkflow workflow = new SilentAuthWorkflow(TO_NUMBER, REDIRECT_URL);
+		assertEquals(TO_NUMBER, workflow.getTo());
+		assertEquals(REDIRECT_URL, workflow.getRedirectUrl().toString());
+		assertNull(workflow.getSandbox());
+	}
+
+	@Test
 	public void testInvalidLocale() {
 		VerificationRequest.Builder builder = getBuilderRequiredParamsSingleWorkflow(Channel.SMS);
 		assertThrows(IllegalArgumentException.class, () -> builder.locale("--++").build());

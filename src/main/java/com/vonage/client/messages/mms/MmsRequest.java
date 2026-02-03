@@ -21,9 +21,11 @@ import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.common.MessageType;
 
 public abstract class MmsRequest extends MessageRequest {
+	protected final Boolean trustedRecipient;
 
 	protected MmsRequest(Builder<?, ?> builder, MessageType messageType) {
 		super(builder, Channel.MMS, messageType);
+		this.trustedRecipient = builder.trustedRecipient;
 		if (media != null) {
 			media.validateCaptionLength(3000);
 		}
@@ -38,7 +40,13 @@ public abstract class MmsRequest extends MessageRequest {
 		return ttl;
 	}
 
+	@JsonProperty("trusted_recipient")
+	public Boolean getTrustedRecipient() {
+		return trustedRecipient;
+	}
+
 	protected abstract static class Builder<M extends MmsRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
+		protected Boolean trustedRecipient;
 
 		/**
 		 * (OPTIONAL)
@@ -54,6 +62,21 @@ public abstract class MmsRequest extends MessageRequest {
 		@Override
 		public B ttl(int ttl) {
 			return super.ttl(ttl);
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Indicates if the recipient is trusted.
+		 *
+		 * @param trustedRecipient Whether the recipient is trusted (true or false).
+		 * @return This builder.
+		 *
+		 * @since 9.8.0
+		 */
+		@SuppressWarnings("unchecked")
+		public B trustedRecipient(Boolean trustedRecipient) {
+			this.trustedRecipient = trustedRecipient;
+			return (B) this;
 		}
 	}
 }

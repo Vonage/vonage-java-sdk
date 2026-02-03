@@ -74,6 +74,23 @@ public abstract class RcsRequest extends MessageRequest {
 			return rcs(new Rcs(category));
 		}
 
+		/**
+		 * (OPTIONAL)
+		 * Indicates if the recipient is trusted.
+		 *
+		 * @param trustedRecipient Whether the recipient is trusted (true or false).
+		 * @return This builder.
+		 *
+		 * @since 9.8.0
+		 */
+		public B trustedRecipient(Boolean trustedRecipient) {
+			if (rcs == null) {
+				rcs = new Rcs();
+			}
+			rcs.trustedRecipient = trustedRecipient;
+			return (B) this;
+		}
+
 		@Override
 		protected B ttl(int ttl) {
 			return super.ttl(ttl);

@@ -17,7 +17,6 @@ package com.vonage.client.insight;
 
 import com.vonage.client.*;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
-import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.function.Function;
 
@@ -42,7 +41,7 @@ public class InsightClient {
             Endpoint(Function<T, String> pathGetter, R... type) {
                 super(DynamicEndpoint.<T, R> builder(type)
                         .wrapper(wrapper).requestMethod(HttpMethod.POST)
-                        .authMethod(SignatureAuthMethod.class, ApiKeyHeaderAuthMethod.class)
+                        .authMethod(ApiKeyHeaderAuthMethod.class)
                         .pathGetter((de, req) -> {
                             String base = de.getHttpWrapper().getHttpConfig().getApiBaseUri();
                             return base + "/ni/" + pathGetter.apply(req) + "/json";

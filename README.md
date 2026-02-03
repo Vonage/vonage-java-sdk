@@ -67,6 +67,15 @@ such as [Maven](https://maven.apache.org/), [Gradle](https://gradle.org/) or [Iv
 
 Release notes for each version can be found in the [changelog](CHANGELOG.md).
 
+> [!WARNING]
+> **Java 8 Deprecation Notice**
+> 
+> Version 9.x is the last major version to support Java 8. Support ends on **June 30, 2026**.
+> Future versions (10.0+) will require **Java 11 or later**.
+> 
+> If you are running Java 8, you will see a warning message in your logs when initializing the SDK.
+> Please plan to upgrade your Java runtime, or pin your SDK version to 9.x.
+
 Here are the instructions for including the SDK in your project:
 
 ### Gradle
@@ -74,7 +83,7 @@ Add the following to your `build.gradle` or `build.gradle.kts` file:
 
 ```groovy
 dependencies {
-    implementation("com.vonage:server-sdk:9.7.0")
+    implementation("com.vonage:server-sdk:9.8.0")
 }
 ```
 
@@ -85,7 +94,7 @@ Add the following to the `<dependencies>` section of your `pom.xml` file:
 <dependency>
     <groupId>com.vonage</groupId>
     <artifactId>server-sdk</artifactId>
-    <version>9.7.0</version>
+    <version>9.8.0</version>
 </dependency>
 ```
 
@@ -300,6 +309,14 @@ This will also activate the logger on `AbstractMethod` if you haven't already sp
 that class, so you don't need to set it separately.
 
 ## Frequently Asked Questions
+
+**Q: I'm seeing a warning about Java 8. What should I do?**
+
+**A:** Version 9.x is the last major version to support Java 8. Support ends on June 30, 2026. Future versions (10.0+) will require Java 11 or later. If you are running Java 8, you have two options:
+1. **Recommended**: Upgrade your Java runtime to Java 11 or later
+2. Pin your SDK version to 9.x in your dependency configuration (though you will miss out on future updates and bug fixes)
+
+The warning appears once per application lifecycle and does not affect functionality.
 
 **Q: What happened to [`com.vonage:client`](https://search.maven.org/artifact/com.vonage/client)?**
 

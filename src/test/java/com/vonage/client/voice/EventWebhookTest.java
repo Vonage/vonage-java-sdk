@@ -53,7 +53,7 @@ public class EventWebhookTest {
                 recordingUuid = UUID.randomUUID().toString().replace("-", "");
 
         boolean dtmfTimedOut = true;
-        int duration = 6, size = 12228;
+        int duration = 6, size = 12228, sipCode = 404;
         double rate = 0.00450000,
                 price = 0.00015000,
                 speechResultConfidence1 = 0.9405097,
@@ -80,6 +80,7 @@ public class EventWebhookTest {
                 "  \"conversation_uuid_from\": \"" + conversationUuidFrom + "\",\n" +
                 "  \"conversation_uuid_to\": \"" + conversationUuidTo + "\",\n" +
                 "  \"reason\": \"" + reason + "\",\n" +
+                "  \"sip_code\": " + sipCode + ",\n" +
                 "  \"recording_url\": \"" + recordingUrl + "\",\n" +
                 "  \"recording_uuid\": \"" + recordingUuid + "\",\n" +
                 "  \"dtmf\": {\n" +
@@ -127,6 +128,7 @@ public class EventWebhookTest {
         assertEquals(rate, event.getRate());
         assertEquals(price, event.getPrice());
         assertEquals(duration, event.getDuration());
+        assertEquals(sipCode, event.getSipCode());
         DtmfResult dtmf = event.getDtmf();
         assertNotNull(dtmf);
         assertEquals(dtmfDigits, dtmf.getDigits());
@@ -177,6 +179,7 @@ public class EventWebhookTest {
         assertNull(event.getStatus());
         assertNull(event.getDtmf());
         assertNull(event.getSpeech());
+        assertNull(event.getSipCode());
     }
 
     @Test
@@ -204,5 +207,71 @@ public class EventWebhookTest {
         assertEquals(DisconnectedBy.PLATFORM, DisconnectedBy.fromString("platform"));
         assertEquals(DisconnectedBy.USER, DisconnectedBy.fromString("user"));
         assertNull(DisconnectedBy.fromString(null));
+    }
+
+    @Test
+    public void testSipCodeInCompletedEvent() {
+        String json = "{\"status\":\"completed\",\"sip_code\":200,\"direction\":\"outbound\"}";
+        EventWebhook event = EventWebhook.fromJson(json);
+        assertEquals(CallStatus.COMPLETED, event.getStatus());
+        assertEquals(200, event.getSipCode());
+    }
+
+    @Test
+    public void testSipCodeInBusyEvent() {
+        String json = "{\"status\":\"busy\",\"sip_code\":486,\"direction\":\"outbound\"}";
+        EventWebhook event = EventWebhook.fromJson(json);
+        assertEquals(CallStatus.BUSY, event.getStatus());
+        assertEquals(486, event.getSipCode());
+    }
+
+    @Test
+    public void testSipCodeInUnansweredEvent() {
+        String json = "{\"status\":\"unanswered\",\"sip_code\":480,\"direction\":\"outbound\"}";
+        EventWebhook event = EventWebhook.fromJson(json);
+        assertEquals(CallStatus.UNANSWERED, event.getStatus());
+        assertEquals(480, event.getSipCode());
+    }
+
+    @Test
+    public void testSipCodeInRejectedEvent() {
+        String json = "{\"status\":\"rejected\",\"sip_code\":603,\"direction\":\"outbound\"}";
+        EventWebhook event = EventWebhook.fromJson(json);
+        assertEquals(CallStatus.REJECTED, event.getStatus());
+        assertEquals(603, event.getSipCode());
+    }
+
+    @Test
+    public void testSipCodeInFailedEvent() {
+        String json = "{\n" +
+                "  \"from\": \"442079460000\",\n" +
+                "  \"to\": \"447700900000\",\n" +
+                "  \"uuid\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n" +
+                "  \"conversation_uuid\": \"CON-aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n" +
+                "  \"status\": \"failed\",\n" +
+                "  \"detail\": \"cannot_route\",\n" +
+                "  \"sip_code\": 404,\n" +
+                "  \"direction\": \"outbound\",\n" +
+                "  \"timestamp\": \"2026-01-01T12:00:00.000Z\"\n" +
+                "}";
+        EventWebhook event = EventWebhook.fromJson(json);
+        testJsonableBaseObject(event);
+        assertEquals(CallStatus.FAILED, event.getStatus());
+        assertEquals(CallStatusDetail.CANNOT_ROUTE, event.getDetail());
+        assertEquals(404, event.getSipCode());
+        assertEquals("442079460000", event.getFrom());
+        assertEquals("447700900000", event.getTo());
+        assertEquals("aaaaaaaa-bbbb-cccc-dddd-0123456789ab", event.getCallUuid());
+        assertEquals("CON-aaaaaaaa-bbbb-cccc-dddd-0123456789ab", event.getConversationUuid());
+        assertEquals(CallDirection.OUTBOUND, event.getDirection());
+        assertEquals(Instant.parse("2026-01-01T12:00:00.000Z"), event.getTimestamp());
+    }
+
+    @Test
+    public void testEventWithoutSipCode() {
+        String json = "{\"status\":\"started\",\"direction\":\"inbound\"}";
+        EventWebhook event = EventWebhook.fromJson(json);
+        assertEquals(CallStatus.STARTED, event.getStatus());
+        assertNull(event.getSipCode());
     }
 }

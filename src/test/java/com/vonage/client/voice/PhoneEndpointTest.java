@@ -28,6 +28,30 @@ public class PhoneEndpointTest {
         TestUtils.testJsonableBaseObject(e);
         assertEquals("number", e.getNumber());
         assertEquals("dtmf", e.getDtmfAnswer());
+        assertNull(e.getShaken());
+    }
+
+    @Test
+    public void testConstructorWithShaken() {
+        String shakenHeader = "eyJhbGciOiJFUzI1NiIsInBwdCI6InNoYWtlbiIsInR5cCI6InBhc3Nwb3J0IiwieDV1IjoiaHR0cHM6Ly9jZXJ0LmV4YW1wbGUuY29tL3Bhc3Nwb3J0LnBlbSJ9.eyJhdHRlc3QiOiJBIiwiZGVzdCI6eyJ0biI6WyIxMjEyNTU1MTIxMiJdfSwiaWF0IjoxNjk0ODcwNDAwLCJvcmlnIjp7InRuIjoiMTQxNTU1NTEyMzQifSwib3JpZ2lkIjoiMTIzZTQ1NjctZTg5Yi0xMmQzLWE0NTYtNDI2NjE0MTc0MDAwIn0.MEUCIQCrfKeMtvn9I6zXjE2VfGEcdjC2sm5M6cPqBvFyV9XkpQIgLxlvLNmC8DJEKexXZqTZ;info=<https://stir-provider.example.net/cert.cer>;alg=ES256;ppt=\"shaken\"";
+        PhoneEndpoint e = new PhoneEndpoint("14155551234", "p*123#", shakenHeader);
+        TestUtils.testJsonableBaseObject(e);
+        assertEquals("14155551234", e.getNumber());
+        assertEquals("p*123#", e.getDtmfAnswer());
+        assertEquals(shakenHeader, e.getShaken());
+    }
+
+    @Test
+    public void testSerializationWithShaken() {
+        String shakenHeader = "eyJhbGciOiJFUzI1NiIsInBwdCI6InNoYWtlbiIsInR5cCI6InBhc3Nwb3J0IiwieDV1IjoiaHR0cHM6Ly9jZXJ0LmV4YW1wbGUuY29tL3Bhc3Nwb3J0LnBlbSJ9.eyJhdHRlc3QiOiJBIiwiZGVzdCI6eyJ0biI6WyIxMjEyNTU1MTIxMiJdfSwiaWF0IjoxNjk0ODcwNDAwLCJvcmlnIjp7InRuIjoiMTQxNTU1NTEyMzQifSwib3JpZ2lkIjoiMTIzZTQ1NjctZTg5Yi0xMmQzLWE0NTYtNDI2NjE0MTc0MDAwIn0.MEUCIQCrfKeMtvn9I6zXjE2VfGEcdjC2sm5M6cPqBvFyV9XkpQIgLxlvLNmC8DJEKexXZqTZ;info=<https://stir-provider.example.net/cert.cer>;alg=ES256;ppt=\"shaken\"";
+        PhoneEndpoint endpoint = new PhoneEndpoint("14155551234", null, shakenHeader);
+        String json = endpoint.toJson();
+        assertTrue(json.contains("\"shaken\""), "JSON should contain shaken field");
+        
+        // Test deserialization
+        PhoneEndpoint deserialized = com.vonage.client.Jsonable.fromJson(json, PhoneEndpoint.class);
+        assertEquals(endpoint.getNumber(), deserialized.getNumber());
+        assertEquals(endpoint.getShaken(), deserialized.getShaken());
     }
 
     @Test
@@ -46,6 +70,10 @@ public class PhoneEndpointTest {
         e1 = new PhoneEndpoint("number", "dtmf");
         e2 = new PhoneEndpoint("number", "dtmf1");
         assertNotEquals(e1, e2, "Endpoints with different dtmfAnswers should not be equal");
+
+        e1 = new PhoneEndpoint("number", "dtmf", "shaken1");
+        e2 = new PhoneEndpoint("number", "dtmf", "shaken2");
+        assertNotEquals(e1, e2, "Endpoints with different shaken values should not be equal");
 
         e1 = new PhoneEndpoint("number", "dtmf");
         e2 = null;
