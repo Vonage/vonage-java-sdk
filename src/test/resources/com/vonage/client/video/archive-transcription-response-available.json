@@ -1,0 +1,10 @@
+{
+  "sessionId": "testSession",
+  "hasTranscription": true,
+  "transcription": {
+    "status": "available",
+    "url": "https://example.com/transcription.txt",
+    "primaryLanguageCode": "en-US",
+    "hasSummary": true
+  }
+}
