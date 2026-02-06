@@ -15,14 +15,42 @@
  */
 package com.vonage.client.video;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.Jsonable;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class ArchiveTest {
+
+	private static final ObjectMapper objectMapper = new ObjectMapper();
+
+	private String loadJsonResource(String filename) throws IOException {
+		try (InputStream is = getClass().getResourceAsStream(filename)) {
+			if (is == null) {
+				throw new IOException("Could not find resource: " + filename);
+			}
+			byte[] buffer = new byte[1024];
+			StringBuilder sb = new StringBuilder();
+			int bytesRead;
+			while ((bytesRead = is.read(buffer)) != -1) {
+				sb.append(new String(buffer, 0, bytesRead, StandardCharsets.UTF_8));
+			}
+			return sb.toString().trim();
+		}
+	}
+
+	private void assertJsonEquals(String expected, String actual) throws IOException {
+		JsonNode expectedNode = objectMapper.readTree(expected);
+		JsonNode actualNode = objectMapper.readTree(actual);
+		assertEquals(expectedNode, actualNode);
+	}
 
 	@Test
 	public void testSerializeAllParams() {
@@ -156,5 +184,143 @@ public class ArchiveTest {
 		assertNull(archive.getCreatedAt());
 		assertNull(archive.getCreatedAtMillis());
 		assertNull(archive.getQuantizationParameter());
+	}
+
+	@Test
+	public void testHasTranscription() throws Exception {
+		String sessionId = "testSessionId";
+		Archive archive = Archive.builder(sessionId).hasTranscription(true).build();
+		
+		assertTrue(archive.getHasTranscription());
+		
+		String expectedJson = loadJsonResource("archive-has-transcription.json");
+		String actualJson = archive.toJson();
+		assertJsonEquals(expectedJson, actualJson);
+	}
+
+	@Test
+	public void testTranscriptionProperties() throws Exception {
+		String sessionId = "testSessionId";
+		String language = "ja-JP";
+		
+		Archive.TranscriptionProperties props = new Archive.TranscriptionProperties();
+		props.setPrimaryLanguageCode(language);
+		props.setHasSummary(true);
+		
+		Archive archive = Archive.builder(sessionId)
+			.transcriptionProperties(props)
+			.build();
+		
+		assertNotNull(archive.getTranscriptionProperties());
+		assertEquals(language, archive.getTranscriptionProperties().getPrimaryLanguageCode());
+		assertTrue(archive.getTranscriptionProperties().getHasSummary());
+		
+		String expectedJson = loadJsonResource("archive-transcription-properties-full.json");
+		String actualJson = archive.toJson();
+		assertJsonEquals(expectedJson, actualJson);
+	}
+
+	@Test
+	public void testTranscriptionPropertiesOnlyLanguage() throws Exception {
+		String sessionId = "testSessionId";
+		String language = "es-ES";
+		
+		Archive.TranscriptionProperties props = new Archive.TranscriptionProperties();
+		props.setPrimaryLanguageCode(language);
+		
+		Archive archive = Archive.builder(sessionId)
+			.transcriptionProperties(props)
+			.build();
+		
+		assertNotNull(archive.getTranscriptionProperties());
+		assertEquals(language, archive.getTranscriptionProperties().getPrimaryLanguageCode());
+		assertNull(archive.getTranscriptionProperties().getHasSummary());
+		
+		String expectedJson = loadJsonResource("archive-transcription-properties-language-only.json");
+		String actualJson = archive.toJson();
+		assertJsonEquals(expectedJson, actualJson);
+	}
+
+	@Test
+	public void testTranscriptionPropertiesOnlySummary() throws Exception {
+		String sessionId = "testSessionId";
+		
+		Archive.TranscriptionProperties props = new Archive.TranscriptionProperties();
+		props.setHasSummary(false);
+		
+		Archive archive = Archive.builder(sessionId)
+			.transcriptionProperties(props)
+			.build();
+		
+		assertNotNull(archive.getTranscriptionProperties());
+		assertNull(archive.getTranscriptionProperties().getPrimaryLanguageCode());
+		assertFalse(archive.getTranscriptionProperties().getHasSummary());
+		
+		String expectedJson = loadJsonResource("archive-transcription-properties-summary-only.json");
+		String actualJson = archive.toJson();
+		assertJsonEquals(expectedJson, actualJson);
+	}
+
+	@Test
+	public void testTranscriptionNotSet() {
+		String sessionId = "testSessionId";
+		Archive archive = Archive.builder(sessionId).build();
+		
+		assertNull(archive.getHasTranscription());
+		assertNull(archive.getTranscription());
+		assertNull(archive.getTranscriptionProperties());
+		
+		String json = archive.toJson();
+		assertFalse(json.contains("transcription"));
+	}
+
+	@Test
+	public void testFullTranscriptionCreation() throws Exception {
+		String sessionId = "testSessionId";
+		
+		Archive.TranscriptionProperties props = new Archive.TranscriptionProperties();
+		props.setPrimaryLanguageCode("en-US");
+		props.setHasSummary(true);
+		
+		Archive archive = Archive.builder(sessionId)
+			.hasTranscription(true)
+			.transcriptionProperties(props)
+			.build();
+		
+		assertTrue(archive.getHasTranscription());
+		assertNotNull(archive.getTranscriptionProperties());
+		assertEquals("en-US", archive.getTranscriptionProperties().getPrimaryLanguageCode());
+		assertTrue(archive.getTranscriptionProperties().getHasSummary());
+		
+		String expectedJson = loadJsonResource("archive-full-transcription-creation.json");
+		String actualJson = archive.toJson();
+		assertJsonEquals(expectedJson, actualJson);
+	}
+
+	@Test
+	public void testFromJsonWithTranscriptionResponse() throws Exception {
+		String json = loadJsonResource("archive-transcription-response-available.json");
+		Archive archive = Jsonable.fromJson(json, Archive.class);
+		
+		assertNotNull(archive);
+		assertEquals("testSession", archive.getSessionId());
+		assertTrue(archive.getHasTranscription());
+		assertNotNull(archive.getTranscription());
+		assertEquals("available", archive.getTranscription().getStatus());
+		assertEquals("https://example.com/transcription.txt", archive.getTranscription().getUrl().toString());
+		assertEquals("en-US", archive.getTranscription().getPrimaryLanguageCode());
+		assertTrue(archive.getTranscription().getHasSummary());
+	}
+
+	@Test
+	public void testFromJsonWithTranscriptionFailed() throws Exception {
+		String json = loadJsonResource("archive-transcription-response-failed.json");
+		Archive archive = Jsonable.fromJson(json, Archive.class);
+		
+		assertNotNull(archive);
+		assertTrue(archive.getHasTranscription());
+		assertNotNull(archive.getTranscription());
+		assertEquals("failed", archive.getTranscription().getStatus());
+		assertEquals("Transcription service unavailable", archive.getTranscription().getReason());
 	}
 }

@@ -31,6 +31,167 @@ public class Archive extends StreamComposition {
     private ArchiveStatus status;
     private OutputMode outputMode;
     private Integer quantizationParameter;
+    private Boolean hasTranscription;
+    private Transcription transcription;
+    private TranscriptionProperties transcriptionProperties;
+
+    /**
+     * Represents transcription properties for creating an archive.
+     */
+    public static class TranscriptionProperties {
+        private String primaryLanguageCode;
+        private Boolean hasSummary;
+
+        public TranscriptionProperties() {
+        }
+
+        /**
+         * The primary language spoken in the archive to be transcribed, in BCP-47 format.
+         *
+         * @return The language code (e.g., "en-US", "es-ES"), or {@code null} if not set.
+         */
+        @JsonProperty("primaryLanguageCode")
+        public String getPrimaryLanguageCode() {
+            return primaryLanguageCode;
+        }
+
+        /**
+         * Sets the primary language code for transcription in BCP-47 format.
+         *
+         * @param primaryLanguageCode The language code (e.g., "en-US", "es-ES").
+         */
+        public void setPrimaryLanguageCode(String primaryLanguageCode) {
+            this.primaryLanguageCode = primaryLanguageCode;
+        }
+
+        /**
+         * Whether the transcription should include a summary.
+         *
+         * @return {@code true} if the transcription should have a summary, {@code false} otherwise, or {@code null} if not set.
+         */
+        @JsonProperty("hasSummary")
+        public Boolean getHasSummary() {
+            return hasSummary;
+        }
+
+        /**
+         * Sets whether the transcription should include a summary.
+         *
+         * @param hasSummary {@code true} if the transcription should have a summary, {@code false} otherwise.
+         */
+        public void setHasSummary(Boolean hasSummary) {
+            this.hasSummary = hasSummary;
+        }
+    }
+
+    /**
+     * Represents transcription information for an archive response.
+     */
+    public static class Transcription {
+        private String status;
+        private URI url;
+        private String reason;
+        private String primaryLanguageCode;
+        private Boolean hasSummary;
+
+        public Transcription() {
+        }
+
+        /**
+         * Status of the transcription.
+         *
+         * @return The status ("requested", "available", "failed", "started", "uploaded"), or {@code null} if not set.
+         */
+        @JsonProperty("status")
+        public String getStatus() {
+            return status;
+        }
+
+        /**
+         * Sets the status of the transcription.
+         *
+         * @param status The transcription status.
+         */
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        /**
+         * URL to the transcription file.
+         *
+         * @return The transcription URL, or {@code null} if not available.
+         */
+        @JsonProperty("url")
+        public URI getUrl() {
+            return url;
+        }
+
+        /**
+         * Sets the URL to the transcription file.
+         *
+         * @param url The transcription URL.
+         */
+        public void setUrl(URI url) {
+            this.url = url;
+        }
+
+        /**
+         * Reason for transcription failure or status.
+         *
+         * @return The reason text, or {@code null} if not applicable.
+         */
+        @JsonProperty("reason")
+        public String getReason() {
+            return reason;
+        }
+
+        /**
+         * Sets the reason for transcription failure.
+         *
+         * @param reason The failure reason.
+         */
+        public void setReason(String reason) {
+            this.reason = reason;
+        }
+
+        /**
+         * The primary language code in BCP-47 format.
+         *
+         * @return The language code (e.g., "en-US", "ja-JP"), or {@code null} if not set.
+         */
+        @JsonProperty("primaryLanguageCode")
+        public String getPrimaryLanguageCode() {
+            return primaryLanguageCode;
+        }
+
+        /**
+         * Sets the primary language code for the transcription.
+         *
+         * @param primaryLanguageCode The language code in BCP-47 format.
+         */
+        public void setPrimaryLanguageCode(String primaryLanguageCode) {
+            this.primaryLanguageCode = primaryLanguageCode;
+        }
+
+        /**
+         * Whether the transcription has a summary.
+         *
+         * @return {@code true} if the transcription has a summary, {@code false} otherwise, or {@code null} if not set.
+         */
+        @JsonProperty("hasSummary")
+        public Boolean getHasSummary() {
+            return hasSummary;
+        }
+
+        /**
+         * Sets whether the transcription has a summary.
+         *
+         * @param hasSummary {@code true} if the transcription has a summary, {@code false} otherwise.
+         */
+        public void setHasSummary(Boolean hasSummary) {
+            this.hasSummary = hasSummary;
+        }
+    }
 
     protected Archive() {
     }
@@ -60,6 +221,8 @@ public class Archive extends StreamComposition {
                 throw new IllegalArgumentException("Quantization parameter must be between 15 and 40.");
             }
         }
+        hasTranscription = builder.hasTranscription;
+        transcriptionProperties = builder.transcriptionProperties;
     }
 
     /**
@@ -168,6 +331,36 @@ public class Archive extends StreamComposition {
         return quantizationParameter;
     }
 
+    /**
+     * Whether the archive will have transcription.
+     *
+     * @return {@code true} if transcription is enabled, {@code false} otherwise, or {@code null} if not set.
+     */
+    @JsonProperty("hasTranscription")
+    public Boolean getHasTranscription() {
+        return hasTranscription;
+    }
+
+    /**
+     * Returns the transcription information for the Archive (response only).
+     *
+     * @return The transcription details, or {@code null} if not available.
+     */
+    @JsonProperty("transcription")
+    public Transcription getTranscription() {
+        return transcription;
+    }
+
+    /**
+     * Returns the transcription properties for creating the Archive (request only).
+     *
+     * @return The transcription properties, or {@code null} if not set.
+     */
+    @JsonProperty("transcriptionProperties")
+    public TranscriptionProperties getTranscriptionProperties() {
+        return transcriptionProperties;
+    }
+
 
     /**
      * Instantiates a Builder, used to construct this object.
@@ -189,6 +382,8 @@ public class Archive extends StreamComposition {
         private String name, multiArchiveTag;
         private OutputMode outputMode;
         private Integer quantizationParameter;
+        private Boolean hasTranscription;
+        private TranscriptionProperties transcriptionProperties;
 
         Builder(String sessionId) {
             this.sessionId = sessionId;
@@ -343,6 +538,31 @@ public class Archive extends StreamComposition {
         }
 
         /**
+         * (OPTIONAL) Whether the archive will have transcription.
+         *
+         * @param hasTranscription {@code true} to enable transcription, {@code false} otherwise.
+         *
+         * @return This builder.
+         */
+        public Builder hasTranscription(boolean hasTranscription) {
+            this.hasTranscription = hasTranscription;
+            return this;
+        }
+
+        /**
+         * (OPTIONAL) Sets the transcription properties for the archive.
+         *
+         * @param transcriptionProperties The transcription properties.
+         *
+         * @return This builder.
+         */
+        public Builder transcriptionProperties(TranscriptionProperties transcriptionProperties) {
+            this.transcriptionProperties = transcriptionProperties;
+            return this;
+        }
+
+        /**
+         * 
          * Builds the {@linkplain Archive} object with this builder's settings.
          *
          * @return A new {@link Archive} instance.

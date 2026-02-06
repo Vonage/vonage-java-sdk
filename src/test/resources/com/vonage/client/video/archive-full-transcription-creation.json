@@ -1,0 +1,8 @@
+{
+  "sessionId": "testSessionId",
+  "hasTranscription": true,
+  "transcriptionProperties": {
+    "primaryLanguageCode": "en-US",
+    "hasSummary": true
+  }
+}
