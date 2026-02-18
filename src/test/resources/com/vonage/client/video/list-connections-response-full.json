@@ -1,0 +1,17 @@
+{
+  "count": 2,
+  "projectId": "PROJECT_ID_PLACEHOLDER",
+  "sessionId": "SESSION_ID_PLACEHOLDER",
+  "items": [
+    {
+      "connectionId": "CONNECTION_ID_0_PLACEHOLDER",
+      "connectionState": "Connected",
+      "createdAt": 1384221730000
+    },
+    {
+      "connectionId": "CONNECTION_ID_1_PLACEHOLDER",
+      "connectionState": "Connecting",
+      "createdAt": 1384221740000
+    }
+  ]
+}

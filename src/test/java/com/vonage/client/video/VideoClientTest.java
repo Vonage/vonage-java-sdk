@@ -23,7 +23,10 @@ import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
@@ -164,6 +167,21 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 	void stubResponseAndAssertThrowsVideoException(int statusCode, String response,
 																  Executable invocation) throws Exception {
 		assertApiResponseException(statusCode, response, VideoResponseException.class, invocation);
+	}
+
+	private String loadJsonResource(String filename) throws IOException {
+		try (InputStream is = getClass().getResourceAsStream(filename)) {
+			if (is == null) {
+				throw new IOException("Could not find resource: " + filename);
+			}
+			byte[] buffer = new byte[1024];
+			StringBuilder sb = new StringBuilder();
+			int bytesRead;
+			while ((bytesRead = is.read(buffer)) != -1) {
+				sb.append(new String(buffer, 0, bytesRead, StandardCharsets.UTF_8));
+			}
+			return sb.toString().trim();
+		}
 	}
 	
 	void stubArchiveJsonAndAssertThrows(Executable invocation) throws Exception {
@@ -386,6 +404,22 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 			  "  \"message\": \"The session exists but has not had any streams added to it yet.\"\n" +
 			  "}";
 		stubResponseAndAssertThrowsVideoException(404, responseJson, () -> client.listStreams(sessionId));
+	}
+
+	@Test
+	public void testListConnections() throws Exception {
+		String responseJson = loadJsonResource("list-connections-response.json");
+
+		stubResponse(responseJson);
+		List<Connection> response = client.listConnections(sessionId);
+		assertEquals(2, response.size());
+		assertEquals(connectionId, response.get(0).getConnectionId().toString());
+		assertEquals(ConnectionState.CONNECTED, response.get(0).getConnectionState());
+		assertEquals(Long.valueOf(1384221730000L), response.get(0).getCreatedAt());
+		assertEquals(streamId, response.get(1).getConnectionId().toString());
+		assertEquals(ConnectionState.CONNECTING, response.get(1).getConnectionState());
+		assertEquals(Long.valueOf(1384221740000L), response.get(1).getCreatedAt());
+		assertThrows(IllegalArgumentException.class, () -> client.listConnections(null));
 	}
 
 	@Test
@@ -1277,6 +1311,68 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 				assertEquals(5, parsed.getItems().size());
 				assertNotNull(parsed.getItems().get(0));
 				assertEquals(applicationId, parsed.getItems().get(2).getApplicationId().toString());
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testListConnectionsEndpoint() throws Exception {
+		new VideoEndpointTestSpec<String, ListConnectionsResponse>() {
+
+			@Override
+			protected RestEndpoint<String, ListConnectionsResponse> endpoint() {
+				return client.listConnections;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(String request) {
+				return "/v2/project/"+applicationId+"/session/"+request+"/connection";
+			}
+
+			@Override
+			protected String sampleRequest() {
+				return sessionId;
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testParseValidResponse();
+			}
+
+			private void testParseValidResponse() throws Exception {
+				UUID connectionId0 = UUID.randomUUID();
+				UUID connectionId1 = UUID.randomUUID();
+				Long createdAt0 = 1384221730000L;
+				Long createdAt1 = 1384221740000L;
+				Integer count = 2;
+				String json = loadJsonResource("list-connections-response-full.json")
+						.replace("PROJECT_ID_PLACEHOLDER", applicationId)
+						.replace("SESSION_ID_PLACEHOLDER", sessionId)
+						.replace("CONNECTION_ID_0_PLACEHOLDER", connectionId0.toString())
+						.replace("CONNECTION_ID_1_PLACEHOLDER", connectionId1.toString());
+
+				stubResponse(200, json);
+				ListConnectionsResponse response = endpoint().execute(sessionId);
+				assertEquals(count, response.getCount());
+				assertEquals(applicationId, response.getProjectId().toString());
+				assertEquals(sessionId, response.getSessionId());
+				List<Connection> connections = response.getItems();
+				assertEquals(2, connections.size());
+				Connection conn0 = connections.get(0);
+				assertEquals(connectionId0, conn0.getConnectionId());
+				assertEquals(ConnectionState.CONNECTED, conn0.getConnectionState());
+				assertEquals(createdAt0, conn0.getCreatedAt());
+				Connection conn1 = connections.get(1);
+				assertEquals(connectionId1, conn1.getConnectionId());
+				assertEquals(ConnectionState.CONNECTING, conn1.getConnectionState());
+				assertEquals(createdAt1, conn1.getCreatedAt());
 			}
 		}
 		.runTests();
