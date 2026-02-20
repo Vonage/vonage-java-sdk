@@ -416,7 +416,7 @@ public class VideoClientTest extends AbstractClientTest<VideoClient> {
 		assertEquals(connectionId, response.get(0).getConnectionId().toString());
 		assertEquals(ConnectionState.CONNECTED, response.get(0).getConnectionState());
 		assertEquals(Long.valueOf(1384221730000L), response.get(0).getCreatedAt());
-		assertEquals(streamId, response.get(1).getConnectionId().toString());
+		assertEquals("9c18b42f-ee38-4b38-99bb-d37b2eca9741", response.get(1).getConnectionId().toString());
 		assertEquals(ConnectionState.CONNECTING, response.get(1).getConnectionState());
 		assertEquals(Long.valueOf(1384221740000L), response.get(1).getCreatedAt());
 		assertThrows(IllegalArgumentException.class, () -> client.listConnections(null));
