@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 # Unreleasd
 - Video: Added post-call transcription options
+- Video: Added connections list calls
 
 # [9.8.0] - 2025-01-29
 - Added deprecation notice for Java 8/1.8 users. Version 9.x will be the final version to support Java 8.

@@ -1,0 +1,17 @@
+{
+  "count": 2,
+  "projectId": "78d335fa-323d-0114-9c3d-d6f0d48968cf",
+  "sessionId": "flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN",
+  "items": [
+    {
+      "connectionId": "09141e29-8770-439b-b180-337d7e637545",
+      "connectionState": "Connected",
+      "createdAt": 1384221730000
+    },
+    {
+      "connectionId": "9c18b42f-ee38-4b38-99bb-d37b2eca9741",
+      "connectionState": "Connecting",
+      "createdAt": 1384221740000
+    }
+  ]
+}
