@@ -17,6 +17,7 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents the state of a connection in a Vonage Video session.
@@ -37,15 +38,16 @@ public enum ConnectionState {
 	 */
 	DISCONNECTED;
 
+	/**
+	 * Convert a string to a ConnectionState enum.
+	 *
+	 * @param value The string to convert.
+	 *
+	 * @return The ConnectionState as an enum, or {@code null} if invalid.
+	 */
 	@JsonCreator
-	public static ConnectionState fromString(String state) {
-		if (state == null) return null;
-		try {
-			return ConnectionState.valueOf(state.toUpperCase());
-		}
-		catch (IllegalArgumentException ex) {
-			return null;
-		}
+	public static ConnectionState fromString(String value) {
+		return Jsonable.fromString(value, ConnectionState.class);
 	}
 
 	@JsonValue
