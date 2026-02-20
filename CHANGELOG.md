@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# Unreleasd
+# [9.9.0]
 - Video: Added post-call transcription options
 - Video: Added connections list calls
 - Verify v2: Added support for `template_id` parameter
