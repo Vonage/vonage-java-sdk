@@ -20,6 +20,9 @@ import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.verify2.VerificationRequest.Builder;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
@@ -42,6 +45,39 @@ public class VerificationRequestTest {
 
 	Builder newBuilder() {
 		return VerificationRequest.builder().brand(BRAND);
+	}
+
+	/**
+	 * Loads a JSON resource file and replaces placeholders with provided values.
+	 * This follows the pattern used in identityinsights tests for better maintainability.
+	 *
+	 * @param filename The resource filename (relative to this test class)
+	 * @param placeholders Variable arguments of key-value pairs (key, value, key, value, ...)
+	 * @return The JSON string with placeholders replaced
+	 * @throws IOException If the resource cannot be loaded
+	 */
+	private String loadJsonResource(String filename, String... placeholders) throws IOException {
+		try (InputStream is = getClass().getResourceAsStream(filename)) {
+			if (is == null) {
+				throw new IOException("Could not find resource: " + filename);
+			}
+			byte[] buffer = new byte[1024];
+			StringBuilder sb = new StringBuilder();
+			int bytesRead;
+			while ((bytesRead = is.read(buffer)) != -1) {
+				sb.append(new String(buffer, 0, bytesRead, StandardCharsets.UTF_8));
+			}
+			String json = sb.toString().trim();
+			
+			// Replace placeholders
+			for (int i = 0; i < placeholders.length; i += 2) {
+				if (i + 1 < placeholders.length) {
+					json = json.replace(placeholders[i], placeholders[i + 1]);
+				}
+			}
+			
+			return json;
+		}
 	}
 
 	Builder newBuilderAllParams() {
@@ -364,6 +400,35 @@ public class VerificationRequestTest {
 		var expectedJson = "{\"brand\":\""+BRAND+"\",\"workflow\":[" +
 				"{\"channel\":\"whatsapp\",\"to\":\""+TO_NUMBER+"\"}]}";
 		assertEquals(expectedJson, request.toJson());
+	}
+
+	@Test
+	public void testTemplateId() throws Exception {
+		String templateId = "4ed3027d-8762-44a0-aa3f-c393717413a4";
+		
+		// Test with SMS workflow - using JSON resource file
+		String expectedSmsJson = loadJsonResource(
+			"verification-request-with-template-id.json",
+			"TEMPLATE_ID_PLACEHOLDER", templateId
+		);
+		
+		VerificationRequest smsRequest = newBuilder()
+				.addWorkflow(new SmsWorkflow(TO_NUMBER))
+				.templateId(templateId)
+				.build();
+		assertEquals(templateId, smsRequest.getTemplateId());
+		assertEquals(expectedSmsJson, smsRequest.toJson());
+		
+		// Test without template_id - using JSON resource file
+		String expectedJsonWithoutTemplate = loadJsonResource(
+			"verification-request-without-template-id.json"
+		);
+		
+		VerificationRequest requestWithoutTemplate = newBuilder()
+				.addWorkflow(new SmsWorkflow(TO_NUMBER))
+				.build();
+		assertNull(requestWithoutTemplate.getTemplateId());
+		assertEquals(expectedJsonWithoutTemplate, requestWithoutTemplate.toJson());
 	}
 
 	@Test
