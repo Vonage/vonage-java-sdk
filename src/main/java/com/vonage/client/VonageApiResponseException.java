@@ -34,6 +34,7 @@ public class VonageApiResponseException extends VonageClientException implements
 	protected String title, detail, instance, code, errorCodeLabel, errorCode;
 	protected List<?> errors, invalidParameters;
 	@JsonIgnore protected int statusCode;
+	@JsonIgnore protected String rawResponse, rawRequest;
 
 	protected VonageApiResponseException() {
 	}
@@ -160,6 +161,50 @@ public class VonageApiResponseException extends VonageClientException implements
 	@JsonIgnore
 	public int getStatusCode() {
 		return statusCode;
+	}
+
+	/**
+	 * Gets the raw HTTP response body that was returned from the API.
+	 * This is useful for debugging when the structured error fields don't provide enough detail.
+	 *
+	 * @return The complete HTTP response body as a string, or {@code null} if not captured.
+	 * @since 9.9.0
+	 */
+	@JsonIgnore
+	public String getRawResponse() {
+		return rawResponse;
+	}
+
+	/**
+	 * Sets the raw HTTP response body. Intended for internal use.
+	 *
+	 * @param rawResponse The complete HTTP response body as a string.
+	 */
+	@JsonIgnore
+	protected void setRawResponse(String rawResponse) {
+		this.rawResponse = rawResponse;
+	}
+
+	/**
+	 * Gets the raw HTTP request body that was sent to the API.
+	 * This is useful for debugging to see exactly what was sent when an error occurred.
+	 *
+	 * @return The complete HTTP request body as a string, or {@code null} if not captured or not applicable.
+	 * @since 9.9.0
+	 */
+	@JsonIgnore
+	public String getRawRequest() {
+		return rawRequest;
+	}
+
+	/**
+	 * Sets the raw HTTP request body. Intended for internal use.
+	 *
+	 * @param rawRequest The complete HTTP request body as a string.
+	 */
+	@JsonIgnore
+	protected void setRawRequest(String rawRequest) {
+		this.rawRequest = rawRequest;
 	}
 
 	@JsonIgnore

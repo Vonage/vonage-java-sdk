@@ -52,6 +52,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	protected final Class<? extends VonageApiResponseException> responseExceptionType;
 	protected final Class<R> responseType;
 	protected T cachedRequestBody;
+	protected String cachedRequestBodyString;
 
 	protected DynamicEndpoint(Builder<T, R> builder) {
 		super(builder.wrapper);
@@ -232,7 +233,8 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			applyQueryParams(((QueryParamsRequest) requestBody).makeParams(), rqb);
 		}
 		if (requestBody instanceof Jsonable) {
-			rqb.setEntity(new StringEntity(((Jsonable) requestBody).toJson(), ContentType.APPLICATION_JSON));
+			cachedRequestBodyString = ((Jsonable) requestBody).toJson();
+			rqb.setEntity(new StringEntity(cachedRequestBodyString, ContentType.APPLICATION_JSON));
 		}
 		else if (requestBody instanceof BinaryRequest) {
 			BinaryRequest bin = (BinaryRequest) requestBody;
@@ -266,6 +268,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 		finally {
 			cachedRequestBody = null;
+			cachedRequestBodyString = null;
 		}
 	}
 
@@ -345,6 +348,10 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 				varex.title = response.getStatusLine().getReasonPhrase();
 			}
 			varex.statusCode = response.getStatusLine().getStatusCode();
+			varex.setRawResponse(exMessage);
+			if (cachedRequestBodyString != null) {
+				varex.setRawRequest(cachedRequestBodyString);
+			}
 			logger.log(Level.WARNING, "Failed to parse response", varex);
 			throw varex;
 		}
