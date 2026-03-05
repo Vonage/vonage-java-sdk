@@ -31,6 +31,10 @@ public abstract class RcsRequest extends MessageRequest {
 	protected RcsRequest(Builder<?, ?> builder, MessageType messageType) {
 		super(builder, Channel.RCS, messageType);
 		this.rcs = builder.rcs;
+		int min = 300, max = 2592000;
+		if (ttl != null && (ttl < min || ttl > max)) {
+			throw new IllegalArgumentException("TTL must be between "+min+" and "+max+" seconds.");
+		}
 	}
 
 	@JsonProperty("ttl")
@@ -143,8 +147,16 @@ public abstract class RcsRequest extends MessageRequest {
 			return (B) this;
 		}
 
+		/**
+		 * (OPTIONAL)
+		 * Sets the time-to-live for the RCS message.
+		 *
+		 * @param ttl The duration in seconds the delivery of a message will be attempted,
+		 *            between 300 and 2592000 seconds.
+		 * @return This builder.
+		 */
 		@Override
-		protected B ttl(int ttl) {
+		public B ttl(int ttl) {
 			return super.ttl(ttl);
 		}
 	}
