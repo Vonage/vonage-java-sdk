@@ -55,7 +55,7 @@ public class RcsTextRequestTest {
 	@Test
 	public void testTtlTooShort() {
 		assertThrows(IllegalArgumentException.class, () ->
-				RcsTextRequest.builder().from(from).to(to).text(message).ttl(299).build()
+				RcsTextRequest.builder().from(from).to(to).text(message).ttl(19).build()
 		);
 	}
 
