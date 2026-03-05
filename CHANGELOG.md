@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.10.0]
+- Exceptions: Added `getRawRequest()` and `getRawResponse()` methods to `VonageApiResponseException` for debugging API errors
+
 # [9.9.0]
 - Video: Added post-call transcription options
 - Video: Added connections list calls

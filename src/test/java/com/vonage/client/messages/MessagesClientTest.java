@@ -33,6 +33,9 @@ import com.vonage.client.messages.viber.ViberVideoRequest;
 import com.vonage.client.messages.whatsapp.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
@@ -133,6 +136,53 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
                   "instance": "bf0ca0bf927b3b52e3cb03217e1a1ddf"
                 }"""
 		);
+	}
+
+	private String loadJsonResource(String filename) throws IOException {
+		try (InputStream is = getClass().getResourceAsStream(filename)) {
+			if (is == null) {
+				throw new IOException("Could not find resource: " + filename);
+			}
+			byte[] buffer = new byte[1024];
+			StringBuilder sb = new StringBuilder();
+			int bytesRead;
+			while ((bytesRead = is.read(buffer)) != -1) {
+				sb.append(new String(buffer, 0, bytesRead, StandardCharsets.UTF_8));
+			}
+			return sb.toString().trim();
+		}
+	}
+
+	@Test
+	public void testSendMessageExceptionContainsRawRequestAndResponse() throws Exception {
+		String responseJson = loadJsonResource("error-422-invalid-channel.json");
+		stubResponse(422, responseJson);
+		
+		MessageRequest request = SmsTextRequest.builder()
+				.from("447700900001")
+				.to("447700900000")
+				.text("Hello").build();
+		
+		try {
+			client.useRegularEndpoint().sendMessage(request);
+			fail("Expected MessageResponseException to be thrown");
+		}
+		catch (MessageResponseException ex) {
+			// Verify the structured fields are set
+			assertEquals(422, ex.getStatusCode());
+			assertEquals("Invalid channel parameters", ex.getTitle());
+			
+			// Verify the raw response is captured
+			assertNotNull(ex.getRawResponse());
+			assertTrue(ex.getRawResponse().contains("Invalid channel parameters"));
+			assertTrue(ex.getRawResponse().contains("1110"));
+			
+			// Verify the raw request is captured
+			assertNotNull(ex.getRawRequest());
+			assertTrue(ex.getRawRequest().contains("447700900000"));
+			assertTrue(ex.getRawRequest().contains("447700900001"));
+			assertTrue(ex.getRawRequest().contains("Hello"));
+		}
 	}
 
 	@Test
