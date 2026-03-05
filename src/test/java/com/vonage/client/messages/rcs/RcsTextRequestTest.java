@@ -209,7 +209,7 @@ public class RcsTextRequestTest {
 
 		String json = rcs.toJson();
 		assertTrue(json.contains("\"trusted_recipient\":true"));
-		assertTrue(json.contains("\"rcs\":"));
+		assertFalse(json.contains("\"rcs\":"));
 	}
 
 	@Test
@@ -220,7 +220,7 @@ public class RcsTextRequestTest {
 
 		String json = rcs.toJson();
 		assertTrue(json.contains("\"trusted_recipient\":false"));
-		assertTrue(json.contains("\"rcs\":"));
+		assertFalse(json.contains("\"rcs\":"));
 	}
 
 	@Test

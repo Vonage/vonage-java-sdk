@@ -25,7 +25,6 @@ import com.vonage.client.JsonableBaseObject;
  */
 public final class Rcs extends JsonableBaseObject {
 	String category;
-	Boolean trustedRecipient;
 	CardOrientation cardOrientation;
 	ImageAlignment imageAlignment;
 	CardWidth cardWidth;
@@ -34,7 +33,6 @@ public final class Rcs extends JsonableBaseObject {
 
 	private Rcs(Builder builder) {
 		this.category = builder.category;
-		this.trustedRecipient = builder.trustedRecipient;
 		this.cardOrientation = builder.cardOrientation;
 		this.imageAlignment = builder.imageAlignment;
 		this.cardWidth = builder.cardWidth;
@@ -50,19 +48,6 @@ public final class Rcs extends JsonableBaseObject {
 	}
 
 	/**
-	 * Creates an RCS options object with the specified category and trusted recipient flag.
-	 *
-	 * @param category The RCS message category.
-	 * @param trustedRecipient Whether the recipient is trusted.
-	 *
-	 * @since 9.8.0
-	 */
-	public Rcs(String category, Boolean trustedRecipient) {
-		this.category = category;
-		this.trustedRecipient = trustedRecipient;
-	}
-
-	/**
 	 * The RCS message category.
 	 *
 	 * @return The category as a string, or {@code null} if not set.
@@ -70,18 +55,6 @@ public final class Rcs extends JsonableBaseObject {
 	@JsonProperty("category")
 	public String getCategory() {
 		return category;
-	}
-
-	/**
-	 * Whether the recipient is trusted.
-	 *
-	 * @return The trusted recipient flag as a Boolean, or {@code null} if not set.
-	 *
-	 * @since 9.8.0
-	 */
-	@JsonProperty("trusted_recipient")
-	public Boolean getTrustedRecipient() {
-		return trustedRecipient;
 	}
 
 	/**
@@ -139,7 +112,6 @@ public final class Rcs extends JsonableBaseObject {
 	 */
 	public static final class Builder {
 		private String category;
-		private Boolean trustedRecipient;
 		private CardOrientation cardOrientation;
 		private ImageAlignment imageAlignment;
 		private CardWidth cardWidth;
@@ -155,18 +127,6 @@ public final class Rcs extends JsonableBaseObject {
 		 */
 		public Builder category(String category) {
 			this.category = category;
-			return this;
-		}
-
-		/**
-		 * (OPTIONAL)
-		 * Sets whether the recipient is trusted.
-		 *
-		 * @param trustedRecipient Whether the recipient is trusted.
-		 * @return This builder.
-		 */
-		public Builder trustedRecipient(Boolean trustedRecipient) {
-			this.trustedRecipient = trustedRecipient;
 			return this;
 		}
 

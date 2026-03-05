@@ -26,19 +26,6 @@ public class RcsTest {
 		String category = "transaction";
 		Rcs rcs = new Rcs(category);
 		assertEquals(category, rcs.getCategory());
-		assertNull(rcs.getTrustedRecipient());
-		assertNull(rcs.getCardOrientation());
-		assertNull(rcs.getImageAlignment());
-		assertNull(rcs.getCardWidth());
-	}
-
-	@Test
-	public void testConstructorWithCategoryAndTrustedRecipient() {
-		String category = "promotion";
-		Boolean trustedRecipient = true;
-		Rcs rcs = new Rcs(category, trustedRecipient);
-		assertEquals(category, rcs.getCategory());
-		assertEquals(trustedRecipient, rcs.getTrustedRecipient());
 		assertNull(rcs.getCardOrientation());
 		assertNull(rcs.getImageAlignment());
 		assertNull(rcs.getCardWidth());
@@ -47,21 +34,18 @@ public class RcsTest {
 	@Test
 	public void testBuilderAllFields() {
 		String category = "authentication";
-		Boolean trustedRecipient = false;
 		CardOrientation orientation = CardOrientation.HORIZONTAL;
 		ImageAlignment alignment = ImageAlignment.RIGHT;
 		CardWidth width = CardWidth.MEDIUM;
 
 		Rcs rcs = Rcs.builder()
 			.category(category)
-			.trustedRecipient(trustedRecipient)
 			.cardOrientation(orientation)
 			.imageAlignment(alignment)
 			.cardWidth(width)
 			.build();
 
 		assertEquals(category, rcs.getCategory());
-		assertEquals(trustedRecipient, rcs.getTrustedRecipient());
 		assertEquals(orientation, rcs.getCardOrientation());
 		assertEquals(alignment, rcs.getImageAlignment());
 		assertEquals(width, rcs.getCardWidth());
@@ -78,7 +62,6 @@ public class RcsTest {
 			.build();
 
 		assertNull(rcs.getCategory());
-		assertNull(rcs.getTrustedRecipient());
 		assertEquals(orientation, rcs.getCardOrientation());
 		assertNull(rcs.getImageAlignment());
 		assertEquals(width, rcs.getCardWidth());
@@ -88,7 +71,6 @@ public class RcsTest {
 	public void testSerializeWithAllFields() {
 		Rcs rcs = Rcs.builder()
 			.category("promotion")
-			.trustedRecipient(true)
 			.cardOrientation(CardOrientation.HORIZONTAL)
 			.imageAlignment(ImageAlignment.LEFT)
 			.cardWidth(CardWidth.SMALL)
@@ -96,7 +78,7 @@ public class RcsTest {
 
 		String json = rcs.toJson();
 		assertTrue(json.contains("\"category\":\"promotion\""));
-		assertTrue(json.contains("\"trusted_recipient\":true"));
+		assertFalse(json.contains("trusted_recipient"));
 		assertTrue(json.contains("\"card_orientation\":\"HORIZONTAL\""));
 		assertTrue(json.contains("\"image_alignment\":\"LEFT\""));
 		assertTrue(json.contains("\"card_width\":\"SMALL\""));
@@ -116,14 +98,13 @@ public class RcsTest {
 
 	@Test
 	public void testDeserializeWithAllFields() throws Exception {
-		String json = "{\"category\":\"transaction\",\"trusted_recipient\":false,"
+		String json = "{\"category\":\"transaction\","
 			+ "\"card_orientation\":\"HORIZONTAL\",\"image_alignment\":\"RIGHT\","
 			+ "\"card_width\":\"MEDIUM\"}";
 
 		Rcs rcs = Jsonable.fromJson(json, Rcs.class);
 		assertNotNull(rcs);
 		assertEquals("transaction", rcs.getCategory());
-		assertEquals(false, rcs.getTrustedRecipient());
 		assertEquals(CardOrientation.HORIZONTAL, rcs.getCardOrientation());
 		assertEquals(ImageAlignment.RIGHT, rcs.getImageAlignment());
 		assertEquals(CardWidth.MEDIUM, rcs.getCardWidth());
@@ -136,7 +117,6 @@ public class RcsTest {
 		Rcs rcs = Jsonable.fromJson(json, Rcs.class);
 		assertNotNull(rcs);
 		assertNull(rcs.getCategory());
-		assertNull(rcs.getTrustedRecipient());
 		assertEquals(CardOrientation.VERTICAL, rcs.getCardOrientation());
 		assertNull(rcs.getImageAlignment());
 		assertEquals(CardWidth.SMALL, rcs.getCardWidth());
@@ -146,7 +126,6 @@ public class RcsTest {
 	public void testEmptyRcs() {
 		Rcs rcs = Rcs.builder().build();
 		assertNull(rcs.getCategory());
-		assertNull(rcs.getTrustedRecipient());
 		assertNull(rcs.getCardOrientation());
 		assertNull(rcs.getImageAlignment());
 		assertNull(rcs.getCardWidth());

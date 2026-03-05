@@ -27,10 +27,12 @@ import com.vonage.client.common.MessageType;
  */
 public abstract class RcsRequest extends MessageRequest {
 	protected Rcs rcs;
+	protected Boolean trustedRecipient;
 
 	protected RcsRequest(Builder<?, ?> builder, MessageType messageType) {
 		super(builder, Channel.RCS, messageType);
 		this.rcs = builder.rcs;
+		this.trustedRecipient = builder.trustedRecipient;
 		int min = 20, max = 259200;
 		if (ttl != null && (ttl < min || ttl > max)) {
 			throw new IllegalArgumentException("TTL must be between "+min+" and "+max+" seconds.");
@@ -42,6 +44,11 @@ public abstract class RcsRequest extends MessageRequest {
 		return ttl;
 	}
 
+	@JsonProperty("trusted_recipient")
+	public Boolean getTrustedRecipient() {
+		return trustedRecipient;
+	}
+
 	@JsonProperty("rcs")
 	public Rcs getRcs() {
 		return rcs;
@@ -50,6 +57,7 @@ public abstract class RcsRequest extends MessageRequest {
 	@SuppressWarnings("unchecked")
 	protected abstract static class Builder<M extends RcsRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
 		protected Rcs rcs;
+		protected Boolean trustedRecipient;
 
 		/**
 		 * (OPTIONAL)
@@ -67,19 +75,6 @@ public abstract class RcsRequest extends MessageRequest {
 
 		/**
 		 * (OPTIONAL)
-		 * Sets the RCS message category.
-		 *
-		 * @param category The RCS category.
-		 * @return This builder.
-		 *
-		 * @since 9.5.0
-		 */
-		public B rcsCategory(String category) {
-			return rcs(new Rcs(category));
-		}
-
-		/**
-		 * (OPTIONAL)
 		 * Indicates if the recipient is trusted.
 		 *
 		 * @param trustedRecipient Whether the recipient is trusted (true or false).
@@ -88,62 +83,7 @@ public abstract class RcsRequest extends MessageRequest {
 		 * @since 9.8.0
 		 */
 		public B trustedRecipient(Boolean trustedRecipient) {
-			if (rcs == null) {
-				rcs = new Rcs();
-			}
-			rcs.trustedRecipient = trustedRecipient;
-			return (B) this;
-		}
-
-		/**
-		 * (OPTIONAL)
-		 * Sets the orientation of the rich card.
-		 *
-		 * @param cardOrientation The card orientation.
-		 * @return This builder.
-		 *
-		 * @since 9.9.0
-		 */
-		public B cardOrientation(CardOrientation cardOrientation) {
-			if (rcs == null) {
-				rcs = new Rcs();
-			}
-			rcs.cardOrientation = cardOrientation;
-			return (B) this;
-		}
-
-		/**
-		 * (OPTIONAL)
-		 * Sets the alignment of the thumbnail image in the rich card.
-		 * This property only applies when sending rich cards with a card_orientation of HORIZONTAL.
-		 *
-		 * @param imageAlignment The image alignment.
-		 * @return This builder.
-		 *
-		 * @since 9.9.0
-		 */
-		public B imageAlignment(ImageAlignment imageAlignment) {
-			if (rcs == null) {
-				rcs = new Rcs();
-			}
-			rcs.imageAlignment = imageAlignment;
-			return (B) this;
-		}
-
-		/**
-		 * (OPTIONAL)
-		 * Sets the width of the rich cards displayed in the carousel.
-		 *
-		 * @param cardWidth The card width.
-		 * @return This builder.
-		 *
-		 * @since 9.9.0
-		 */
-		public B cardWidth(CardWidth cardWidth) {
-			if (rcs == null) {
-				rcs = new Rcs();
-			}
-			rcs.cardWidth = cardWidth;
+			this.trustedRecipient = trustedRecipient;
 			return (B) this;
 		}
 
