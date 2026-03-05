@@ -24,10 +24,21 @@ import com.vonage.client.JsonableBaseObject;
  * @since 9.6.0
  */
 public final class Rcs extends JsonableBaseObject {
-	private String category;
+	String category;
 	Boolean trustedRecipient;
+	CardOrientation cardOrientation;
+	ImageAlignment imageAlignment;
+	CardWidth cardWidth;
 
 	Rcs() {}
+
+	private Rcs(Builder builder) {
+		this.category = builder.category;
+		this.trustedRecipient = builder.trustedRecipient;
+		this.cardOrientation = builder.cardOrientation;
+		this.imageAlignment = builder.imageAlignment;
+		this.cardWidth = builder.cardWidth;
+	}
 
 	/**
 	 * Creates an RCS options object with the specified category.
@@ -71,5 +82,138 @@ public final class Rcs extends JsonableBaseObject {
 	@JsonProperty("trusted_recipient")
 	public Boolean getTrustedRecipient() {
 		return trustedRecipient;
+	}
+
+	/**
+	 * The orientation of the rich card.
+	 *
+	 * @return The card orientation, or {@code null} if not set.
+	 *
+	 * @since 9.9.0
+	 */
+	@JsonProperty("card_orientation")
+	public CardOrientation getCardOrientation() {
+		return cardOrientation;
+	}
+
+	/**
+	 * The alignment of the thumbnail image in the rich card.
+	 * This property only applies when sending rich cards with a card_orientation of HORIZONTAL.
+	 *
+	 * @return The image alignment, or {@code null} if not set.
+	 *
+	 * @since 9.9.0
+	 */
+	@JsonProperty("image_alignment")
+	public ImageAlignment getImageAlignment() {
+		return imageAlignment;
+	}
+
+	/**
+	 * The width of the rich cards displayed in the carousel.
+	 *
+	 * @return The card width, or {@code null} if not set.
+	 *
+	 * @since 9.9.0
+	 */
+	@JsonProperty("card_width")
+	public CardWidth getCardWidth() {
+		return cardWidth;
+	}
+
+	/**
+	 * Entry point for constructing an instance of this class.
+	 *
+	 * @return A new Builder.
+	 *
+	 * @since 9.9.0
+	 */
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	/**
+	 * Builder for constructing an Rcs object with fluent API.
+	 *
+	 * @since 9.9.0
+	 */
+	public static final class Builder {
+		private String category;
+		private Boolean trustedRecipient;
+		private CardOrientation cardOrientation;
+		private ImageAlignment imageAlignment;
+		private CardWidth cardWidth;
+
+		Builder() {}
+
+		/**
+		 * (OPTIONAL)
+		 * Sets the RCS message category.
+		 *
+		 * @param category The RCS category.
+		 * @return This builder.
+		 */
+		public Builder category(String category) {
+			this.category = category;
+			return this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Sets whether the recipient is trusted.
+		 *
+		 * @param trustedRecipient Whether the recipient is trusted.
+		 * @return This builder.
+		 */
+		public Builder trustedRecipient(Boolean trustedRecipient) {
+			this.trustedRecipient = trustedRecipient;
+			return this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Sets the orientation of the rich card.
+		 *
+		 * @param cardOrientation The card orientation.
+		 * @return This builder.
+		 */
+		public Builder cardOrientation(CardOrientation cardOrientation) {
+			this.cardOrientation = cardOrientation;
+			return this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Sets the alignment of the thumbnail image in the rich card.
+		 * This property only applies when sending rich cards with a card_orientation of HORIZONTAL.
+		 *
+		 * @param imageAlignment The image alignment.
+		 * @return This builder.
+		 */
+		public Builder imageAlignment(ImageAlignment imageAlignment) {
+			this.imageAlignment = imageAlignment;
+			return this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Sets the width of the rich cards displayed in the carousel.
+		 *
+		 * @param cardWidth The card width.
+		 * @return This builder.
+		 */
+		public Builder cardWidth(CardWidth cardWidth) {
+			this.cardWidth = cardWidth;
+			return this;
+		}
+
+		/**
+		 * Builds the Rcs object.
+		 *
+		 * @return A new Rcs instance.
+		 */
+		public Rcs build() {
+			return new Rcs(this);
+		}
 	}
 }

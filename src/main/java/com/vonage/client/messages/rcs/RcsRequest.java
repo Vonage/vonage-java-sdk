@@ -91,6 +91,58 @@ public abstract class RcsRequest extends MessageRequest {
 			return (B) this;
 		}
 
+		/**
+		 * (OPTIONAL)
+		 * Sets the orientation of the rich card.
+		 *
+		 * @param cardOrientation The card orientation.
+		 * @return This builder.
+		 *
+		 * @since 9.9.0
+		 */
+		public B cardOrientation(CardOrientation cardOrientation) {
+			if (rcs == null) {
+				rcs = new Rcs();
+			}
+			rcs.cardOrientation = cardOrientation;
+			return (B) this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Sets the alignment of the thumbnail image in the rich card.
+		 * This property only applies when sending rich cards with a card_orientation of HORIZONTAL.
+		 *
+		 * @param imageAlignment The image alignment.
+		 * @return This builder.
+		 *
+		 * @since 9.9.0
+		 */
+		public B imageAlignment(ImageAlignment imageAlignment) {
+			if (rcs == null) {
+				rcs = new Rcs();
+			}
+			rcs.imageAlignment = imageAlignment;
+			return (B) this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Sets the width of the rich cards displayed in the carousel.
+		 *
+		 * @param cardWidth The card width.
+		 * @return This builder.
+		 *
+		 * @since 9.9.0
+		 */
+		public B cardWidth(CardWidth cardWidth) {
+			if (rcs == null) {
+				rcs = new Rcs();
+			}
+			rcs.cardWidth = cardWidth;
+			return (B) this;
+		}
+
 		@Override
 		protected B ttl(int ttl) {
 			return super.ttl(ttl);
