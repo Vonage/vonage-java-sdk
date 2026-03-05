@@ -31,7 +31,7 @@ public abstract class RcsRequest extends MessageRequest {
 	protected RcsRequest(Builder<?, ?> builder, MessageType messageType) {
 		super(builder, Channel.RCS, messageType);
 		this.rcs = builder.rcs;
-		int min = 300, max = 2592000;
+		int min = 20, max = 259200;
 		if (ttl != null && (ttl < min || ttl > max)) {
 			throw new IllegalArgumentException("TTL must be between "+min+" and "+max+" seconds.");
 		}
