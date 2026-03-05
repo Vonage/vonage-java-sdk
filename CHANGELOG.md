@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 # [9.10.0]
 - Exceptions: Added `getRawRequest()` and `getRawResponse()` methods to `VonageApiResponseException` for debugging API errors
+- Messages: RCS TTL is now publicly settable on all RCS message types, with validation between 300 and 2592000 seconds
 
 # [9.9.0]
 - Video: Added post-call transcription options

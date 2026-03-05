@@ -55,7 +55,14 @@ public class RcsTextRequestTest {
 	@Test
 	public void testTtlTooShort() {
 		assertThrows(IllegalArgumentException.class, () ->
-				RcsTextRequest.builder().from(from).to(to).text(message).ttl(0).build()
+				RcsTextRequest.builder().from(from).to(to).text(message).ttl(19).build()
+		);
+	}
+
+	@Test
+	public void testTtlTooLong() {
+		assertThrows(IllegalArgumentException.class, () ->
+				RcsTextRequest.builder().from(from).to(to).text(message).ttl(2592001).build()
 		);
 	}
 
@@ -202,7 +209,7 @@ public class RcsTextRequestTest {
 
 		String json = rcs.toJson();
 		assertTrue(json.contains("\"trusted_recipient\":true"));
-		assertTrue(json.contains("\"rcs\":"));
+		assertFalse(json.contains("\"rcs\":"));
 	}
 
 	@Test
@@ -213,7 +220,7 @@ public class RcsTextRequestTest {
 
 		String json = rcs.toJson();
 		assertTrue(json.contains("\"trusted_recipient\":false"));
-		assertTrue(json.contains("\"rcs\":"));
+		assertFalse(json.contains("\"rcs\":"));
 	}
 
 	@Test
