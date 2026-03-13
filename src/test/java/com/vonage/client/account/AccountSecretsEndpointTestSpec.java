@@ -16,16 +16,13 @@
 package com.vonage.client.account;
 
 import com.vonage.client.auth.AuthMethod;
-import com.vonage.client.auth.SignatureAuthMethod;
 import java.util.Collection;
 
 abstract class AccountSecretsEndpointTestSpec<T, R> extends AccountEndpointTestSpec<T, R> {
 
 	@Override
 	protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-		Collection<Class<? extends AuthMethod>> authMethods = super.expectedAuthMethods();
-		authMethods.add(SignatureAuthMethod.class);
-		return authMethods;
+		return super.expectedAuthMethods();
 	}
 
 	@Override
@@ -36,16 +33,22 @@ abstract class AccountSecretsEndpointTestSpec<T, R> extends AccountEndpointTestS
 	@Override
 	protected String expectedEndpointUri(T request) {
 		String uri = "/accounts/%s/secrets";
-        switch (request) {
-            case SecretRequest secretRequest -> {
-                String apiKey = secretRequest.apiKey;
-                String secretId = secretRequest.secretId;
-                uri = String.format(uri, apiKey) + "/" + secretId;
-            }
-            case CreateSecretRequest createSecretRequest -> uri = String.format(uri, createSecretRequest.apiKey);
-            case String ignored -> uri = String.format(uri, request);
-            case null, default -> throw new IllegalStateException();
-        }
+		if (request instanceof SecretRequest) {
+			SecretRequest secretRequest = (SecretRequest) request;
+			String apiKey = secretRequest.apiKey;
+			String secretId = secretRequest.secretId;
+			uri = String.format(uri, apiKey) + "/" + secretId;
+		}
+		else if (request instanceof CreateSecretRequest) {
+			CreateSecretRequest createSecretRequest = (CreateSecretRequest) request;
+			uri = String.format(uri, createSecretRequest.apiKey);
+		}
+		else if (request instanceof String) {
+			uri = String.format(uri, request);
+		}
+		else {
+			throw new IllegalStateException();
+		}
 		return uri;
 	}
 }

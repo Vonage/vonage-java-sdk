@@ -32,6 +32,7 @@ public final class Websocket extends JsonableBaseObject {
     private Collection<String> streams;
     private Map<String, String> headers;
     private AudioRate audioRate;
+    private Boolean bidirectional;
 
     Websocket() {}
 
@@ -48,6 +49,7 @@ public final class Websocket extends JsonableBaseObject {
         }
         headers = builder.headers;
         audioRate = builder.audioRate;
+        bidirectional = builder.bidirectional;
     }
 
     /**
@@ -58,6 +60,16 @@ public final class Websocket extends JsonableBaseObject {
     @JsonProperty("uri")
     public URI getUri() {
         return uri;
+    }
+
+    /**
+     * Whether the websocket is bidirectional (optional).
+     *
+     * @return True if bidirectional, false if not, or null if not set.
+     */
+    @JsonProperty("bidirectional")
+    public Boolean getBidirectional() {
+        return bidirectional;
     }
 
     /**

@@ -40,12 +40,13 @@ public class VerificationRequest implements Jsonable {
 	@JsonProperty("locale") protected final Locale locale;
 	protected final Integer channelTimeout, codeLength;
 	protected final Boolean fraudCheck;
-	protected final String brand, code, clientRef;
+	protected final String brand, code, clientRef, templateId;
 	protected final List<Workflow> workflows;
 
 	VerificationRequest(Builder builder) {
 		locale = builder.locale;
 		clientRef = builder.clientRef;
+		templateId = builder.templateId;
 		fraudCheck = builder.fraudCheck != null && !builder.fraudCheck ? false : null;
 		if ((brand = builder.brand) == null || brand.trim().isEmpty()) {
 			throw new IllegalArgumentException("Brand name is required.");
@@ -159,6 +160,17 @@ public class VerificationRequest implements Jsonable {
 	}
 
 	/**
+	 * A custom template ID to use for the verification. This parameter works only when
+	 * the channel is SMS or RCS.
+	 *
+	 * @return The template ID, or {@code null} if not set.
+	 */
+	@JsonProperty("template_id")
+	public String getTemplateId() {
+		return templateId;
+	}
+
+	/**
 	 * Workflows are a sequence of actions that Vonage use to reach the user you wish to verify with a PIN code.
 	 *
 	 * @return The list of workflows (contact methods) to be used in verification, in order of preference.
@@ -190,7 +202,7 @@ public class VerificationRequest implements Jsonable {
 	
 	public static final class Builder {
 		Boolean fraudCheck;
-		String brand, code, clientRef;
+		String brand, code, clientRef, templateId;
 		Integer timeout, codeLength;
 		Locale locale;
 		final List<Workflow> workflows = new ArrayList<>(1);
@@ -362,6 +374,20 @@ public class VerificationRequest implements Jsonable {
 		 */
 		public Builder fraudCheck() {
 			return fraudCheck(false);
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Set a custom template ID to use for the verification. This parameter works only when
+		 * the channel is SMS or RCS.
+		 *
+		 * @param templateId The template ID to use.
+		 *
+		 * @return This builder.
+		 */
+		public Builder templateId(String templateId) {
+			this.templateId = templateId;
+			return this;
 		}
 
 		/**

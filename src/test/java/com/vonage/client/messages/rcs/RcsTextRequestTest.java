@@ -55,7 +55,14 @@ public class RcsTextRequestTest {
 	@Test
 	public void testTtlTooShort() {
 		assertThrows(IllegalArgumentException.class, () ->
-				RcsTextRequest.builder().from(from).to(to).text(message).ttl(0).build()
+				RcsTextRequest.builder().from(from).to(to).text(message).ttl(19).build()
+		);
+	}
+
+	@Test
+	public void testTtlTooLong() {
+		assertThrows(IllegalArgumentException.class, () ->
+				RcsTextRequest.builder().from(from).to(to).text(message).ttl(2592001).build()
 		);
 	}
 
@@ -88,5 +95,140 @@ public class RcsTextRequestTest {
 		assertThrows(IllegalArgumentException.class, () -> RcsTextRequest.builder()
 				.from(rcsText.getFrom()).text(text.toString()).to(rcsText.getTo()).build()
 		);
+	}
+
+	@Test
+	public void testWithSuggestions() {
+		RcsSuggestedReply reply = RcsSuggestedReply.builder()
+				.text("Yes")
+				.postbackData("yes")
+				.build();
+
+		RcsSuggestedActionDial dial = RcsSuggestedActionDial.builder()
+				.text("Call Us")
+				.postbackData("call")
+				.phoneNumber("+14155550123")
+				.build();
+
+		RcsTextRequest rcsText = RcsTextRequest.builder()
+				.from(from)
+				.to(to)
+				.text(message)
+				.suggestions(reply, dial)
+				.build();
+
+		assertEquals(2, rcsText.getSuggestions().size());
+		String json = rcsText.toJson();
+		assertTrue(json.contains("\"suggestions\":["));
+		assertTrue(json.contains("\"type\":\"reply\""));
+		assertTrue(json.contains("\"type\":\"dial\""));
+		assertTrue(json.contains("\"postback_data\":\"yes\""));
+		assertTrue(json.contains("\"phone_number\":\"+14155550123\""));
+	}
+
+	@Test
+	public void testAddSuggestion() {
+		RcsTextRequest rcsText = RcsTextRequest.builder()
+				.from(from)
+				.to(to)
+				.text(message)
+				.addSuggestion(RcsSuggestedReply.builder()
+						.text("Reply 1")
+						.postbackData("r1")
+						.build())
+				.addSuggestion(RcsSuggestedReply.builder()
+						.text("Reply 2")
+						.postbackData("r2")
+						.build())
+				.build();
+
+		assertEquals(2, rcsText.getSuggestions().size());
+		String json = rcsText.toJson();
+		assertTrue(json.contains("\"postback_data\":\"r1\""));
+		assertTrue(json.contains("\"postback_data\":\"r2\""));
+	}
+
+	@Test
+	public void testMaxSuggestions() {
+		java.util.List<RcsSuggestion> suggestions = new java.util.ArrayList<>();
+		for (int i = 1; i <= 11; i++) {
+			suggestions.add(RcsSuggestedReply.builder()
+					.text("Reply " + i)
+					.postbackData("r" + i)
+					.build());
+		}
+
+		RcsTextRequest rcsText = RcsTextRequest.builder()
+				.from(from)
+				.to(to)
+				.text(message)
+				.suggestions(suggestions)
+				.build();
+
+		assertEquals(11, rcsText.getSuggestions().size());
+	}
+
+	@Test
+	public void testTooManySuggestions() {
+		java.util.List<RcsSuggestion> suggestions = new java.util.ArrayList<>();
+		for (int i = 1; i <= 12; i++) {
+			suggestions.add(RcsSuggestedReply.builder()
+					.text("Reply " + i)
+					.postbackData("r" + i)
+					.build());
+		}
+
+		assertThrows(IllegalArgumentException.class, () ->
+				RcsTextRequest.builder()
+						.from(from)
+						.to(to)
+						.text(message)
+						.suggestions(suggestions)
+						.build()
+		);
+	}
+
+	@Test
+	public void testNoSuggestions() {
+		RcsTextRequest rcsText = RcsTextRequest.builder()
+				.from(from)
+				.to(to)
+				.text(message)
+				.build();
+
+		assertNull(rcsText.getSuggestions());
+		String json = rcsText.toJson();
+		assertFalse(json.contains("\"suggestions\""));
+	}
+
+	@Test
+	public void testWithTrustedRecipient() {
+		RcsTextRequest rcs = RcsTextRequest.builder()
+				.from(from).to(to).text(message)
+				.trustedRecipient(true).build();
+
+		String json = rcs.toJson();
+		assertTrue(json.contains("\"trusted_recipient\":true"));
+		assertFalse(json.contains("\"rcs\":"));
+	}
+
+	@Test
+	public void testTrustedRecipientFalse() {
+		RcsTextRequest rcs = RcsTextRequest.builder()
+				.from(from).to(to).text(message)
+				.trustedRecipient(false).build();
+
+		String json = rcs.toJson();
+		assertTrue(json.contains("\"trusted_recipient\":false"));
+		assertFalse(json.contains("\"rcs\":"));
+	}
+
+	@Test
+	public void testWithoutTrustedRecipient() {
+		RcsTextRequest rcs = RcsTextRequest.builder()
+				.from(from).to(to).text(message).build();
+
+		String json = rcs.toJson();
+		assertFalse(json.contains("\"trusted_recipient\""));
 	}
 }

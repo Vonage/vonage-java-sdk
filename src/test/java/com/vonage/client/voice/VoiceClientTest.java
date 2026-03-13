@@ -76,6 +76,27 @@ public class VoiceClientTest extends AbstractClientTest<VoiceClient> {
     }
 
     @Test
+    public void testCreateCallWithShaken() throws Exception {
+        String shakenHeader = "eyJhbGciOiJFUzI1NiIsInBwdCI6InNoYWtlbiIsInR5cCI6InBhc3Nwb3J0IiwieDV1IjoiaHR0cHM6Ly9jZXJ0LmV4YW1wbGUuY29tL3Bhc3Nwb3J0LnBlbSJ9.eyJhdHRlc3QiOiJBIiwiZGVzdCI6eyJ0biI6WyIxMjEyNTU1MTIxMiJdfSwiaWF0IjoxNjk0ODcwNDAwLCJvcmlnIjp7InRuIjoiMTQxNTU1NTEyMzQifSwib3JpZ2lkIjoiMTIzZTQ1NjctZTg5Yi0xMmQzLWE0NTYtNDI2NjE0MTc0MDAwIn0.MEUCIQCrfKeMtvn9I6zXjE2VfGEcdjC2sm5M6cPqBvFyV9XkpQIgLxlvLNmC8DJEKexXZqTZ;info=<https://stir-provider.example.net/cert.cer>;alg=ES256;ppt=\"shaken\"";
+        String expectedJson = "{\n" + "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n"
+                + "  \"uuid\": \"" + SAMPLE_CALL_ID + "\",\n"
+                + "  \"status\": \"started\",\n" + "  \"direction\": \"outbound\"\n" + "}";
+        stubResponse(200, expectedJson);
+        
+        PhoneEndpoint fromEndpoint = new PhoneEndpoint("14155551234", null, shakenHeader);
+        Call call = Call.builder()
+            .to(new PhoneEndpoint("12125551212"))
+            .from(fromEndpoint)
+            .answerUrl("http://api.example.com/answer")
+            .build();
+        
+        CallEvent evt = client.createCall(call);
+        assertEquals(Jsonable.fromJson(expectedJson, CallEvent.class), evt);
+        assertEquals(SAMPLE_CALL_ID, evt.getUuid());
+        assertEquals(shakenHeader, ((PhoneEndpoint) call.getFrom()).getShaken());
+    }
+
+    @Test
     public void testListCallsNoFilter() throws Exception {
         stubResponse(200,
                 "{\n" + "  \"page_size\": 10,\n" + "  \"record_index\": 0,\n" + "  \"count\": 0,\n"

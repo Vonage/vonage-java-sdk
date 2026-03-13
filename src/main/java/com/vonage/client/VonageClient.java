@@ -25,6 +25,7 @@ import com.vonage.client.auth.hashutils.HashType;
 import com.vonage.client.camara.numberverification.NumberVerificationClient;
 import com.vonage.client.camara.simswap.SimSwapClient;
 import com.vonage.client.conversations.ConversationsClient;
+import com.vonage.client.identityinsights.IdentityInsightsClient;
 import com.vonage.client.conversion.ConversionClient;
 import com.vonage.client.insight.InsightClient;
 import com.vonage.client.messages.MessagesClient;
@@ -49,9 +50,18 @@ import java.util.UUID;
  * <p>
  * Construct an instance of this object with one or more {@link AuthMethod}s (providing all the authentication methods
  * for the APIs you wish to use), and then call {@link #getVoiceClient()} to obtain a client for the Vonage Voice API.
- * <p>.
+ * <p>
+ * <p><strong>DEPRECATION NOTICE:</strong></p>
+ * <p>This SDK version (9.x) is the last major version to support Java 8.</p>
+ * <p>Starting with version 10.0, Java 11 or later will be required.</p>
+ * <p>Java 8 support will end on June 30, 2026. Please upgrade your Java runtime or pin your SDK version to 9.x.</p>
  */
 public class VonageClient {
+    /**
+     * Flag to ensure the Java 8 deprecation warning is only printed once.
+     */
+    private static volatile boolean java8WarningShown = false;
+
     /**
      * The HTTP wrapper for this client and its sub-clients.
      */
@@ -74,6 +84,7 @@ public class VonageClient {
     private final ConversationsClient conversations;
     private final SimSwapClient simSwap;
     private final NumberVerificationClient numberVerification;
+    private final IdentityInsightsClient identityInsights;
 
     /**
      * Constructor which uses the builder pattern for instantiation.
@@ -81,6 +92,7 @@ public class VonageClient {
      * @param builder The builder object to use for configuration.
      */
     private VonageClient(Builder builder) {
+        warnOnLegacyJava();
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection, builder.httpClient);
 
         custom = new CustomClient(httpWrapper);
@@ -101,6 +113,30 @@ public class VonageClient {
         conversations = new ConversationsClient(httpWrapper);
         simSwap = new SimSwapClient(httpWrapper);
         numberVerification = new NumberVerificationClient(httpWrapper);
+        identityInsights = new IdentityInsightsClient(httpWrapper);
+    }
+
+    /**
+     * Checks if the current Java version is Java 8 and prints a deprecation warning to stderr if it is.
+     * This warning is only shown once per JVM process to avoid log spam.
+     */
+    private static void warnOnLegacyJava() {
+        if (java8WarningShown) {
+            return;
+        }
+
+        String version = System.getProperty("java.specification.version");
+        if ("1.8".equals(version)) {
+            synchronized (VonageClient.class) {
+                // Double-check after acquiring lock to prevent race conditions
+                if (!java8WarningShown) {
+                    System.err.println("⚠️  [VONAGE SDK WARNING] You are using Java 8. Support ends on June 30, 2026.");
+                    System.err.println("   Future versions of this SDK (v10.0+) will require Java 11 or later.");
+                    System.err.println("   Please upgrade your runtime or pin your SDK version to 9.x.");
+                    java8WarningShown = true;
+                }
+            }
+        }
     }
 
     /**
@@ -281,6 +317,16 @@ public class VonageClient {
     @Deprecated
     public NumberVerificationClient getNumberVerificationClient() {
         return numberVerification;
+    }
+
+    /**
+     * Returns the Identity Insights API client.
+     *
+     * @return The {@linkplain IdentityInsightsClient}.
+     * @since 9.1.0
+     */
+    public IdentityInsightsClient getIdentityInsightsClient() {
+        return identityInsights;
     }
 
     /**

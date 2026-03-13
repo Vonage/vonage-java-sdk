@@ -39,6 +39,7 @@ public class VideoClient {
 
 	final RestEndpoint<CreateSessionRequest, CreateSessionResponse[]> createSession;
 	final RestEndpoint<String, ListStreamsResponse> listStreams;
+	final RestEndpoint<String, ListConnectionsResponse> listConnections;
 	final RestEndpoint<SessionResourceRequestWrapper, GetStreamResponse> getStream;
 	final RestEndpoint<SetStreamLayoutRequest, Void> setStreamLayout;
 	final RestEndpoint<SignalRequest, Void> signal, signalAll;
@@ -90,6 +91,7 @@ public class VideoClient {
 
 		createSession = new Endpoint<>(req -> "/session/create", HttpMethod.POST);
 		listStreams = new Endpoint<>(req -> "session/"+req+"/stream", HttpMethod.GET);
+		listConnections = new Endpoint<>(req -> "session/"+req+"/connection", HttpMethod.GET);
 		setStreamLayout = new Endpoint<>(req -> "session/"+req.sessionId+"/stream", HttpMethod.PUT);
 		getStream = new Endpoint<>(req -> "session/"+req.sessionId+"/stream/"+req.resourceId, HttpMethod.GET);
 		signalAll = new Endpoint<>(req -> "session/"+req.sessionId+"/signal", HttpMethod.POST);
@@ -231,6 +233,16 @@ public class VideoClient {
 	 */
 	public List<GetStreamResponse> listStreams(String sessionId) {
 		return listStreams.execute(validateSessionId(sessionId)).getItems();
+	}
+
+	/**
+	 * Use this method to list the connections from a Vonage Video session.
+	 *
+	 * @param sessionId The session ID.
+	 * @return Details for each connection, as a List.
+	 */
+	public List<Connection> listConnections(String sessionId) {
+		return listConnections.execute(validateSessionId(sessionId)).getItems();
 	}
 
 	/**

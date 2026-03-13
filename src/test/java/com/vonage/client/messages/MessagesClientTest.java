@@ -20,6 +20,7 @@ import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import com.vonage.client.messages.whatsapp.ReplyingIndicator;
 import com.vonage.client.common.MessageType;
 import com.vonage.client.messages.messenger.*;
 import com.vonage.client.messages.mms.*;
@@ -32,6 +33,9 @@ import com.vonage.client.messages.viber.ViberVideoRequest;
 import com.vonage.client.messages.whatsapp.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
@@ -134,6 +138,53 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 		);
 	}
 
+	private String loadJsonResource(String filename) throws IOException {
+		try (InputStream is = getClass().getResourceAsStream(filename)) {
+			if (is == null) {
+				throw new IOException("Could not find resource: " + filename);
+			}
+			byte[] buffer = new byte[1024];
+			StringBuilder sb = new StringBuilder();
+			int bytesRead;
+			while ((bytesRead = is.read(buffer)) != -1) {
+				sb.append(new String(buffer, 0, bytesRead, StandardCharsets.UTF_8));
+			}
+			return sb.toString().trim();
+		}
+	}
+
+	@Test
+	public void testSendMessageExceptionContainsRawRequestAndResponse() throws Exception {
+		String responseJson = loadJsonResource("error-422-invalid-channel.json");
+		stubResponse(422, responseJson);
+		
+		MessageRequest request = SmsTextRequest.builder()
+				.from("447700900001")
+				.to("447700900000")
+				.text("Hello").build();
+		
+		try {
+			client.useRegularEndpoint().sendMessage(request);
+			fail("Expected MessageResponseException to be thrown");
+		}
+		catch (MessageResponseException ex) {
+			// Verify the structured fields are set
+			assertEquals(422, ex.getStatusCode());
+			assertEquals("Invalid channel parameters", ex.getTitle());
+			
+			// Verify the raw response is captured
+			assertNotNull(ex.getRawResponse());
+			assertTrue(ex.getRawResponse().contains("Invalid channel parameters"));
+			assertTrue(ex.getRawResponse().contains("1110"));
+			
+			// Verify the raw request is captured
+			assertNotNull(ex.getRawRequest());
+			assertTrue(ex.getRawRequest().contains("447700900000"));
+			assertTrue(ex.getRawRequest().contains("447700900001"));
+			assertTrue(ex.getRawRequest().contains("Hello"));
+		}
+	}
+
 	@Test
 	public void testSensSmsSandboxFailure() {
 		assertThrows(MessageResponseException.class, () -> client.useSandboxEndpoint()
@@ -220,6 +271,29 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
                 }""", MessageResponseException.class,
 				() -> client.ackInboundMessage(MESSAGE_ID, ApiRegion.API_US)
 		);
+	}
+
+	@Test
+	public void testAckInboundMessageWithTypingIndicator() throws Exception {
+		ReplyingIndicator indicator = ReplyingIndicator.builder()
+				.show(true)
+				.type("text")
+				.build();
+		
+		stubResponseAndRun(200, () -> client.ackInboundMessage(MESSAGE_ID, null, indicator));
+		stubResponseAndAssertThrows(() -> client.ackInboundMessage(null, ApiRegion.API_US, indicator), NullPointerException.class);
+		stubResponseAndAssertThrows(() -> client.ackInboundMessage("not-an-id", null, indicator), IllegalArgumentException.class);
+		stubResponseAndRun(200, () -> client.ackInboundMessage(MESSAGE_ID, ApiRegion.API_EU, indicator));
+		
+		// Test with show=false
+		ReplyingIndicator indicatorFalse = ReplyingIndicator.builder()
+				.show(false)
+				.type("text")
+				.build();
+		stubResponseAndRun(200, () -> client.ackInboundMessage(MESSAGE_ID, null, indicatorFalse));
+		
+		// Test with null indicator (should work same as original method)
+		stubResponseAndRun(200, () -> client.ackInboundMessage(MESSAGE_ID, null, null));
 	}
 
 	@Test
@@ -399,6 +473,68 @@ public class MessagesClientTest extends AbstractClientTest<MessagesClient> {
 				super.runTests();
 				assertEquals("https://api-eu.vonage.com", expectedDefaultBaseUri());
 
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testUpdateMessageEndpointWithTypingIndicator() throws Exception {
+		new DynamicEndpointTestSpec<UpdateStatusRequest, Void>() {
+
+			@Override
+			protected RestEndpoint<UpdateStatusRequest, Void> endpoint() {
+				return client.updateMessage;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.PATCH;
+			}
+
+			@Override
+			protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
+				return List.of(JWTAuthMethod.class);
+			}
+
+			@Override
+			protected Class<? extends Exception> expectedResponseExceptionType() {
+				return MessageResponseException.class;
+			}
+
+			@Override
+			protected String expectedDefaultBaseUri() {
+				return wrapper.getHttpConfig().getRegionalBaseUri(sampleRequest().region).toString();
+			}
+
+			@Override
+			protected String expectedCustomBaseUri() {
+				return expectedDefaultBaseUri().replace("vonage", "example");
+			}
+
+			@Override
+			protected String expectedEndpointUri(UpdateStatusRequest request) {
+				return "/v1/messages/" + request.messageId;
+			}
+
+			@Override
+			protected UpdateStatusRequest sampleRequest() {
+				ReplyingIndicator indicator = ReplyingIndicator.builder()
+						.show(true)
+						.type("text")
+						.build();
+				return new UpdateStatusRequest("read", MESSAGE_ID, null, indicator);
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"status\":\"read\",\"replying_indicator\":{\"show\":true,\"type\":\"text\"}}";
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				assertEquals("https://api-eu.vonage.com", expectedDefaultBaseUri());
 			}
 		}
 		.runTests();

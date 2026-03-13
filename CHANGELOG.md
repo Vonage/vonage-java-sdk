@@ -2,6 +2,59 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.10.2]
+- HTTP: Fixed stale pooled connection reuse by adding connection TTL, idle/expired eviction and inactivity validation to reduce intermittent `Connection reset` errors when reusing long-lived `VonageClient` instances
+
+# [9.10.1]
+- No changes, had to create to trigger a rebuild due to build system problem
+
+# [9.10.0]
+- Exceptions: Added `getRawRequest()` and `getRawResponse()` methods to `VonageApiResponseException` for debugging API errors
+- Messages: RCS TTL is now publicly settable on all RCS message types, with validation between 300 and 2592000 seconds
+
+# [9.9.0]
+- Video: Added post-call transcription options
+- Video: Added connections list calls
+- Verify v2: Added support for `template_id` parameter
+
+# [9.8.0] - 2025-01-29
+- Added deprecation notice for Java 8/1.8 users. Version 9.x will be the final version to support Java 8.
+- Accounts: Internally switched to supporting only Basic Authorization header authentication
+- Conversion: Internally switched to supporting only Basic Authorization header authentication
+- Identity Insights: Added new API, covers Formatting, SimSwap, Original and Current Carrier checks
+- Messages: Added `trusted_recipient` to SMS, MMS, and RCS
+- Messages: Added support for Typing Indicators in WhatsApp
+- Messages: Added `pool_id` support
+- Number Insights: Internally switched to supporting only Basic Authorization header authentication
+- Verify v1: Internally switched to supporting only Basic Authorization header authentication
+- Verify: Deprecates the `sandbox` parameter
+- Voice: Websocket Connections can now include custom authorization headers
+- Voice: Answer Webhook adds support for SIP User-To-User incoming headers
+- Voice: Add support for `shaken` signing on calls
+- Voice: Added support for `sip_code` on incoming event webhooks
+- Voice: Added support for Transfer NCCO action
+- Voice: Added support for Wait NCCO action
+
+# [9.7.0] - 2025-12-04
+- Added native RCS message types (card, carousel) and suggestions support to eliminate need for custom message type
+
+# [9.6.0] - 2025-12-04
+- MMS caption length increased on 3000
+- Added new RCS param for messages to set the category
+- Added additional whatsapp information for deserializing incoming messages that contain pricing.
+
+# [9.5.0] - 2025-12-04
+- Added `trusted-number` to SMS
+
+# [9.4.2] - 2025-10-23
+- Added missing supported languages (Lithuanian and Marathi) to `TextToSpeechLanguage` enum
+
+# [9.4.1] - 2025-08-22
+- Fixed typo for verify to correct the call to next workflow
+
+# [9.4.0] - 2025-08-22
+- Added `bidirectional` flag for websockets to support the new Bi-Directional Audio Connector
+
 # [9.3.1] - 2025-05-08
 - Fixed `CustomClient` return type validation (normalise to `Void` if unknown)
 - Deprecated Verify v1, SIM Swap and Number Verification APIs

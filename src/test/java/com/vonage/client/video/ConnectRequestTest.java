@@ -29,35 +29,39 @@ public class ConnectRequestTest {
 
 	@Test
 	public void testSerializeAllParams() {
-		var request = ConnectRequest.builder()
+		ConnectRequest request = ConnectRequest.builder()
 				.token(token).uri(uri).sessionId(sessionId)
 				.streams(Collections.singleton(VideoClientTest.randomId))
 				.audioRate(AudioRate.L16_16K)
-				.headers(Map.of("k1", "v1")).build();
+				.headers(Map.of("k1", "v1"))
+				.bidirectional(true)
+				.build();
 
-		var expectedJson = "{\"sessionId\":\""+sessionId+"\",\"token\":\""+token+"\",\"websocket\":{\"uri\":\"" +
-				uri+"\",\"streams\":[\""+randomId+"\"],\"headers\":{\"k1\":\"v1\"},\"audioRate\":16000}}";
+		String expectedJson = "{\"sessionId\":\""+sessionId+"\",\"token\":\""+token+"\",\"websocket\":{\"uri\":\"" +
+				uri+"\",\"streams\":[\""+randomId+"\"],\"headers\":{\"k1\":\"v1\"},\"audioRate\":16000,\"bidirectional\":true}}";
 
 		assertEquals(expectedJson, request.toJson());
 		testJsonableBaseObject(request);
+		assertEquals(Boolean.TRUE, request.getWebsocket().getBidirectional());
 	}
 
 	@Test
 	public void testSerializeRequiredParams() {
-		var request = ConnectRequest.builder().token(token).sessionId(sessionId).uri(uri).build();
-		var expectedJson = "{\"sessionId\":\""+sessionId+"\",\"token\":\""+token +
+		ConnectRequest request = ConnectRequest.builder().token(token).sessionId(sessionId).uri(uri).build();
+		String expectedJson = "{\"sessionId\":\""+sessionId+"\",\"token\":\""+token +
 				"\",\"websocket\":{\"uri\":\""+uri+"\"}}";
 
 		assertEquals(expectedJson, request.toJson());
+		assertNull(request.getWebsocket().getBidirectional());
 	}
 
 	@Test
 	public void testEmptyStreamsAndHeaders() {
-		var request = ConnectRequest.builder()
+		ConnectRequest request = ConnectRequest.builder()
 				.token(token).uri(uri).sessionId(sessionId)
 				.streams().headers(Map.of()).build();
 
-		var expectedJson = "{\"sessionId\":\""+sessionId+"\",\"token\":\""+token +
+		String expectedJson = "{\"sessionId\":\""+sessionId+"\",\"token\":\""+token +
 				"\",\"websocket\":{\"uri\":\""+uri+"\",\"streams\":[],\"headers\":{}}}";
 
 		assertEquals(expectedJson, request.toJson());
@@ -66,7 +70,7 @@ public class ConnectRequestTest {
 
 	@Test
 	public void testUriProtocol() {
-		var builder = ConnectRequest.builder().sessionId(sessionId).token(token);
+		ConnectRequest.Builder builder = ConnectRequest.builder().sessionId(sessionId).token(token);
 		assertEquals(URI.create(uri), builder.uri(uri).build().getWebsocket().getUri());
 		assertThrows(IllegalArgumentException.class, () -> builder.uri("https://example.com/ws-endpoint").build());
 		assertNotNull(builder.uri("ws://example.com/ws-endpoint").build().getWebsocket().getUri());
