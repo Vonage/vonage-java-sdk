@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.10.2]
+- HTTP: Fixed stale pooled connection reuse by adding connection TTL, idle/expired eviction and inactivity validation to reduce intermittent `Connection reset` errors when reusing long-lived `VonageClient` instances
+
+# [9.10.1]
+- No changes, had to create to trigger a rebuild due to build system problem
+
 # [9.10.0]
 - Exceptions: Added `getRawRequest()` and `getRawResponse()` methods to `VonageApiResponseException` for debugging API errors
 - Messages: RCS TTL is now publicly settable on all RCS message types, with validation between 300 and 2592000 seconds
