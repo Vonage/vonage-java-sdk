@@ -195,8 +195,8 @@ public class HttpWrapper {
                 .setConnectionManager(connectionManager)
                 .setUserAgent(getUserAgent())
                 .setDefaultRequestConfig(requestConfig)
-            .evictExpiredConnections()
-            .evictIdleConnections(EVICT_IDLE_CONNECTIONS_SECONDS, TimeUnit.SECONDS)
+                .evictExpiredConnections()
+                .evictIdleConnections(EVICT_IDLE_CONNECTIONS_SECONDS, TimeUnit.SECONDS)
                 .useSystemProperties().disableRedirectHandling();
 
         URI proxy = httpConfig.getProxy();
