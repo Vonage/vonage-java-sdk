@@ -1,0 +1,28 @@
+{
+  "request_id": "REQUEST_ID_PLACEHOLDER",
+  "insights": {
+    "format": {
+      "country_code": "US",
+      "is_format_valid": true,
+      "status": {
+        "code": "OK",
+        "message": "Success"
+      }
+    },
+    "sim_swap": {
+      "is_swapped": false,
+      "status": {
+        "code": "OK",
+        "message": "Success"
+      }
+    },
+    "original_carrier": {
+      "name": "Verizon Wireless",
+      "network_type": "MOBILE",
+      "status": {
+        "code": "OK",
+        "message": "Success"
+      }
+    }
+  }
+}

@@ -18,18 +18,18 @@ package com.vonage.client.verify;
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.VonageClientException;
-import com.vonage.client.auth.ApiKeyQueryParamsAuthMethod;
+import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.common.HttpMethod;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 abstract class VerifyEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, R> {
 
 	@Override
 	protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-		return List.of(ApiKeyQueryParamsAuthMethod.class);
+		return Arrays.asList(ApiKeyHeaderAuthMethod.class);
 	}
 
 	@Override

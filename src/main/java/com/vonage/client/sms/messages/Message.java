@@ -28,6 +28,7 @@ public abstract class Message extends AbstractQueryParamsRequest {
     private MessageClass messageClass;
     private Long timeToLive;
     private String clientReference, callbackUrl, entityId, contentId;
+    private Boolean trustedNumber;
 
     protected Message(final MessageType type,
                       final String from,
@@ -227,6 +228,25 @@ public abstract class Message extends AbstractQueryParamsRequest {
         this.statusReportRequired = statusReportRequired;
     }
 
+    /**
+     * Indicates whether this message is being sent from a trusted number.
+     *
+     * @return {@code true} if from a trusted number, {@code false} if not, or {@code null} if unspecified.
+     */
+    public Boolean getTrustedNumber() {
+        return trustedNumber;
+    }
+
+    /**
+     * Sets whether this message is being sent from a trusted number.
+     * This parameter is optional and will only be sent if explicitly set to {@code true} or {@code false}.
+     *
+     * @param trustedNumber {@code true} if from a trusted number, {@code false} if not, or {@code null} to omit.
+     */
+    public void setTrustedNumber(Boolean trustedNumber) {
+        this.trustedNumber = trustedNumber;
+    }
+
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
@@ -244,6 +264,9 @@ public abstract class Message extends AbstractQueryParamsRequest {
         }
         conditionalAdd("entity-id", entityId);
         conditionalAdd("content-id", contentId);
+        if (trustedNumber != null) {
+            conditionalAdd("trusted-number", trustedNumber ? "true" : "false");
+        }
         return params;
     }
 

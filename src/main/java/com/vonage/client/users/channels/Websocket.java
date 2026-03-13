@@ -87,7 +87,12 @@ public class Websocket extends Channel {
 		/**
 		 * audio/l16 with bitrate of 16000.
 		 */
-		AUDIO_L16_16K("audio/l16;rate=16000");
+		AUDIO_L16_16K("audio/l16;rate=16000"),
+
+		/**
+		 * audio/l16 with bitrate of 24000.
+		 */
+		AUDIO_L16_24K("audio/l16;rate=24000");
 
 		private final String value;
 
@@ -107,6 +112,7 @@ public class Websocket extends Channel {
 			switch (value.toLowerCase()) {
 				case ("audio/l16;rate=8000"): return AUDIO_L16_8K;
 				case ("audio/l16;rate=16000"): return AUDIO_L16_16K;
+				case ("audio/l16;rate=24000"): return AUDIO_L16_24K;
 				default: throw new IllegalArgumentException("Unknown content-type: "+value);
 			}
 		}

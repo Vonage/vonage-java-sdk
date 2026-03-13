@@ -1,0 +1,15 @@
+{
+  "request_id": "REQUEST_ID_PLACEHOLDER",
+  "insights": {
+    "current_carrier": {
+      "name": "Orange Espana, S.A. Unipersonal",
+      "network_type": "MOBILE",
+      "country_code": "ES",
+      "network_code": "21403",
+      "status": {
+        "code": "OK",
+        "message": "Success"
+      }
+    }
+  }
+}

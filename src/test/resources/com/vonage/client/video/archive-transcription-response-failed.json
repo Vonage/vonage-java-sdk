@@ -1,0 +1,8 @@
+{
+  "sessionId": "testSession",
+  "hasTranscription": true,
+  "transcription": {
+    "status": "failed",
+    "reason": "Transcription service unavailable"
+  }
+}

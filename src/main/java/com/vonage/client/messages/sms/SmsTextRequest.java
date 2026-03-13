@@ -26,7 +26,7 @@ public final class SmsTextRequest extends MessageRequest implements TextMessageR
 
 	SmsTextRequest(Builder builder) {
 		super(builder, Channel.SMS, MessageType.TEXT);
-		sms = OutboundSettings.construct(builder.encodingType, builder.contentId, builder.entityId);
+		sms = OutboundSettings.construct(builder.encodingType, builder.contentId, builder.entityId, builder.poolId, builder.trustedRecipient);
 	}
 
 	@Override
@@ -49,8 +49,9 @@ public final class SmsTextRequest extends MessageRequest implements TextMessageR
 	}
 
 	public final static class Builder extends MessageRequest.Builder<SmsTextRequest, Builder> implements TextMessageRequest.Builder<Builder> {
-		String contentId, entityId;
+		String contentId, entityId, poolId;
 		EncodingType encodingType;
+		Boolean trustedRecipient;
 
 		Builder() {}
 
@@ -123,6 +124,37 @@ public final class SmsTextRequest extends MessageRequest implements TextMessageR
 		@Override
 		public SmsTextRequest build() {
 			return new SmsTextRequest(this);
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * The ID of the Number Pool to use as the sender of this message. If specified, a number from the
+		 * pool will be used as the from number. The from number is still required even when specifying a
+		 * pool_id and will be used as a fall-back if the number pool cannot be used. See the Number Pools
+		 * documentation for more information.
+		 *
+		 * @param poolId The pool ID as a string.
+		 * @return This builder.
+		 *
+		 * @since 9.9.0
+		 */
+		public Builder poolId(String poolId) {
+			this.poolId = poolId;
+			return this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Indicates whether the recipient is a trusted recipient.
+		 *
+		 * @param trustedRecipient {@code true} if the recipient is considered a trusted recipient, {@code false} otherwise.
+		 * @return This builder.
+		 * 
+		 * @since 9.8.0
+		 */
+		public Builder trustedRecipient(Boolean trustedRecipient) {
+			this.trustedRecipient = trustedRecipient;
+			return this;
 		}
 	}
 }

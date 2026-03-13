@@ -18,7 +18,10 @@ package com.vonage.client;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 
@@ -243,5 +246,36 @@ public class VonageApiResponseExceptionTest {
 		assertNotEquals(expected, ex2);
 		ex2.instance = expected.instance;
 		assertEquals(expected, ex2);
+	}
+
+	private String loadJsonResource(String filename) throws IOException {
+		try (InputStream is = getClass().getResourceAsStream(filename)) {
+			if (is == null) {
+				throw new IOException("Could not find resource: " + filename);
+			}
+			byte[] buffer = new byte[1024];
+			StringBuilder sb = new StringBuilder();
+			int bytesRead;
+			while ((bytesRead = is.read(buffer)) != -1) {
+				sb.append(new String(buffer, 0, bytesRead, StandardCharsets.UTF_8));
+			}
+			return sb.toString().trim();
+		}
+	}
+
+	@Test
+	public void testRawRequestAndResponse() throws IOException {
+		String rawRequest = loadJsonResource("raw-request-sms.json");
+		String rawResponse = loadJsonResource("error-422-invalid-channel.json");
+		
+		ConcreteVonageApiResponseException ex = new ConcreteVonageApiResponseException();
+		assertNull(ex.getRawRequest());
+		assertNull(ex.getRawResponse());
+		
+		ex.setRawRequest(rawRequest);
+		ex.setRawResponse(rawResponse);
+		
+		assertEquals(rawRequest, ex.getRawRequest());
+		assertEquals(rawResponse, ex.getRawResponse());
 	}
 }

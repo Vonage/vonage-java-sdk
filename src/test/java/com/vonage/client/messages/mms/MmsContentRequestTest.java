@@ -124,9 +124,9 @@ public class MmsContentRequestTest {
 		assertEquals(caption, content.getCaption());
 		assertThrows(IllegalArgumentException.class, () -> new Content(MessageType.IMAGE, imageUrl, ""));
 
-		StringBuilder sb = new StringBuilder(2001);
-		sb.append("*".repeat(1999));
-		assertEquals(1999, sb.length());
+		StringBuilder sb = new StringBuilder(3001);
+		sb.append("*".repeat(2999));
+		assertEquals(2999, sb.length());
 
 		var sbStr = sb.toString();
 		assertEquals(sbStr, new Content(MessageType.IMAGE, imageUrl, sbStr).getCaption());
@@ -135,7 +135,7 @@ public class MmsContentRequestTest {
 			fail("Expected exception for caption length");
 		}
 		catch (IllegalArgumentException ex) {
-			assertEquals(2001, sb.length());
+			assertEquals(3001, sb.length());
 		}
 	}
 }

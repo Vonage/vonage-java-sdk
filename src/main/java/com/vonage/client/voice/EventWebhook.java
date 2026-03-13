@@ -40,7 +40,7 @@ public class EventWebhook extends JsonableBaseObject {
     private DtmfResult dtmf;
     private SpeechResults speech;
     private Instant timestamp, startTime, endTime;
-    private Integer duration, size;
+    private Integer duration, size, sipCode;
     private Double rate, price;
     private URI recordingUrl;
     private String to, from, network, reason,
@@ -295,6 +295,19 @@ public class EventWebhook extends JsonableBaseObject {
     @JsonProperty("reason")
     public String getReason() {
         return reason;
+    }
+
+    /**
+     * SIP code from the CS sip:hangup event sent to VAPI. This is present if {@linkplain #getStatus()}
+     * is {@linkplain CallStatus#COMPLETED}, {@linkplain CallStatus#BUSY}, {@linkplain CallStatus#UNANSWERED},
+     * {@linkplain CallStatus#REJECTED}, or {@linkplain CallStatus#FAILED}.
+     *
+     * @return The SIP code, or {@code null} if not applicable.
+     * @since 8.17.0
+     */
+    @JsonProperty("sip_code")
+    public Integer getSipCode() {
+        return sipCode;
     }
 
     /**

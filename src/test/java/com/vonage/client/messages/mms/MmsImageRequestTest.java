@@ -94,11 +94,11 @@ public class MmsImageRequestTest {
 			assertEquals("V", builder.caption("V").build().getImage().getCaption());
 		}
 
-		StringBuilder sb = new StringBuilder(2001);
-		for (int i = 0; i < 1999; i++) {
+		StringBuilder sb = new StringBuilder(3001);
+		for (int i = 0; i < 2999; i++) {
 			sb.append('*');
 		}
-		assertEquals(1999, sb.length());
+		assertEquals(2999, sb.length());
 
 		assertEquals(sb.toString(), builder.caption(sb.toString()).build().getImage().getCaption());
 		try {
@@ -106,7 +106,39 @@ public class MmsImageRequestTest {
 			fail("Expected exception for caption length");
 		}
 		catch (IllegalArgumentException ex) {
-			assertEquals(2001, sb.length());
+			assertEquals(3001, sb.length());
 		}
+	}
+
+	@Test
+	public void testWithTrustedRecipient() {
+		MmsImageRequest mms = MmsImageRequest.builder()
+				.from("447900000001").to("317900000002")
+				.url("https://example.com/image.jpg")
+				.trustedRecipient(true).build();
+
+		String json = mms.toJson();
+		assertTrue(json.contains("\"trusted_recipient\":true"));
+	}
+
+	@Test
+	public void testTrustedRecipientFalse() {
+		MmsImageRequest mms = MmsImageRequest.builder()
+				.from("447900000001").to("317900000002")
+				.url("https://example.com/image.jpg")
+				.trustedRecipient(false).build();
+
+		String json = mms.toJson();
+		assertTrue(json.contains("\"trusted_recipient\":false"));
+	}
+
+	@Test
+	public void testWithoutTrustedRecipient() {
+		MmsImageRequest mms = MmsImageRequest.builder()
+				.from("447900000001").to("317900000002")
+				.url("https://example.com/image.jpg").build();
+
+		String json = mms.toJson();
+		assertFalse(json.contains("\"trusted_recipient\""));
 	}
 }

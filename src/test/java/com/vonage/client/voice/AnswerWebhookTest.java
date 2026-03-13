@@ -69,4 +69,55 @@ public class AnswerWebhookTest {
         assertEquals(EndpointType.SIP, EndpointType.fromString("sip"));
         assertEquals(EndpointType.WEBSOCKET, EndpointType.fromString("websocket"));
     }
+
+    @Test
+    public void testSipHeaderUserToUser() {
+        String userToUserHeader = "1234567890abcdef;encoding=hex",
+                json = "{\"SipHeader_User-to-User\":\"" + userToUserHeader + "\"}";
+        AnswerWebhook parsed = AnswerWebhook.fromJson(json);
+        testJsonableBaseObject(parsed);
+        assertEquals(userToUserHeader, parsed.getSipHeaderUserToUser());
+        assertNull(parsed.getEndpointType());
+        assertNull(parsed.getTo());
+        assertNull(parsed.getFrom());
+        assertNull(parsed.getUuid());
+        assertNull(parsed.getConversationUuid());
+        assertNull(parsed.getRegionUrl());
+        assertNull(parsed.getCustomData());
+    }
+
+    @Test
+    public void testSipHeaderUserToUserWithOtherFields() {
+        String userToUserHeader = "abcd1234;encoding=hex",
+                to = "442079460000",
+                from = "447700900000",
+                uuid = "f7aebf19bd374d638f3532352f48901b",
+                json = "{\n" +
+                    "  \"to\": \"" + to + "\",\n" +
+                    "  \"from\": \"" + from + "\",\n" +
+                    "  \"uuid\": \"" + uuid + "\",\n" +
+                    "  \"SipHeader_User-to-User\": \"" + userToUserHeader + "\"\n}";
+
+        AnswerWebhook parsed = AnswerWebhook.fromJson(json);
+        testJsonableBaseObject(parsed);
+        assertEquals(to, parsed.getTo());
+        assertEquals(from, parsed.getFrom());
+        assertEquals(uuid, parsed.getUuid());
+        assertEquals(userToUserHeader, parsed.getSipHeaderUserToUser());
+    }
+
+    @Test
+    public void testSipHeaderUserToUserMaxLength() {
+        // Test with a 256-character string (maximum allowed)
+        StringBuilder sb = new StringBuilder(260);
+        for (int i = 0; i < 246; i++) {
+            sb.append('a');
+        }
+        sb.append(";encoding=hex"); // 246 + 14 = 260 chars
+        String userToUserHeader = sb.toString();
+        String json = "{\"SipHeader_User-to-User\":\"" + userToUserHeader + "\"}";
+        AnswerWebhook parsed = AnswerWebhook.fromJson(json);
+        testJsonableBaseObject(parsed);
+        assertEquals(userToUserHeader, parsed.getSipHeaderUserToUser());
+    }
 }

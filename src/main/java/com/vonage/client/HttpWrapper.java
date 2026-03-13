@@ -29,15 +29,22 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeUnit;
 import java.util.UUID;
 
 /**
  * Internal class that holds available authentication methods and a shared HttpClient.
  */
 public class HttpWrapper {
+    private static final int
+            CONNECTION_POOL_MAX = 200,
+            CONNECTION_TTL_SECONDS = 60,
+            VALIDATE_AFTER_INACTIVITY_MS = 2000,
+            EVICT_IDLE_CONNECTIONS_SECONDS = 30;
+
     private static final String
             CLIENT_NAME = "vonage-java-sdk",
-            CLIENT_VERSION = "9.3.1",
+            CLIENT_VERSION = "9.10.2",
             JAVA_VERSION = System.getProperty("java.version"),
             USER_AGENT = String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION);
 
@@ -168,16 +175,16 @@ public class HttpWrapper {
     }
 
     protected CloseableHttpClient createHttpClient() {
-        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-        connectionManager.setDefaultMaxPerRoute(200);
-        connectionManager.setMaxTotal(200);
+        PoolingHttpClientConnectionManager connectionManager =
+                new PoolingHttpClientConnectionManager(CONNECTION_TTL_SECONDS, TimeUnit.SECONDS);
+        connectionManager.setDefaultMaxPerRoute(CONNECTION_POOL_MAX);
+        connectionManager.setMaxTotal(CONNECTION_POOL_MAX);
         connectionManager.setDefaultConnectionConfig(
             ConnectionConfig.custom().setCharset(StandardCharsets.UTF_8).build()
         );
         connectionManager.setDefaultSocketConfig(SocketConfig.custom().setTcpNoDelay(true).build());
+        connectionManager.setValidateAfterInactivity(VALIDATE_AFTER_INACTIVITY_MS);
 
-        // Need to work out a good value for the following:
-        // threadSafeClientConnManager.setValidateAfterInactivity();
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(httpConfig.getTimeoutMillis())
                 .setConnectionRequestTimeout(httpConfig.getTimeoutMillis())
@@ -188,6 +195,8 @@ public class HttpWrapper {
                 .setConnectionManager(connectionManager)
                 .setUserAgent(getUserAgent())
                 .setDefaultRequestConfig(requestConfig)
+                .evictExpiredConnections()
+                .evictIdleConnections(EVICT_IDLE_CONNECTIONS_SECONDS, TimeUnit.SECONDS)
                 .useSystemProperties().disableRedirectHandling();
 
         URI proxy = httpConfig.getProxy();

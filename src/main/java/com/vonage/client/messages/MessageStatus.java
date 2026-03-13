@@ -196,7 +196,47 @@ public class MessageStatus extends JsonableBaseObject {
 			@JsonProperty("id") String id;
 			@JsonProperty("origin") Origin origin;
 		}
+
+		/**
+		 * Represents WhatsApp pricing information in the status webhook.
+		 *
+		 * @since 9.5.0
+		 */
+		public static class Pricing extends JsonableBaseObject {
+			@JsonProperty("type") String type;
+			@JsonProperty("pricing_model") String pricingModel;
+			@JsonProperty("category") String category;
+
+			/**
+			 * The pricing type.
+			 *
+			 * @return The pricing type as a string. Possible values: {@code regular}, {@code free_customer_service}, {@code free_entry_point}.
+			 */
+			public String getType() {
+				return type;
+			}
+
+			/**
+			 * The pricing model.
+			 *
+			 * @return The pricing model as a string. Possible values: {@code PMP}, {@code CBP}.
+			 */
+			public String getPricingModel() {
+				return pricingModel;
+			}
+
+			/**
+			 * The message category.
+			 *
+			 * @return The category as a string. Possible values: {@code authentication}, {@code authentication_international}, {@code marketing}, {@code utility}, {@code service}, {@code referral_conversion}, {@code marketing_lite}.
+			 */
+			public String getCategory() {
+				return category;
+			}
+		}
+
 		@JsonProperty("conversation") Conversation conversation;
+		@JsonProperty("pricing") Pricing pricing;
 	}
 
 	protected MessageStatus() {
@@ -368,6 +408,19 @@ public class MessageStatus extends JsonableBaseObject {
 	public String getWhatsappConversationId() {
         return whatsapp != null && whatsapp.conversation != null ? whatsapp.conversation.id : null;
     }
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns the pricing information
+	 * for the message.
+	 *
+	 * @return The WhatsApp pricing information, {@code null} if absent or not applicable.
+	 *
+	 * @since 9.5.0
+	 */
+	@JsonIgnore
+	public Whatsapp.Pricing getWhatsappPricing() {
+		return whatsapp != null ? whatsapp.pricing : null;
+	}
 
 	/**
 	 * Catch-all for properties which are not mapped by this class during deserialization.

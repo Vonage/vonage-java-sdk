@@ -493,7 +493,7 @@ public class Verify2ClientTest extends AbstractClientTest<Verify2Client> {
 
 			@Override
 			protected String expectedEndpointUri(UUID request) {
-				return "/v2/verify/"+request+"/next-workflow";
+				return "/v2/verify/"+request+"/next_workflow";
 			}
 
 			@Override

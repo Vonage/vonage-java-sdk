@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.ApiRegion;
 import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.messages.whatsapp.ReplyingIndicator;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -29,12 +30,18 @@ import java.util.UUID;
  */
 class UpdateStatusRequest extends JsonableBaseObject {
     @JsonProperty("status") final String status;
+    @JsonProperty("replying_indicator") final ReplyingIndicator replyingIndicator;
     @JsonIgnore final UUID messageId;
     @JsonIgnore final ApiRegion region;
 
     UpdateStatusRequest(String status, String messageId, ApiRegion region) {
+        this(status, messageId, region, null);
+    }
+
+    UpdateStatusRequest(String status, String messageId, ApiRegion region, ReplyingIndicator replyingIndicator) {
         this.status = status;
         this.messageId = UUID.fromString(Objects.requireNonNull(messageId, "Message ID is required."));
         this.region = region != null ? region : ApiRegion.API_EU;
+        this.replyingIndicator = replyingIndicator;
     }
 }

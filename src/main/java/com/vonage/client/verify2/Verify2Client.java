@@ -65,7 +65,7 @@ public class Verify2Client {
 		verifyUser = new Endpoint<>(null, HttpMethod.POST);
 		verifyRequest = new Endpoint<>(req -> req.requestId, HttpMethod.POST);
 		cancel = new Endpoint<>(UUID::toString, HttpMethod.DELETE);
-		nextWorkflow = new Endpoint<>(id -> id + "/next-workflow", HttpMethod.POST);
+		nextWorkflow = new Endpoint<>(id -> id + "/next_workflow", HttpMethod.POST);
 
 		final String templatesBase = "templates";
 		listTemplates = new Endpoint<>(__ -> templatesBase, HttpMethod.GET);

@@ -185,4 +185,90 @@ public class SmsTextRequestTest {
 		assertEquals(EncodingType.AUTO, EncodingType.fromString("auto"));
 		assertNull(EncodingType.fromString(null));
 	}
+
+	@Test
+	public void testWithTrustedRecipient() {
+		SmsTextRequest sms = SmsTextRequest.builder()
+			.from(from).to(to).text(msg)
+			.trustedRecipient(true).build();
+	
+		String json = sms.toJson();
+		assertTrue(json.contains("\"trusted_recipient\":true"));
+	}
+	
+	@Test
+	public void testTrustedRecipientFalse() {
+		SmsTextRequest sms = SmsTextRequest.builder()
+			.from(from).to(to).text(msg)
+			.trustedRecipient(false).build();
+	
+		String json = sms.toJson();
+		assertTrue(json.contains("\"trusted_recipient\":false"));
+	}
+	
+	@Test
+	public void testWithoutTrustedRecipient() {
+		SmsTextRequest sms = SmsTextRequest.builder()
+			.from(from).to(to).text(msg).build();
+	
+		String json = sms.toJson();
+		assertFalse(json.contains("\"trusted_recipient\""));
+	}
+
+	@Test
+	public void testPoolIdOnly() {
+		String poolId = "test-pool-123";
+		var sms = SmsTextRequest.builder().from(from).to(to).text(msg).poolId(poolId).build();
+
+		String json = sms.toJson();
+		assertTrue(json.contains("\"text\":\"" + msg + "\""));
+		assertTrue(json.contains("\"from\":\"" + from + "\""));
+		assertTrue(json.contains("\"to\":\"" + to + "\""));
+		assertTrue(json.contains("\"message_type\":\"text\""));
+		assertTrue(json.contains("\"channel\":\"sms\""));
+		assertTrue(json.contains("\"sms\":{\"pool_id\":\"" + poolId + "\"}"));
+
+		assertNull(sms.getTtl());
+		OutboundSettings settings = sms.getMessageSettings();
+		assertNotNull(settings);
+		assertNull(settings.getEncodingType());
+		assertNull(settings.getEntityId());
+		assertNull(settings.getContentId());
+		assertEquals(poolId, settings.getPoolId());
+	}
+
+	@Test
+	public void testInvalidPoolId() {
+		assertThrows(IllegalArgumentException.class, () ->
+				OutboundSettings.construct(EncodingType.TEXT, contentId, entityId, " ", null)
+		);
+	}
+
+	@Test
+	public void testAllSmsFieldsIncludingPoolId() {
+		String poolId = "pool-456";
+		SmsTextRequest sms = SmsTextRequest.builder()
+				.from(from).to(to).text(msg)
+				.contentId(contentId)
+				.entityId(entityId)
+				.poolId(poolId)
+				.encodingType(EncodingType.TEXT)
+				.trustedRecipient(true)
+				.build();
+
+		String json = sms.toJson();
+		assertTrue(json.contains("\"pool_id\":\"" + poolId + "\""));
+		assertTrue(json.contains("\"content_id\":\"" + contentId + "\""));
+		assertTrue(json.contains("\"entity_id\":\"" + entityId + "\""));
+		assertTrue(json.contains("\"encoding_type\":\"text\""));
+		assertTrue(json.contains("\"trusted_recipient\":true"));
+
+		OutboundSettings settings = sms.getMessageSettings();
+		assertNotNull(settings);
+		assertEquals(poolId, settings.getPoolId());
+		assertEquals(contentId, settings.getContentId());
+		assertEquals(entityId, settings.getEntityId());
+		assertEquals(EncodingType.TEXT, settings.getEncodingType());
+		assertTrue(settings.getTrustedRecipient());
+	}
 }
