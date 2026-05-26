@@ -24,9 +24,9 @@ import java.util.Objects;
  * <p>
  * Build using {@link #builder(Product, String)}, providing the required {@code product} and
  * {@code account_id}. Use either date-based queries ({@link Builder#dateStart}/{@link Builder#dateEnd})
- * or ID-based queries ({@link Builder#id}) — when using ID queries, only {@code product},
- * {@code account_id}, {@code direction}, {@code id}, {@code includeMessage} and
- * {@code showConcatenated} are allowed.
+ * or ID-based queries ({@link Builder#id}). Note: when using ID-based queries, the API only processes
+ * {@code product}, {@code account_id}, {@code direction}, {@code id}, {@code includeMessage} and
+ * {@code showConcatenated} — other parameters are accepted but will be ignored by the API.
  * </p>
  */
 public class RecordsFilter extends AbstractQueryParamsRequest {

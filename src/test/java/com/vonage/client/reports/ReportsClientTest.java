@@ -16,7 +16,6 @@
 package com.vonage.client.reports;
 
 import com.vonage.client.AbstractClientTest;
-import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
@@ -28,6 +27,7 @@ public class ReportsClientTest extends AbstractClientTest<ReportsClient> {
 
     static final String REPORT_ID = "aaaaaaaa-bbbb-cccc-dddd-0123456789ab";
     static final String FILE_ID = "bbbbbbbb-cccc-dddd-eeee-0123456789ab";
+    static final String DOWNLOAD_URL = "https://api.nexmo.com/v3/media/" + FILE_ID;
     static final String ACCOUNT_ID = "12aa3456";
 
     static final String REPORT_RESPONSE_JSON = "{\n" +
@@ -521,26 +521,32 @@ public class ReportsClientTest extends AbstractClientTest<ReportsClient> {
 
     @Test
     public void testDownloadReport() throws Exception {
-        byte[] zipData = new byte[]{0x50, 0x4B, 0x03, 0x04}; // PK (zip magic bytes)
-        stubResponse(200, new String(zipData));
-        var result = client.downloadReport(FILE_ID);
-        assertNotNull(result);
+        byte[] expectedBytes = "<BINARY_ZIP>".getBytes();
+        stubResponse(200, new String(expectedBytes));
+        assertArrayEquals(expectedBytes, client.downloadReport(DOWNLOAD_URL));
     }
 
     @Test
-    public void testDownloadReportNullId() {
-        assertThrows(NullPointerException.class, () -> client.downloadReport(null));
+    public void testDownloadReportNullUrl() {
+        assertThrows(IllegalArgumentException.class, () -> client.downloadReport(null));
     }
 
     @Test
-    public void testDownloadReportEmptyId() {
+    public void testDownloadReportEmptyUrl() {
         assertThrows(IllegalArgumentException.class, () -> client.downloadReport(""));
+    }
+
+    @Test
+    public void testDownloadReportInvalidHost() {
+        assertThrows(IllegalArgumentException.class, () ->
+                client.downloadReport("https://evil.com/v3/media/" + FILE_ID)
+        );
     }
 
     @Test
     public void testDownloadReport404() throws Exception {
         assertApiResponseException(404, "{\"title\":\"Not Found\"}", ReportsResponseException.class,
-                () -> client.downloadReport(FILE_ID)
+                () -> client.downloadReport(DOWNLOAD_URL)
         );
     }
 

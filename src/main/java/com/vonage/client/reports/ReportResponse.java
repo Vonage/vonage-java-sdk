@@ -196,10 +196,11 @@ public class ReportResponse extends JsonableBaseObject {
     }
 
     /**
-     * Convenience method to get the download URL for the report.
-     * Returns the {@code href} value from the {@code download_report} HAL link.
+     * Convenience method to get the full download URL for the report.
+     * Returns the {@code href} value from the {@code download_report} HAL link, which is a
+     * complete absolute URL that can be passed directly to {@link ReportsClient#downloadReport(String)}.
      *
-     * @return The download URL string, or {@code null} if not available.
+     * @return The absolute download URL string, or {@code null} if not available.
      */
     public String getDownloadUrl() {
         if (links == null) return null;
