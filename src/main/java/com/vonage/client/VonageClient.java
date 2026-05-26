@@ -27,6 +27,7 @@ import com.vonage.client.camara.simswap.SimSwapClient;
 import com.vonage.client.conversations.ConversationsClient;
 import com.vonage.client.identityinsights.IdentityInsightsClient;
 import com.vonage.client.conversion.ConversionClient;
+import com.vonage.client.reports.ReportsClient;
 import com.vonage.client.insight.InsightClient;
 import com.vonage.client.messages.MessagesClient;
 import com.vonage.client.numbers.NumbersClient;
@@ -85,6 +86,7 @@ public class VonageClient {
     private final SimSwapClient simSwap;
     private final NumberVerificationClient numberVerification;
     private final IdentityInsightsClient identityInsights;
+    private final ReportsClient reports;
 
     /**
      * Constructor which uses the builder pattern for instantiation.
@@ -114,6 +116,7 @@ public class VonageClient {
         simSwap = new SimSwapClient(httpWrapper);
         numberVerification = new NumberVerificationClient(httpWrapper);
         identityInsights = new IdentityInsightsClient(httpWrapper);
+        reports = new ReportsClient(httpWrapper);
     }
 
     /**
@@ -327,6 +330,16 @@ public class VonageClient {
      */
     public IdentityInsightsClient getIdentityInsightsClient() {
         return identityInsights;
+    }
+
+    /**
+     * Returns the Reports API client.
+     *
+     * @return The {@linkplain ReportsClient}.
+     * @since 9.9.0
+     */
+    public ReportsClient getReportsClient() {
+        return reports;
     }
 
     /**

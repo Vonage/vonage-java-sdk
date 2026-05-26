@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [Unreleased]
+- Reports: Added new Reports API client covering synchronous records retrieval (`getRecords`), asynchronous report creation (`createReport`), report status polling (`getReport`), report cancellation (`cancelReport`), and report download (`downloadReport`)
+
 # [9.10.2]
 - HTTP: Fixed stale pooled connection reuse by adding connection TTL, idle/expired eviction and inactivity validation to reduce intermittent `Connection reset` errors when reusing long-lived `VonageClient` instances
 
