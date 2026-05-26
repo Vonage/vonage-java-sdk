@@ -21,7 +21,6 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageClient;
 import com.vonage.client.auth.ApiKeyHeaderAuthMethod;
 import com.vonage.client.common.HttpMethod;
-import java.net.URI;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -76,13 +75,7 @@ public class ReportsClient {
         createReport = new Endpoint<>(req -> "/v2/reports", HttpMethod.POST);
         getReport = new Endpoint<>(reportId -> "/v2/reports/" + reportId, HttpMethod.GET);
         cancelReport = new Endpoint<>(reportId -> "/v2/reports/" + reportId, HttpMethod.DELETE);
-        downloadReport = DynamicEndpoint.<String, byte[]>builder(byte[].class)
-                .responseExceptionType(ReportsResponseException.class)
-                .wrapper(wrapper)
-                .requestMethod(HttpMethod.GET)
-                .authMethod(ApiKeyHeaderAuthMethod.class)
-                .pathGetter((de, url) -> url)
-                .build();
+        downloadReport = new Endpoint<>(fileId -> "/v3/media/" + fileId, HttpMethod.GET);
     }
 
     private static String requireId(String id, String name) {
@@ -120,7 +113,7 @@ public class ReportsClient {
      * <p>
      * The report will be processed in the background. Use the returned {@code request_id} to poll
      * for status with {@link #getReport(String)}, and once the status is {@link ReportStatus#SUCCESS},
-     * use the full download URL from {@link ReportResponse#getDownloadUrl()} with
+     * use the file ID from {@link ReportResponse#getFileId()} with
      * {@link #downloadReport(String)} to retrieve the data.
      * </p>
      *
@@ -191,15 +184,13 @@ public class ReportsClient {
      * Download the completed report as a zip archive containing a CSV file.
      * <p>
      * The file is available for download for 72 hours after the report completes.
-     * Pass the full URL returned by {@link ReportResponse#getDownloadUrl()}.
+     * The file ID can be obtained via {@link ReportResponse#getFileId()}.
      * </p>
      *
-     * @param downloadUrl The full download URL from the report's {@code download_report} HAL link
-     *                    (obtained via {@link ReportResponse#getDownloadUrl()}).
+     * @param fileId The UUID of the file to download, obtained from {@link ReportResponse#getFileId()}.
      *
      * @return The raw bytes of the zip archive.
      *
-     * @throws IllegalArgumentException If the download URL is null, empty, or not a Vonage URL.
      * @throws ReportsResponseException If the request was unsuccessful. Possible reasons:
      * <ul>
      *   <li><b>401</b>: Authentication failure.</li>
@@ -208,14 +199,7 @@ public class ReportsClient {
      *   <li><b>500</b>: Internal server error.</li>
      * </ul>
      */
-    public byte[] downloadReport(String downloadUrl) {
-        if (downloadUrl == null || downloadUrl.trim().isEmpty()) {
-            throw new IllegalArgumentException("Download URL is required.");
-        }
-        String validated = URI.create(downloadUrl).toString();
-        if (!validated.contains(".nexmo.com/") && !validated.contains(".vonage.com/")) {
-            throw new IllegalArgumentException("Download URL must be a Vonage URL.");
-        }
-        return downloadReport.execute(validated);
+    public byte[] downloadReport(String fileId) {
+        return downloadReport.execute(requireId(fileId, "File ID"));
     }
 }

@@ -372,12 +372,14 @@ public class ReportsClientTest extends AbstractClientTest<ReportsClient> {
         assertEquals("outbound", response.getDirection());
         assertNotNull(response.getLinks());
         assertEquals("https://api.nexmo.com/v3/media/" + FILE_ID, response.getDownloadUrl());
+        assertEquals(FILE_ID, response.getFileId());
     }
 
     @Test
     public void testReportResponseDownloadUrlNullWhenNoLinks() {
         var response = new ReportResponse();
         assertNull(response.getDownloadUrl());
+        assertNull(response.getFileId());
     }
 
     @Test
@@ -523,30 +525,23 @@ public class ReportsClientTest extends AbstractClientTest<ReportsClient> {
     public void testDownloadReport() throws Exception {
         byte[] expectedBytes = "<BINARY_ZIP>".getBytes();
         stubResponse(200, new String(expectedBytes));
-        assertArrayEquals(expectedBytes, client.downloadReport(DOWNLOAD_URL));
+        assertArrayEquals(expectedBytes, client.downloadReport(FILE_ID));
     }
 
     @Test
-    public void testDownloadReportNullUrl() {
-        assertThrows(IllegalArgumentException.class, () -> client.downloadReport(null));
+    public void testDownloadReportNullId() {
+        assertThrows(NullPointerException.class, () -> client.downloadReport(null));
     }
 
     @Test
-    public void testDownloadReportEmptyUrl() {
+    public void testDownloadReportEmptyId() {
         assertThrows(IllegalArgumentException.class, () -> client.downloadReport(""));
-    }
-
-    @Test
-    public void testDownloadReportInvalidHost() {
-        assertThrows(IllegalArgumentException.class, () ->
-                client.downloadReport("https://evil.com/v3/media/" + FILE_ID)
-        );
     }
 
     @Test
     public void testDownloadReport404() throws Exception {
         assertApiResponseException(404, "{\"title\":\"Not Found\"}", ReportsResponseException.class,
-                () -> client.downloadReport(DOWNLOAD_URL)
+                () -> client.downloadReport(FILE_ID)
         );
     }
 

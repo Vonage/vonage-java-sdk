@@ -197,8 +197,7 @@ public class ReportResponse extends JsonableBaseObject {
 
     /**
      * Convenience method to get the full download URL for the report.
-     * Returns the {@code href} value from the {@code download_report} HAL link, which is a
-     * complete absolute URL that can be passed directly to {@link ReportsClient#downloadReport(String)}.
+     * Returns the {@code href} value from the {@code download_report} HAL link.
      *
      * @return The absolute download URL string, or {@code null} if not available.
      */
@@ -207,6 +206,20 @@ public class ReportResponse extends JsonableBaseObject {
         Map<String, String> downloadReport = links.get("download_report");
         if (downloadReport == null) return null;
         return downloadReport.get("href");
+    }
+
+    /**
+     * Convenience method to extract the file ID from the report's download link.
+     * This is the last path segment of the download URL, and should be passed to
+     * {@link ReportsClient#downloadReport(String)}.
+     *
+     * @return The file UUID string, or {@code null} if not available.
+     */
+    public String getFileId() {
+        String url = getDownloadUrl();
+        if (url == null) return null;
+        int lastSlash = url.lastIndexOf('/');
+        return lastSlash >= 0 ? url.substring(lastSlash + 1) : null;
     }
 
     /**
