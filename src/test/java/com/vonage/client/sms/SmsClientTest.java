@@ -73,7 +73,7 @@ public class SmsClientTest extends AbstractClientTest<SmsClient> {
         stubResponse(500, "");
         var message = new TextMessage("TestSender", "not-a-number", "Test");
         assertThrows(VonageApiResponseException.class, () -> client.submitMessage(message));
-        assertThrows(IllegalArgumentException.class, () -> message.setClientReference("R".repeat(41)));
+        assertThrows(IllegalArgumentException.class, () -> message.setClientReference("R".repeat(101)));
     }
 
     @Test

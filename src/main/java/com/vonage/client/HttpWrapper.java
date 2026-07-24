@@ -44,7 +44,7 @@ public class HttpWrapper {
 
     private static final String
             CLIENT_NAME = "vonage-java-sdk",
-            CLIENT_VERSION = "9.10.2",
+            CLIENT_VERSION = "9.11.0",
             JAVA_VERSION = System.getProperty("java.version"),
             USER_AGENT = String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION);
 
