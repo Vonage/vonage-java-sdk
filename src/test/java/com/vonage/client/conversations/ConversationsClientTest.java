@@ -646,7 +646,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 
 			@Override
 			protected String expectedEndpointUri(ListConversationsRequest request) {
-				return "/v1/conversations/";
+				return "/v1/conversations";
 			}
 
 			@Override
@@ -748,7 +748,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 
 			@Override
 			protected String expectedEndpointUri(Conversation request) {
-				return "/v1/conversations/";
+				return "/v1/conversations";
 			}
 
 			@Override
@@ -1176,7 +1176,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 
 			@Override
 			protected String expectedEndpointUri(ListMembersRequest request) {
-				return "/v1/conversations/"+request.conversationId+"/members/";
+				return "/v1/conversations/"+request.conversationId+"/members";
 			}
 
 			@Override
@@ -1325,7 +1325,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 
 			@Override
 			protected String expectedEndpointUri(Member request) {
-				return "/v1/conversations/"+request.getConversationId()+"/members/";
+				return "/v1/conversations/"+request.getConversationId()+"/members";
 			}
 
 			@Override
@@ -1670,7 +1670,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 
 			@Override
 			protected String expectedEndpointUri(ListEventsRequest request) {
-				return "/v1/conversations/"+request.conversationId+"/events/";
+				return "/v1/conversations/"+request.conversationId+"/events";
 			}
 
 			@Override
@@ -1734,7 +1734,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 
 			@Override
 			protected String expectedEndpointUri(Event request) {
-				return "/v1/conversations/"+request.conversationId+"/events/";
+				return "/v1/conversations/"+request.conversationId+"/events";
 			}
 
 			@Override

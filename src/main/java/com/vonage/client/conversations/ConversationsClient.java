@@ -71,7 +71,11 @@ public class ConversationsClient {
 					.responseExceptionType(ConversationsResponseException.class)
 					.requestMethod(method).wrapper(wrapper).pathGetter((de, req) -> {
 						String base = de.getHttpWrapper().getHttpConfig().getApiBaseUri();
-						return base + pathGetter.apply(req);
+						String path = base + pathGetter.apply(req);
+						// The API gateway stopped routing trailing-slash paths to their
+						// canonical form (broke ~2026-06-06), so strip a trailing slash
+						// from any Conversations route that would otherwise end in one.
+						return path.endsWith("/") ? path.substring(0, path.length() - 1) : path;
 					})
 				);
 			}
