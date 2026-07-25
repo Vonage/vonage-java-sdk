@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.11.0]
+- SMS: Increased client reference (`client-ref`) maximum length from 40 to 100 characters, matching the Messages API
+
 # [9.10.2]
 - HTTP: Fixed stale pooled connection reuse by adding connection TTL, idle/expired eviction and inactivity validation to reduce intermittent `Connection reset` errors when reusing long-lived `VonageClient` instances
 
