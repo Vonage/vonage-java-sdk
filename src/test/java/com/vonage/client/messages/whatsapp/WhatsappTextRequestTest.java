@@ -81,4 +81,61 @@ public class WhatsappTextRequestTest {
 				.from(msg.getFrom()).text(text.toString()).to(msg.getTo()).build()
 		);
 	}
+
+	@Test
+	public void testSendToBsuid() {
+		String bsuid = "US.13491208655302741918";
+		WhatsappTextRequest msg = WhatsappTextRequest.builder()
+				.from(from).to(bsuid).text(txt).build();
+		assertEquals(bsuid, msg.getTo());
+		assertTrue(msg.toJson().contains("\"to\":\""+bsuid+"\""));
+	}
+
+	@Test
+	public void testSendToParentBsuid() {
+		String parentBsuid = "US.ENT.11815799212886844830";
+		WhatsappTextRequest msg = WhatsappTextRequest.builder()
+				.from(from).to(parentBsuid).text(txt).build();
+		assertEquals(parentBsuid, msg.getTo());
+		assertTrue(msg.toJson().contains("\"to\":\""+parentBsuid+"\""));
+	}
+
+	@Test
+	public void testSenderCannotBeBsuid() {
+		assertThrows(IllegalArgumentException.class, () -> WhatsappTextRequest.builder()
+				.from("US.13491208655302741918").to(to).text(txt).build()
+		);
+	}
+
+	@Test
+	public void testArbitraryRecipientAcceptedAsIs() {
+		// Non-phone recipients (e.g. BSUIDs, or future provider formats) are passed through unchanged
+		// rather than validated against a client-side format.
+		String opaque = "some-future-identifier_v2";
+		WhatsappTextRequest msg = WhatsappTextRequest.builder()
+				.from(from).to(opaque).text(txt).build();
+		assertEquals(opaque, msg.getTo());
+		assertTrue(msg.toJson().contains("\"to\":\""+opaque+"\""));
+	}
+
+	@Test
+	public void testPhoneRecipientIsNormalised() {
+		WhatsappTextRequest msg = WhatsappTextRequest.builder()
+				.from(from).to("+31 79-0000 0002").text(txt).build();
+		assertEquals("317900000002", msg.getTo());
+	}
+
+	@Test
+	public void testEmptyRecipientRejected() {
+		assertThrows(IllegalArgumentException.class, () -> WhatsappTextRequest.builder()
+				.from(from).to("").text(txt).build()
+		);
+	}
+
+	@Test
+	public void testNullRecipientRejected() {
+		assertThrows(NullPointerException.class, () -> WhatsappTextRequest.builder()
+				.from(from).to(null).text(txt).build()
+		);
+	}
 }
