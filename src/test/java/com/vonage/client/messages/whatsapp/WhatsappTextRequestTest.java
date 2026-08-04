@@ -108,9 +108,34 @@ public class WhatsappTextRequestTest {
 	}
 
 	@Test
-	public void testInvalidRecipientRejected() {
+	public void testArbitraryRecipientAcceptedAsIs() {
+		// Non-phone recipients (e.g. BSUIDs, or future provider formats) are passed through unchanged
+		// rather than validated against a client-side format.
+		String opaque = "some-future-identifier_v2";
+		WhatsappTextRequest msg = WhatsappTextRequest.builder()
+				.from(from).to(opaque).text(txt).build();
+		assertEquals(opaque, msg.getTo());
+		assertTrue(msg.toJson().contains("\"to\":\""+opaque+"\""));
+	}
+
+	@Test
+	public void testPhoneRecipientIsNormalised() {
+		WhatsappTextRequest msg = WhatsappTextRequest.builder()
+				.from(from).to("+31 79-0000 0002").text(txt).build();
+		assertEquals("317900000002", msg.getTo());
+	}
+
+	@Test
+	public void testEmptyRecipientRejected() {
 		assertThrows(IllegalArgumentException.class, () -> WhatsappTextRequest.builder()
-				.from(from).to("not-a-number-or-bsuid").text(txt).build()
+				.from(from).to("").text(txt).build()
+		);
+	}
+
+	@Test
+	public void testNullRecipientRejected() {
+		assertThrows(NullPointerException.class, () -> WhatsappTextRequest.builder()
+				.from(from).to(null).text(txt).build()
 		);
 	}
 }

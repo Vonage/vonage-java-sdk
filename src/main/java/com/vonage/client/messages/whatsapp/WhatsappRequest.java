@@ -37,29 +37,35 @@ public abstract class WhatsappRequest extends MessageRequest {
 	}
 
 	/**
-	 * Validates and sanitizes the recipient of a WhatsApp message. Unlike other channels, a WhatsApp
-	 * recipient may be identified either by an E.164 phone number or by a business-scoped user ID (BSUID)
-	 * for users who have adopted a WhatsApp username and whose phone number is not available.
+	 * Sanitizes the recipient of a WhatsApp message. Unlike other channels, a WhatsApp recipient may be
+	 * identified either by an E.164 phone number or by a business-scoped user ID (BSUID) for users who have
+	 * adopted a WhatsApp username and whose phone number is not available.
+	 * <p>
+	 * When the value is a valid E.164 phone number it is normalised (stripping spaces, dashes and any leading
+	 * {@code +}). Any other non-empty value is passed through unchanged: no format is imposed on non-phone
+	 * identifiers such as BSUIDs, so that recipients accepted by the API are never rejected client-side even
+	 * if the underlying provider format changes. The API validates the recipient and will reject genuinely
+	 * unsupported values (e.g. error {@code 131062}).
 	 *
-	 * @param to The recipient phone number or BSUID passed in from the builder.
+	 * @param to The recipient phone number or opaque identifier (e.g. BSUID) passed in from the builder.
 	 *
 	 * @return The sanitized recipient identifier.
-	 * @throws IllegalArgumentException If the recipient is neither a valid E.164 number nor a valid BSUID.
+	 * @throws NullPointerException If the recipient is {@code null}.
+	 * @throws IllegalArgumentException If the recipient is empty.
 	 * @since 9.13.0
 	 */
 	static String sanitizeRecipient(String to) throws IllegalArgumentException {
+		if (to == null) {
+			throw new NullPointerException("Recipient cannot be null.");
+		}
+		if (to.isEmpty()) {
+			throw new IllegalArgumentException("Recipient cannot be empty.");
+		}
 		try {
 			return new E164(to).toString();
 		}
-		catch (IllegalArgumentException phoneEx) {
-			try {
-				return new Bsuid(to).toString();
-			}
-			catch (IllegalArgumentException bsuidEx) {
-				throw new IllegalArgumentException(
-						"Recipient must be a valid E.164 phone number or WhatsApp BSUID: " + to
-				);
-			}
+		catch (IllegalArgumentException notAPhoneNumber) {
+			return to;
 		}
 	}
 
@@ -76,14 +82,14 @@ public abstract class WhatsappRequest extends MessageRequest {
 		 * (REQUIRED)
 		 * Sets the recipient of the message. For WhatsApp this may be either an E.164 phone number or a
 		 * business-scoped user ID (BSUID) for users who have adopted a WhatsApp username and whose phone
-		 * number is not available. When using a BSUID, always provide the full value including the country
-		 * code prefix, e.g. {@code US.13491208655302741918}. Note that BSUID recipients are not supported
-		 * for one-tap, zero-tap or copy-code authentication templates.
+		 * number is not available. When using a BSUID, provide the full value including the country code
+		 * prefix, e.g. {@code US.13491208655302741918}. The value is accepted as-is (aside from normalising
+		 * phone numbers), so it is not rejected client-side if the provider identifier format changes. Note
+		 * that BSUID recipients are not supported for one-tap, zero-tap or copy-code authentication templates.
 		 *
 		 * @param to The recipient phone number or BSUID.
 		 *
 		 * @return This builder.
-		 * @see Bsuid
 		 */
 		@Override
 		public B to(String to) {
