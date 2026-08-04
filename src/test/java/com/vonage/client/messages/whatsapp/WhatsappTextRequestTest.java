@@ -81,4 +81,36 @@ public class WhatsappTextRequestTest {
 				.from(msg.getFrom()).text(text.toString()).to(msg.getTo()).build()
 		);
 	}
+
+	@Test
+	public void testSendToBsuid() {
+		String bsuid = "US.13491208655302741918";
+		WhatsappTextRequest msg = WhatsappTextRequest.builder()
+				.from(from).to(bsuid).text(txt).build();
+		assertEquals(bsuid, msg.getTo());
+		assertTrue(msg.toJson().contains("\"to\":\""+bsuid+"\""));
+	}
+
+	@Test
+	public void testSendToParentBsuid() {
+		String parentBsuid = "US.ENT.11815799212886844830";
+		WhatsappTextRequest msg = WhatsappTextRequest.builder()
+				.from(from).to(parentBsuid).text(txt).build();
+		assertEquals(parentBsuid, msg.getTo());
+		assertTrue(msg.toJson().contains("\"to\":\""+parentBsuid+"\""));
+	}
+
+	@Test
+	public void testSenderCannotBeBsuid() {
+		assertThrows(IllegalArgumentException.class, () -> WhatsappTextRequest.builder()
+				.from("US.13491208655302741918").to(to).text(txt).build()
+		);
+	}
+
+	@Test
+	public void testInvalidRecipientRejected() {
+		assertThrows(IllegalArgumentException.class, () -> WhatsappTextRequest.builder()
+				.from(from).to("not-a-number-or-bsuid").text(txt).build()
+		);
+	}
 }

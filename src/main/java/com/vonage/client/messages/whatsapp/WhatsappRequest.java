@@ -33,7 +33,34 @@ public abstract class WhatsappRequest extends MessageRequest {
 	@Override
 	protected void validateSenderAndRecipient(String from, String to) throws IllegalArgumentException {
 		this.from = new E164(from).toString();
-		this.to = new E164(to).toString();
+		this.to = sanitizeRecipient(to);
+	}
+
+	/**
+	 * Validates and sanitizes the recipient of a WhatsApp message. Unlike other channels, a WhatsApp
+	 * recipient may be identified either by an E.164 phone number or by a business-scoped user ID (BSUID)
+	 * for users who have adopted a WhatsApp username and whose phone number is not available.
+	 *
+	 * @param to The recipient phone number or BSUID passed in from the builder.
+	 *
+	 * @return The sanitized recipient identifier.
+	 * @throws IllegalArgumentException If the recipient is neither a valid E.164 number nor a valid BSUID.
+	 * @since 9.13.0
+	 */
+	static String sanitizeRecipient(String to) throws IllegalArgumentException {
+		try {
+			return new E164(to).toString();
+		}
+		catch (IllegalArgumentException phoneEx) {
+			try {
+				return new Bsuid(to).toString();
+			}
+			catch (IllegalArgumentException bsuidEx) {
+				throw new IllegalArgumentException(
+						"Recipient must be a valid E.164 phone number or WhatsApp BSUID: " + to
+				);
+			}
+		}
 	}
 
 	@JsonProperty("context")
@@ -44,6 +71,24 @@ public abstract class WhatsappRequest extends MessageRequest {
 	@SuppressWarnings("unchecked")
 	protected abstract static class Builder<M extends WhatsappRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
 		UUID messageUuid;
+
+		/**
+		 * (REQUIRED)
+		 * Sets the recipient of the message. For WhatsApp this may be either an E.164 phone number or a
+		 * business-scoped user ID (BSUID) for users who have adopted a WhatsApp username and whose phone
+		 * number is not available. When using a BSUID, always provide the full value including the country
+		 * code prefix, e.g. {@code US.13491208655302741918}. Note that BSUID recipients are not supported
+		 * for one-tap, zero-tap or copy-code authentication templates.
+		 *
+		 * @param to The recipient phone number or BSUID.
+		 *
+		 * @return This builder.
+		 * @see Bsuid
+		 */
+		@Override
+		public B to(String to) {
+			return super.to(to);
+		}
 
 		/**
 		 * (REQUIRED for replies and reaction messages)

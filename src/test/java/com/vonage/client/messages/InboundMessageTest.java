@@ -433,6 +433,55 @@ public class InboundMessageTest {
 	}
 
 	@Test
+	public void testWhatsappSenderAndProfileUsername() {
+		String userId = "US.13491208655302741918",
+				parentUserId = "US.ENT.11815799212886844830",
+				waId = "447700900001", name = "Jane Smith", username = "janeSmith";
+		String json = "{\n" +
+				"  \"channel\": \"whatsapp\",\n" +
+				"  \"message_uuid\": \"aaaaaaaa-bbbb-4ccc-8ddd-0123456789ab\",\n" +
+				"  \"to\": \"447700900000\",\n" +
+				"  \"from\": \""+waId+"\",\n" +
+				"  \"timestamp\": \"2025-02-03T12:14:25Z\",\n" +
+				"  \"message_type\": \"text\",\n" +
+				"  \"text\": \"Hello from Vonage!\",\n" +
+				"  \"profile\": {\n" +
+				"    \"name\": \""+name+"\",\n" +
+				"    \"username\": \""+username+"\"\n" +
+				"  },\n" +
+				"  \"whatsapp\": {\n" +
+				"    \"sender\": {\n" +
+				"      \"user_id\": \""+userId+"\",\n" +
+				"      \"parent_user_id\": \""+parentUserId+"\",\n" +
+				"      \"wa_id\": \""+waId+"\"\n" +
+				"    }\n" +
+				"  }\n" +
+				"}";
+
+		InboundMessage im = InboundMessage.fromJson(json);
+		testJsonableBaseObject(im);
+
+		WhatsappUser sender = im.getWhatsappSender();
+		assertNotNull(sender);
+		assertEquals(userId, sender.getUserId());
+		assertEquals(parentUserId, sender.getParentUserId());
+		assertEquals(waId, sender.getWaId());
+
+		Profile profile = im.getWhatsappProfile();
+		assertNotNull(profile);
+		assertEquals(name, profile.getName());
+		assertEquals(username, profile.getUsername());
+	}
+
+	@Test
+	public void testWhatsappSenderAbsent() {
+		InboundMessage im = InboundMessage.fromJson("{\"channel\":\"whatsapp\",\"whatsapp\":{}}");
+		assertNull(im.getWhatsappSender());
+		im = InboundMessage.fromJson("{\"channel\":\"whatsapp\"}");
+		assertNull(im.getWhatsappSender());
+	}
+
+	@Test
 	public void testWhatsappReferralOnly() {
 		String body = "Check out our new product offering",
 				headline = "New Products!", sourceId = "212731241638144",

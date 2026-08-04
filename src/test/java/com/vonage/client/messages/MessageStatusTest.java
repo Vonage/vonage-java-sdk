@@ -261,4 +261,54 @@ public class MessageStatusTest {
 		assertNull(ms.getWhatsappConversationType());
 		assertNull(ms.getWhatsappConversationId());
 	}
+
+	@Test
+	public void testWhatsappRecipientAndProfile() {
+		String userId = "US.13491208655302741918",
+				parentUserId = "US.ENT.11815799212886844830",
+				waId = "447700900000", name = "John Smith", username = "johnSmith";
+		String json = "{\n" +
+				"  \"message_uuid\": \"aaaaaaaa-bbbb-4ccc-8ddd-0123456789ab\",\n" +
+				"  \"to\": \""+waId+"\",\n" +
+				"  \"from\": \"447700900001\",\n" +
+				"  \"timestamp\": \"2025-02-03T12:14:25Z\",\n" +
+				"  \"status\": \"read\",\n" +
+				"  \"channel\": \"whatsapp\",\n" +
+				"  \"profile\": {\n" +
+				"    \"name\": \""+name+"\",\n" +
+				"    \"username\": \""+username+"\"\n" +
+				"  },\n" +
+				"  \"whatsapp\": {\n" +
+				"    \"recipient\": {\n" +
+				"      \"user_id\": \""+userId+"\",\n" +
+				"      \"parent_user_id\": \""+parentUserId+"\",\n" +
+				"      \"wa_id\": \""+waId+"\"\n" +
+				"    }\n" +
+				"  }\n" +
+				"}";
+
+		MessageStatus ms = MessageStatus.fromJson(json);
+		testJsonableBaseObject(ms);
+
+		com.vonage.client.messages.whatsapp.WhatsappUser recipient = ms.getWhatsappRecipient();
+		assertNotNull(recipient);
+		assertEquals(userId, recipient.getUserId());
+		assertEquals(parentUserId, recipient.getParentUserId());
+		assertEquals(waId, recipient.getWaId());
+
+		com.vonage.client.messages.whatsapp.Profile profile = ms.getWhatsappProfile();
+		assertNotNull(profile);
+		assertEquals(name, profile.getName());
+		assertEquals(username, profile.getUsername());
+	}
+
+	@Test
+	public void testWhatsappRecipientAbsent() {
+		MessageStatus ms = MessageStatus.fromJson("{\"channel\":\"whatsapp\",\"whatsapp\":{}}");
+		assertNull(ms.getWhatsappRecipient());
+		assertNull(ms.getWhatsappProfile());
+		ms = MessageStatus.fromJson("{\"channel\":\"whatsapp\"}");
+		assertNull(ms.getWhatsappRecipient());
+		assertNull(ms.getWhatsappProfile());
+	}
 }
