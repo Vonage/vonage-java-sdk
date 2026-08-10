@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.13.0]
+- Messages: Added WhatsApp business-scoped user ID (BSUID) support
+  - Outbound WhatsApp messages can now be sent to a BSUID (or parent BSUID) in the `to` field, in addition to a phone number. The recipient is accepted as-is (phone numbers are normalised) and not validated against a client-side format, so values accepted by the API are never rejected by the SDK
+  - Added shared `WhatsappUser` model (`user_id`, `parent_user_id`, `wa_id`)
+  - `InboundMessage`: added `whatsapp.sender` via `getWhatsappSender()`
+  - `MessageStatus`: added `whatsapp.recipient` via `getWhatsappRecipient()` and WhatsApp `profile` via `getWhatsappProfile()`
+  - WhatsApp `Profile`: added `getUsername()`
+
 # [9.11.0]
 - SMS: Increased client reference (`client-ref`) maximum length from 40 to 100 characters, matching the Messages API
 

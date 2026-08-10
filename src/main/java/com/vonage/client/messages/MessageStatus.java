@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.messages.whatsapp.ConversationType;
+import com.vonage.client.messages.whatsapp.Profile;
+import com.vonage.client.messages.whatsapp.WhatsappUser;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Currency;
@@ -237,6 +239,7 @@ public class MessageStatus extends JsonableBaseObject {
 
 		@JsonProperty("conversation") Conversation conversation;
 		@JsonProperty("pricing") Pricing pricing;
+		@JsonProperty("recipient") WhatsappUser recipient;
 	}
 
 	protected MessageStatus() {
@@ -254,6 +257,7 @@ public class MessageStatus extends JsonableBaseObject {
 	@JsonProperty("error") protected Error error;
 	@JsonProperty("workflow") protected Workflow workflow;
 	@JsonProperty("usage") protected Usage usage;
+	@JsonProperty("profile") protected Profile whatsappProfile;
 
 	@JsonProperty("destination") private Destination destination;
 	@JsonProperty("sms") private Sms sms;
@@ -420,6 +424,32 @@ public class MessageStatus extends JsonableBaseObject {
 	@JsonIgnore
 	public Whatsapp.Pricing getWhatsappPricing() {
 		return whatsapp != null ? whatsapp.pricing : null;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns the recipient's WhatsApp
+	 * identifiers (business-scoped user ID, parent BSUID and, if available, phone number). This is typically
+	 * present for {@code delivered} and {@code read} statuses.
+	 *
+	 * @return The WhatsApp recipient object, {@code null} if absent or not applicable.
+	 *
+	 * @since 9.13.0
+	 */
+	@JsonIgnore
+	public WhatsappUser getWhatsappRecipient() {
+		return whatsapp != null ? whatsapp.recipient : null;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns the recipient's WhatsApp
+	 * profile information, including their display name and username (if adopted).
+	 *
+	 * @return The WhatsApp profile object, {@code null} if absent or not applicable.
+	 *
+	 * @since 9.13.0
+	 */
+	public Profile getWhatsappProfile() {
+		return whatsappProfile;
 	}
 
 	/**
