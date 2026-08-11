@@ -10,6 +10,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   - `MessageStatus`: added `whatsapp.recipient` via `getWhatsappRecipient()` and WhatsApp `profile` via `getWhatsappProfile()`
   - WhatsApp `Profile`: added `getUsername()`
 
+# [9.12.0]
+- Conversations: Removed trailing slashes from Conversations API request URIs to prevent routing errors after the API gateway stopped normalising trailing-slash paths
+
 # [9.11.0]
 - SMS: Increased client reference (`client-ref`) maximum length from 40 to 100 characters, matching the Messages API
 
