@@ -1,0 +1,27 @@
+CHANGELOG.md
+  s_578742332c0b8c::t_e853f4d98c3663 5-7
+src/main/java/com/vonage/client/messages/sms/OutboundSettings.java
+  s_578742332c0b8c::t_4f4935e9dd32b0 30-31,34,42,45-46,58
+src/main/java/com/vonage/client/messages/sms/SmsTextRequest.java
+  s_578742332c0b8c::t_cc34b8ce56ba7f 26,30-31
+src/test/java/com/vonage/client/messages/sms/SmsTextRequestTest.java
+  s_578742332c0b8c::t_2940f8b3126243 194-196,198,201,209-211,214-215,222-224
+  s_578742332c0b8c::t_4fb9a4b216edd6 275,277
+  s_578742332c0b8c::t_10d8579598f518 200
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "0237c551b2bb007997a17a83e6cb67800d69eff9",
+  "prompts": {},
+  "sessions": {
+    "s_578742332c0b8c": {
+      "agent_id": {
+        "tool": "kiro",
+        "id": "sess_1915dff8-0177-4ff3-93f5-a7e3d9169d23",
+        "model": "auto"
+      },
+      "human_author": "Chris Tankersley <chris@ctankersley.com>"
+    }
+  }
+}
