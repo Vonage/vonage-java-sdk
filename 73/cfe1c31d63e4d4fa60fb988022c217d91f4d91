@@ -1,0 +1,18 @@
+README.md
+  h_b0b759f4c5cf9e 86,97
+pom.xml
+  h_b0b759f4c5cf9e 8
+src/main/java/com/vonage/client/HttpWrapper.java
+  h_b0b759f4c5cf9e 47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "73cfe1c31d63e4d4fa60fb988022c217d91f4d91",
+  "prompts": {},
+  "humans": {
+    "h_b0b759f4c5cf9e": {
+      "author": "Chris Tankersley <chris@ctankersley.com>"
+    }
+  }
+}
