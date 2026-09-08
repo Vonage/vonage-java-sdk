@@ -1,0 +1,19 @@
+CHANGELOG.md
+  s_578742332c0b8c::t_1af0986e472927 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "1b4ecfc085c0d22819cf283a03975c25dfc46db3",
+  "prompts": {},
+  "sessions": {
+    "s_578742332c0b8c": {
+      "agent_id": {
+        "tool": "kiro",
+        "id": "sess_1915dff8-0177-4ff3-93f5-a7e3d9169d23",
+        "model": "auto"
+      },
+      "human_author": "Chris Tankersley <chris@ctankersley.com>"
+    }
+  }
+}
