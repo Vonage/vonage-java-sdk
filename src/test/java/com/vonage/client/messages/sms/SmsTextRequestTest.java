@@ -191,9 +191,14 @@ public class SmsTextRequestTest {
 		SmsTextRequest sms = SmsTextRequest.builder()
 			.from(from).to(to).text(msg)
 			.trustedRecipient(true).build();
-	
+
+		assertEquals(Boolean.TRUE, sms.getTrustedRecipient());
+
 		String json = sms.toJson();
+		// trusted_recipient must be a top-level field, not nested inside the "sms" settings object.
 		assertTrue(json.contains("\"trusted_recipient\":true"));
+		assertFalse(json.contains("\"sms\":{"));
+		assertNull(sms.getMessageSettings());
 	}
 	
 	@Test
@@ -201,16 +206,22 @@ public class SmsTextRequestTest {
 		SmsTextRequest sms = SmsTextRequest.builder()
 			.from(from).to(to).text(msg)
 			.trustedRecipient(false).build();
-	
+
+		assertEquals(Boolean.FALSE, sms.getTrustedRecipient());
+
 		String json = sms.toJson();
 		assertTrue(json.contains("\"trusted_recipient\":false"));
+		assertFalse(json.contains("\"sms\":{"));
+		assertNull(sms.getMessageSettings());
 	}
 	
 	@Test
 	public void testWithoutTrustedRecipient() {
 		SmsTextRequest sms = SmsTextRequest.builder()
 			.from(from).to(to).text(msg).build();
-	
+
+		assertNull(sms.getTrustedRecipient());
+
 		String json = sms.toJson();
 		assertFalse(json.contains("\"trusted_recipient\""));
 	}
@@ -240,7 +251,7 @@ public class SmsTextRequestTest {
 	@Test
 	public void testInvalidPoolId() {
 		assertThrows(IllegalArgumentException.class, () ->
-				OutboundSettings.construct(EncodingType.TEXT, contentId, entityId, " ", null)
+				OutboundSettings.construct(EncodingType.TEXT, contentId, entityId, " ")
 		);
 	}
 
@@ -261,7 +272,9 @@ public class SmsTextRequestTest {
 		assertTrue(json.contains("\"content_id\":\"" + contentId + "\""));
 		assertTrue(json.contains("\"entity_id\":\"" + entityId + "\""));
 		assertTrue(json.contains("\"encoding_type\":\"text\""));
+		// trusted_recipient is a top-level field, not part of the "sms" settings object.
 		assertTrue(json.contains("\"trusted_recipient\":true"));
+		assertEquals(Boolean.TRUE, sms.getTrustedRecipient());
 
 		OutboundSettings settings = sms.getMessageSettings();
 		assertNotNull(settings);
@@ -269,6 +282,5 @@ public class SmsTextRequestTest {
 		assertEquals(contentId, settings.getContentId());
 		assertEquals(entityId, settings.getEntityId());
 		assertEquals(EncodingType.TEXT, settings.getEncodingType());
-		assertTrue(settings.getTrustedRecipient());
 	}
 }
