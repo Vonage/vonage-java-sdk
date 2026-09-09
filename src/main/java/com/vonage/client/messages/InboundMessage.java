@@ -49,6 +49,7 @@ public class InboundMessage extends JsonableBaseObject {
 	protected static class Whatsapp extends JsonableBaseObject {
 		@JsonProperty("referral") protected Referral referral;
 		@JsonProperty("whatsapp_referred_product") protected ReferredProduct referredProduct;
+		@JsonProperty("sender") protected WhatsappUser sender;
 	}
 
 	protected static class Origin extends JsonableBaseObject {
@@ -440,6 +441,20 @@ public class InboundMessage extends JsonableBaseObject {
 	@JsonIgnore
 	public ReferredProduct getWhatsappReferredProduct() {
 		return whatsapp != null ? whatsapp.referredProduct : null;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns the sender's WhatsApp
+	 * identifiers (business-scoped user ID, parent BSUID and, if available, phone number). This is present
+	 * for WhatsApp users who may be identified by a BSUID as well as, or instead of, a phone number.
+	 *
+	 * @return The WhatsApp sender object, or {@code null} if not present or applicable.
+	 *
+	 * @since 9.13.0
+	 */
+	@JsonIgnore
+	public WhatsappUser getWhatsappSender() {
+		return whatsapp != null ? whatsapp.sender : null;
 	}
 
 	/**

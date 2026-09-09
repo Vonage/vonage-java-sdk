@@ -102,12 +102,12 @@ public abstract class Message extends AbstractQueryParamsRequest {
     /**
      * Sets the client reference for this message.
      *
-     * @param clientReference The custom message reference, maximum 40 characters.
-     * @throws IllegalArgumentException if the client reference is longer than 40 characters.
+     * @param clientReference The custom message reference, maximum 100 characters.
+     * @throws IllegalArgumentException if the client reference is longer than 100 characters.
      */
     public void setClientReference(String clientReference) {
-        if (clientReference.length() > 40) {
-            throw new IllegalArgumentException("Client reference must be 40 characters or less.");
+        if (clientReference.length() > 100) {
+            throw new IllegalArgumentException("Client reference must be 100 characters or less.");
         }
         this.clientReference = clientReference;
     }

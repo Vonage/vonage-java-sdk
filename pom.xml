@@ -5,7 +5,7 @@
 
   <groupId>com.vonage</groupId>
   <artifactId>server-sdk</artifactId>
-  <version>9.10.2</version>
+  <version>9.13.0</version>
 
   <name>Vonage Java Server SDK</name>
   <description>Java client for Vonage APIs</description>
@@ -45,8 +45,8 @@
     <java.testVersion>21</java.testVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <nexusUrl>https://central.sonatype.com</nexusUrl>
-    <jackson.version>2.19.0</jackson.version>
     <mockito.version>5.23.0</mockito.version>
+    <jackson.version>2.22.0</jackson.version>
     <jjwt.version>0.12.6</jjwt.version>
   </properties>
 
@@ -75,7 +75,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.19.0</version>
+      <version>3.20.0</version>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
@@ -263,7 +263,7 @@
 
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.4.2</version>
+        <version>3.5.0</version>
         <configuration>
           <archive>
             <manifest>
@@ -331,7 +331,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
-            <version>3.7.1</version>
+            <version>3.8.0</version>
             <executions>
               <execution>
                 <phase>package</phase>

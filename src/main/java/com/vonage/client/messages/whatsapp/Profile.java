@@ -24,7 +24,7 @@ import com.vonage.client.JsonableBaseObject;
  * @since 7.2.0
  */
 public final class Profile extends JsonableBaseObject {
-	private String name;
+	private String name, username;
 
 	Profile() {}
 
@@ -36,5 +36,16 @@ public final class Profile extends JsonableBaseObject {
 	@JsonProperty("name")
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * The user's WhatsApp username, if they have adopted one. Omitted if the user has no username.
+	 *
+	 * @return The WhatsApp username, or {@code null} if not present.
+	 * @since 9.13.0
+	 */
+	@JsonProperty("username")
+	public String getUsername() {
+		return username;
 	}
 }
