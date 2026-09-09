@@ -1,0 +1,20 @@
+pom.xml
+  s_578742332c0b8c::t_1d1aba07f2fc7e 62-64
+  s_578742332c0b8c::t_dec4b3dced07c3 60-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "03791d7f88abc9a29602a1881647366b1f14d46a",
+  "prompts": {},
+  "sessions": {
+    "s_578742332c0b8c": {
+      "agent_id": {
+        "tool": "kiro",
+        "id": "sess_1915dff8-0177-4ff3-93f5-a7e3d9169d23",
+        "model": "auto"
+      },
+      "human_author": null
+    }
+  }
+}
