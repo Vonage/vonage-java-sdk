@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.13.1]
+- SMS: Fixed `trusted_recipient` being serialized nested inside the `sms` settings object instead of at the top level of the message body, so `SmsTextRequest.builder().trustedRecipient(...)` now matches the Messages API contract (MMS and RCS were already correct). Removed the incorrectly placed `trusted_recipient` accessor from `OutboundSettings`; use `SmsTextRequest.getTrustedRecipient()` instead
+
 # [9.13.0]
 - Messages: Added WhatsApp business-scoped user ID (BSUID) support
   - Outbound WhatsApp messages can now be sent to a BSUID (or parent BSUID) in the `to` field, in addition to a phone number. The recipient is accepted as-is (phone numbers are normalised) and not validated against a client-side format, so values accepted by the API are never rejected by the SDK

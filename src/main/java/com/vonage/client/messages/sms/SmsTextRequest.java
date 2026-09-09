@@ -23,10 +23,12 @@ import com.vonage.client.messages.TextMessageRequest;
 
 public final class SmsTextRequest extends MessageRequest implements TextMessageRequest {
 	final OutboundSettings sms;
+	final Boolean trustedRecipient;
 
 	SmsTextRequest(Builder builder) {
 		super(builder, Channel.SMS, MessageType.TEXT);
-		sms = OutboundSettings.construct(builder.encodingType, builder.contentId, builder.entityId, builder.poolId, builder.trustedRecipient);
+		this.trustedRecipient = builder.trustedRecipient;
+		sms = OutboundSettings.construct(builder.encodingType, builder.contentId, builder.entityId, builder.poolId);
 	}
 
 	@Override
@@ -37,6 +39,11 @@ public final class SmsTextRequest extends MessageRequest implements TextMessageR
 	@JsonProperty("sms")
 	public OutboundSettings getMessageSettings() {
 		return sms;
+	}
+
+	@JsonProperty("trusted_recipient")
+	public Boolean getTrustedRecipient() {
+		return trustedRecipient;
 	}
 
 	@JsonProperty("ttl")
