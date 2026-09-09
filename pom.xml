@@ -45,8 +45,8 @@
     <java.testVersion>21</java.testVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <nexusUrl>https://central.sonatype.com</nexusUrl>
+    <mockito.version>5.23.0</mockito.version>
     <jackson.version>2.22.0</jackson.version>
-    <mockito.version>5.20.0</mockito.version>
     <jjwt.version>0.12.6</jjwt.version>
   </properties>
 
