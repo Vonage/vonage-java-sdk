@@ -1,0 +1,19 @@
+src/test/java/com/vonage/client/DynamicEndpointTest.java
+  s_e087424c34f8bf::t_9ce641aea28b95 25-26,32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "827cba03baf3a9c12a8ca3ad94f26949eda05e52",
+  "prompts": {},
+  "sessions": {
+    "s_e087424c34f8bf": {
+      "agent_id": {
+        "tool": "kiro",
+        "id": "sess_3d593ddf-b8c6-48d2-86a3-0da8e866af53",
+        "model": "auto"
+      },
+      "human_author": "Chris Tankersley <chris@ctankersley.com>"
+    }
+  }
+}
