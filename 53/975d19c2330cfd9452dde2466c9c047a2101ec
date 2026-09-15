@@ -1,0 +1,24 @@
+src/main/java/com/vonage/client/auth/RequestSigning.java
+  s_e087424c34f8bf::t_518626046b9946 140-161
+  s_e087424c34f8bf::t_5e7efa325b44f9 139
+src/test/java/com/vonage/client/auth/RequestSigningTest.java
+  s_e087424c34f8bf::t_086fd4c3cba8dd 193-217
+CHANGELOG.md
+  s_e087424c34f8bf::t_f86312cd16f424 5-7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "53975d19c2330cfd9452dde2466c9c047a2101ec",
+  "prompts": {},
+  "sessions": {
+    "s_e087424c34f8bf": {
+      "agent_id": {
+        "tool": "kiro",
+        "id": "sess_3d593ddf-b8c6-48d2-86a3-0da8e866af53",
+        "model": "auto"
+      },
+      "human_author": "Chris Tankersley <chris@ctankersley.com>"
+    }
+  }
+}
