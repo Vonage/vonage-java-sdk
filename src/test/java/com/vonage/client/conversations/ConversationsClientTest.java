@@ -48,7 +48,7 @@ public class ConversationsClientTest extends AbstractClientTest<ConversationsCli
 	static final boolean IS_SYSTEM = false, EXCLUDE_DELETED_EVENTS = true,
 			AUDIO = true, AUDIO_EARMUFFED = false, AUDIO_MUTED = true, AUDIO_ENABLED = true;
 	static final int PAGE_SIZE = 30,
-			EVENT_ID = RANDOM.nextInt(100),
+			EVENT_ID = RANDOM.nextInt(1, 100),
 			EVENT_START_ID = RANDOM.nextInt(EVENT_ID),
 			EVENT_END_ID = RANDOM.nextInt(EVENT_ID, EVENT_ID * 12),
 			CONVERSATION_SEQUENCE_NUMBER = 159, CONVERSATION_TTL = 60;
