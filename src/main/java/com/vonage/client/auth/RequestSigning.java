@@ -137,6 +137,29 @@ public class RequestSigning {
     }
 
     /**
+     * Verifies the signature in an HttpServletRequest using the specified hashing strategy.
+     *
+     * @param inputStream The request data stream.
+     * @param contentType The request Content-Type header.
+     * @param parameterMap The request parameters.
+     * @param secretKey The pre-shared secret key used by the sender of the request to create the signature.
+     * @param hashType The hashing strategy used by the sender of the request to create the signature.
+     *
+     * @return true if the signature is correct for this request and secret key.
+     *
+     * @since 9.14.0
+     */
+    public static boolean verifyRequestSignature(InputStream inputStream,
+                                                    String contentType,
+                                                    Map<String, String[]> parameterMap,
+                                                    String secretKey,
+                                                    HashType hashType) {
+        return verifyRequestSignature(contentType, inputStream, parameterMap,
+                secretKey, System.currentTimeMillis(), hashType
+        );
+    }
+
+    /**
      * Verifies the signature in an HttpServletRequest. Hashing strategy is MD5.
      *
      * @param contentType The request Content-Type header.
