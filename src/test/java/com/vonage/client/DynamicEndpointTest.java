@@ -22,11 +22,14 @@ import com.vonage.client.auth.NoAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import java.net.URI;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Execution(ExecutionMode.SAME_THREAD)
 public class DynamicEndpointTest {
     private static final HttpWrapper WRAPPER = new HttpWrapper(new NoAuthMethod());
 

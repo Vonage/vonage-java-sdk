@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.14.0]
+- Auth: Added public `RequestSigning.verifyRequestSignature(InputStream, String, Map, String, HashType)` overload, so callers can verify signed callbacks (e.g. SMS) using a non-MD5 algorithm such as `HMAC_SHA256`. Previously the only publicly accessible overload was hardcoded to `HashType.MD5` and the algorithm-aware overload was package-private. Existing overloads are unchanged and still default to MD5
+
 # [9.13.1]
 - SMS: Fixed `trusted_recipient` being serialized nested inside the `sms` settings object instead of at the top level of the message body, so `SmsTextRequest.builder().trustedRecipient(...)` now matches the Messages API contract (MMS and RCS were already correct). Removed the incorrectly placed `trusted_recipient` accessor from `OutboundSettings`; use `SmsTextRequest.getTrustedRecipient()` instead
 
