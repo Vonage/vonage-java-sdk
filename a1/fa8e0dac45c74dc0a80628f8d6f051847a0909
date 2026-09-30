@@ -1,0 +1,18 @@
+CHANGELOG.md
+  h_b0b759f4c5cf9e 5-7
+src/main/java/com/vonage/client/voice/Call.java
+  h_b0b759f4c5cf9e 39,69,236-249,283,440-455
+src/test/java/com/vonage/client/voice/CallTest.java
+  h_b0b759f4c5cf9e 432-455
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "a1fa8e0dac45c74dc0a80628f8d6f051847a0909",
+  "prompts": {},
+  "humans": {
+    "h_b0b759f4c5cf9e": {
+      "author": "Chris Tankersley <chris@ctankersley.com>"
+    }
+  }
+}
