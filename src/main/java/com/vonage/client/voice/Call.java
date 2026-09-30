@@ -36,7 +36,7 @@ public class Call extends JsonableBaseObject {
     private MachineDetection machineDetection;
     private AdvancedMachineDetection advancedMachineDetection;
     private Integer lengthTimer, ringingTimer;
-    private Boolean fromRandomNumber;
+    private Boolean fromRandomNumber, returnCpsOnStarted;
     private Collection<? extends Action> ncco;
 
     /**
@@ -66,6 +66,7 @@ public class Call extends JsonableBaseObject {
         answerUrl = builder.answerUrl != null ? Collections.singletonList(URI.create(builder.answerUrl)) : null;
         eventUrl = builder.eventUrl != null ? Collections.singletonList(URI.create(builder.eventUrl)) : null;
         ncco = builder.ncco;
+        returnCpsOnStarted = builder.returnCpsOnStarted;
         advancedMachineDetection = builder.advancedMachineDetection;
         if ((machineDetection = builder.machineDetection) != null && advancedMachineDetection != null) {
             throw new IllegalStateException("Cannot set both machineDetection and advancedMachineDetection.");
@@ -233,6 +234,20 @@ public class Call extends JsonableBaseObject {
     }
 
     /**
+     * Whether the {@code started} event webhook will include calls per second (CPS) usage and limit data
+     * ({@code cps_region_usage}, {@code cps_global_usage} and {@code cps_limit}).
+     *
+     * @return {@code true} if CPS data will be included in the {@code started} event,
+     * or {@code null} if unspecified (the default, equivalent to {@code false}).
+     *
+     * @since 9.15.0
+     */
+    @JsonProperty("return_cps_on_started")
+    public Boolean getReturnCpsOnStarted() {
+        return returnCpsOnStarted;
+    }
+
+    /**
      * Gets the NCCOs to use for this call.
      *
      * @return The NCCO actions.
@@ -265,7 +280,7 @@ public class Call extends JsonableBaseObject {
         private MachineDetection machineDetection;
         private AdvancedMachineDetection advancedMachineDetection;
         private Integer lengthTimer, ringingTimer;
-        private Boolean fromRandomNumber;
+        private Boolean fromRandomNumber, returnCpsOnStarted;
         private Collection<Action> ncco;
 
         Builder() {}
@@ -419,6 +434,22 @@ public class Call extends JsonableBaseObject {
          */
         public Builder fromRandomNumber(boolean fromRandomNumber) {
             this.fromRandomNumber = fromRandomNumber;
+            return this;
+        }
+
+        /**
+         * Set to {@code true} to include calls per second (CPS) usage and limit data in the {@code started}
+         * event webhook. When enabled, the event will contain {@code cps_region_usage}, {@code cps_global_usage}
+         * and {@code cps_limit}. When omitted or {@code false}, the {@code started} event is unchanged.
+         *
+         * @param returnCpsOnStarted Whether to include CPS data in the {@code started} event.
+         *
+         * @return This builder.
+         *
+         * @since 9.15.0
+         */
+        public Builder returnCpsOnStarted(boolean returnCpsOnStarted) {
+            this.returnCpsOnStarted = returnCpsOnStarted;
             return this;
         }
 

@@ -155,6 +155,9 @@ public class EventWebhookTest {
     public void testParseEmptyJson() {
         EventWebhook event = EventWebhook.fromJson("{}");
         testJsonableBaseObject(event);
+        assertNull(event.getCpsRegionUsage());
+        assertNull(event.getCpsGlobalUsage());
+        assertNull(event.getCpsLimit());
         assertNull(event.getDetail());
         assertNull(event.getCallUuid());
         assertNull(event.getReason());
@@ -273,5 +276,26 @@ public class EventWebhookTest {
         EventWebhook event = EventWebhook.fromJson(json);
         assertEquals(CallStatus.STARTED, event.getStatus());
         assertNull(event.getSipCode());
+        assertNull(event.getCpsRegionUsage());
+        assertNull(event.getCpsGlobalUsage());
+        assertNull(event.getCpsLimit());
+    }
+
+    @Test
+    public void testStartedEventWithCpsFields() {
+        String json = "{\"from\":\"442079460000\",\"to\":\"447700900000\"," +
+                "\"uuid\":\"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"," +
+                "\"conversation_uuid\":\"CON-aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"," +
+                "\"status\":\"started\",\"direction\":\"outbound\"," +
+                "\"timestamp\":\"2020-01-01T12:00:00.000Z\"," +
+                "\"cps_region_usage\":1,\"cps_global_usage\":0,\"cps_limit\":3}";
+        EventWebhook event = EventWebhook.fromJson(json);
+        testJsonableBaseObject(event);
+        assertEquals(CallStatus.STARTED, event.getStatus());
+        assertEquals(CallDirection.OUTBOUND, event.getDirection());
+        assertEquals("aaaaaaaa-bbbb-cccc-dddd-0123456789ab", event.getCallUuid());
+        assertEquals(1, event.getCpsRegionUsage());
+        assertEquals(0, event.getCpsGlobalUsage());
+        assertEquals(3, event.getCpsLimit());
     }
 }
