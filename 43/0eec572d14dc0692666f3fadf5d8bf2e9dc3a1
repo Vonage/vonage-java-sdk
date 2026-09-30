@@ -1,0 +1,18 @@
+CHANGELOG.md
+  h_b0b759f4c5cf9e 7
+src/main/java/com/vonage/client/voice/EventWebhook.java
+  h_b0b759f4c5cf9e 43,313-351
+src/test/java/com/vonage/client/voice/EventWebhookTest.java
+  h_b0b759f4c5cf9e 158-160,279-299
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "430eec572d14dc0692666f3fadf5d8bf2e9dc3a1",
+  "prompts": {},
+  "humans": {
+    "h_b0b759f4c5cf9e": {
+      "author": "Chris Tankersley <chris@ctankersley.com>"
+    }
+  }
+}
