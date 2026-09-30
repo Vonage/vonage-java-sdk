@@ -430,6 +430,30 @@ public class CallTest {
     }
 
     @Test
+    public void testToJsonReturnCpsOnStarted() {
+        Call.Builder builder = Call.builder().to(new PhoneEndpoint("4477999000"))
+                .from("44111222333").answerUrl("https://callback.example.com/");
+        String prefix = "{\"to\":[{\"number\":\"4477999000\",\"type\":\"phone\"}],"
+                + "\"from\":{\"number\":\"44111222333\",\"type\":\"phone\"},"
+                + "\"answer_method\":\"GET\",\"answer_url\":[\"https://callback.example.com/\"]";
+
+        Call enabled = builder.returnCpsOnStarted(true).build();
+        assertTrue(enabled.getReturnCpsOnStarted());
+        assertEquals(prefix + ",\"return_cps_on_started\":true}", enabled.toJson());
+
+        Call disabled = builder.returnCpsOnStarted(false).build();
+        assertFalse(disabled.getReturnCpsOnStarted());
+        assertEquals(prefix + ",\"return_cps_on_started\":false}", disabled.toJson());
+    }
+
+    @Test
+    public void testReturnCpsOnStartedOmittedByDefault() {
+        Call call = Call.builder().to(new VbcEndpoint("123")).build();
+        assertNull(call.getReturnCpsOnStarted());
+        assertFalse(call.toJson().contains("return_cps_on_started"));
+    }
+
+    @Test
     public void testNulllAnswerMethod() {
         Call call = Call.builder().to(new VbcEndpoint("123"))
                 .answerUrl("http://example.com/answer")
