@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 # [9.15.0]
 - Voice: Added `returnCpsOnStarted` to `Call.Builder` (`return_cps_on_started`) to request calls per second (CPS) usage and limit data in the `started` event webhook
 - Voice: Added `getCpsRegionUsage()`, `getCpsGlobalUsage()` and `getCpsLimit()` to `EventWebhook` for the new `started` event CPS fields
+- Dependencies: Bumped Jackson from 2.22.0 to 2.22.2 to address `jackson-databind` security advisories (GHSA-q4xh-88c3-wmh7, GHSA-gx83-3vf8-gh7j, GHSA-wjgm-6hv5-3cvf, GHSA-vvgp-rfg2-7rr6, GHSA-5gvw-p9qm-jgwh, GHSA-5jmj-h7xm-6q6v)
 
 # [9.14.0]
 - Auth: Added public `RequestSigning.verifyRequestSignature(InputStream, String, Map, String, HashType)` overload, so callers can verify signed callbacks (e.g. SMS) using a non-MD5 algorithm such as `HMAC_SHA256`. Previously the only publicly accessible overload was hardcoded to `HashType.MD5` and the algorithm-aware overload was package-private. Existing overloads are unchanged and still default to MD5
