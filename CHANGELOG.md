@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 # [9.15.0]
 - Voice: Added `returnCpsOnStarted` to `Call.Builder` (`return_cps_on_started`) to request calls per second (CPS) usage and limit data in the `started` event webhook
+- Voice: Added `getCpsRegionUsage()`, `getCpsGlobalUsage()` and `getCpsLimit()` to `EventWebhook` for the new `started` event CPS fields
 
 # [9.14.0]
 - Auth: Added public `RequestSigning.verifyRequestSignature(InputStream, String, Map, String, HashType)` overload, so callers can verify signed callbacks (e.g. SMS) using a non-MD5 algorithm such as `HMAC_SHA256`. Previously the only publicly accessible overload was hardcoded to `HashType.MD5` and the algorithm-aware overload was package-private. Existing overloads are unchanged and still default to MD5

@@ -40,7 +40,7 @@ public class EventWebhook extends JsonableBaseObject {
     private DtmfResult dtmf;
     private SpeechResults speech;
     private Instant timestamp, startTime, endTime;
-    private Integer duration, size, sipCode;
+    private Integer duration, size, sipCode, cpsRegionUsage, cpsGlobalUsage, cpsLimit;
     private Double rate, price;
     private URI recordingUrl;
     private String to, from, network, reason,
@@ -308,6 +308,45 @@ public class EventWebhook extends JsonableBaseObject {
     @JsonProperty("sip_code")
     public Integer getSipCode() {
         return sipCode;
+    }
+
+    /**
+     * Calls per second (CPS) in use within the region at the time the call was created. This is only present
+     * on {@linkplain CallStatus#STARTED} events when the call was created with
+     * {@link Call.Builder#returnCpsOnStarted(boolean)} set to {@code true}.
+     *
+     * @return The regional CPS usage, or {@code null} if not applicable.
+     * @since 9.15.0
+     */
+    @JsonProperty("cps_region_usage")
+    public Integer getCpsRegionUsage() {
+        return cpsRegionUsage;
+    }
+
+    /**
+     * Calls per second (CPS) in use across all regions at the time the call was created. This is only present
+     * on {@linkplain CallStatus#STARTED} events when the call was created with
+     * {@link Call.Builder#returnCpsOnStarted(boolean)} set to {@code true}.
+     *
+     * @return The global CPS usage, or {@code null} if not applicable.
+     * @since 9.15.0
+     */
+    @JsonProperty("cps_global_usage")
+    public Integer getCpsGlobalUsage() {
+        return cpsGlobalUsage;
+    }
+
+    /**
+     * Maximum calls per second (CPS) configured for the account. This is only present
+     * on {@linkplain CallStatus#STARTED} events when the call was created with
+     * {@link Call.Builder#returnCpsOnStarted(boolean)} set to {@code true}.
+     *
+     * @return The account's CPS limit, or {@code null} if not applicable.
+     * @since 9.15.0
+     */
+    @JsonProperty("cps_limit")
+    public Integer getCpsLimit() {
+        return cpsLimit;
     }
 
     /**
