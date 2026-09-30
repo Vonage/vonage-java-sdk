@@ -1,0 +1,16 @@
+CHANGELOG.md
+  h_b0b759f4c5cf9e 8
+pom.xml
+  h_b0b759f4c5cf9e 49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "10c9949f8023fe0ea10778009c9eb4ec5d95ae64",
+  "prompts": {},
+  "humans": {
+    "h_b0b759f4c5cf9e": {
+      "author": "Chris Tankersley <chris@ctankersley.com>"
+    }
+  }
+}
