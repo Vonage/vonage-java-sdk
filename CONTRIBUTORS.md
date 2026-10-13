@@ -38,3 +38,4 @@ documentation, or tests are eligible to be added to this list.
 - Mofi Rahman ([@moficodes](https://github.com/moficodes))
 - Sina Madani ([@SMadani](https://github.com/SMadani))
 - Chris Tankersley ([#dragonmantank](https://github.com/dragonmantank))
+- Vincent Jaouën ([@vincent-docto](https://github.com/vincent-docto))

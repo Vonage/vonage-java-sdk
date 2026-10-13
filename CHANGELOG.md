@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# [9.15.1]
+- Fixed `DynamicEndpoint` keeping per-request state (`cachedRequestBodyString`, `cachedRequestBody`) in instance fields shared by all callers of a client. Concurrent requests could be sent with another request's body, or have a response written into another caller's request object. Request state is now passed explicitly to response parsing. Added `AbstractMethod.parseResponse(HttpResponse, REQ)`, which by default delegates to the existing `parseResponse(HttpResponse)`, so subclasses are unaffected
+
 # [9.15.0]
 - Voice: Added `returnCpsOnStarted` to `Call.Builder` (`return_cps_on_started`) to request calls per second (CPS) usage and limit data in the `started` event webhook
 - Voice: Added `getCpsRegionUsage()`, `getCpsGlobalUsage()` and `getCpsLimit()` to `EventWebhook` for the new `started` event CPS fields

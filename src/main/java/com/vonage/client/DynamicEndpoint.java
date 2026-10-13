@@ -51,8 +51,6 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	protected final BiFunction<DynamicEndpoint<T, R>, ? super T, String> pathGetter;
 	protected final Class<? extends VonageApiResponseException> responseExceptionType;
 	protected final Class<R> responseType;
-	protected T cachedRequestBody;
-	protected String cachedRequestBodyString;
 
 	protected DynamicEndpoint(Builder<T, R> builder) {
 		super(builder.wrapper);
@@ -218,9 +216,6 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	@Override
 	protected final RequestBuilder makeRequest(T requestBody) {
-		if (requestBody instanceof Jsonable && responseType.isAssignableFrom(requestBody.getClass())) {
-			cachedRequestBody = requestBody;
-		}
 		RequestBuilder rqb = createRequestBuilderFromRequestMethod(requestMethod);
 		String header = getRequestHeader(requestBody);
 		if (header != null) {
@@ -233,8 +228,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			applyQueryParams(((QueryParamsRequest) requestBody).makeParams(), rqb);
 		}
 		if (requestBody instanceof Jsonable) {
-			cachedRequestBodyString = ((Jsonable) requestBody).toJson();
-			rqb.setEntity(new StringEntity(cachedRequestBodyString, ContentType.APPLICATION_JSON));
+			rqb.setEntity(new StringEntity(((Jsonable) requestBody).toJson(), ContentType.APPLICATION_JSON));
 		}
 		else if (requestBody instanceof BinaryRequest) {
 			BinaryRequest bin = (BinaryRequest) requestBody;
@@ -248,27 +242,30 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	@Override
 	protected final R parseResponse(HttpResponse response) throws IOException {
+		return parseResponse(response, null);
+	}
+
+	/**
+	 * Parses the response. The request is passed in explicitly rather than stored on this endpoint,
+	 * since an endpoint instance is shared by every caller of its client.
+	 */
+	@Override
+	protected final R parseResponse(HttpResponse response, T request) throws IOException {
 		StatusLine statusLine = response.getStatusLine();
 		int statusCode = statusLine.getStatusCode();
 		logger.fine(() -> "Response status: " + statusCode);
-		try {
-			if (statusCode < 200) {
-				logger.info(statusLine::getReasonPhrase);
-				return null;
-			}
-			if (statusCode < 300) {
-				return parseResponseSuccess(response);
-			}
-			if (statusCode < 400) {
-				return parseResponseRedirect(response);
-			}
-			else {
-				return parseResponseFailure(response);
-			}
+		if (statusCode < 200) {
+			logger.info(statusLine::getReasonPhrase);
+			return null;
 		}
-		finally {
-			cachedRequestBody = null;
-			cachedRequestBodyString = null;
+		if (statusCode < 300) {
+			return parseResponseSuccess(response, request);
+		}
+		if (statusCode < 400) {
+			return parseResponseRedirect(response, request);
+		}
+		else {
+			return parseResponseFailure(response, request);
 		}
 	}
 
@@ -276,7 +273,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		return null;
 	}
 
-	private R parseResponseRedirect(HttpResponse response) throws IOException {
+	private R parseResponseRedirect(HttpResponse response, T request) throws IOException {
 		final String location = response.getFirstHeader("Location").getValue();
 		logger.fine(() -> "Redirect: " + location);
 
@@ -287,11 +284,11 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			return (R) location;
 		}
 		else {
-			return parseResponseSuccess(response);
+			return parseResponseSuccess(response, request);
 		}
 	}
 
-	private R parseResponseSuccess(HttpResponse response) throws IOException {
+	private R parseResponseSuccess(HttpResponse response, T request) throws IOException {
 		if (Void.class.equals(responseType)) {
 			logger.fine(() -> "No response body.");
 			return null;
@@ -309,9 +306,9 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 				return (R) deser;
 			}
 
-			if (cachedRequestBody instanceof Jsonable) {
-				((Jsonable) cachedRequestBody).updateFromJson(deser);
-				return (R) cachedRequestBody;
+			if (request instanceof Jsonable && responseType.isAssignableFrom(request.getClass())) {
+				((Jsonable) request).updateFromJson(deser);
+				return (R) request;
 			}
 
 			if (Jsonable.class.isAssignableFrom(responseType)) {
@@ -338,7 +335,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 	}
 
-	private R parseResponseFailure(HttpResponse response) throws IOException {
+	private R parseResponseFailure(HttpResponse response, T request) throws IOException {
 		String exMessage = EntityUtils.toString(response.getEntity());
 		if (responseExceptionType != null) {
 			VonageApiResponseException varex = Jsonable.fromJson(exMessage,
@@ -349,8 +346,8 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			}
 			varex.statusCode = response.getStatusLine().getStatusCode();
 			varex.setRawResponse(exMessage);
-			if (cachedRequestBodyString != null) {
-				varex.setRawRequest(cachedRequestBodyString);
+			if (request instanceof Jsonable) {
+				varex.setRawRequest(((Jsonable) request).toJson());
 			}
 			logger.log(Level.WARNING, "Failed to parse response", varex);
 			throw varex;
