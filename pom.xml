@@ -47,7 +47,7 @@
     <nexusUrl>https://central.sonatype.com</nexusUrl>
     <mockito.version>5.23.0</mockito.version>
     <jackson.version>2.22.2</jackson.version>
-    <jjwt.version>0.12.6</jjwt.version>
+    <jjwt.version>0.13.0</jjwt.version>
   </properties>
 
   <dependencies>
