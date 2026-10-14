@@ -133,7 +133,7 @@ public abstract class AbstractMethod<REQ, RES> implements RestEndpoint<REQ, RES>
                     }
                 }
 
-                final RES responseBody = parseResponse(response);
+                final RES responseBody = parseResponse(response, request);
                 if (responseBody != null && shouldLog()) {
                     LOGGER.log(LOG_LEVEL, "--- RESPONSE BODY ---\n" + responseBody);
                 }
@@ -216,4 +216,20 @@ public abstract class AbstractMethod<REQ, RES> implements RestEndpoint<REQ, RES>
      * @throws IOException if a problem occurs parsing the response.
      */
     protected abstract RES parseResponse(HttpResponse response) throws IOException;
+
+    /**
+     * Construct a response object from the HTTP response, with access to the request that produced it.
+     * Endpoints are shared between callers, so request-specific state must not be kept in fields.
+     * By default this delegates to {@link #parseResponse(HttpResponse)}.
+     *
+     * @param response An HttpResponse returned from the Vonage API.
+     * @param request The request object that was passed to {@link #execute(Object)}.
+     *
+     * @return The unmarshalled result of the REST call.
+     *
+     * @throws IOException if a problem occurs parsing the response.
+     */
+    protected RES parseResponse(HttpResponse response, REQ request) throws IOException {
+        return parseResponse(response);
+    }
 }

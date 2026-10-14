@@ -24,7 +24,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.util.EntityUtils;
 import java.net.URI;
+import java.util.concurrent.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -148,5 +151,59 @@ public class DynamicEndpointTest {
 
         stubResponse(WRAPPER, 406, responseText);
         assertEquals(expectedResponse, customEndpoint.execute("FooBarBaz"));
+    }
+
+    @Test
+    public void testConcurrentRequestsKeepTheirOwnBody() throws Exception {
+        DynamicEndpoint<SampleJsonable, SampleJsonable> endpoint = DynamicEndpoint.<SampleJsonable, SampleJsonable> builder(SampleJsonable.class)
+                .wrapper(WRAPPER).authMethod(NoAuthMethod.class)
+                .pathGetter((de, req) -> TEST_BASE_URI)
+                .requestMethod(HttpMethod.POST).build();
+
+        final int threads = 8, iterations = 500;
+        ExecutorService executor = Executors.newFixedThreadPool(threads);
+        try {
+            CyclicBarrier barrier = new CyclicBarrier(threads);
+            List<Future<Integer>> futures = new ArrayList<>();
+            for (int t = 0; t < threads; t++) {
+                final int id = t;
+                futures.add(executor.submit(() -> {
+                    int mismatches = 0;
+                    for (int i = 0; i < iterations; i++) {
+                        SampleJsonable request = new SampleJsonable();
+                        request.field = "thread-" + id + "-" + i;
+                        barrier.await(10, TimeUnit.SECONDS);
+                        HttpEntityEnclosingRequest http = (HttpEntityEnclosingRequest) endpoint.createFullHttpRequest(request);
+                        if (!EntityUtils.toString(http.getEntity()).contains(request.field)) {
+                            mismatches++;
+                        }
+                    }
+                    return mismatches;
+                }));
+            }
+            int total = 0;
+            for (Future<Integer> f : futures) {
+                total += f.get(60, TimeUnit.SECONDS);
+            }
+            assertEquals(0, total, "Requests were sent with another request's body");
+        }
+        finally {
+            executor.shutdownNow();
+        }
+    }
+
+    @Test
+    public void testResponseIsParsedIntoItsOwnRequest() throws Exception {
+        DynamicEndpoint<SampleJsonable, SampleJsonable> endpoint = DynamicEndpoint.<SampleJsonable, SampleJsonable> builder(SampleJsonable.class)
+                .wrapper(WRAPPER).authMethod(NoAuthMethod.class)
+                .pathGetter((de, req) -> TEST_BASE_URI)
+                .requestMethod(HttpMethod.POST).build();
+        SampleJsonable first = new SampleJsonable(), second = new SampleJsonable();
+        endpoint.createFullHttpRequest(first);
+        endpoint.createFullHttpRequest(second);
+        SampleJsonable result = endpoint.parseResponse(makeJsonHttpResponse(200, "{\"field\":\"a\"}"), first);
+        assertSame(first, result);
+        assertEquals("a", first.field);
+        assertNull(second.field);
     }
 }
